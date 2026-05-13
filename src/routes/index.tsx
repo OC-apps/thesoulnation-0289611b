@@ -91,28 +91,28 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      {/* HITODAMA — fondo de flamas azules */}
-      <div className="hitodama-field" aria-hidden="true">
-        {Array.from({ length: 14 }).map((_, i) => {
-          const left = (i * 7.3) % 100;
-          const dur = 14 + ((i * 3) % 12);
-          const delay = (i * 1.7) % 14;
-          const scale = 0.5 + ((i * 0.13) % 1.1);
-          return (
-            <span
-              key={i}
-              className="hitodama"
-              style={{
-                left: `${left}%`,
-                animationDuration: `${dur}s`,
-                animationDelay: `-${delay}s`,
-                transform: `scale(${scale})`,
-              }}
-            />
-          );
-        })}
+      {/* AURORA — fondo ambiente premium */}
+      <div className="aurora-field" aria-hidden="true">
+        <div className="aurora-grid" />
+        <div className="aurora-scan" />
       </div>
       {/* NAV */}
+      <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
+        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+          <a href="#top" className="flex items-center gap-2 font-display font-bold tracking-tight">
+            <img src={soulLogo} alt="The Soul Nation" width={28} height={28} className="drop-shadow-[0_0_12px_var(--flame-glow)]" />
+            <span>THE SOUL <span className="text-flame">NATION</span></span>
+          </a>
+          <nav className="hidden md:flex gap-6 text-sm uppercase tracking-widest text-muted-foreground">
+            <a href="#about" className="hover:text-foreground transition">¿Quiénes Somos?</a>
+            <a href="#vision" className="hover:text-foreground transition">Visión</a>
+            <a href="#objetivo" className="hover:text-foreground transition">Objetivo</a>
+            <a href="#roster" className="hover:text-foreground transition">Roster</a>
+            <a href="#videos" className="hover:text-foreground transition">Videos</a>
+            <a href="#wallpapers" className="hover:text-foreground transition">Wallpapers</a>
+            <a href="#jersey" className="hover:text-foreground transition">Jersey</a>
+            <a href="#redes" className="hover:text-foreground transition">Redes</a>
+          </nav>
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
           <a href="#top" className="flex items-center gap-2 font-display font-bold tracking-tight">
