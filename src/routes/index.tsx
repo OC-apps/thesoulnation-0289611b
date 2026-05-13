@@ -369,7 +369,18 @@ function Index() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6 perspective">
+          {/* Mobile carrusel */}
+          <div className="md:hidden -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {VIDEOS.map((v, i) => (
+              <div key={v.id} className="snap-center shrink-0 w-[85%]">
+                <VideoCard video={v} index={i} />
+              </div>
+            ))}
+          </div>
+          <div className="md:hidden mt-2 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</div>
+
+          {/* Desktop grid */}
+          <div className="hidden md:grid lg:grid-cols-3 gap-6 perspective">
             {VIDEOS.map((v, i) => (
               <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
