@@ -226,15 +226,11 @@ function Index() {
           <div className="perspective grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {WAVES.map((c, i) => (
               <article key={c.name} className="tilt-card roster-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background flex items-center justify-center overflow-hidden">
-                  {/* photo placeholder — listo para que suban una foto */}
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--flame-glow)_0%,transparent_60%)] opacity-40" />
-                  <img src={soulLogo} alt="" className="w-1/2 opacity-30 tilt-idle" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/60 backdrop-blur px-2 py-1 rounded-full border border-border">
+                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
+                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
                     Wave · 0{i + 1}
-                  </span>
-                  <span className="absolute bottom-4 right-4 text-[10px] uppercase tracking-widest text-muted-foreground bg-background/60 backdrop-blur px-2 py-1 rounded-full border border-border">
-                    Foto próximamente
                   </span>
                 </div>
                 <div className="p-6 flex flex-col gap-3 relative z-10">
