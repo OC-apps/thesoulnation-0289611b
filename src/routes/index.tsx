@@ -247,7 +247,7 @@ function Index() {
         <div className="absolute inset-0 bg-hero opacity-80" />
         <img src={soulLogo} alt="" width={500} height={500} loading="lazy" className="absolute right-[-5%] top-1/2 -translate-y-1/2 w-[40vw] max-w-[500px] opacity-20 animate-float" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame">04</div>
+          <div className="text-xs uppercase tracking-[0.3em] text-flame">05</div>
           <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
             síguenos en nuestras <br /><span className="text-flame italic">redes sociales</span>
           </h2>
