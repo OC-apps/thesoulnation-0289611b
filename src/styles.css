@@ -98,3 +98,38 @@
 .animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
 .animate-marquee { animation: marquee 30s linear infinite; }
 .animate-fade-up { animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* 3D tilt + perspective */
+.perspective { perspective: 1200px; }
+.tilt-card { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.6s; will-change: transform; }
+.tilt-card:hover { transform: rotateX(8deg) rotateY(-12deg) translateZ(20px); box-shadow: 0 40px 80px -20px var(--flame-glow); }
+.tilt-card .layer-up { transform: translateZ(40px); transition: transform 0.6s; }
+.tilt-card:hover .layer-up { transform: translateZ(70px); }
+
+.text-3d {
+  text-shadow:
+    0 1px 0 oklch(0.62 0.24 30),
+    0 2px 0 oklch(0.55 0.22 28),
+    0 3px 0 oklch(0.48 0.20 26),
+    0 4px 0 oklch(0.40 0.18 24),
+    0 8px 20px var(--flame-glow);
+}
+
+.roster-card {
+  background: linear-gradient(160deg, oklch(0.22 0.16 268) 0%, oklch(0.16 0.14 268) 100%);
+  border: 1px solid oklch(1 0 0 / 0.08);
+  position: relative;
+  overflow: hidden;
+}
+.roster-card::before {
+  content: ""; position: absolute; inset: -1px;
+  background: linear-gradient(135deg, transparent 40%, var(--flame-glow) 100%);
+  opacity: 0; transition: opacity 0.5s; z-index: 0;
+}
+.roster-card:hover::before { opacity: 0.4; }
+
+@keyframes tilt-idle {
+  0%,100% { transform: rotateX(0) rotateY(0); }
+  50% { transform: rotateX(2deg) rotateY(-3deg); }
+}
+.tilt-idle { animation: tilt-idle 8s ease-in-out infinite; transform-style: preserve-3d; }
