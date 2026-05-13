@@ -13,6 +13,33 @@ import waveSystem from "@/assets/wave-system.png";
 import waveEmix from "@/assets/wave-emix.png";
 import waveEnri from "@/assets/wave-enri.png";
 import soulJersey from "@/assets/soul-jersey.png";
+import wpOlimpo from "@/assets/wallpaper-olimpo.jpg";
+import wpComic from "@/assets/wallpaper-comic.jpg";
+import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
+
+const WALLPAPERS = [
+  {
+    title: "OLIMPO SERIES",
+    tagline: "Dioses, mármol y fuego sagrado",
+    img: wpOlimpo,
+    href: "https://drive.google.com/drive/u/1/folders/19khEVAVun8iSlS-GpWannb_AoK03cPNV",
+    accent: "from-amber-500/40 via-orange-600/30 to-blue-500/40",
+  },
+  {
+    title: "COMIC ESPORTS SERIES",
+    tagline: "Estilo cómic, energía explosiva",
+    img: wpComic,
+    href: "https://drive.google.com/drive/u/1/folders/16YM8uh-zRjcJJb0DiWf2qY0IBs86oKT1",
+    accent: "from-orange-500/50 via-red-500/30 to-blue-600/40",
+  },
+  {
+    title: "CINEMATOGRAPHIC SERIES",
+    tagline: "Atmósfera de película, cinemática pura",
+    img: wpCinematic,
+    href: "https://drive.google.com/drive/u/1/folders/1b_LO3nHQNPyjvtTqf-vLyq9GwrwCh5mU",
+    accent: "from-blue-600/50 via-indigo-500/30 to-orange-500/40",
+  },
+];
 
 const SOCIALS = {
   youtube: "https://www.youtube.com/@TheSoulNationHD",
@@ -64,26 +91,10 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      {/* HITODAMA — fondo de flamas azules */}
-      <div className="hitodama-field" aria-hidden="true">
-        {Array.from({ length: 14 }).map((_, i) => {
-          const left = (i * 7.3) % 100;
-          const dur = 14 + ((i * 3) % 12);
-          const delay = (i * 1.7) % 14;
-          const scale = 0.5 + ((i * 0.13) % 1.1);
-          return (
-            <span
-              key={i}
-              className="hitodama"
-              style={{
-                left: `${left}%`,
-                animationDuration: `${dur}s`,
-                animationDelay: `-${delay}s`,
-                transform: `scale(${scale})`,
-              }}
-            />
-          );
-        })}
+      {/* AURORA — fondo ambiente premium */}
+      <div className="aurora-field" aria-hidden="true">
+        <div className="aurora-grid" />
+        <div className="aurora-scan" />
       </div>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
@@ -92,12 +103,13 @@ function Index() {
             <img src={soulLogo} alt="The Soul Nation" width={28} height={28} className="drop-shadow-[0_0_12px_var(--flame-glow)]" />
             <span>THE SOUL <span className="text-flame">NATION</span></span>
           </a>
-          <nav className="hidden md:flex gap-8 text-sm uppercase tracking-widest text-muted-foreground">
+          <nav className="hidden md:flex gap-6 text-sm uppercase tracking-widest text-muted-foreground">
             <a href="#about" className="hover:text-foreground transition">¿Quiénes Somos?</a>
             <a href="#vision" className="hover:text-foreground transition">Visión</a>
             <a href="#objetivo" className="hover:text-foreground transition">Objetivo</a>
             <a href="#roster" className="hover:text-foreground transition">Roster</a>
             <a href="#videos" className="hover:text-foreground transition">Videos</a>
+            <a href="#wallpapers" className="hover:text-foreground transition">Wallpapers</a>
             <a href="#jersey" className="hover:text-foreground transition">Jersey</a>
             <a href="#redes" className="hover:text-foreground transition">Redes</a>
           </nav>
@@ -313,6 +325,55 @@ function Index() {
                   <h3 className="layer-up font-display font-bold text-lg text-foreground/95">{v.title}</h3>
                 </div>
               </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WALLPAPERS */}
+      <section id="wallpapers" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[140px]" />
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="text-center mb-16">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Wallpapers <span className="italic text-flame">Oficiales</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+              Tres series exclusivas para vestir tu pantalla con la identidad de The Soul Nation. Da clic, descarga y representa.
+            </p>
+          </div>
+          <div className="perspective grid md:grid-cols-3 gap-8">
+            {WALLPAPERS.map((wp, i) => (
+              <a
+                key={wp.title}
+                href={wp.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="wp-card group block"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-deep">
+                  <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${wp.accent} mix-blend-overlay opacity-60`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                  <span className="wp-shine" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
+                    Serie · 0{i + 1}
+                  </span>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="font-display font-bold text-2xl md:text-3xl leading-tight text-foreground">
+                      {wp.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-foreground/80">{wp.tagline}</p>
+                    <div className="wp-cta mt-4 inline-flex items-center gap-2 text-sm font-bold text-flame">
+                      <span>Descargar en Drive</span>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M13 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </a>
             ))}
           </div>
         </div>
