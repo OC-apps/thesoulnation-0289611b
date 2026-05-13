@@ -13,6 +13,33 @@ import waveSystem from "@/assets/wave-system.png";
 import waveEmix from "@/assets/wave-emix.png";
 import waveEnri from "@/assets/wave-enri.png";
 import soulJersey from "@/assets/soul-jersey.png";
+import wpOlimpo from "@/assets/wallpaper-olimpo.jpg";
+import wpComic from "@/assets/wallpaper-comic.jpg";
+import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
+
+const WALLPAPERS = [
+  {
+    title: "OLIMPO SERIES",
+    tagline: "Dioses, mármol y fuego sagrado",
+    img: wpOlimpo,
+    href: "https://drive.google.com/drive/u/1/folders/19khEVAVun8iSlS-GpWannb_AoK03cPNV",
+    accent: "from-amber-500/40 via-orange-600/30 to-blue-500/40",
+  },
+  {
+    title: "COMIC ESPORTS SERIES",
+    tagline: "Estilo cómic, energía explosiva",
+    img: wpComic,
+    href: "https://drive.google.com/drive/u/1/folders/16YM8uh-zRjcJJb0DiWf2qY0IBs86oKT1",
+    accent: "from-orange-500/50 via-red-500/30 to-blue-600/40",
+  },
+  {
+    title: "CINEMATOGRAPHIC SERIES",
+    tagline: "Atmósfera de película, cinemática pura",
+    img: wpCinematic,
+    href: "https://drive.google.com/drive/u/1/folders/1b_LO3nHQNPyjvtTqf-vLyq9GwrwCh5mU",
+    accent: "from-blue-600/50 via-indigo-500/30 to-orange-500/40",
+  },
+];
 
 const SOCIALS = {
   youtube: "https://www.youtube.com/@TheSoulNationHD",
