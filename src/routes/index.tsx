@@ -538,7 +538,6 @@ function Index() {
                   <option>The Soul Waves (Streamer y CC)</option>
                   <option>The Soul Media (GFX y/o VFX)</option>
                   <option>The Soul Killers (Top 100 Guardian)</option>
-                  <option>The Soul Conquest (Top 200 Control)</option>
                 </select>
               </label>
 
