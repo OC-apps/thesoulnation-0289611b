@@ -13,7 +13,8 @@ import waveTempla from "@/assets/wave-templa.png";
 import waveSystem from "@/assets/wave-system.png";
 import waveEmix from "@/assets/wave-emix.png";
 import waveEnri from "@/assets/wave-enri.png";
-import soulJersey from "@/assets/soul-jersey.png";
+import jerseyFront from "@/assets/jersey-front.png";
+import jerseyBack from "@/assets/jersey-back.png";
 import wpOlimpo from "@/assets/wallpaper-olimpo.jpg";
 import wpComic from "@/assets/wallpaper-comic.jpg";
 import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
@@ -58,7 +59,7 @@ const VIDEOS = [
   { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
 ];
 
-const KILLERS = ["YAZ", "MORTAAL", "GALLARD", "RAPID", "SANTHY"];
+const KILLERS = ["YAZ", "MORTAAL", "GALLARD", "RAPID", "SANTHY", "SLADE X", "DIABOLI"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
 const CREW = [
   "SOUL VELFI", "SOUL VOLCANO", "SOUL XANS", "SOUL PEYERZ", "SOUL PAKAL",
@@ -426,26 +427,34 @@ function Index() {
               ))}
             </ul>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 rounded-2xl border border-border bg-card/40 backdrop-blur p-5">
+              <p className="text-sm text-foreground/85 leading-relaxed">
+                Puedes pedir tu Jersey enviando un <span className="font-bold text-flame">mensaje privado por TikTok</span>.
+              </p>
               <a
-                href={SOCIALS.discord}
+                href="https://www.tiktok.com/@thesoulnation"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-flame text-primary-foreground px-6 py-3 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
+                className="mt-4 inline-flex items-center gap-2 bg-flame text-primary-foreground px-6 py-3 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
               >
-                Pedir mi Jersey
+                @thesoulnation en TikTok
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
               </a>
-              <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-border text-xs uppercase tracking-widest text-muted-foreground">
-                <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
-                Stock limitado
-              </span>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                  <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
+                  Stock limitado
+                </span>
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/40 text-[10px] uppercase tracking-[0.25em] text-flame font-bold">
+                  Drop 2026
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Showcase interactivo */}
           <div className="md:col-span-7">
-            <JerseyShowcase img={soulJersey} />
+            <JerseyShowcase front={jerseyFront} back={jerseyBack} />
           </div>
         </div>
       </section>
@@ -458,7 +467,7 @@ function Index() {
           <div className="text-center mb-16">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
             <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
-              Soul <span className="italic text-flame">Music</span>
+              The Soul Nation <span className="italic text-flame">Music</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
               El sonido oficial de The Soul Nation. Escucha nuestros tracks directamente desde Spotify.
@@ -676,9 +685,10 @@ function Index() {
   );
 }
 
-function JerseyShowcase({ img }: { img: string }) {
+function JerseyShowcase({ front, back }: { front: string; back: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
+  const [side, setSide] = useState<"front" | "back">("front");
 
   const onMove = (e: MouseEvent) => {
     const el = ref.current;
@@ -688,79 +698,108 @@ function JerseyShowcase({ img }: { img: string }) {
     const y = (e.clientY - r.top) / r.height;
     setT({ rx: (0.5 - y) * 18, ry: (x - 0.5) * 22, mx: x * 100, my: y * 100, active: true });
   };
-  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
+  const onLeave = () => setT((s) => ({ ...s, rx: 0, ry: 0, active: false }));
 
   return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="relative mx-auto w-full max-w-[640px] aspect-square select-none"
-      style={{ perspective: "1400px" }}
-    >
-      {/* Halo radial que sigue al cursor */}
+    <div className="relative mx-auto w-full max-w-[640px] select-none">
       <div
-        aria-hidden
-        className="absolute inset-0 rounded-[2rem] transition-opacity duration-500"
-        style={{
-          opacity: t.active ? 1 : 0.55,
-          background: `radial-gradient(circle at ${t.mx}% ${t.my}%, var(--flame-glow), transparent 55%)`,
-          filter: "blur(50px)",
-        }}
-      />
-      {/* Tarjeta 3D */}
-      <div
-        className="relative w-full h-full rounded-[2rem] border border-border bg-gradient-to-br from-card/80 to-background/40 backdrop-blur-xl overflow-hidden transition-transform duration-200 ease-out"
-        style={{
-          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg)`,
-          transformStyle: "preserve-3d",
-          boxShadow: "0 40px 80px -20px rgba(0,0,0,.6), 0 0 60px -10px var(--flame-glow)",
-        }}
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        className="relative aspect-square"
+        style={{ perspective: "1400px" }}
       >
-        {/* Grid sutil */}
+        {/* Halo */}
         <div
           aria-hidden
-          className="absolute inset-0 opacity-[0.08]"
+          className="absolute inset-0 rounded-[2rem] transition-opacity duration-500"
           style={{
-            backgroundImage:
-              "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
-            backgroundSize: "44px 44px",
+            opacity: t.active ? 1 : 0.55,
+            background: `radial-gradient(circle at ${t.mx}% ${t.my}%, var(--flame-glow), transparent 55%)`,
+            filter: "blur(50px)",
           }}
         />
-        {/* Etiqueta */}
-        <div className="absolute top-5 left-5 z-20 flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] bg-background/70 backdrop-blur border border-border rounded-full px-3 py-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
-          Drop · 2025
-        </div>
-        <div className="absolute top-5 right-5 z-20 text-[10px] uppercase tracking-[0.3em] bg-flame text-primary-foreground rounded-full px-3 py-1.5 font-bold">
-          Oficial
-        </div>
-
-        {/* Jersey */}
-        <img
-          src={img}
-          alt="Jersey oficial The Soul Nation"
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-contain p-10 transition-transform duration-300 ease-out"
-          style={{
-            transform: `translateZ(80px) scale(${t.active ? 1.06 : 1})`,
-            filter: "drop-shadow(0 25px 60px var(--flame-glow))",
-          }}
-        />
-
-        {/* Reflejo / shine que sigue al cursor */}
+        {/* Tarjeta 3D con flip */}
         <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none mix-blend-overlay transition-opacity duration-300"
+          className="relative w-full h-full rounded-[2rem] border border-border bg-gradient-to-br from-card/80 to-background/40 backdrop-blur-xl overflow-hidden"
           style={{
-            opacity: t.active ? 0.9 : 0,
-            background: `radial-gradient(circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.35), transparent 35%)`,
+            transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg)`,
+            transformStyle: "preserve-3d",
+            boxShadow: "0 40px 80px -20px rgba(0,0,0,.6), 0 0 60px -10px var(--flame-glow)",
+            transition: "transform 200ms ease-out",
           }}
-        />
+        >
+          {/* Grid */}
+          <div
+            aria-hidden
+            className="absolute inset-0 opacity-[0.08]"
+            style={{
+              backgroundImage:
+                "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
+              backgroundSize: "44px 44px",
+            }}
+          />
+          {/* Etiquetas */}
+          <div className="absolute top-5 left-5 z-20 flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] bg-background/70 backdrop-blur border border-border rounded-full px-3 py-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
+            Drop · 2026
+          </div>
+          <div className="absolute top-5 right-5 z-20 text-[10px] uppercase tracking-[0.3em] bg-flame text-primary-foreground rounded-full px-3 py-1.5 font-bold">
+            {side === "front" ? "Frente" : "Espalda"}
+          </div>
 
-        {/* Footer hint */}
-        <div className="absolute bottom-4 inset-x-0 z-20 text-center text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-          Mueve el cursor sobre el jersey
+          {/* Flip container */}
+          <div
+            className="absolute inset-0"
+            style={{
+              transformStyle: "preserve-3d",
+              transition: "transform 700ms cubic-bezier(.2,.8,.2,1)",
+              transform: `translateZ(80px) scale(${t.active ? 1.06 : 1}) rotateY(${side === "front" ? 0 : 180}deg)`,
+            }}
+          >
+            <img
+              src={front}
+              alt="Jersey oficial The Soul Nation - frente"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-contain p-8"
+              style={{ backfaceVisibility: "hidden", filter: "drop-shadow(0 25px 60px var(--flame-glow))" }}
+            />
+            <img
+              src={back}
+              alt="Jersey oficial The Soul Nation - espalda"
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-contain p-8"
+              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", filter: "drop-shadow(0 25px 60px var(--flame-glow))" }}
+            />
+          </div>
+
+          {/* Shine */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none mix-blend-overlay transition-opacity duration-300"
+            style={{
+              opacity: t.active ? 0.9 : 0,
+              background: `radial-gradient(circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.35), transparent 35%)`,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Toggle frente / espalda */}
+      <div className="mt-6 flex items-center justify-center gap-2">
+        <div className="inline-flex p-1 rounded-full border border-border bg-card/60 backdrop-blur">
+          {(["front", "back"] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setSide(s)}
+              className={`px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.3em] font-bold transition ${
+                side === s ? "bg-flame text-primary-foreground shadow-[0_0_30px_-5px_var(--flame-glow)]" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {s === "front" ? "Frente" : "Espalda"}
+            </button>
+          ))}
         </div>
       </div>
     </div>
