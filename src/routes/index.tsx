@@ -1,9 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import heroFlame from "@/assets/hero-flame.jpg";
+import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
 import soulCrewLogo from "@/assets/soul-crew.png";
 import soulLegendsLogo from "@/assets/soul-legends.png";
 import soulKillersLogo from "@/assets/soul-killers.png";
+import waveMaverick from "@/assets/wave-maverick.png";
+import waveAleman from "@/assets/wave-aleman.png";
+import wavePxlmaa from "@/assets/wave-pxlmaa.png";
+import waveGizzmo from "@/assets/wave-gizzmo.png";
+import waveTempla from "@/assets/wave-templa.png";
+import waveSystem from "@/assets/wave-system.png";
+import waveEmix from "@/assets/wave-emix.png";
+import waveEnri from "@/assets/wave-enri.png";
 
 const KILLERS = ["YAZ", "MORTAAL", "GALLARD", "RAPID", "SANTHY"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
@@ -13,17 +21,15 @@ const CREW = [
   "SOUL CASTERIZE", "SOUL ADVERSL", "SOUL SLADE X", "SOUL ZAINT",
 ];
 
-const WAVES: { name: string; redes: string; bio: string }[] = [
-  { name: "SOUL MAVERICK", redes: "Facebook · TikTok · YouTube · X", bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War." },
-  { name: "SOUL ARID", redes: "Twitch · TikTok · Instagram · X", bio: "Streamer creativa y con mucha energía. Cree en el juego limpio, el respeto y en crecer sin pisar a nadie. Tiene claro que nadie avanza solo: cuando el equipo se apoya, todos mejoran. Su forma de ser, cercana y positiva, genera confianza y hace que la gente se sienta parte. No busca protagonismo vacío; trabaja para sumar, motivar y ayudar a que la comunidad crezca de verdad." },
-  { name: "SOUL ALEMAN", redes: "Facebook · TikTok · YouTube · X", bio: "Uno de los integrantes más recientes de Soul, Mendoza la Crew y dio el salto a The Waves con ganas reales de aprender y crecer. Se caracteriza por su rápida conexión con los viewers, sus chistes rancios y su carisma natural. No es el mejor jugador, pero juega con el corazón, especialmente Gears of War, un juego que lo marcó desde sus inicios gracias a su hermano mayor." },
-  { name: "SOUL GIZZMO", redes: "TikTok · Twitch · X", bio: "Creador de contenido mexicano que transmite su pasión por los videojuegos en Twitch y TikTok, crea videos y memes para YouTube, y conecta con su comunidad a través del humor y una energía intensa. Cada stream es más que juego: es un show donde se vive el momento y la gente se siente parte de la experiencia." },
-  { name: "SOUL CASTERIZE", redes: "TikTok · YouTube · X", bio: "Streamer risueño y con buena vibra. Le gusta cotorrear con el chat, leer lo que escriben los viewers y reírse con ellos. Cree fielmente en que puede lograrse una comunidad sana donde todos se sientan bienvenidos. Trabaja constantemente en formar un equipo con su comunidad, motivar y ayudar a la gente que lo necesite. Si buscas un buen amigo y streamer, él estará para ti." },
-  { name: "SOUL PXLMAA", redes: "Facebook · TikTok · YouTube · X", bio: "Palma es gamer de corazón y clavado con la música urbana. Le gusta prender stream, echar la reta, cotorrear sin filtro con la banda y reírse un rato mientras juega. También le entra al básquet y le late todo lo que sea competir en equipo. Cuida su flow al vestir y siempre anda con ganas de convivir y pasarla bien con la comunidad." },
-  { name: "SOUL SYSTEM", redes: "Twitch · TikTok · YouTube", bio: "Ex pro player de Gears of War. Ganador de torneos en GOW 3 y jugador profesional en GOW 4. Veterano de la época dorada, sobreviviente de LANs, rankeds infinitos y noches injustas. Hoy juego por diversión, nostalgia y risas con la comunidad. No prometo tryhard, pero sí buenos momentos y uno que otro escopetazo legendario… o fallido." },
-  { name: "SOUL TEMPLA", redes: "TikTok · YouTube · X", bio: "No nació casualmente en Gears of War, se forjó en él. Desde los 12 años descubrió el campo de batalla que moldeó su carácter. Durante la época de Gears of War 3 se unió como combatiente competitivo, se forjó en equipos y entendió que en gears no gana el que dispara, sino quien juega bien con IQ. Ahora es creador de contenido, busca transmitir el juego por amor, orgullo, nostalgia y respeto." },
-  { name: "SOUL ENRI", redes: "TikTok · YouTube · X", bio: "Carismático streamer al que le gusta disfrutar de diversos juegos como Halo, Fortnite, Roblox, pero ama hacer múltiples kills, nemesis y remontar partidas en Gears of War. Soul Enri está presente en casi todos los títulos de la franquicia con su clásico alternativo y su arma favorita… ¡La Gnasher!" },
-  { name: "SOUL EMI X", redes: "TikTok", bio: "Creador de contenido y editor de video enfocado en montajes, gameplays y contenido para redes sociales. Disfruta todo el proceso: idea, ritmo, música y detalles que hacen que el video conecte. Le gusta experimentar con estilos y narrativas. Fan de Gears of War, lo toma como inspiración para crear montajes intensos, competitivos y con identidad propia." },
+const WAVES: { name: string; redes: string; bio: string; photo: string }[] = [
+  { name: "SOUL MAVERICK", redes: "Facebook · TikTok · YouTube · X", photo: waveMaverick, bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War." },
+  { name: "SOUL ALEMAN", redes: "Facebook · TikTok · YouTube · X", photo: waveAleman, bio: "Uno de los integrantes más recientes de Soul, Mendoza la Crew y dio el salto a The Waves con ganas reales de aprender y crecer. Se caracteriza por su rápida conexión con los viewers, sus chistes rancios y su carisma natural. No es el mejor jugador, pero juega con el corazón, especialmente Gears of War, un juego que lo marcó desde sus inicios gracias a su hermano mayor." },
+  { name: "SOUL GIZZMO", redes: "TikTok · Twitch · X", photo: waveGizzmo, bio: "Creador de contenido mexicano que transmite su pasión por los videojuegos en Twitch y TikTok, crea videos y memes para YouTube, y conecta con su comunidad a través del humor y una energía intensa. Cada stream es más que juego: es un show donde se vive el momento y la gente se siente parte de la experiencia." },
+  { name: "SOUL PXLMAA", redes: "Facebook · TikTok · YouTube · X", photo: wavePxlmaa, bio: "Palma es gamer de corazón y clavado con la música urbana. Le gusta prender stream, echar la reta, cotorrear sin filtro con la banda y reírse un rato mientras juega. También le entra al básquet y le late todo lo que sea competir en equipo. Cuida su flow al vestir y siempre anda con ganas de convivir y pasarla bien con la comunidad." },
+  { name: "SOUL SYSTEM", redes: "Twitch · TikTok · YouTube", photo: waveSystem, bio: "Ex pro player de Gears of War. Ganador de torneos en GOW 3 y jugador profesional en GOW 4. Veterano de la época dorada, sobreviviente de LANs, rankeds infinitos y noches injustas. Hoy juego por diversión, nostalgia y risas con la comunidad. No prometo tryhard, pero sí buenos momentos y uno que otro escopetazo legendario… o fallido." },
+  { name: "SOUL TEMPLA", redes: "TikTok · YouTube · X", photo: waveTempla, bio: "No nació casualmente en Gears of War, se forjó en él. Desde los 12 años descubrió el campo de batalla que moldeó su carácter. Durante la época de Gears of War 3 se unió como combatiente competitivo, se forjó en equipos y entendió que en gears no gana el que dispara, sino quien juega bien con IQ. Ahora es creador de contenido, busca transmitir el juego por amor, orgullo, nostalgia y respeto." },
+  { name: "SOUL ENRI", redes: "TikTok · YouTube · X", photo: waveEnri, bio: "Carismático streamer al que le gusta disfrutar de diversos juegos como Halo, Fortnite, Roblox, pero ama hacer múltiples kills, nemesis y remontar partidas en Gears of War. Soul Enri está presente en casi todos los títulos de la franquicia con su clásico alternativo y su arma favorita… ¡La Gnasher!" },
+  { name: "SOUL EMI X", redes: "TikTok", photo: waveEmix, bio: "Creador de contenido y editor de video enfocado en montajes, gameplays y contenido para redes sociales. Disfruta todo el proceso: idea, ritmo, música y detalles que hacen que el video conecte. Le gusta experimentar con estilos y narrativas. Fan de Gears of War, lo toma como inspiración para crear montajes intensos, competitivos y con identidad propia." },
 ];
 
 export const Route = createFileRoute("/")({
@@ -61,7 +67,7 @@ function Index() {
       {/* HERO */}
       <section id="top" className="relative min-h-screen overflow-hidden grain bg-hero">
         <img
-          src={heroFlame}
+          src={soulMascot}
           alt=""
           width={1536}
           height={1536}
@@ -220,15 +226,11 @@ function Index() {
           <div className="perspective grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {WAVES.map((c, i) => (
               <article key={c.name} className="tilt-card roster-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background flex items-center justify-center overflow-hidden">
-                  {/* photo placeholder — listo para que suban una foto */}
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--flame-glow)_0%,transparent_60%)] opacity-40" />
-                  <img src={soulLogo} alt="" className="w-1/2 opacity-30 tilt-idle" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/60 backdrop-blur px-2 py-1 rounded-full border border-border">
+                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
+                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
                     Wave · 0{i + 1}
-                  </span>
-                  <span className="absolute bottom-4 right-4 text-[10px] uppercase tracking-widest text-muted-foreground bg-background/60 backdrop-blur px-2 py-1 rounded-full border border-border">
-                    Foto próximamente
                   </span>
                 </div>
                 <div className="p-6 flex flex-col gap-3 relative z-10">
