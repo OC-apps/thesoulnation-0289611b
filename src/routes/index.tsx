@@ -188,7 +188,7 @@ function Index() {
           </div>
           <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</span>
         </div>
-        <div className="-mx-0 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <MobileCarousel>
           {[
             { n: "02", t: "Visión", body: "Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región." },
             { n: "03", t: "Objetivo", body: "Impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones (Legends, Media, Waves y Crew). Queremos expandir la organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, colaborando para un crecimiento conjunto." },
@@ -199,7 +199,7 @@ function Index() {
               <p className="mt-4 text-sm text-foreground/85 leading-relaxed">{s.body}</p>
             </article>
           ))}
-        </div>
+        </MobileCarousel>
       </section>
 
       {/* VISIÓN — desktop */}
@@ -305,26 +305,27 @@ function Index() {
             </p>
           </div>
 
-          {/* Mobile: scroll horizontal con snap */}
-          <div className="sm:hidden -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {WAVES.map((c, i) => (
-              <article key={c.name} className="snap-center shrink-0 w-[78%] roster-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
-                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-                  <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+          {/* Mobile: carrusel */}
+          <div className="sm:hidden">
+            <MobileCarousel>
+              {WAVES.map((c, i) => (
+                <article key={c.name} className="snap-center shrink-0 w-[78%] roster-card rounded-2xl overflow-hidden flex flex-col">
+                  <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
+                    <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                    <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
+                      <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4 relative z-10">
-                  <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
-                </div>
-              </article>
-            ))}
+                  <div className="p-4 relative z-10">
+                    <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
+                  </div>
+                </article>
+              ))}
+            </MobileCarousel>
           </div>
-          <div className="sm:hidden mt-3 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</div>
 
           {/* Desktop/tablet: grid */}
           <div className="hidden sm:grid perspective sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -370,14 +371,15 @@ function Index() {
           </div>
 
           {/* Mobile carrusel */}
-          <div className="md:hidden -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {VIDEOS.map((v, i) => (
-              <div key={v.id} className="snap-center shrink-0 w-[85%]">
-                <VideoCard video={v} index={i} />
-              </div>
-            ))}
+          <div className="md:hidden">
+            <MobileCarousel>
+              {VIDEOS.map((v, i) => (
+                <div key={v.id} className="snap-center shrink-0 w-[85%]">
+                  <VideoCard video={v} index={i} />
+                </div>
+              ))}
+            </MobileCarousel>
           </div>
-          <div className="md:hidden mt-2 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</div>
 
           {/* Desktop grid */}
           <div className="hidden md:grid lg:grid-cols-3 gap-6 perspective">
@@ -908,5 +910,41 @@ function VideoCard({ video, index, featured }: { video: { title: string; id: str
         )}
       </div>
     </article>
+  );
+}
+
+function MobileCarousel({ children, label }: { children: React.ReactNode; label?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = (dir: 1 | -1) => {
+    const el = ref.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
+  };
+  return (
+    <div className="relative">
+      <div
+        ref={ref}
+        className="-mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth"
+      >
+        {children}
+      </div>
+      <button
+        type="button"
+        aria-label="Anterior"
+        onClick={() => scroll(-1)}
+        className="absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/70 backdrop-blur border border-border flex items-center justify-center text-foreground/80 active:scale-95 transition shadow-lg"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button
+        type="button"
+        aria-label="Siguiente"
+        onClick={() => scroll(1)}
+        className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/70 backdrop-blur border border-border flex items-center justify-center text-foreground/80 active:scale-95 transition shadow-lg"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+      </button>
+      {label && <div className="mt-1 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{label}</div>}
+    </div>
   );
 }
