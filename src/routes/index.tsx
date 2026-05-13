@@ -306,7 +306,8 @@ function Index() {
       {/* VIDEOS */}
       <section id="videos" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-flame opacity-[0.08] blur-[160px]" />
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{backgroundImage:"repeating-linear-gradient(0deg, var(--foreground) 0 1px, transparent 1px 4px)"}} />
+        <div className="absolute -bottom-40 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-[0.06] blur-[140px]" />
+        <div className="absolute inset-0 pointer-events-none opacity-30" style={{backgroundImage:"radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--flame) 8%, transparent), transparent 40%), radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--flame) 6%, transparent), transparent 45%)"}} />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
             <div>
