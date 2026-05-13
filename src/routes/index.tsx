@@ -179,8 +179,31 @@ function Index() {
         </div>
       </section>
 
-      {/* VISIÓN */}
-      <section id="vision" className="relative py-32 md:py-48 border-y border-border bg-card/30">
+      {/* VISIÓN + OBJETIVO — mobile carrusel */}
+      <section id="vision" className="md:hidden relative py-20 border-y border-border bg-card/30">
+        <div className="px-6 mb-6 flex items-end justify-between">
+          <div>
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">02 · 03</div>
+            <h2 className="mt-2 font-display text-3xl font-bold italic text-flame">Visión & Objetivo</h2>
+          </div>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</span>
+        </div>
+        <div className="-mx-0 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {[
+            { n: "02", t: "Visión", body: "Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región." },
+            { n: "03", t: "Objetivo", body: "Impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones (Legends, Media, Waves y Crew). Queremos expandir la organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, colaborando para un crecimiento conjunto." },
+          ].map((s) => (
+            <article key={s.n} id={s.t === "Objetivo" ? "objetivo" : undefined} className="snap-center shrink-0 w-[85%] roster-card rounded-2xl p-6">
+              <div className="text-[10px] uppercase tracking-[0.3em] text-flame">{s.n}</div>
+              <h3 className="mt-2 font-display text-3xl font-bold italic text-flame">{s.t}</h3>
+              <p className="mt-4 text-sm text-foreground/85 leading-relaxed">{s.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* VISIÓN — desktop */}
+      <section className="hidden md:block relative py-32 md:py-48 border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-16 items-start">
           <div className="md:col-span-5 md:sticky md:top-32">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">02</div>
@@ -196,8 +219,8 @@ function Index() {
         </div>
       </section>
 
-      {/* OBJETIVO */}
-      <section id="objetivo" className="relative py-32 md:py-48">
+      {/* OBJETIVO — desktop */}
+      <section className="hidden md:block relative py-32 md:py-48">
         <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-16 items-start">
           <div className="md:col-span-5 md:sticky md:top-32">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">03</div>
