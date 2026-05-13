@@ -305,26 +305,27 @@ function Index() {
             </p>
           </div>
 
-          {/* Mobile: scroll horizontal con snap */}
-          <div className="sm:hidden -mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {WAVES.map((c, i) => (
-              <article key={c.name} className="snap-center shrink-0 w-[78%] roster-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
-                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-                  <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+          {/* Mobile: carrusel */}
+          <div className="sm:hidden">
+            <MobileCarousel>
+              {WAVES.map((c, i) => (
+                <article key={c.name} className="snap-center shrink-0 w-[78%] roster-card rounded-2xl overflow-hidden flex flex-col">
+                  <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
+                    <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                    <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
+                      <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4 relative z-10">
-                  <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
-                </div>
-              </article>
-            ))}
+                  <div className="p-4 relative z-10">
+                    <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
+                  </div>
+                </article>
+              ))}
+            </MobileCarousel>
           </div>
-          <div className="sm:hidden mt-3 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</div>
 
           {/* Desktop/tablet: grid */}
           <div className="hidden sm:grid perspective sm:grid-cols-2 lg:grid-cols-3 gap-6">
