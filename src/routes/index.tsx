@@ -64,7 +64,7 @@ const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
 const CREW = [
   "SOUL VELFI", "SOUL VOLCANO", "SOUL XANS", "SOUL PEYERZ", "SOUL PAKAL",
   "SOUL BOUNSS", "SOUL GHOOST", "SOUL NEXUS Z", "SOUL XCENFE",
-  "SOUL CASTERIZE", "SOUL ADVERSL", "SOUL SLADE X", "SOUL ZAINT",
+  "SOUL CASTERIZE", "SOUL ADVERSL", "SOUL SLADE X", "SOUL ZAINT", "SOUL ARID",
 ];
 
 const WAVES: { name: string; redes: string; bio: string; photo: string }[] = [
@@ -76,6 +76,7 @@ const WAVES: { name: string; redes: string; bio: string; photo: string }[] = [
   { name: "SOUL TEMPLA", redes: "TikTok · YouTube · X", photo: waveTempla, bio: "No nació casualmente en Gears of War, se forjó en él. Desde los 12 años descubrió el campo de batalla que moldeó su carácter. Durante la época de Gears of War 3 se unió como combatiente competitivo, se forjó en equipos y entendió que en gears no gana el que dispara, sino quien juega bien con IQ. Ahora es creador de contenido, busca transmitir el juego por amor, orgullo, nostalgia y respeto." },
   { name: "SOUL ENRI", redes: "TikTok · YouTube · X", photo: waveEnri, bio: "Carismático streamer al que le gusta disfrutar de diversos juegos como Halo, Fortnite, Roblox, pero ama hacer múltiples kills, nemesis y remontar partidas en Gears of War. Soul Enri está presente en casi todos los títulos de la franquicia con su clásico alternativo y su arma favorita… ¡La Gnasher!" },
   { name: "SOUL EMI X", redes: "TikTok", photo: waveEmix, bio: "Creador de contenido y editor de video enfocado en montajes, gameplays y contenido para redes sociales. Disfruta todo el proceso: idea, ritmo, música y detalles que hacen que el video conecte. Le gusta experimentar con estilos y narrativas. Fan de Gears of War, lo toma como inspiración para crear montajes intensos, competitivos y con identidad propia." },
+  { name: "SOUL BELLATRIIX", redes: "Próximamente", photo: soulLogo, bio: "Nueva incorporación a The Soul Waves. Pronto compartirá su estilo, contenido y energía con la comunidad. Stay tuned." },
 ];
 
 export const Route = createFileRoute("/")({
@@ -272,9 +273,11 @@ function Index() {
 
           {/* WAVES — creators */}
           <div className="text-center mb-12">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">The Soul Waves</div>
-            <h3 className="mt-4 font-display text-4xl md:text-6xl font-bold text-3d">CREADORES DE CONTENIDO</h3>
-            <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
+            <h3 className="font-display text-5xl md:text-7xl font-bold text-3d leading-[0.95]">
+              The <span className="italic text-flame">Soul Waves</span>
+            </h3>
+            <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
+            <p className="mt-6 text-muted-foreground max-w-3xl mx-auto">
               Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
             </p>
           </div>
@@ -301,34 +304,28 @@ function Index() {
       </section>
 
       {/* VIDEOS */}
-      <section id="videos" className="relative py-32 md:py-48 border-t border-border">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-16">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">05</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
-              Nuestros <span className="italic text-flame">Videos</span>
-            </h2>
-            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
-              Una pequeña selección de momentos clave en la historia de The Soul Nation.
-            </p>
+      <section id="videos" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-flame opacity-[0.08] blur-[160px]" />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{backgroundImage:"repeating-linear-gradient(0deg, var(--foreground) 0 1px, transparent 1px 4px)"}} />
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+            <div>
+              <div className="text-xs uppercase tracking-[0.3em] text-flame">05 · Reel</div>
+              <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+                Nuestros <span className="italic text-flame">Videos</span>
+              </h2>
+              <p className="mt-6 text-muted-foreground max-w-2xl">
+                Una selección de momentos clave en la historia de The Soul Nation. Da clic en cualquiera para reproducir.
+              </p>
+            </div>
+            <div className="hidden md:flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-flame animate-pulse" /> Live archive · {VIDEOS.length} clips
+            </div>
           </div>
-          <div className="perspective grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {VIDEOS.map((v) => (
-              <article key={v.id} className="tilt-card roster-card rounded-2xl overflow-hidden">
-                <div className="aspect-video bg-black">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${v.id}`}
-                    title={v.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0"
-                  />
-                </div>
-                <div className="p-5 relative z-10">
-                  <h3 className="layer-up font-display font-bold text-lg text-foreground/95">{v.title}</h3>
-                </div>
-              </article>
+
+          <div className="grid lg:grid-cols-3 gap-6 perspective">
+            {VIDEOS.map((v, i) => (
+              <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
           </div>
         </div>
@@ -803,5 +800,56 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function VideoCard({ video, index, featured }: { video: { title: string; id: string }; index: number; featured?: boolean }) {
+  const [playing, setPlaying] = useState(false);
+  return (
+    <article
+      className={`group relative tilt-card roster-card rounded-2xl overflow-hidden ${featured ? "lg:col-span-2 lg:row-span-2" : ""}`}
+    >
+      <div className={`relative ${featured ? "aspect-video lg:aspect-[16/10]" : "aspect-video"} bg-black overflow-hidden`}>
+        {playing ? (
+          <iframe
+            src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+            title={video.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute inset-0 w-full h-full border-0"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPlaying(true)}
+            className="absolute inset-0 w-full h-full group/play"
+            aria-label={`Reproducir ${video.title}`}
+          >
+            <img
+              src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
+              alt={video.title}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/play:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-flame/90 text-primary-foreground shadow-[0_0_60px_-5px_var(--flame-glow)] transition-transform duration-300 group-hover/play:scale-110">
+                <span className="absolute inset-0 rounded-full bg-flame/40 animate-ping" />
+                <svg viewBox="0 0 24 24" className="relative w-8 h-8 ml-1 fill-current"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
+            <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
+              #{String(index + 1).padStart(2, "0")}
+            </span>
+            <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
+              <h3 className="font-display font-bold text-lg md:text-xl text-foreground/95 drop-shadow">{video.title}</h3>
+              <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-flame" /> YouTube · The Soul Nation
+              </div>
+            </div>
+          </button>
+        )}
+      </div>
+    </article>
   );
 }
