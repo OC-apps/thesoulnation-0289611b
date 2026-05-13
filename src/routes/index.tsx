@@ -188,7 +188,7 @@ function Index() {
           </div>
           <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</span>
         </div>
-        <div className="-mx-0 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <MobileCarousel>
           {[
             { n: "02", t: "Visión", body: "Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región." },
             { n: "03", t: "Objetivo", body: "Impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones (Legends, Media, Waves y Crew). Queremos expandir la organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, colaborando para un crecimiento conjunto." },
@@ -199,7 +199,7 @@ function Index() {
               <p className="mt-4 text-sm text-foreground/85 leading-relaxed">{s.body}</p>
             </article>
           ))}
-        </div>
+        </MobileCarousel>
       </section>
 
       {/* VISIÓN — desktop */}
