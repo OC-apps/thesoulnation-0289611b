@@ -910,3 +910,39 @@ function VideoCard({ video, index, featured }: { video: { title: string; id: str
     </article>
   );
 }
+
+function MobileCarousel({ children, label }: { children: React.ReactNode; label?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const scroll = (dir: 1 | -1) => {
+    const el = ref.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
+  };
+  return (
+    <div className="relative">
+      <div
+        ref={ref}
+        className="-mx-6 px-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden scroll-smooth"
+      >
+        {children}
+      </div>
+      <button
+        type="button"
+        aria-label="Anterior"
+        onClick={() => scroll(-1)}
+        className="absolute left-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/70 backdrop-blur border border-border flex items-center justify-center text-foreground/80 active:scale-95 transition shadow-lg"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button
+        type="button"
+        aria-label="Siguiente"
+        onClick={() => scroll(1)}
+        className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/70 backdrop-blur border border-border flex items-center justify-center text-foreground/80 active:scale-95 transition shadow-lg"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+      </button>
+      {label && <div className="mt-1 text-center text-[10px] uppercase tracking-[0.3em] text-muted-foreground">{label}</div>}
+    </div>
+  );
+}
