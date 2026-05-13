@@ -478,7 +478,6 @@ function Index() {
               { t: "The Soul Waves (Streamers y CC)", d: "La calidad de tu contenido y la conexión con tu comunidad es lo que importa. Comparte tus redes y plataformas y cuéntanos tu estilo y enfoque como creador." },
               { t: "The Soul Media (GFX y VFX)", d: "Diseñadores gráficos y editores con efectos visuales. Comparte tu portafolio (Behance, Carbonmade, etc.) o el link de tu mejor trabajo editado." },
               { t: "The Soul Killers (Guardian · Gears 5)", d: "Top 100 Guardian. Comunicación, lectura de partida y mentalidad de team. Si entras, una semana de prueba y cambio de GT clásico inmediato." },
-              { t: "The Soul Conquest (Control · Gears 5)", d: "Top 200 Control. Comunicación clara, criterio táctico y química con el squad. Semana de prueba y cambio de GT clásico al ser aceptado." },
             ].map((a) => (
               <div key={a.t} className="rounded-2xl border border-border bg-card/40 backdrop-blur p-6 hover:border-flame transition">
                 <h4 className="font-display font-bold text-lg text-flame">{a.t}</h4>
