@@ -12,6 +12,23 @@ import waveTempla from "@/assets/wave-templa.png";
 import waveSystem from "@/assets/wave-system.png";
 import waveEmix from "@/assets/wave-emix.png";
 import waveEnri from "@/assets/wave-enri.png";
+import soulJersey from "@/assets/soul-jersey.png";
+
+const SOCIALS = {
+  youtube: "https://www.youtube.com/@TheSoulNationHD",
+  tiktok: "https://www.tiktok.com/@thesoulnation",
+  facebook: "https://www.facebook.com/TheSoulNationHD",
+  x: "https://x.com/TheSoulNation",
+  discord: "https://discord.gg/ADPyNMFggc",
+};
+
+const VIDEOS = [
+  { title: "¿Cómo unirte a The Soul Nation?", id: "MtgudmupERs" },
+  { title: "Nuestro primer video como equipo", id: "Vnkmle9en6s" },
+  { title: "Primer equipo mexicano en Clan Wars", id: "itqKDO_8GWs" },
+  { title: "Nuestro torneo Xplicit Cup", id: "bq7tQexrbvI" },
+  { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
+];
 
 const KILLERS = ["YAZ", "MORTAAL", "GALLARD", "RAPID", "SANTHY"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
@@ -46,7 +63,28 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground relative">
+      {/* HITODAMA — fondo de flamas azules */}
+      <div className="hitodama-field" aria-hidden="true">
+        {Array.from({ length: 14 }).map((_, i) => {
+          const left = (i * 7.3) % 100;
+          const dur = 14 + ((i * 3) % 12);
+          const delay = (i * 1.7) % 14;
+          const scale = 0.5 + ((i * 0.13) % 1.1);
+          return (
+            <span
+              key={i}
+              className="hitodama"
+              style={{
+                left: `${left}%`,
+                animationDuration: `${dur}s`,
+                animationDelay: `-${delay}s`,
+                transform: `scale(${scale})`,
+              }}
+            />
+          );
+        })}
+      </div>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
@@ -59,6 +97,8 @@ function Index() {
             <a href="#vision" className="hover:text-foreground transition">Visión</a>
             <a href="#objetivo" className="hover:text-foreground transition">Objetivo</a>
             <a href="#roster" className="hover:text-foreground transition">Roster</a>
+            <a href="#videos" className="hover:text-foreground transition">Videos</a>
+            <a href="#jersey" className="hover:text-foreground transition">Jersey</a>
             <a href="#redes" className="hover:text-foreground transition">Redes</a>
           </nav>
         </div>
@@ -244,20 +284,89 @@ function Index() {
         </div>
       </section>
 
+      {/* VIDEOS */}
+      <section id="videos" className="relative py-32 md:py-48 border-t border-border">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center mb-16">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">05</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Nuestros <span className="italic text-flame">Videos</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+              Una pequeña selección de momentos clave en la historia de The Soul Nation.
+            </p>
+          </div>
+          <div className="perspective grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {VIDEOS.map((v) => (
+              <article key={v.id} className="tilt-card roster-card rounded-2xl overflow-hidden">
+                <div className="aspect-video bg-black">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${v.id}`}
+                    title={v.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full border-0"
+                  />
+                </div>
+                <div className="p-5 relative z-10">
+                  <h3 className="layer-up font-display font-bold text-lg text-foreground/95">{v.title}</h3>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* JERSEY */}
+      <section id="jersey" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
+        <div className="relative mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-12 items-center">
+          <div className="md:col-span-5">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Jersey <span className="italic text-flame">Oficial</span>
+            </h2>
+            <p className="mt-6 text-lg text-foreground/85 leading-relaxed">
+              Los colores de la nación. Diseño oficial de The Soul Nation, hecho para representar dentro y fuera del juego.
+            </p>
+          </div>
+          <div className="md:col-span-7 perspective">
+            <div className="tilt-card relative">
+              <img
+                src={soulJersey}
+                alt="Jersey oficial The Soul Nation"
+                loading="lazy"
+                className="layer-up w-full h-auto drop-shadow-[0_30px_80px_var(--flame-glow)]"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* REDES */}
       <section id="redes" className="relative py-32 md:py-48 overflow-hidden border-t border-border">
         <div className="absolute inset-0 bg-hero opacity-80" />
         <img src={soulLogo} alt="" width={500} height={500} loading="lazy" className="absolute right-[-5%] top-1/2 -translate-y-1/2 w-[40vw] max-w-[500px] opacity-20 animate-float" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame">05</div>
+          <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
           <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
             síguenos en nuestras <br /><span className="text-flame italic">redes sociales</span>
           </h2>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <a href="#" className="inline-flex items-center gap-3 bg-flame text-primary-foreground px-10 py-5 rounded-full font-bold text-lg shadow-[0_0_80px_-10px_var(--flame-glow)] hover:scale-105 transition">
+            <a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-flame text-primary-foreground px-10 py-5 rounded-full font-bold text-lg shadow-[0_0_80px_-10px_var(--flame-glow)] hover:scale-105 transition">
               Discord
             </a>
-            <a href="#" className="inline-flex items-center gap-3 px-10 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent transition">
+            <a href={SOCIALS.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
+              YouTube
+            </a>
+            <a href={SOCIALS.tiktok} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
+              TikTok
+            </a>
+            <a href={SOCIALS.facebook} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
+              Facebook
+            </a>
+            <a href={SOCIALS.x} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
               X / Twitter
             </a>
           </div>
