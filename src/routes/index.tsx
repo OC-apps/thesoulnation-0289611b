@@ -304,34 +304,28 @@ function Index() {
       </section>
 
       {/* VIDEOS */}
-      <section id="videos" className="relative py-32 md:py-48 border-t border-border">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-16">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">05</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
-              Nuestros <span className="italic text-flame">Videos</span>
-            </h2>
-            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
-              Una pequeña selección de momentos clave en la historia de The Soul Nation.
-            </p>
+      <section id="videos" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-flame opacity-[0.08] blur-[160px]" />
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{backgroundImage:"repeating-linear-gradient(0deg, var(--foreground) 0 1px, transparent 1px 4px)"}} />
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+            <div>
+              <div className="text-xs uppercase tracking-[0.3em] text-flame">05 · Reel</div>
+              <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+                Nuestros <span className="italic text-flame">Videos</span>
+              </h2>
+              <p className="mt-6 text-muted-foreground max-w-2xl">
+                Una selección de momentos clave en la historia de The Soul Nation. Da clic en cualquiera para reproducir.
+              </p>
+            </div>
+            <div className="hidden md:flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-flame animate-pulse" /> Live archive · {VIDEOS.length} clips
+            </div>
           </div>
-          <div className="perspective grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {VIDEOS.map((v) => (
-              <article key={v.id} className="tilt-card roster-card rounded-2xl overflow-hidden">
-                <div className="aspect-video bg-black">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${v.id}`}
-                    title={v.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0"
-                  />
-                </div>
-                <div className="p-5 relative z-10">
-                  <h3 className="layer-up font-display font-bold text-lg text-foreground/95">{v.title}</h3>
-                </div>
-              </article>
+
+          <div className="grid lg:grid-cols-3 gap-6 perspective">
+            {VIDEOS.map((v, i) => (
+              <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
           </div>
         </div>
