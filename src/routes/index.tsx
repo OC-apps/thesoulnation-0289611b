@@ -384,7 +384,23 @@ function Index() {
       {/* JERSEY */}
       <section id="jersey" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-flame/60 to-transparent" />
+
+        {/* Marquee superior con specs */}
+        <div className="relative overflow-hidden border-y border-border bg-background/40 backdrop-blur py-3 mb-16">
+          <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="flex gap-10 items-center shrink-0">
+                {["Edición Oficial", "★", "Tela Premium", "★", "Diseño 2025", "★", "Bordado Soul", "★", "Drop Limitado", "★", "The Soul Nation", "★"].map((t, j) => (
+                  <span key={j} className={j % 2 === 0 ? "text-flame" : "text-foreground/60"}>{t}</span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="relative mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-12 items-center">
+          {/* Texto + specs */}
           <div className="md:col-span-5">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
             <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
@@ -393,16 +409,42 @@ function Index() {
             <p className="mt-6 text-lg text-foreground/85 leading-relaxed">
               Los colores de la nación. Diseño oficial de The Soul Nation, hecho para representar dentro y fuera del juego.
             </p>
-          </div>
-          <div className="md:col-span-7 perspective">
-            <div className="tilt-card relative">
-              <img
-                src={soulJersey}
-                alt="Jersey oficial The Soul Nation"
-                loading="lazy"
-                className="layer-up w-full h-auto drop-shadow-[0_30px_80px_var(--flame-glow)]"
-              />
+
+            {/* Specs interactivas */}
+            <ul className="mt-8 space-y-3">
+              {[
+                { k: "Material", v: "Poliéster premium dry-fit" },
+                { k: "Diseño", v: "Naranja flama · negro abismo" },
+                { k: "Edición", v: "Drop oficial · cantidades limitadas" },
+                { k: "Para", v: "Player · Streamer · Soul Family" },
+              ].map((s) => (
+                <li key={s.k} className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl border border-border bg-card/40 backdrop-blur hover:border-flame hover:bg-card/60 transition group">
+                  <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground group-hover:text-flame transition">{s.k}</span>
+                  <span className="text-sm font-bold text-right">{s.v}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={SOCIALS.discord}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-flame text-primary-foreground px-6 py-3 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
+              >
+                Pedir mi Jersey
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </a>
+              <span className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-border text-xs uppercase tracking-widest text-muted-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
+                Stock limitado
+              </span>
             </div>
+          </div>
+
+          {/* Showcase interactivo */}
+          <div className="md:col-span-7">
+            <JerseyShowcase img={soulJersey} />
           </div>
         </div>
       </section>
