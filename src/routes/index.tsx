@@ -63,7 +63,28 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground relative">
+      {/* HITODAMA — fondo de flamas azules */}
+      <div className="hitodama-field" aria-hidden="true">
+        {Array.from({ length: 14 }).map((_, i) => {
+          const left = (i * 7.3) % 100;
+          const dur = 14 + ((i * 3) % 12);
+          const delay = (i * 1.7) % 14;
+          const scale = 0.5 + ((i * 0.13) % 1.1);
+          return (
+            <span
+              key={i}
+              className="hitodama"
+              style={{
+                left: `${left}%`,
+                animationDuration: `${dur}s`,
+                animationDelay: `-${delay}s`,
+                transform: `scale(${scale})`,
+              }}
+            />
+          );
+        })}
+      </div>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
