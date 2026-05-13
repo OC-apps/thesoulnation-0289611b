@@ -159,10 +159,12 @@
 .aurora-grid {
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(oklch(1 0 0 / 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black, transparent 75%);
+    radial-gradient(circle at 15% 20%, oklch(0.72 0.22 42 / 0.12), transparent 35%),
+    radial-gradient(circle at 85% 30%, oklch(0.65 0.20 280 / 0.10), transparent 40%),
+    radial-gradient(circle at 50% 80%, oklch(0.72 0.22 42 / 0.10), transparent 45%),
+    radial-gradient(circle at 20% 90%, oklch(0.60 0.18 200 / 0.08), transparent 40%);
+  filter: blur(40px);
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black, transparent 85%);
 }
 .aurora-scan {
   position: absolute; inset: 0;
