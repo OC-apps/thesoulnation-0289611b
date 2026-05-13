@@ -111,6 +111,8 @@ function Index() {
             <a href="#videos" className="hover:text-foreground transition">Videos</a>
             <a href="#wallpapers" className="hover:text-foreground transition">Wallpapers</a>
             <a href="#jersey" className="hover:text-foreground transition">Jersey</a>
+            <a href="#music" className="hover:text-foreground transition">Music</a>
+            <a href="#reclutamiento" className="hover:text-foreground transition">Reclutamiento</a>
             <a href="#redes" className="hover:text-foreground transition">Redes</a>
           </nav>
         </div>
@@ -402,6 +404,182 @@ function Index() {
               />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* MUSIC — SPOTIFY */}
+      <section id="music" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-10 blur-[160px]" />
+        <div className="absolute -bottom-40 left-0 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[160px]" />
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="text-center mb-16">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Soul <span className="italic text-flame">Music</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+              El sonido oficial de The Soul Nation. Escucha nuestros tracks directamente desde Spotify.
+            </p>
+          </div>
+          <div className="perspective grid md:grid-cols-12 gap-8 items-center">
+            <div className="md:col-span-7 tilt-card roster-card rounded-3xl p-3 md:p-4 overflow-hidden">
+              <iframe
+                title="The Soul Nation en Spotify"
+                src="https://open.spotify.com/embed/artist/56ieAbEEuRbD3pg8xtIRt7?utm_source=generator&theme=0"
+                width="100%"
+                height="520"
+                loading="lazy"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                className="rounded-2xl border-0 relative z-10"
+              />
+            </div>
+            <div className="md:col-span-5 relative z-10">
+              <div className="text-xs uppercase tracking-[0.3em] text-flame mb-4">Now Playing</div>
+              <h3 className="font-display text-3xl md:text-4xl font-bold leading-tight">
+                Identidad <span className="italic text-flame">sonora</span> de la nación
+              </h3>
+              <p className="mt-5 text-foreground/85 leading-relaxed">
+                Música hecha por y para la comunidad. Dale play, sigue al artista y haz que cada track suene en tus partidas, montajes y streams.
+              </p>
+              <a
+                href="https://open.spotify.com/intl-es/artist/56ieAbEEuRbD3pg8xtIRt7?si=1IirEmBPSKKvZSjk2_Q4JA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center gap-3 bg-flame text-primary-foreground px-8 py-4 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
+              >
+                Abrir en Spotify
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 17L17 7M9 7h8v8"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RECLUTAMIENTO */}
+      <section id="reclutamiento" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
+        <div className="relative mx-auto max-w-6xl px-6">
+          <div className="text-center mb-16">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">08</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Únete al <span className="italic text-flame">Equipo</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+              Aplica al área en la que destaques. Revisamos cada postulación y respondemos por las redes oficiales.
+            </p>
+          </div>
+
+          {/* Áreas info */}
+          <div className="grid md:grid-cols-2 gap-5 mb-14">
+            {[
+              { t: "The Soul Legends (Montagers)", d: "Buscamos a los mejores jugadores de exhibición (no competitivos). Envía un video con 10 de tus mejores clips de Gears of War — partida normal (no OSOK, no evento), preferentemente DPE." },
+              { t: "The Soul Waves (Streamers y CC)", d: "La calidad de tu contenido y la conexión con tu comunidad es lo que importa. Comparte tus redes y plataformas y cuéntanos tu estilo y enfoque como creador." },
+              { t: "The Soul Media (GFX y VFX)", d: "Diseñadores gráficos y editores con efectos visuales. Comparte tu portafolio (Behance, Carbonmade, etc.) o el link de tu mejor trabajo editado." },
+              { t: "The Soul Killers (Guardian · Gears 5)", d: "Top 100 Guardian. Comunicación, lectura de partida y mentalidad de team. Si entras, una semana de prueba y cambio de GT clásico inmediato." },
+              { t: "The Soul Conquest (Control · Gears 5)", d: "Top 200 Control. Comunicación clara, criterio táctico y química con el squad. Semana de prueba y cambio de GT clásico al ser aceptado." },
+            ].map((a) => (
+              <div key={a.t} className="rounded-2xl border border-border bg-card/40 backdrop-blur p-6 hover:border-flame transition">
+                <h4 className="font-display font-bold text-lg text-flame">{a.t}</h4>
+                <p className="mt-2 text-sm text-foreground/80 leading-relaxed">{a.d}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-sm text-muted-foreground mb-10">
+            Para todo RC debes incluir la intro oficial de The Soul Nation. Solicítala por <a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer" className="text-flame hover:underline">Discord</a>.
+          </p>
+
+          {/* FORM */}
+          <form
+            action="https://formsubmit.co/soulteamhq@gmail.com"
+            method="POST"
+            className="relative rounded-3xl border border-border bg-card/40 backdrop-blur p-8 md:p-12 shadow-[0_30px_80px_-20px_var(--flame-glow)]"
+          >
+            <input type="hidden" name="_subject" value="RECLUTAMIENTO THE SOUL NATION" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_captcha" value="true" />
+            <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+
+            <p className="text-xs uppercase tracking-widest text-flame mb-2">* Indica un campo obligatorio</p>
+            <p className="text-sm text-muted-foreground mb-8">Rellena todos los campos.</p>
+
+            <div className="grid gap-6">
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider">Nombre real y Nickname *</span>
+                <input
+                  required
+                  type="text"
+                  name="Nombre y Nickname"
+                  className="mt-2 w-full bg-background/60 border border-border rounded-xl px-4 py-3 outline-none focus:border-flame transition"
+                  placeholder="Ej: Juan Pérez · SOUL JUANP"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider">Área *</span>
+                <select
+                  required
+                  name="Area"
+                  defaultValue=""
+                  className="mt-2 w-full bg-background/60 border border-border rounded-xl px-4 py-3 outline-none focus:border-flame transition"
+                >
+                  <option value="" disabled>Selecciona un área</option>
+                  <option>The Soul Legends (Montager)</option>
+                  <option>The Soul Waves (Streamer y CC)</option>
+                  <option>The Soul Media (GFX y/o VFX)</option>
+                  <option>The Soul Killers (Top 100 Guardian)</option>
+                  <option>The Soul Conquest (Top 200 Control)</option>
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider">Link de tu RC *</span>
+                <span className="block text-xs text-muted-foreground mt-1">
+                  Para The Soul Legends: video con tus mejores clips de Gears of War subido a YouTube con el título "The Soul Nation RC".
+                </span>
+                <input
+                  required
+                  type="url"
+                  name="Link RC"
+                  className="mt-2 w-full bg-background/60 border border-border rounded-xl px-4 py-3 outline-none focus:border-flame transition"
+                  placeholder="https://youtube.com/..."
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider">Cuéntanos sobre ti y deja tus redes sociales *</span>
+                <textarea
+                  required
+                  name="Sobre ti y redes"
+                  rows={6}
+                  className="mt-2 w-full bg-background/60 border border-border rounded-xl px-4 py-3 outline-none focus:border-flame transition resize-y"
+                  placeholder="Edad, experiencia, juegos, plataformas, redes sociales, gamertag, etc."
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-bold uppercase tracking-wider">Correo de contacto</span>
+                <input
+                  type="email"
+                  name="email"
+                  className="mt-2 w-full bg-background/60 border border-border rounded-xl px-4 py-3 outline-none focus:border-flame transition"
+                  placeholder="tucorreo@ejemplo.com"
+                />
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="mt-10 w-full md:w-auto inline-flex items-center justify-center gap-3 bg-flame text-primary-foreground px-10 py-5 rounded-full font-bold text-lg shadow-[0_0_80px_-10px_var(--flame-glow)] hover:scale-[1.02] active:scale-[0.99] transition"
+            >
+              Enviar postulación
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </form>
         </div>
       </section>
 
