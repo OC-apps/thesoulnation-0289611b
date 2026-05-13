@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
 import soulCrewLogo from "@/assets/soul-crew.png";
@@ -680,7 +680,7 @@ function JerseyShowcase({ img }: { img: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
 
-  const onMove = (e: React.MouseEvent) => {
+  const onMove = (e: MouseEvent) => {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
