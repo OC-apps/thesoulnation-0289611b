@@ -150,6 +150,98 @@ function Index() {
         </div>
       </section>
 
+      {/* ROSTER */}
+      <section id="roster" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-flame opacity-10 blur-[140px]" />
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="text-center mb-20">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">04</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Nuestro <span className="italic text-flame">Roster</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+              Cuatro divisiones, una sola familia. Conoce a quienes representan a Soul dentro y fuera del juego.
+            </p>
+          </div>
+
+          {/* KILLERS + LEGENDS — text-logo cards 3D */}
+          <div className="perspective grid md:grid-cols-2 gap-8 mb-12">
+            {[
+              { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Equipo enfocado en grindear el modo Guardian de Gears 5", members: KILLERS },
+              { logo: soulLegendsLogo, title: "THE SOUL LEGENDS", subtitle: "Jugadores habilidosos y creadores de clips para montajes editados", members: LEGENDS },
+            ].map((sq) => (
+              <div key={sq.title} className="tilt-card roster-card rounded-3xl p-10 group">
+                <div className="relative z-10">
+                  <img src={sq.logo} alt={sq.title} className="layer-up h-20 md:h-28 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
+                  <p className="mt-6 text-sm uppercase tracking-widest text-flame">{sq.subtitle}</p>
+                  <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 font-display text-lg font-bold">
+                    {sq.members.map((m) => (
+                      <li key={m} className="flex items-center gap-2 text-foreground/90">
+                        <span className="w-1.5 h-1.5 rounded-full bg-flame" />{m}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CREW — banner + grid de nombres */}
+          <div className="perspective mb-20">
+            <div className="tilt-card roster-card rounded-3xl p-10 md:p-14">
+              <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
+                <div className="md:col-span-5">
+                  <img src={soulCrewLogo} alt="THE SOUL CREW" className="layer-up h-24 md:h-36 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
+                  <p className="mt-6 text-sm uppercase tracking-widest text-flame">Apoyo y familia oficial</p>
+                  <p className="mt-3 text-muted-foreground">Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation.</p>
+                </div>
+                <div className="md:col-span-7">
+                  <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-display font-bold">
+                    {CREW.map((m) => (
+                      <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-sm tracking-wide hover:border-flame hover:text-flame transition-colors">
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* WAVES — creators */}
+          <div className="text-center mb-12">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">The Soul Waves</div>
+            <h3 className="mt-4 font-display text-4xl md:text-6xl font-bold text-3d">CREADORES DE CONTENIDO</h3>
+            <p className="mt-4 text-muted-foreground max-w-3xl mx-auto">
+              Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
+            </p>
+          </div>
+
+          <div className="perspective grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {WAVES.map((c, i) => (
+              <article key={c.name} className="tilt-card roster-card rounded-2xl overflow-hidden flex flex-col">
+                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background flex items-center justify-center overflow-hidden">
+                  {/* photo placeholder — listo para que suban una foto */}
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--flame-glow)_0%,transparent_60%)] opacity-40" />
+                  <img src={soulLogo} alt="" className="w-1/2 opacity-30 tilt-idle" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/60 backdrop-blur px-2 py-1 rounded-full border border-border">
+                    Wave · 0{i + 1}
+                  </span>
+                  <span className="absolute bottom-4 right-4 text-[10px] uppercase tracking-widest text-muted-foreground bg-background/60 backdrop-blur px-2 py-1 rounded-full border border-border">
+                    Foto próximamente
+                  </span>
+                </div>
+                <div className="p-6 flex flex-col gap-3 relative z-10">
+                  <h4 className="layer-up font-display font-bold text-2xl text-flame">{c.name}</h4>
+                  <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+                  <p className="text-sm text-foreground/85 leading-relaxed">{c.bio}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* REDES */}
       <section id="redes" className="relative py-32 md:py-48 overflow-hidden border-t border-border">
         <div className="absolute inset-0 bg-hero opacity-80" />
