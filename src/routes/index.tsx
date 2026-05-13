@@ -487,7 +487,16 @@ function Index() {
           </div>
 
           <p className="text-center text-sm text-muted-foreground mb-10">
-            Para todo RC debes incluir la intro oficial de The Soul Nation. Solicítala por <a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer" className="text-flame hover:underline">Discord</a>.
+            Para todo RC debes incluir la intro oficial de The Soul Nation.{" "}
+            <a
+              href="https://drive.google.com/file/d/1fBD9_mETYpvAAazyzAft7e2wcBEdrK-J/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-flame font-bold hover:underline"
+            >
+              Descárgala aquí
+            </a>
+            .
           </p>
 
           {/* FORM */}
