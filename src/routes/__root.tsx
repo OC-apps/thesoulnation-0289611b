@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "The Soul Nation" },
+      { name: "description", content: "Página Web de The Soul Nation" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "The Soul Nation" },
+      { property: "og:description", content: "Página Web de The Soul Nation" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "The Soul Nation" },
+      { name: "twitter:description", content: "Página Web de The Soul Nation" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d7d1a020-3aab-43f9-aa93-af9dc7a62524/id-preview-6eb22a7b--02db53ff-1cb4-449a-ae22-9eb902ca9aba.lovable.app-1778659605894.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d7d1a020-3aab-43f9-aa93-af9dc7a62524/id-preview-6eb22a7b--02db53ff-1cb4-449a-ae22-9eb902ca9aba.lovable.app-1778659605894.png" },
     ],
     links: [
       {
