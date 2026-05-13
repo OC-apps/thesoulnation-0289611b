@@ -12,6 +12,23 @@ import waveTempla from "@/assets/wave-templa.png";
 import waveSystem from "@/assets/wave-system.png";
 import waveEmix from "@/assets/wave-emix.png";
 import waveEnri from "@/assets/wave-enri.png";
+import soulJersey from "@/assets/soul-jersey.png";
+
+const SOCIALS = {
+  youtube: "https://www.youtube.com/@TheSoulNationHD",
+  tiktok: "https://www.tiktok.com/@thesoulnation",
+  facebook: "https://www.facebook.com/TheSoulNationHD",
+  x: "https://x.com/TheSoulNation",
+  discord: "https://discord.gg/ADPyNMFggc",
+};
+
+const VIDEOS = [
+  { title: "¿Cómo unirte a The Soul Nation?", id: "MtgudmupERs" },
+  { title: "Nuestro primer video como equipo", id: "Vnkmle9en6s" },
+  { title: "Primer equipo mexicano en Clan Wars", id: "itqKDO_8GWs" },
+  { title: "Nuestro torneo Xplicit Cup", id: "bq7tQexrbvI" },
+  { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
+];
 
 const KILLERS = ["YAZ", "MORTAAL", "GALLARD", "RAPID", "SANTHY"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
