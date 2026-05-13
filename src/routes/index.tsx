@@ -675,3 +675,94 @@ function Index() {
     </div>
   );
 }
+
+function JerseyShowcase({ img }: { img: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
+
+  const onMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    setT({ rx: (0.5 - y) * 18, ry: (x - 0.5) * 22, mx: x * 100, my: y * 100, active: true });
+  };
+  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      className="relative mx-auto w-full max-w-[640px] aspect-square select-none"
+      style={{ perspective: "1400px" }}
+    >
+      {/* Halo radial que sigue al cursor */}
+      <div
+        aria-hidden
+        className="absolute inset-0 rounded-[2rem] transition-opacity duration-500"
+        style={{
+          opacity: t.active ? 1 : 0.55,
+          background: `radial-gradient(circle at ${t.mx}% ${t.my}%, var(--flame-glow), transparent 55%)`,
+          filter: "blur(50px)",
+        }}
+      />
+      {/* Tarjeta 3D */}
+      <div
+        className="relative w-full h-full rounded-[2rem] border border-border bg-gradient-to-br from-card/80 to-background/40 backdrop-blur-xl overflow-hidden transition-transform duration-200 ease-out"
+        style={{
+          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg)`,
+          transformStyle: "preserve-3d",
+          boxShadow: "0 40px 80px -20px rgba(0,0,0,.6), 0 0 60px -10px var(--flame-glow)",
+        }}
+      >
+        {/* Grid sutil */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.08]"
+          style={{
+            backgroundImage:
+              "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
+            backgroundSize: "44px 44px",
+          }}
+        />
+        {/* Etiqueta */}
+        <div className="absolute top-5 left-5 z-20 flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] bg-background/70 backdrop-blur border border-border rounded-full px-3 py-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
+          Drop · 2025
+        </div>
+        <div className="absolute top-5 right-5 z-20 text-[10px] uppercase tracking-[0.3em] bg-flame text-primary-foreground rounded-full px-3 py-1.5 font-bold">
+          Oficial
+        </div>
+
+        {/* Jersey */}
+        <img
+          src={img}
+          alt="Jersey oficial The Soul Nation"
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-contain p-10 transition-transform duration-300 ease-out"
+          style={{
+            transform: `translateZ(80px) scale(${t.active ? 1.06 : 1})`,
+            filter: "drop-shadow(0 25px 60px var(--flame-glow))",
+          }}
+        />
+
+        {/* Reflejo / shine que sigue al cursor */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none mix-blend-overlay transition-opacity duration-300"
+          style={{
+            opacity: t.active ? 0.9 : 0,
+            background: `radial-gradient(circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.35), transparent 35%)`,
+          }}
+        />
+
+        {/* Footer hint */}
+        <div className="absolute bottom-4 inset-x-0 z-20 text-center text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+          Mueve el cursor sobre el jersey
+        </div>
+      </div>
+    </div>
+  );
+}
