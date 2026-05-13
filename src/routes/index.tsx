@@ -680,7 +680,7 @@ function JerseyShowcase({ img }: { img: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
 
-  const onMove = (e: React.MouseEvent) => {
+  const onMove = (e: MouseEvent) => {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
