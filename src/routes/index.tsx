@@ -330,6 +330,55 @@ function Index() {
         </div>
       </section>
 
+      {/* WALLPAPERS */}
+      <section id="wallpapers" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+        <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[140px]" />
+        <div className="relative mx-auto max-w-7xl px-6">
+          <div className="text-center mb-16">
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
+            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              Wallpapers <span className="italic text-flame">Oficiales</span>
+            </h2>
+            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+              Tres series exclusivas para vestir tu pantalla con la identidad de The Soul Nation. Da clic, descarga y representa.
+            </p>
+          </div>
+          <div className="perspective grid md:grid-cols-3 gap-8">
+            {WALLPAPERS.map((wp, i) => (
+              <a
+                key={wp.title}
+                href={wp.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="wp-card group block"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-deep">
+                  <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${wp.accent} mix-blend-overlay opacity-60`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                  <span className="wp-shine" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
+                    Serie · 0{i + 1}
+                  </span>
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="font-display font-bold text-2xl md:text-3xl leading-tight text-foreground">
+                      {wp.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-foreground/80">{wp.tagline}</p>
+                    <div className="wp-cta mt-4 inline-flex items-center gap-2 text-sm font-bold text-flame">
+                      <span>Descargar en Drive</span>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M13 5l7 7-7 7"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* JERSEY */}
       <section id="jersey" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
