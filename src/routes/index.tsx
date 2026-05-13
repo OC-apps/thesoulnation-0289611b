@@ -67,7 +67,7 @@ function Index() {
       {/* HERO */}
       <section id="top" className="relative min-h-screen overflow-hidden grain bg-hero">
         <img
-          src={heroFlame}
+          src={soulMascot}
           alt=""
           width={1536}
           height={1536}
