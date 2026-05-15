@@ -62,7 +62,7 @@ const VIDEOS = [
   { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
 ];
 
-const KILLERS = ["MORTAAL", "GALLARD", "RAPID", "SANTHY", "SLADE X", "DIABOLI"];
+const KILLERS = ["SOUL MORTAAL", "SOUL GALLARD", "SOUL RAPID", "SOUL SANTHY", "SOUL SLADE X", "SOUL DIABOLI"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
 const CREW = [
   "SOUL VELFI", "SOUL VOLCANO", "SOUL XANS", "SOUL PEYERZ", "SOUL PAKAL",
@@ -232,24 +232,28 @@ function Index() {
             </p>
           </div>
 
-          {/* KILLERS + LEGENDS — text-logo cards 3D */}
-          <div className="perspective grid md:grid-cols-2 gap-8 mb-12">
+          {/* KILLERS + LEGENDS — banner + grid de nombres (mismo layout que CREW) */}
+          <div className="perspective mb-12 space-y-8">
             {[
-              { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Equipo enfocado en grindear el modo Guardian de Gears 5", members: KILLERS },
-              { logo: soulLegendsLogo, title: "THE SOUL LEGENDS", subtitle: "Jugadores habilidosos y creadores de clips para montajes editados", members: LEGENDS },
+              { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Modo Guardian · Gears 5", desc: "Equipo enfocado en grindear el modo Guardian de Gears 5.", members: KILLERS },
+              { logo: soulLegendsLogo, title: "THE SOUL LEGENDS", subtitle: "Montagers · Clips & Highlights", desc: "Jugadores habilidosos y creadores de clips para montajes editados.", members: LEGENDS },
             ].map((sq) => (
-              <div key={sq.title} className="tilt-card roster-card rounded-3xl p-10 group">
-                <div className="relative z-10">
-                  <img src={sq.logo} alt={sq.title} className="layer-up h-20 md:h-28 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
-                  <p className="mt-6 text-sm uppercase tracking-widest text-flame">{sq.subtitle}</p>
-                  <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 font-display text-base sm:text-lg font-bold">
-                    {sq.members.map((m) => (
-                      <li key={m} className="flex items-center gap-2 text-foreground/90 whitespace-nowrap min-w-0">
-                        <span className="w-1.5 h-1.5 rounded-full bg-flame shrink-0" />
-                        <RosterName name={m} />
-                      </li>
-                    ))}
-                  </ul>
+              <div key={sq.title} className="tilt-card roster-card rounded-3xl p-10 md:p-14">
+                <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
+                  <div className="md:col-span-5">
+                    <img src={sq.logo} alt={sq.title} className="layer-up h-24 md:h-36 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
+                    <p className="mt-6 text-sm uppercase tracking-widest text-flame">{sq.subtitle}</p>
+                    <p className="mt-3 text-muted-foreground">{sq.desc}</p>
+                  </div>
+                  <div className="md:col-span-7">
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-display font-bold">
+                      {sq.members.map((m) => (
+                        <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-xs sm:text-sm tracking-wide hover:border-flame hover:text-flame transition-colors whitespace-nowrap overflow-hidden">
+                          <RosterName name={m} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             ))}
