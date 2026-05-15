@@ -242,10 +242,11 @@ function Index() {
                 <div className="relative z-10">
                   <img src={sq.logo} alt={sq.title} className="layer-up h-20 md:h-28 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
                   <p className="mt-6 text-sm uppercase tracking-widest text-flame">{sq.subtitle}</p>
-                  <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 font-display text-lg font-bold">
+                  <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 font-display text-base sm:text-lg font-bold">
                     {sq.members.map((m) => (
-                      <li key={m} className="flex items-center gap-2 text-foreground/90">
-                        <span className="w-1.5 h-1.5 rounded-full bg-flame" />{m}
+                      <li key={m} className="flex items-center gap-2 text-foreground/90 whitespace-nowrap min-w-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-flame shrink-0" />
+                        <RosterName name={m} />
                       </li>
                     ))}
                   </ul>
