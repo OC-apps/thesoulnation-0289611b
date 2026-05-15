@@ -141,49 +141,24 @@
 /* Aurora mesh background — premium ambient */
 .aurora-field {
   position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  background: var(--background);
 }
-.aurora-field::before,
-.aurora-field::after {
-  content: ""; position: absolute; inset: -20%;
-  background:
-    radial-gradient(40% 35% at 20% 30%, oklch(0.65 0.28 45 / 0.35), transparent 60%),
-    radial-gradient(35% 30% at 80% 20%, oklch(0.55 0.30 260 / 0.45), transparent 60%),
-    radial-gradient(45% 40% at 70% 80%, oklch(0.60 0.26 30 / 0.30), transparent 65%),
-    radial-gradient(40% 35% at 15% 85%, oklch(0.50 0.28 270 / 0.40), transparent 60%);
-  filter: blur(60px) saturate(140%);
-  animation: aurora-drift 24s ease-in-out infinite;
-  mix-blend-mode: screen;
+.aurora-field::before {
+  content: ""; position: absolute;
+  top: -10%; left: -10%; width: 50%; height: 60%;
+  background: var(--flame);
+  opacity: 0.18;
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0 80%);
 }
 .aurora-field::after {
-  animation-duration: 36s;
-  animation-direction: reverse;
-  opacity: 0.7;
-  transform: scale(1.2) rotate(15deg);
+  content: ""; position: absolute;
+  bottom: -10%; right: -10%; width: 55%; height: 65%;
+  background: var(--blue);
+  opacity: 0.35;
+  clip-path: polygon(30% 0, 100% 20%, 100% 100%, 0 100%);
 }
-.aurora-grid {
-  position: absolute; inset: 0;
-  background-image:
-    radial-gradient(circle at 15% 20%, oklch(0.72 0.22 42 / 0.12), transparent 35%),
-    radial-gradient(circle at 85% 30%, oklch(0.65 0.20 280 / 0.10), transparent 40%),
-    radial-gradient(circle at 50% 80%, oklch(0.72 0.22 42 / 0.10), transparent 45%),
-    radial-gradient(circle at 20% 90%, oklch(0.60 0.18 200 / 0.08), transparent 40%);
-  filter: blur(40px);
-  mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black, transparent 85%);
-}
-.aurora-scan {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, transparent, oklch(0.72 0.22 42 / 0.06) 50%, transparent);
-  animation: aurora-scan 8s linear infinite;
-}
-@keyframes aurora-drift {
-  0%,100% { transform: translate(0,0) scale(1) rotate(0deg); }
-  33%     { transform: translate(4%, -3%) scale(1.08) rotate(4deg); }
-  66%     { transform: translate(-3%, 4%) scale(0.95) rotate(-3deg); }
-}
-@keyframes aurora-scan {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
+.aurora-grid { display: none; }
+.aurora-scan { display: none; }
 
 /* Wallpaper cards — interactive */
 .wp-card {
