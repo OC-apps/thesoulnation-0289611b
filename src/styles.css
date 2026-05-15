@@ -244,3 +244,38 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .hitodama { animation: none; opacity: 0.3; }
 }
+
+/* Wave cards — holographic sweep + color reveal */
+.wave-card {
+  position: relative;
+  background: var(--blue-deep);
+  border: 1px solid oklch(1 0 0 / 0.08);
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1), border-color 0.5s, box-shadow 0.6s;
+}
+.wave-card::before {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, oklch(1 0 0 / 0.18) 50%, transparent 65%);
+  transform: translateX(-130%);
+  transition: transform 1s cubic-bezier(0.22,1,0.36,1);
+  mix-blend-mode: screen;
+}
+.wave-card::after {
+  content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
+  background: conic-gradient(from 180deg at 50% 50%, var(--flame), var(--blue), var(--flame));
+  opacity: 0; filter: blur(14px);
+  transition: opacity 0.6s;
+}
+.wave-card img {
+  filter: grayscale(0.6) contrast(1.05) brightness(0.85);
+  transition: filter 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.wave-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--flame);
+  box-shadow: 0 30px 80px -30px var(--flame-glow);
+}
+.wave-card:hover::before { transform: translateX(130%); }
+.wave-card:hover::after { opacity: 0.55; }
+.wave-card:hover img { filter: grayscale(0) contrast(1.1) brightness(1); transform: scale(1.06); }
