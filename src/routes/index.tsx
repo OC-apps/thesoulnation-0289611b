@@ -242,10 +242,11 @@ function Index() {
                 <div className="relative z-10">
                   <img src={sq.logo} alt={sq.title} className="layer-up h-20 md:h-28 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
                   <p className="mt-6 text-sm uppercase tracking-widest text-flame">{sq.subtitle}</p>
-                  <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 font-display text-lg font-bold">
+                  <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3 font-display text-base sm:text-lg font-bold">
                     {sq.members.map((m) => (
-                      <li key={m} className="flex items-center gap-2 text-foreground/90">
-                        <span className="w-1.5 h-1.5 rounded-full bg-flame" />{m}
+                      <li key={m} className="flex items-center gap-2 text-foreground/90 whitespace-nowrap min-w-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-flame shrink-0" />
+                        <RosterName name={m} />
                       </li>
                     ))}
                   </ul>
@@ -266,8 +267,8 @@ function Index() {
                 <div className="md:col-span-7">
                   <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-display font-bold">
                     {CREW.map((m) => (
-                      <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-sm tracking-wide hover:border-flame hover:text-flame transition-colors">
-                        {m}
+                      <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-xs sm:text-sm tracking-wide hover:border-flame hover:text-flame transition-colors whitespace-nowrap overflow-hidden">
+                        <RosterName name={m} />
                       </li>
                     ))}
                   </ul>
@@ -636,6 +637,19 @@ function Index() {
       </footer>
     </div>
   );
+}
+
+function RosterName({ name }: { name: string }) {
+  if (name.toUpperCase().startsWith("SOUL ")) {
+    const rest = name.slice(5);
+    return (
+      <span className="inline-flex items-baseline gap-1 min-w-0">
+        <span className="text-flame text-[0.7em] font-semibold tracking-wider">SOUL</span>
+        <span className="truncate">{rest}</span>
+      </span>
+    );
+  }
+  return <span className="truncate">{name}</span>;
 }
 
 function JerseyShowcase({ front, back }: { front: string; back: string }) {
