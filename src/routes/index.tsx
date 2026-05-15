@@ -651,6 +651,8 @@ function RosterName({ name }: { name: string }) {
   }
   return <span className="truncate">{name}</span>;
 }
+
+function JerseyShowcase({ front, back }: { front: string; back: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
   const [side, setSide] = useState<"front" | "back">("front");
