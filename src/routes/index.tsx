@@ -59,7 +59,7 @@ const VIDEOS = [
   { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
 ];
 
-const KILLERS = ["YAZ", "MORTAAL", "GALLARD", "RAPID", "SANTHY", "SLADE X", "DIABOLI"];
+const KILLERS = ["MORTAAL", "GALLARD", "RAPID", "SANTHY", "SLADE X", "DIABOLI"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
 const CREW = [
   "SOUL VELFI", "SOUL VOLCANO", "SOUL XANS", "SOUL PEYERZ", "SOUL PAKAL",
@@ -123,25 +123,25 @@ function Index() {
       </header>
 
       {/* HERO */}
-      <section id="top" className="relative min-h-screen overflow-hidden grain bg-hero">
+      <section id="top" className="relative overflow-hidden grain bg-hero">
         <img
           src={soulMascot}
           alt=""
           width={1536}
           height={1536}
-          className="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[80vw] max-w-[900px] opacity-90 mix-blend-screen pointer-events-none animate-float"
+          className="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] opacity-90 mix-blend-screen pointer-events-none animate-float"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
         <div className="absolute -left-32 top-32 w-96 h-96 rounded-full bg-flame opacity-20 blur-[120px] animate-pulse-glow" />
 
-        <div className="relative mx-auto max-w-7xl px-6 pt-40 pb-32 md:pt-48 md:pb-48">
+        <div className="relative mx-auto max-w-7xl px-6 pt-28 pb-24 md:pt-32 md:pb-28">
           <div className="max-w-3xl animate-fade-up flex flex-col items-start">
             <img src={soulLogo} alt="The Soul Nation" width={120} height={120} className="w-24 md:w-32 mb-8 drop-shadow-[0_0_40px_var(--flame-glow)]" />
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-border bg-background/30 backdrop-blur text-xs uppercase tracking-[0.3em] text-muted-foreground">
               <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
               desde el 2012
             </div>
-            <h1 className="mt-8 font-display font-bold text-[clamp(3rem,9vw,8rem)] leading-[0.9]">
+            <h1 className="mt-6 font-display font-bold text-[clamp(2.5rem,7vw,6rem)] leading-[0.9]">
               <span className="text-gradient block">THE SOUL</span>
               <span className="text-flame block italic">NATION</span>
             </h1>
