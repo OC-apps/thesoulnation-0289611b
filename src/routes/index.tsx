@@ -277,10 +277,12 @@ function Index() {
           </div>
 
           {/* WAVES — creators */}
-          <div className="text-center mb-12">
-            <h3 className="font-display text-5xl md:text-7xl font-bold text-3d leading-[0.95]">
-              The <span className="italic text-flame">Soul Waves</span>
-            </h3>
+          <div className="text-center mb-12 flex flex-col items-center">
+            <img
+              src={soulWavesLogo}
+              alt="The Soul Waves"
+              className="h-20 md:h-32 lg:h-40 w-auto object-contain drop-shadow-[0_10px_40px_var(--flame-glow)] animate-float"
+            />
             <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
             <p className="mt-6 text-muted-foreground max-w-3xl mx-auto">
               Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
