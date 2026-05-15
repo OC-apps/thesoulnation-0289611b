@@ -19,6 +19,7 @@ import jerseyBack from "@/assets/jersey-back.png";
 import wpOlimpo from "@/assets/wallpaper-olimpo.jpg";
 import wpComic from "@/assets/wallpaper-comic.jpg";
 import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
+import { RecruitmentForm } from "@/components/recruitment-form";
 
 const WALLPAPERS = [
   {
