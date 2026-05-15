@@ -126,6 +126,7 @@ function RootComponent() {
         <span className="hitodama" />
         <span className="hitodama" />
       </div>
+      <EffectsLayer />
       <Outlet />
     </QueryClientProvider>
   );
