@@ -267,8 +267,8 @@ function Index() {
                 <div className="md:col-span-7">
                   <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-display font-bold">
                     {CREW.map((m) => (
-                      <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-sm tracking-wide hover:border-flame hover:text-flame transition-colors">
-                        {m}
+                      <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-xs sm:text-sm tracking-wide hover:border-flame hover:text-flame transition-colors whitespace-nowrap overflow-hidden">
+                        <RosterName name={m} />
                       </li>
                     ))}
                   </ul>
