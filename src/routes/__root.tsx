@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { EffectsLayer } from "@/components/effects-layer";
 
 function NotFoundComponent() {
   return (
@@ -125,6 +126,7 @@ function RootComponent() {
         <span className="hitodama" />
         <span className="hitodama" />
       </div>
+      <EffectsLayer />
       <Outlet />
     </QueryClientProvider>
   );
