@@ -778,7 +778,7 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
         />
         {/* Tarjeta 3D con flip */}
         <div
-          className="relative w-full h-full rounded-[2rem] border border-border bg-gradient-to-br from-card/80 to-background/40 backdrop-blur-xl overflow-hidden"
+          className="relative w-full h-full rounded-[2rem] border-2 border-flame bg-blue-deep overflow-hidden"
           style={{
             transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg)`,
             transformStyle: "preserve-3d",
