@@ -131,7 +131,7 @@ function Index() {
           height={1536}
           className="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] opacity-90 mix-blend-screen pointer-events-none animate-float"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-[color:var(--background)]/55" />
         <div className="absolute -left-32 top-32 w-96 h-96 rounded-full bg-flame opacity-20 blur-[120px] animate-pulse-glow" />
 
         <div className="relative mx-auto max-w-7xl px-6 pt-28 pb-24 md:pt-32 md:pb-28">
@@ -311,9 +311,9 @@ function Index() {
             <MobileCarousel>
               {WAVES.map((c, i) => (
                 <article key={c.name} className="snap-center shrink-0 w-[78%] roster-card rounded-2xl overflow-hidden flex flex-col">
-                  <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
+                  <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
                     <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                    <div className="absolute inset-0 bg-[color:var(--background)]/40" />
                     <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
                     <div className="absolute bottom-0 left-0 right-0 p-4">
                       <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
@@ -332,9 +332,9 @@ function Index() {
           <div className="hidden sm:grid perspective sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {WAVES.map((c, i) => (
               <article key={c.name} className="tilt-card roster-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-gradient-to-br from-deep to-background overflow-hidden">
+                <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
                   <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--background)]/30" />
                   <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
                     Wave · 0{i + 1}
                   </span>
@@ -416,7 +416,7 @@ function Index() {
                 <div className="relative aspect-[16/10] overflow-hidden bg-deep">
                   <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                   <div className={`absolute inset-0 bg-gradient-to-br ${wp.accent} mix-blend-overlay opacity-60`} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                  <div className="absolute inset-0 bg-[color:var(--background)]/40" />
                   <span className="wp-shine" />
                   <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
                     Serie · 0{i + 1}
@@ -891,7 +891,7 @@ function VideoCard({ video, index, featured }: { video: { title: string; id: str
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/play:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+            <div className="absolute inset-0 bg-[color:var(--background)]/40" />
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-flame/90 text-primary-foreground shadow-[0_0_60px_-5px_var(--flame-glow)] transition-transform duration-300 group-hover/play:scale-110">
                 <span className="absolute inset-0 rounded-full bg-flame/40 animate-ping" />
