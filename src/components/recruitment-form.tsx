@@ -1,10 +1,12 @@
 import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import soulLegendsLogo from "@/assets/soul-legends.png";
+import soulWavesLogo from "@/assets/soul-waves.png";
+import soulKillersLogo from "@/assets/soul-killers.png";
 
 const AREAS = [
-  { value: "The Soul Legends (Montager)", label: "Legends", hint: "Montagers", icon: "🎯" },
-  { value: "The Soul Waves (Streamer y CC)", label: "Waves", hint: "Streamers · CC", icon: "🌊" },
-  { value: "The Soul Media (GFX y/o VFX)", label: "Media", hint: "GFX · VFX", icon: "🎨" },
-  { value: "The Soul Killers (Top 100 Guardian)", label: "Killers", hint: "Top 100 Guardian", icon: "💀" },
+  { value: "The Soul Legends (Montager)", label: "Legends", hint: "Montagers", img: soulLegendsLogo },
+  { value: "The Soul Waves (Streamer y CC)", label: "Waves", hint: "Streamers · CC", img: soulWavesLogo },
+  { value: "The Soul Killers (Top 100 Guardian)", label: "Killers", hint: "Top 100 Guardian", img: soulKillersLogo },
 ];
 
 export function RecruitmentForm() {
@@ -47,7 +49,7 @@ export function RecruitmentForm() {
   return (
     <>
       {/* Selector de área 3D */}
-      <div className="perspective grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
+      <div className="perspective grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
         {AREAS.map((a) => {
           const active = area === a.value;
           return (
@@ -55,17 +57,18 @@ export function RecruitmentForm() {
               key={a.value}
               type="button"
               onClick={() => setArea(a.value)}
-              className={`area-chip group relative rounded-2xl border p-4 md:p-5 text-left transition-all ${
+              className={`area-chip group relative rounded-2xl border p-5 md:p-6 flex flex-col items-center justify-center text-center transition-all overflow-hidden ${
                 active
-                  ? "border-flame bg-flame/15 shadow-[0_20px_60px_-20px_var(--flame-glow)]"
-                  : "border-border bg-card/40 hover:border-flame/60"
+                  ? "border-flame bg-flame/15 shadow-[0_20px_60px_-20px_var(--flame-glow)] -translate-y-1"
+                  : "border-border bg-card/40 hover:border-flame/60 hover:-translate-y-0.5"
               }`}
             >
-              <div className="text-2xl md:text-3xl mb-2 transition-transform group-hover:scale-110 group-hover:-translate-y-0.5">
-                {a.icon}
-              </div>
-              <div className="font-display font-bold text-sm md:text-base">{a.label}</div>
-              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">
+              <img
+                src={a.img}
+                alt={a.label}
+                className="h-14 md:h-20 w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_8px_24px_var(--flame-glow)]"
+              />
+              <div className="mt-3 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
                 {a.hint}
               </div>
               {active && (
