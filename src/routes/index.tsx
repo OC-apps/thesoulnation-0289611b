@@ -151,12 +151,22 @@ function Index() {
 
         {/* marquee */}
         <div className="absolute bottom-0 inset-x-0 border-y border-border bg-background/40 backdrop-blur py-4 overflow-hidden">
-          <div className="flex gap-12 whitespace-nowrap animate-marquee font-display text-2xl md:text-3xl font-bold tracking-tight">
+          <div className="flex gap-12 whitespace-nowrap animate-marquee font-display text-2xl md:text-3xl font-bold tracking-tight items-center">
             {Array.from({ length: 2 }).map((_, i) => (
               <div key={i} className="flex gap-12 items-center shrink-0">
-                {["THE SOUL NATION", "★", "DESDE EL 2012", "★", "THE SOUL LEGENDS", "★", "THE SOUL MEDIA", "★", "THE SOUL WAVES", "★", "THE SOUL CREW", "★"].map((t, j) => (
-                  <span key={j} className={j % 2 === 0 ? "text-flame" : "text-foreground/70"}>{t}</span>
-                ))}
+                {["THE SOUL NATION", "ghost", "DESDE EL 2012", "ghost", "THE SOUL LEGENDS", "ghost", "THE SOUL MEDIA", "ghost", "THE SOUL WAVES", "ghost", "THE SOUL CREW", "ghost"].map((t, j) =>
+                  t === "ghost" ? (
+                    <img
+                      key={j}
+                      src={soulMascot}
+                      alt=""
+                      aria-hidden="true"
+                      className="h-7 md:h-9 w-auto opacity-90 drop-shadow-[0_0_10px_var(--flame-glow)] shrink-0"
+                    />
+                  ) : (
+                    <span key={j} className={j % 2 === 0 ? "text-flame" : "text-foreground/70"}>{t}</span>
+                  ),
+                )}
               </div>
             ))}
           </div>
