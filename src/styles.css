@@ -120,17 +120,17 @@
 }
 
 .roster-card {
-  background: linear-gradient(160deg, oklch(0.22 0.16 268) 0%, oklch(0.16 0.14 268) 100%);
-  border: 1px solid oklch(1 0 0 / 0.08);
+  background: var(--blue-deep);
+  border: 2px solid var(--flame);
   position: relative;
   overflow: hidden;
 }
 .roster-card::before {
-  content: ""; position: absolute; inset: -1px;
-  background: linear-gradient(135deg, transparent 40%, var(--flame-glow) 100%);
-  opacity: 0; transition: opacity 0.5s; z-index: 0;
+  content: ""; position: absolute; inset: 0;
+  background: var(--flame);
+  opacity: 0; transition: opacity 0.3s; z-index: 0;
 }
-.roster-card:hover::before { opacity: 0.4; }
+.roster-card:hover::before { opacity: 0.12; }
 
 @keyframes tilt-idle {
   0%,100% { transform: rotateX(0) rotateY(0); }
