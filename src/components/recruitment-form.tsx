@@ -1,10 +1,12 @@
 import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import soulLegendsLogo from "@/assets/soul-legends.png";
+import soulWavesLogo from "@/assets/soul-waves.png";
+import soulKillersLogo from "@/assets/soul-killers.png";
 
 const AREAS = [
-  { value: "The Soul Legends (Montager)", label: "Legends", hint: "Montagers", icon: "🎯" },
-  { value: "The Soul Waves (Streamer y CC)", label: "Waves", hint: "Streamers · CC", icon: "🌊" },
-  { value: "The Soul Media (GFX y/o VFX)", label: "Media", hint: "GFX · VFX", icon: "🎨" },
-  { value: "The Soul Killers (Top 100 Guardian)", label: "Killers", hint: "Top 100 Guardian", icon: "💀" },
+  { value: "The Soul Legends (Montager)", label: "Legends", hint: "Montagers", img: soulLegendsLogo },
+  { value: "The Soul Waves (Streamer y CC)", label: "Waves", hint: "Streamers · CC", img: soulWavesLogo },
+  { value: "The Soul Killers (Top 100 Guardian)", label: "Killers", hint: "Top 100 Guardian", img: soulKillersLogo },
 ];
 
 export function RecruitmentForm() {
