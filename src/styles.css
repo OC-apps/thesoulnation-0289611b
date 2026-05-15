@@ -78,10 +78,13 @@
 }
 
 @layer utilities {
-  .text-gradient { background: var(--gradient-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .text-flame { background: var(--gradient-flame); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .bg-hero { background: var(--gradient-hero); }
-  .bg-flame { background: var(--gradient-flame); }
+  .text-gradient { color: var(--foreground); }
+  .text-flame { color: var(--flame); }
+  .bg-hero { background: var(--blue-deep); }
+  .bg-flame { background: var(--flame); color: var(--primary-foreground); }
+  .bg-blue { background: var(--blue); }
+  .bg-blue-deep { background: var(--blue-deep); }
+  .border-flame { border-color: var(--flame); }
   .glow { box-shadow: var(--shadow-glow); }
   .grain::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
