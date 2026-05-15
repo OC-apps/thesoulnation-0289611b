@@ -163,77 +163,45 @@ function Index() {
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" className="relative py-32 md:py-48">
-        <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-16 items-start">
-          <div className="md:col-span-5 md:sticky md:top-32">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">01</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
-              ¿Quiénes <span className="italic text-flame">Somos?</span>
-            </h2>
-            <img src={soulLogo} alt="" width={200} height={200} loading="lazy" className="mt-12 w-40 opacity-80 animate-float" />
+      {/* ABOUT + VISIÓN + OBJETIVO — compacto y responsive */}
+      <section id="about" className="relative py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+          {/* Encabezado */}
+          <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-start">
+            <div className="md:col-span-5">
+              <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
+              <h2 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95]">
+                ¿Quiénes <span className="italic text-flame">Somos?</span>
+              </h2>
+              <img src={soulLogo} alt="" width={160} height={160} loading="lazy" className="hidden md:block mt-6 w-24 lg:w-32 opacity-80 animate-float" />
+            </div>
+            <div className="md:col-span-7">
+              <p className="text-base sm:text-lg md:text-xl text-foreground/90 font-light leading-relaxed">
+                The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en la creación de clips de Gears of War. Con el tiempo, expandimos nuestros horizontes y nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad para una variedad de juegos competitivos. Nos caracteriza la pasión por el gaming y el compromiso de elevar la escena de los esports en Latinoamérica, trabajando como una familia unida, donde cada miembro puede crecer y destacar en lo que mejor sabe hacer.
+              </p>
+            </div>
           </div>
-          <div className="md:col-span-7">
-            <p className="text-xl md:text-2xl text-foreground/90 font-light leading-relaxed">
-              The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en la creación de clips de Gears of War. Con el tiempo, expandimos nuestros horizontes y nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad para una variedad de juegos competitivos. Nos caracteriza la pasión por el gaming y el compromiso de elevar la escena de los esports en Latinoamérica, trabajando como una familia unida, donde cada miembro puede crecer y destacar en lo que mejor sabe hacer.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* VISIÓN + OBJETIVO — mobile carrusel */}
-      <section id="vision" className="md:hidden relative py-20 border-y border-border bg-card/30">
-        <div className="px-6 mb-6 flex items-end justify-between">
-          <div>
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">02 · 03</div>
-            <h2 className="mt-2 font-display text-3xl font-bold italic text-flame">Visión & Objetivo</h2>
-          </div>
-          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">desliza →</span>
-        </div>
-        <MobileCarousel>
-          {[
-            { n: "02", t: "Visión", body: "Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región." },
-            { n: "03", t: "Objetivo", body: "Impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones (Legends, Media, Waves y Crew). Queremos expandir la organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, colaborando para un crecimiento conjunto." },
-          ].map((s) => (
-            <article key={s.n} id={s.t === "Objetivo" ? "objetivo" : undefined} className="snap-center shrink-0 w-[85%] roster-card rounded-2xl p-6">
-              <div className="text-[10px] uppercase tracking-[0.3em] text-flame">{s.n}</div>
-              <h3 className="mt-2 font-display text-3xl font-bold italic text-flame">{s.t}</h3>
-              <p className="mt-4 text-sm text-foreground/85 leading-relaxed">{s.body}</p>
-            </article>
-          ))}
-        </MobileCarousel>
-      </section>
-
-      {/* VISIÓN — desktop */}
-      <section className="hidden md:block relative py-32 md:py-48 border-y border-border bg-card/30">
-        <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-16 items-start">
-          <div className="md:col-span-5 md:sticky md:top-32">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">02</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95] italic text-flame">
-              Visión
-            </h2>
-          </div>
-          <div className="md:col-span-7">
-            <p className="text-xl md:text-2xl text-foreground/90 font-light leading-relaxed">
-              Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* OBJETIVO — desktop */}
-      <section className="hidden md:block relative py-32 md:py-48">
-        <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-16 items-start">
-          <div className="md:col-span-5 md:sticky md:top-32">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">03</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95] italic text-flame">
-              Objetivo
-            </h2>
-          </div>
-          <div className="md:col-span-7">
-            <p className="text-xl md:text-2xl text-foreground/90 font-light leading-relaxed">
-              Nuestro objetivo principal es impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones como <span className="text-flame">The Soul Legends</span>, <span className="text-flame">The Soul Media</span>, <span className="text-flame">The Soul Waves</span> y <span className="text-flame">The Soul Crew</span>. Queremos expandir nuestra organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, sin necesidad de competir, sino colaborando para un crecimiento conjunto. Buscamos crear un ambiente en el que todos podamos avanzar, aprender y aportar para construir el futuro de los esports en la región.
-            </p>
+          {/* Visión + Objetivo — grid 2 columnas en md+, stack en móvil */}
+          <div id="vision" className="mt-10 md:mt-14 grid sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+            {[
+              { n: "02", t: "Visión", body: "Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región." },
+              { n: "03", t: "Objetivo", body: "Nuestro objetivo principal es impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones como The Soul Legends, The Soul Media, The Soul Waves y The Soul Crew. Queremos expandir nuestra organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, sin necesidad de competir, sino colaborando para un crecimiento conjunto. Buscamos crear un ambiente en el que todos podamos avanzar, aprender y aportar para construir el futuro de los esports en la región." },
+            ].map((s) => (
+              <article
+                key={s.n}
+                id={s.t === "Objetivo" ? "objetivo" : undefined}
+                className="roster-card rounded-2xl p-5 sm:p-6 md:p-7"
+              >
+                <div className="text-[10px] uppercase tracking-[0.3em] text-flame">{s.n}</div>
+                <h3 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl font-bold italic text-flame leading-tight">
+                  {s.t}
+                </h3>
+                <p className="mt-3 sm:mt-4 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                  {s.body}
+                </p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
