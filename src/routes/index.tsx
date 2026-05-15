@@ -415,7 +415,7 @@ function Index() {
               >
                 <div className="relative aspect-[16/10] overflow-hidden bg-deep">
                   <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${wp.accent} mix-blend-overlay opacity-60`} />
+                  <div className={`absolute inset-0 bg-flame opacity-30 mix-blend-multiply`} />
                   <div className="absolute inset-0 bg-[color:var(--background)]/40" />
                   <span className="wp-shine" />
                   <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
@@ -443,7 +443,7 @@ function Index() {
       {/* JERSEY */}
       <section id="jersey" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-flame/60 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-flame" />
 
         {/* Marquee superior con specs */}
         <div className="relative overflow-hidden border-y border-border bg-background/40 backdrop-blur py-3 mb-16">
