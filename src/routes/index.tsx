@@ -141,7 +141,7 @@ function Index() {
               <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
               desde el 2012
             </div>
-            <h1 className="mt-8 font-display font-bold text-[clamp(3rem,9vw,8rem)] leading-[0.9]">
+            <h1 className="mt-6 font-display font-bold text-[clamp(2.5rem,7vw,6rem)] leading-[0.9]">
               <span className="text-gradient block">THE SOUL</span>
               <span className="text-flame block italic">NATION</span>
             </h1>
