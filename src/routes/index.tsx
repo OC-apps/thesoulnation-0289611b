@@ -639,7 +639,18 @@ function Index() {
   );
 }
 
-function JerseyShowcase({ front, back }: { front: string; back: string }) {
+function RosterName({ name }: { name: string }) {
+  if (name.toUpperCase().startsWith("SOUL ")) {
+    const rest = name.slice(5);
+    return (
+      <span className="inline-flex items-baseline gap-1 min-w-0">
+        <span className="text-flame text-[0.7em] font-semibold tracking-wider">SOUL</span>
+        <span className="truncate">{rest}</span>
+      </span>
+    );
+  }
+  return <span className="truncate">{name}</span>;
+}
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
   const [side, setSide] = useState<"front" | "back">("front");
