@@ -11,7 +11,7 @@ export function RecruitmentForm() {
   const [area, setArea] = useState<string>("");
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, mx: 50, my: 50 });
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLFormElement>(null);
 
   const onMove = (e: MouseEvent) => {
     const el = cardRef.current;
