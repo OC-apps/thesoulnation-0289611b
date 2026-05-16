@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { EffectsLayer } from "@/components/effects-layer";
+import { SideNav } from "@/components/side-nav";
 
 function NotFoundComponent() {
   return (
@@ -130,6 +131,7 @@ function RootComponent() {
         }}
       />
       <EffectsLayer />
+      <SideNav />
       <Outlet />
     </QueryClientProvider>
   );
