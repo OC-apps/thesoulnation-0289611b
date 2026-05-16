@@ -1,5 +1,7 @@
 import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { sendDiscordRecruitment } from "@/lib/discord.functions";
 import soulLegendsLogo from "@/assets/soul-legends.png";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import soulKillersLogo from "@/assets/soul-killers.png";
