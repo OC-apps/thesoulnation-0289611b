@@ -193,7 +193,7 @@ function Index() {
       </section>
 
       {/* ROSTER */}
-      <section id="roster" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+      <section id="roster" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-flame opacity-10 blur-[140px]" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-20">
@@ -313,7 +313,7 @@ function Index() {
       </section>
 
       {/* VIDEOS */}
-      <section id="videos" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+      <section id="videos" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/3 w-[600px] h-[600px] rounded-full bg-flame opacity-[0.08] blur-[160px]" />
         <div className="absolute -bottom-40 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-[0.06] blur-[140px]" />
         <div className="absolute inset-0 pointer-events-none opacity-30" style={{backgroundImage:"radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--flame) 8%, transparent), transparent 40%), radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--flame) 6%, transparent), transparent 45%)"}} />
@@ -354,7 +354,7 @@ function Index() {
       </section>
 
       {/* WALLPAPERS */}
-      <section id="wallpapers" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+      <section id="wallpapers" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
         <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[140px]" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
@@ -402,7 +402,7 @@ function Index() {
       </section>
 
       {/* JERSEY */}
-      <section id="jersey" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+      <section id="jersey" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="absolute inset-x-0 top-0 h-px bg-flame" />
 
@@ -478,7 +478,7 @@ function Index() {
       </section>
 
       {/* MUSIC — SPOTIFY */}
-      <section id="music" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+      <section id="music" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
         <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-10 blur-[160px]" />
         <div className="absolute -bottom-40 left-0 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-7xl px-6">
@@ -528,7 +528,7 @@ function Index() {
       </section>
 
       {/* RECLUTAMIENTO */}
-      <section id="reclutamiento" className="relative py-32 md:py-48 border-t border-border overflow-hidden">
+      <section id="reclutamiento" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
@@ -574,7 +574,7 @@ function Index() {
       </section>
 
       {/* REDES */}
-      <section id="redes" className="relative py-32 md:py-48 overflow-hidden border-t border-border">
+      <section id="redes" className="relative py-16 md:py-24 overflow-hidden border-t border-border">
         <div className="absolute inset-0 bg-hero opacity-80" />
         <img src={soulLogo} alt="" width={500} height={500} loading="lazy" className="absolute right-[-5%] top-1/2 -translate-y-1/2 w-[40vw] max-w-[500px] opacity-20 animate-float" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">

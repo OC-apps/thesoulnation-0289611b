@@ -9,7 +9,7 @@ import soulLogo from "@/assets/soul-logo.png";
  */
 export function Hero3D() {
   return (
-    <div className="relative w-full h-[88vh] min-h-[620px] overflow-hidden select-none isolate">
+    <div className="relative w-full h-[60vh] min-h-[460px] overflow-hidden select-none isolate">
       {/* Solid blue base */}
       <div
         className="absolute inset-0 -z-10"
