@@ -270,3 +270,35 @@ function FloatField({
     </label>
   );
 }
+
+function SocialField({ network }: { network: string }) {
+  const [checked, setChecked] = useState(false);
+  return (
+    <div
+      className={`rounded-xl border transition overflow-hidden ${
+        checked ? "border-flame bg-flame/10" : "border-border bg-background/40"
+      }`}
+    >
+      <label className="flex items-center gap-3 px-4 py-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => setChecked(e.target.checked)}
+          className="w-4 h-4 accent-[var(--flame)]"
+        />
+        <span className="text-sm font-bold uppercase tracking-wider">{network}</span>
+      </label>
+      {checked && (
+        <div className="px-4 pb-3">
+          <input
+            required
+            type="text"
+            name={`Red ${network}`}
+            placeholder={`Tu @usuario o link de ${network}`}
+            className="w-full bg-background/60 border border-border rounded-lg px-3 py-2 outline-none focus:border-flame focus:shadow-[0_0_0_4px_var(--flame-glow)] transition text-sm"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
