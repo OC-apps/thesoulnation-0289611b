@@ -576,9 +576,10 @@ function Index() {
 
       {/* REDES */}
       <section id="redes" className="relative py-16 md:py-24 overflow-hidden border-t border-border">
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] aspect-square">
-          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,var(--flame-glow)_0%,transparent_65%)] opacity-40 animate-pulse" />
-          <img src={soulLogo} alt="" width={500} height={500} loading="lazy" className="relative w-full h-full opacity-15 animate-[spin_40s_linear_infinite]" />
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[720px] aspect-square">
+          <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,var(--flame-glow)_0%,transparent_60%)] opacity-60 animate-pulse" />
+          <div className="absolute inset-[15%] rounded-full bg-[radial-gradient(circle,var(--flame-glow)_0%,transparent_70%)] opacity-50 blur-2xl" />
+          <img src={soulLogo} alt="" width={720} height={720} loading="lazy" className="relative w-full h-full opacity-40 drop-shadow-[0_0_60px_var(--flame-glow)] animate-[pulse_4s_ease-in-out_infinite]" />
         </div>
         <div className="relative mx-auto max-w-5xl px-6 text-center">
           <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
