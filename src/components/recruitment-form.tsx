@@ -1,4 +1,5 @@
 import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import soulLegendsLogo from "@/assets/soul-legends.png";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import soulKillersLogo from "@/assets/soul-killers.png";
@@ -32,12 +33,28 @@ export function RecruitmentForm() {
     const data = new FormData(form);
     setStatus("sending");
     try {
-      const res = await fetch("https://formsubmit.co/ajax/ximgxteam@gmail.com", {
+      // 1) Guarda en base de datos (siempre funciona)
+      const { error: dbError } = await supabase.from("recruitment_submissions").insert({
+        area,
+        nombre_nickname: String(data.get("Nombre y Nickname") || ""),
+        link_rc: String(data.get("Link RC") || "") || null,
+        sobre_ti: String(data.get("Sobre ti") || ""),
+        red_tiktok: String(data.get("Red TikTok") || "") || null,
+        red_youtube: String(data.get("Red YouTube") || "") || null,
+        red_twitch: String(data.get("Red Twitch") || "") || null,
+        red_facebook: String(data.get("Red Facebook") || "") || null,
+        red_instagram: String(data.get("Red Instagram") || "") || null,
+        email: String(data.get("email") || "") || null,
+      });
+      if (dbError) throw dbError;
+
+      // 2) Intenta también enviar correo por FormSubmit (puede fallar, no es crítico)
+      fetch("https://formsubmit.co/ajax/ximgxteam@gmail.com", {
         method: "POST",
         headers: { Accept: "application/json" },
         body: data,
-      });
-      if (!res.ok) throw new Error("error");
+      }).catch(() => {});
+
       setStatus("ok");
       form.reset();
       setArea("");
