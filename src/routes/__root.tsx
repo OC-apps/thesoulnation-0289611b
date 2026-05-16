@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { EffectsLayer } from "@/components/effects-layer";
+import { CinematicBackground } from "@/components/cinematic-background";
 
 function NotFoundComponent() {
   return (
@@ -118,14 +119,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="hitodama-field" aria-hidden="true">
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-      </div>
+      <CinematicBackground />
       <EffectsLayer />
       <Outlet />
     </QueryClientProvider>
