@@ -97,7 +97,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <div className="min-h-screen text-foreground relative">
       {/* AURORA — fondo ambiente premium */}
       <div className="aurora-field" aria-hidden="true">
         <div className="aurora-grid" />
