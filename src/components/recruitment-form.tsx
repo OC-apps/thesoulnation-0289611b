@@ -46,8 +46,16 @@ export function RecruitmentForm() {
     }
   };
 
+  const SOCIALS = ["TikTok", "YouTube", "Twitch", "Facebook", "Instagram"] as const;
+
   return (
     <>
+      {/* Aviso área */}
+      <div className="mb-4 text-center">
+        <p className="text-sm md:text-base uppercase tracking-[0.25em] text-flame font-bold">
+          ↓ Selecciona el área en la que deseas ingresar ↓
+        </p>
+      </div>
       {/* Selector de área 3D */}
       <div className="perspective grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
         {AREAS.map((a) => {
@@ -122,8 +130,6 @@ export function RecruitmentForm() {
           <p className="text-sm text-muted-foreground mb-8">Rellena todos los campos.</p>
 
           <div className="grid gap-6 relative z-10">
-            <FloatField label="Nombre real y Nickname *" name="Nombre y Nickname" required placeholder="Ej: Juan Pérez · SOUL JUANP" />
-
             <div>
               <span className="text-sm font-bold uppercase tracking-wider">Área seleccionada *</span>
               <div
@@ -137,26 +143,37 @@ export function RecruitmentForm() {
               </div>
             </div>
 
+            <FloatField label="Nombre real y Nickname *" name="Nombre y Nickname" required placeholder="Ej: Juan Pérez · SOUL JUANP" />
+
             <div>
               <FloatField
-                label="Link de tu RC *"
+                label="Link de tu RC"
                 name="Link RC"
                 type="url"
-                required
                 placeholder="https://youtube.com/..."
               />
-              <span className="block text-xs text-muted-foreground mt-1">
-                Para The Soul Legends: video con tus mejores clips de Gears of War subido a YouTube con el título "The Soul Nation RC".
+              <span className="block text-xs text-flame mt-1 font-semibold">
+                Solo aplica para el área de Soul Legends — video con tus mejores clips de Gears of War subido a YouTube con el título "The Soul Nation RC".
               </span>
             </div>
 
             <FloatField
-              label="Cuéntanos sobre ti y deja tus redes sociales *"
-              name="Sobre ti y redes"
+              label="Cuéntanos sobre ti *"
+              name="Sobre ti"
               required
               textarea
-              placeholder="Edad, experiencia, juegos, plataformas, redes sociales, gamertag, etc."
+              placeholder="Edad, experiencia, juegos, plataformas, gamertag, etc."
             />
+
+            <div>
+              <span className="text-sm font-bold uppercase tracking-wider">Redes sociales *</span>
+              <p className="text-xs text-muted-foreground mt-1 mb-3">Selecciona las redes que tienes y escribe tu usuario o link.</p>
+              <div className="grid gap-3">
+                {SOCIALS.map((s) => (
+                  <SocialField key={s} network={s} />
+                ))}
+              </div>
+            </div>
 
             <FloatField label="Correo de contacto" name="email" type="email" placeholder="tucorreo@ejemplo.com" />
           </div>
@@ -251,5 +268,37 @@ function FloatField({
         <input required={required} type={type} name={name} placeholder={placeholder} className={base} />
       )}
     </label>
+  );
+}
+
+function SocialField({ network }: { network: string }) {
+  const [checked, setChecked] = useState(false);
+  return (
+    <div
+      className={`rounded-xl border transition overflow-hidden ${
+        checked ? "border-flame bg-flame/10" : "border-border bg-background/40"
+      }`}
+    >
+      <label className="flex items-center gap-3 px-4 py-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => setChecked(e.target.checked)}
+          className="w-4 h-4 accent-[var(--flame)]"
+        />
+        <span className="text-sm font-bold uppercase tracking-wider">{network}</span>
+      </label>
+      {checked && (
+        <div className="px-4 pb-3">
+          <input
+            required
+            type="text"
+            name={`Red ${network}`}
+            placeholder={`Tu @usuario o link de ${network}`}
+            className="w-full bg-background/60 border border-border rounded-lg px-3 py-2 outline-none focus:border-flame focus:shadow-[0_0_0_4px_var(--flame-glow)] transition text-sm"
+          />
+        </div>
+      )}
+    </div>
   );
 }
