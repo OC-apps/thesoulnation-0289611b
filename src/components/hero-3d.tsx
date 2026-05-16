@@ -100,7 +100,7 @@ export function Hero3D() {
               className="relative shrink-0"
               style={{ transformStyle: "preserve-3d" }}
             >
-              <SCrest />
+              <SCrest src={soulLogo} />
             </motion.div>
 
             {/* Stacked title */}
