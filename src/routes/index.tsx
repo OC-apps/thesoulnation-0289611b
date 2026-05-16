@@ -127,7 +127,7 @@ function Index() {
           alt=""
           width={1536}
           height={1536}
-          className="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] opacity-25 mix-blend-screen pointer-events-none animate-float"
+          className="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[60vw] max-w-[600px] opacity-10 mix-blend-luminosity pointer-events-none animate-float"
         />
         <div className="absolute inset-0 bg-[color:var(--background)]/5" />
         <div className="absolute -left-32 top-32 w-96 h-96 rounded-full bg-flame opacity-20 blur-[120px] animate-pulse-glow" />
