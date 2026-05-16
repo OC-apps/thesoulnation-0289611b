@@ -849,41 +849,104 @@ function SocialIcon({ name }: { name: string }) {
 
 function Social3DCard({ href, name, handle, gradient, icon }: { href: string; name: string; handle: string; gradient: string; icon: string }) {
   const ref = useRef<HTMLAnchorElement>(null);
-  const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, lift: 0 });
+  const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, hover: false });
   const onMove = (e: MouseEvent) => {
     const el = ref.current; if (!el) return;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
     const y = (e.clientY - r.top) / r.height;
-    setT({ rx: (0.5 - y) * 18, ry: (x - 0.5) * 22, mx: x * 100, my: y * 100, lift: 12 });
+    setT({ rx: (0.5 - y) * 28, ry: (x - 0.5) * 32, mx: x * 100, my: y * 100, hover: true });
   };
-  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, lift: 0 });
+  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, hover: false });
+  const lift = t.hover ? 30 : 0;
   return (
-    <a
-      ref={ref}
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{
-        transform: `perspective(900px) rotateX(${t.rx}deg) rotateY(${t.ry}deg) translateZ(${t.lift}px)`,
-        transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)",
-      }}
-      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} p-6 aspect-square flex flex-col items-center justify-center text-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] hover:shadow-[0_30px_80px_-15px_var(--flame-glow)] border border-white/10`}
-    >
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay"
-        style={{ background: `radial-gradient(300px circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.45), transparent 60%)` }}
-      />
-      <div aria-hidden className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-60 blur-xl transition-opacity" style={{ background: `radial-gradient(circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.3), transparent 60%)` }} />
-      <div style={{ transform: `translateZ(40px)` }} className="relative flex flex-col items-center gap-3">
-        <SocialIcon name={icon} />
-        <div className="font-display font-bold text-lg md:text-xl uppercase tracking-wider">{name}</div>
-        <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/80">{handle}</div>
-      </div>
-      <div className="absolute bottom-3 right-3 text-[10px] uppercase tracking-widest text-white/60 group-hover:text-white transition">→ Ir</div>
-    </a>
+    <div style={{ perspective: "1200px" }} className="group">
+      <a
+        ref={ref}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        style={{
+          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg) translateZ(${lift}px) scale(${t.hover ? 1.04 : 1})`,
+          transformStyle: "preserve-3d",
+          transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+        }}
+        className={`relative block aspect-square rounded-3xl bg-gradient-to-br ${gradient} text-white shadow-[0_25px_60px_-20px_rgba(0,0,0,0.7)] hover:shadow-[0_40px_100px_-20px_var(--flame-glow)] border border-white/15 overflow-hidden`}
+      >
+        {/* Animated grid floor */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-30 mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.25) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+            transform: "translateZ(-40px)",
+          }}
+        />
+        {/* Floating orb behind icon */}
+        <div
+          aria-hidden
+          className="absolute left-1/2 top-1/2 w-40 h-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
+          style={{
+            background: "radial-gradient(circle, rgba(255,255,255,0.6), transparent 65%)",
+            transform: `translate(-50%, -50%) translateZ(${t.hover ? 20 : 0}px) scale(${t.hover ? 1.3 : 0.9})`,
+            transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
+            opacity: t.hover ? 0.9 : 0.5,
+          }}
+        />
+        {/* Cursor glare */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay"
+          style={{ background: `radial-gradient(280px circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.55), transparent 60%)` }}
+        />
+        {/* Corner shine sweep */}
+        <div
+          aria-hidden
+          className="absolute -inset-x-10 -top-10 h-20 bg-gradient-to-r from-transparent via-white/40 to-transparent rotate-12 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-[1100ms] ease-out"
+        />
+
+        {/* Floating handle chip */}
+        <div
+          style={{ transform: "translateZ(60px)" }}
+          className="absolute top-3 left-3 px-2 py-1 rounded-md bg-black/30 backdrop-blur-sm border border-white/20 text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold"
+        >
+          {name}
+        </div>
+
+        {/* Icon stack with parallax */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+          {/* Echo icon (deep layer) */}
+          <div
+            aria-hidden
+            style={{ transform: `translateZ(20px) scale(${t.hover ? 1.6 : 1.2})`, opacity: t.hover ? 0.25 : 0.12, transition: "all 0.45s cubic-bezier(0.22,1,0.36,1)" }}
+            className="absolute"
+          >
+            <SocialIcon name={icon} />
+          </div>
+          {/* Main icon (front layer) */}
+          <div style={{ transform: "translateZ(80px)" }} className="relative drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
+            <SocialIcon name={icon} />
+          </div>
+          <div
+            style={{ transform: "translateZ(50px)" }}
+            className="relative text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/90 font-mono px-3 py-1 rounded-full bg-black/30 backdrop-blur-sm border border-white/15"
+          >
+            {handle}
+          </div>
+        </div>
+
+        {/* CTA arrow */}
+        <div
+          style={{ transform: "translateZ(70px)" }}
+          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition"
+        >
+          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M5 12h12.2l-4.6-4.6L14 6l7 6-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
+        </div>
+      </a>
+    </div>
   );
 }
