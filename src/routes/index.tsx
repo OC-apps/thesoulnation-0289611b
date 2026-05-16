@@ -585,12 +585,12 @@ function Index() {
           <p className="mt-6 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
             Únete a la comunidad y vive el día a día de <span className="text-flame font-bold">The Soul Nation</span>.
           </p>
-          <div className="perspective mt-14 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-            <Social3DCard href={SOCIALS.discord} name="Discord" handle="ADPyNMFggc" gradient="from-[#5865F2] to-[#404EED]" icon="discord" />
-            <Social3DCard href={SOCIALS.youtube} name="YouTube" handle="@TheSoulNationHD" gradient="from-[#FF0000] to-[#CC0000]" icon="youtube" />
-            <Social3DCard href={SOCIALS.tiktok} name="TikTok" handle="@thesoulnation" gradient="from-[#FF0050] via-[#000000] to-[#00F2EA]" icon="tiktok" />
-            <Social3DCard href={SOCIALS.facebook} name="Facebook" handle="TheSoulNationHD" gradient="from-[#1877F2] to-[#0A5AC9]" icon="facebook" />
-            <Social3DCard href={SOCIALS.x} name="X / Twitter" handle="@TheSoulNation" gradient="from-[#1a1a1a] to-[#000000]" icon="x" />
+          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <Social3DCard href={SOCIALS.discord} name="Discord" handle="ADPyNMFggc" icon="discord" />
+            <Social3DCard href={SOCIALS.youtube} name="YouTube" handle="@TheSoulNationHD" icon="youtube" />
+            <Social3DCard href={SOCIALS.tiktok} name="TikTok" handle="@thesoulnation" icon="tiktok" />
+            <Social3DCard href={SOCIALS.facebook} name="Facebook" handle="TheSoulNationHD" icon="facebook" />
+            <Social3DCard href={SOCIALS.x} name="X / Twitter" handle="@TheSoulNation" icon="x" />
           </div>
 
         </div>
