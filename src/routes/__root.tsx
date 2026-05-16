@@ -122,7 +122,7 @@ function RootComponent() {
         className="fixed inset-0 -z-50"
         style={{
           background:
-            "radial-gradient(120% 90% at 50% 30%, #1a3a78 0%, #0e2756 40%, #061638 75%, #02091e 100%)",
+            "radial-gradient(120% 90% at 50% 20%, #3b82f6 0%, #1e4fd1 28%, #0c2da8 55%, #061a6e 80%, #02093a 100%)",
         }}
       />
       <EffectsLayer />
