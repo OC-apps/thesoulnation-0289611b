@@ -156,7 +156,7 @@ function Index() {
           <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-start">
             <div className="md:col-span-5">
               <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
-              <h2 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95]">
+              <h2 className="mt-3 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
                 ¿Quiénes <span className="italic text-flame">Somos?</span>
               </h2>
               <img src={soulLogo} alt="" width={160} height={160} loading="lazy" className="hidden md:block mt-6 w-24 lg:w-32 opacity-80 animate-float" />
@@ -198,7 +198,7 @@ function Index() {
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-20">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">04</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Nuestro <span className="italic text-flame">Roster</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
@@ -321,7 +321,7 @@ function Index() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
             <div>
               <div className="text-xs uppercase tracking-[0.3em] text-flame">05 · Reel</div>
-              <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
                 Nuestros <span className="italic text-flame">Videos</span>
               </h2>
               <p className="mt-6 text-muted-foreground max-w-2xl">
@@ -359,7 +359,7 @@ function Index() {
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Wallpapers <span className="italic text-flame">Oficiales</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
@@ -423,7 +423,7 @@ function Index() {
           {/* Texto + specs */}
           <div className="md:col-span-5">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Jersey <span className="italic text-flame">Oficial</span>
             </h2>
             <p className="mt-6 text-lg text-foreground/85 leading-relaxed">
@@ -484,7 +484,7 @@ function Index() {
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               The Soul Nation <span className="italic text-flame">Music</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
@@ -533,7 +533,7 @@ function Index() {
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">08</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Únete al <span className="italic text-flame">Equipo</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
