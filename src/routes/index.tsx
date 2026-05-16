@@ -585,12 +585,12 @@ function Index() {
           <p className="mt-6 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
             Únete a la comunidad y vive el día a día de <span className="text-flame font-bold">The Soul Nation</span>.
           </p>
-          <div className="perspective mt-14 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-            <Social3DCard href={SOCIALS.discord} name="Discord" handle="ADPyNMFggc" gradient="from-[#5865F2] to-[#404EED]" icon="discord" />
-            <Social3DCard href={SOCIALS.youtube} name="YouTube" handle="@TheSoulNationHD" gradient="from-[#FF0000] to-[#CC0000]" icon="youtube" />
-            <Social3DCard href={SOCIALS.tiktok} name="TikTok" handle="@thesoulnation" gradient="from-[#FF0050] via-[#000000] to-[#00F2EA]" icon="tiktok" />
-            <Social3DCard href={SOCIALS.facebook} name="Facebook" handle="TheSoulNationHD" gradient="from-[#1877F2] to-[#0A5AC9]" icon="facebook" />
-            <Social3DCard href={SOCIALS.x} name="X / Twitter" handle="@TheSoulNation" gradient="from-[#1a1a1a] to-[#000000]" icon="x" />
+          <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <Social3DCard href={SOCIALS.discord} name="Discord" handle="ADPyNMFggc" icon="discord" />
+            <Social3DCard href={SOCIALS.youtube} name="YouTube" handle="@TheSoulNationHD" icon="youtube" />
+            <Social3DCard href={SOCIALS.tiktok} name="TikTok" handle="@thesoulnation" icon="tiktok" />
+            <Social3DCard href={SOCIALS.facebook} name="Facebook" handle="TheSoulNationHD" icon="facebook" />
+            <Social3DCard href={SOCIALS.x} name="X / Twitter" handle="@TheSoulNation" icon="x" />
           </div>
 
         </div>
@@ -832,7 +832,7 @@ function MobileCarousel({ children, label }: { children: React.ReactNode; label?
 }
 
 function SocialIcon({ name }: { name: string }) {
-  const cls = "w-12 h-12 md:w-14 md:h-14 fill-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]";
+  const cls = "w-6 h-6 fill-current";
   switch (name) {
     case "youtube":
       return <svg viewBox="0 0 24 24" className={cls}><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/></svg>;
@@ -848,106 +848,24 @@ function SocialIcon({ name }: { name: string }) {
   }
 }
 
-function Social3DCard({ href, name, handle, gradient, icon }: { href: string; name: string; handle: string; gradient: string; icon: string }) {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, hover: false });
-  const onMove = (e: MouseEvent) => {
-    const el = ref.current; if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    setT({ rx: (0.5 - y) * 28, ry: (x - 0.5) * 32, mx: x * 100, my: y * 100, hover: true });
-  };
-  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, hover: false });
-  const lift = t.hover ? 30 : 0;
+function Social3DCard({ href, name, handle, icon }: { href: string; name: string; handle: string; icon: string }) {
   return (
-    <div style={{ perspective: "1200px" }} className="group">
-      <a
-        ref={ref}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        style={{
-          transform: `rotateX(${t.rx}deg) rotateY(${t.ry}deg) translateZ(${lift}px) scale(${t.hover ? 1.04 : 1})`,
-          transformStyle: "preserve-3d",
-          transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
-        }}
-        className={`relative block aspect-square rounded-3xl bg-gradient-to-br ${gradient} text-white shadow-[0_25px_60px_-20px_rgba(0,0,0,0.7)] hover:shadow-[0_40px_100px_-20px_var(--flame-glow)] border border-white/15 overflow-hidden`}
-      >
-        {/* Animated grid floor */}
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-30 mix-blend-overlay"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.25) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-            transform: "translateZ(-40px)",
-          }}
-        />
-        {/* Floating orb behind icon */}
-        <div
-          aria-hidden
-          className="absolute left-1/2 top-1/2 w-40 h-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl"
-          style={{
-            background: "radial-gradient(circle, rgba(255,255,255,0.6), transparent 65%)",
-            transform: `translate(-50%, -50%) translateZ(${t.hover ? 20 : 0}px) scale(${t.hover ? 1.3 : 0.9})`,
-            transition: "transform 0.45s cubic-bezier(0.22,1,0.36,1)",
-            opacity: t.hover ? 0.9 : 0.5,
-          }}
-        />
-        {/* Cursor glare */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay"
-          style={{ background: `radial-gradient(280px circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.55), transparent 60%)` }}
-        />
-        {/* Corner shine sweep */}
-        <div
-          aria-hidden
-          className="absolute -inset-x-10 -top-10 h-20 bg-gradient-to-r from-transparent via-white/40 to-transparent rotate-12 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-[1100ms] ease-out"
-        />
-
-        {/* Floating handle chip */}
-        <div
-          style={{ transform: "translateZ(60px)" }}
-          className="absolute top-3 left-3 px-2 py-1 rounded-md bg-black/30 backdrop-blur-sm border border-white/20 text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold"
-        >
-          {name}
-        </div>
-
-        {/* Icon stack with parallax */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-          {/* Echo icon (deep layer) */}
-          <div
-            aria-hidden
-            style={{ transform: `translateZ(20px) scale(${t.hover ? 1.6 : 1.2})`, opacity: t.hover ? 0.25 : 0.12, transition: "all 0.45s cubic-bezier(0.22,1,0.36,1)" }}
-            className="absolute"
-          >
-            <SocialIcon name={icon} />
-          </div>
-          {/* Main icon (front layer) */}
-          <div style={{ transform: "translateZ(80px)" }} className="relative drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
-            <SocialIcon name={icon} />
-          </div>
-          <div
-            style={{ transform: "translateZ(50px)" }}
-            className="relative text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/90 font-mono px-3 py-1 rounded-full bg-black/30 backdrop-blur-sm border border-white/15"
-          >
-            {handle}
-          </div>
-        </div>
-
-        {/* CTA arrow */}
-        <div
-          style={{ transform: "translateZ(70px)" }}
-          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition"
-        >
-          <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current"><path d="M5 12h12.2l-4.6-4.6L14 6l7 6-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
-        </div>
-      </a>
-    </div>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group flex min-h-20 items-center gap-3 rounded-2xl border border-border bg-card/60 p-3 text-left backdrop-blur transition hover:-translate-y-1 hover:border-flame hover:bg-background/90 hover:shadow-[0_18px_50px_-28px_var(--flame-glow)] active:scale-95 lg:min-h-36 lg:flex-col lg:items-start lg:justify-between"
+    >
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-background/70 text-flame transition group-hover:border-flame group-hover:bg-flame group-hover:text-primary-foreground">
+        <SocialIcon name={icon} />
+      </span>
+      <span className="min-w-0 flex-1 lg:w-full">
+        <span className="block font-display text-base font-bold text-foreground lg:text-lg">{name}</span>
+        <span className="mt-1 block truncate text-xs text-muted-foreground lg:text-[11px]">{handle}</span>
+      </span>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-flame transition group-hover:translate-x-1 group-hover:border-flame lg:self-end">
+        <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current"><path d="M5 12h12.2l-4.6-4.6L14 6l7 6-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
+      </span>
+    </a>
   );
 }
