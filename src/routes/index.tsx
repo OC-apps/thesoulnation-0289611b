@@ -423,7 +423,7 @@ function Index() {
           {/* Texto + specs */}
           <div className="md:col-span-5">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
-            <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Jersey <span className="italic text-flame">Oficial</span>
             </h2>
             <p className="mt-6 text-lg text-foreground/85 leading-relaxed">
