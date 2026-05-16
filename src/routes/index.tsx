@@ -206,7 +206,61 @@ function Index() {
             </p>
           </div>
 
-          {/* KILLERS + LEGENDS — banner + grid de nombres (mismo layout que CREW) */}
+          {/* WAVES — creators */}
+          <div className="text-center mb-12 flex flex-col items-center">
+            <img
+              src={soulWavesLogo}
+              alt="The Soul Waves"
+              className="h-20 md:h-32 lg:h-40 w-auto object-contain drop-shadow-[0_10px_40px_var(--flame-glow)] animate-float"
+            />
+            <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
+            <p className="mt-6 text-muted-foreground max-w-3xl mx-auto">
+              Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
+            </p>
+          </div>
+
+          {/* Mobile: carrusel */}
+          <div className="sm:hidden mb-12">
+            <MobileCarousel>
+              {WAVES.map((c, i) => (
+                <article key={c.name} className="snap-center shrink-0 w-[78%] wave-card rounded-2xl overflow-hidden flex flex-col">
+                  <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
+                    <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent" />
+                    <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
+                      <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+                    </div>
+                  </div>
+                  <div className="p-4 relative z-10">
+                    <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
+                  </div>
+                </article>
+              ))}
+            </MobileCarousel>
+          </div>
+
+          {/* Desktop/tablet: grid */}
+          <div className="hidden sm:grid perspective sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+            {WAVES.map((c, i) => (
+              <article key={c.name} className="group wave-card rounded-2xl overflow-hidden flex flex-col">
+                <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
+                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
+                    Wave · 0{i + 1}
+                  </span>
+                </div>
+                <div className="p-6 flex flex-col gap-3 relative z-10">
+                  <h4 className="layer-up font-display font-bold text-2xl text-flame">{c.name}</h4>
+                  <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
+                  <p className="text-sm text-foreground/85 leading-relaxed">{c.bio}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* KILLERS + LEGENDS — banner + grid de nombres */}
           <div className="perspective mb-12 space-y-8">
             {[
               { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Modo Guardian · Gears 5", desc: "Equipo enfocado en grindear el modo Guardian de Gears 5.", members: KILLERS },
@@ -234,7 +288,7 @@ function Index() {
           </div>
 
           {/* CREW — banner + grid de nombres */}
-          <div className="perspective mb-20">
+          <div className="perspective">
             <div className="tilt-card roster-card rounded-3xl p-10 md:p-14">
               <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
                 <div className="md:col-span-5">
@@ -254,63 +308,10 @@ function Index() {
               </div>
             </div>
           </div>
-
-          {/* WAVES — creators */}
-          <div className="text-center mb-12 flex flex-col items-center">
-            <img
-              src={soulWavesLogo}
-              alt="The Soul Waves"
-              className="h-20 md:h-32 lg:h-40 w-auto object-contain drop-shadow-[0_10px_40px_var(--flame-glow)] animate-float"
-            />
-            <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
-            <p className="mt-6 text-muted-foreground max-w-3xl mx-auto">
-              Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
-            </p>
-          </div>
-
-          {/* Mobile: carrusel */}
-          <div className="sm:hidden">
-            <MobileCarousel>
-              {WAVES.map((c, i) => (
-                <article key={c.name} className="snap-center shrink-0 w-[78%] wave-card rounded-2xl overflow-hidden flex flex-col">
-                  <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
-                    <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent" />
-                    <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
-                      <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
-                    </div>
-                  </div>
-                  <div className="p-4 relative z-10">
-                    <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
-                  </div>
-                </article>
-              ))}
-            </MobileCarousel>
-          </div>
-
-          {/* Desktop/tablet: grid */}
-          <div className="hidden sm:grid perspective sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WAVES.map((c, i) => (
-              <article key={c.name} className="group wave-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
-                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
-                    Wave · 0{i + 1}
-                  </span>
-                </div>
-                <div className="p-6 flex flex-col gap-3 relative z-10">
-                  <h4 className="layer-up font-display font-bold text-2xl text-flame">{c.name}</h4>
-                  <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
-                  <p className="text-sm text-foreground/85 leading-relaxed">{c.bio}</p>
-                </div>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
+
+
 
       {/* VIDEOS */}
       <section id="videos" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
