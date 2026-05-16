@@ -1,5 +1,7 @@
 import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { sendDiscordRecruitment } from "@/lib/discord.functions";
 import soulLegendsLogo from "@/assets/soul-legends.png";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import soulKillersLogo from "@/assets/soul-killers.png";
@@ -15,6 +17,7 @@ export function RecruitmentForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, mx: 50, my: 50 });
   const cardRef = useRef<HTMLFormElement>(null);
+  const sendDiscord = useServerFn(sendDiscordRecruitment);
 
   const onMove = (e: MouseEvent) => {
     const el = cardRef.current;
@@ -33,8 +36,7 @@ export function RecruitmentForm() {
     const data = new FormData(form);
     setStatus("sending");
     try {
-      // 1) Guarda en base de datos (siempre funciona)
-      const { error: dbError } = await supabase.from("recruitment_submissions").insert({
+      const payload = {
         area,
         nombre_nickname: String(data.get("Nombre y Nickname") || ""),
         link_rc: String(data.get("Link RC") || "") || null,
@@ -45,10 +47,16 @@ export function RecruitmentForm() {
         red_facebook: String(data.get("Red Facebook") || "") || null,
         red_instagram: String(data.get("Red Instagram") || "") || null,
         email: String(data.get("email") || "") || null,
-      });
+      };
+
+      // 1) Guarda en base de datos
+      const { error: dbError } = await supabase.from("recruitment_submissions").insert(payload);
       if (dbError) throw dbError;
 
-      // 2) Intenta también enviar correo por FormSubmit (puede fallar, no es crítico)
+      // 2) Envía embed a Discord (server-side, webhook secreto)
+      sendDiscord({ data: payload }).catch((err) => console.error("Discord webhook error:", err));
+
+      // 3) Intenta también enviar por correo (FormSubmit, no crítico)
       fetch("https://formsubmit.co/ajax/ximgxteam@gmail.com", {
         method: "POST",
         headers: { Accept: "application/json" },
