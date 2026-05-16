@@ -10,12 +10,12 @@ import soulLogo from "@/assets/soul-logo.png";
 export function Hero3D() {
   return (
     <div className="relative w-full h-[88vh] min-h-[620px] overflow-hidden select-none isolate">
-      {/* Solid orange base — kills any background underneath */}
+      {/* Solid blue base */}
       <div
         className="absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(120% 80% at 50% 40%, #ff8a2a 0%, #f0590c 35%, #b8330a 65%, #5a1604 100%)",
+            "radial-gradient(120% 80% at 50% 40%, #2a6fd8 0%, #134098 35%, #0a2466 70%, #03102e 100%)",
         }}
       />
 
@@ -24,58 +24,63 @@ export function Hero3D() {
         className="absolute inset-0 opacity-[0.18] mix-blend-overlay pointer-events-none"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='64' viewBox='0 0 56 64'><path d='M28 0L56 16v32L28 64 0 48V16z' fill='none' stroke='%23000' stroke-width='1'/></svg>\")",
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='64' viewBox='0 0 56 64'><path d='M28 0L56 16v32L28 64 0 48V16z' fill='none' stroke='%23ffffff' stroke-width='1'/></svg>\")",
           backgroundSize: "56px 64px",
         }}
       />
 
-      {/* Diagonal speed stripes */}
-      <div
-        className="absolute inset-0 opacity-15 pointer-events-none"
-        style={{
-          background:
-            "repeating-linear-gradient(115deg, transparent 0 22px, rgba(0,0,0,0.35) 22px 24px)",
-        }}
-      />
-
-      {/* Bottom dark gradient + top vignette */}
+      {/* Vignette */}
       <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
       <div className="absolute inset-0 pointer-events-none [background:radial-gradient(120%_80%_at_50%_40%,transparent_55%,rgba(0,0,0,0.55)_100%)]" />
 
-      {/* Animated scan-line sweep */}
+      {/* Pulsing blue core flare behind logo */}
       <motion.div
-        className="absolute inset-x-0 h-40 pointer-events-none mix-blend-screen"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] pointer-events-none"
         style={{
           background:
-            "linear-gradient(180deg, transparent, rgba(255,220,180,0.25), transparent)",
-          filter: "blur(6px)",
-        }}
-        animate={{ y: ["-20%", "120%"] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Light streaks */}
-      <motion.div
-        className="absolute -top-20 -left-20 w-[60%] h-[60%] pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(255,235,180,0.45), transparent 70%)",
-          filter: "blur(40px)",
+            "radial-gradient(closest-side, rgba(120,200,255,0.55), rgba(60,140,255,0.25) 40%, transparent 70%)",
+          filter: "blur(30px)",
           mixBlendMode: "screen",
         }}
-        animate={{ opacity: [0.5, 0.9, 0.5] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [0.5, 1, 0.5], scale: [0.95, 1.05, 0.95] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       />
+
+      {/* Diagonal light beam sweep */}
       <motion.div
-        className="absolute -bottom-24 -right-24 w-[65%] h-[65%] pointer-events-none"
+        className="absolute inset-0 pointer-events-none mix-blend-screen"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255,140,50,0.55), transparent 70%)",
+            "linear-gradient(110deg, transparent 30%, rgba(150,210,255,0.35) 48%, rgba(255,255,255,0.55) 50%, rgba(150,210,255,0.35) 52%, transparent 70%)",
+          backgroundSize: "250% 100%",
+          filter: "blur(8px)",
+        }}
+        animate={{ backgroundPositionX: ["-60%", "160%"] }}
+        transition={{ duration: 5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+      />
+
+      {/* Ambient corner glows */}
+      <motion.div
+        className="absolute -top-32 -left-32 w-[55%] h-[55%] pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(80,170,255,0.55), transparent 70%)",
           filter: "blur(50px)",
           mixBlendMode: "screen",
         }}
-        animate={{ opacity: [0.6, 1, 0.6] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+        animate={{ opacity: [0.4, 0.9, 0.4] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -bottom-32 -right-32 w-[60%] h-[60%] pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(120,220,255,0.5), transparent 70%)",
+          filter: "blur(55px)",
+          mixBlendMode: "screen",
+        }}
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
       />
 
       {/* Particles */}
