@@ -829,3 +829,61 @@ function MobileCarousel({ children, label }: { children: React.ReactNode; label?
     </div>
   );
 }
+
+function SocialIcon({ name }: { name: string }) {
+  const cls = "w-12 h-12 md:w-14 md:h-14 fill-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]";
+  switch (name) {
+    case "youtube":
+      return <svg viewBox="0 0 24 24" className={cls}><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/></svg>;
+    case "tiktok":
+      return <svg viewBox="0 0 24 24" className={cls}><path d="M19.6 6.3a5.6 5.6 0 0 1-3.4-1.2 5.6 5.6 0 0 1-2.1-3.5h-3.5v13.2a3.1 3.1 0 1 1-2.2-3 3.1 3.1 0 0 1 .9.1V8.3a6.6 6.6 0 0 0-1-.1A6.6 6.6 0 1 0 14.1 15V8.7a9 9 0 0 0 5.5 1.9V7.1a5.6 5.6 0 0 1 0-.8z"/></svg>;
+    case "facebook":
+      return <svg viewBox="0 0 24 24" className={cls}><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.5 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>;
+    case "x":
+      return <svg viewBox="0 0 24 24" className={cls}><path d="M18.2 2H21l-6.5 7.4L22.5 22h-6.4l-5-6.6L5.3 22H2.5l7-8L1.5 2h6.6l4.5 6 5.6-6zm-1.1 18.2h1.6L7 3.7H5.3z"/></svg>;
+    case "discord":
+    default:
+      return <svg viewBox="0 0 24 24" className={cls}><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.3.5a18.3 18.3 0 0 1 4.4 1.4 16 16 0 0 0-13 0A18.3 18.3 0 0 1 11 3.5L10.7 3a19.8 19.8 0 0 0-4.9 1.4A20.7 20.7 0 0 0 2.3 18a20 20 0 0 0 6 3l1.3-1.9a13 13 0 0 1-2-1l.5-.4a14.3 14.3 0 0 0 12 0l.5.4a13 13 0 0 1-2 1L19.7 21a20 20 0 0 0 6-3 20.7 20.7 0 0 0-5.4-13.6zM9 15.3a2.4 2.4 0 0 1-2.2-2.5A2.4 2.4 0 0 1 9 10.3a2.4 2.4 0 0 1 2.2 2.5A2.4 2.4 0 0 1 9 15.3zm6 0a2.4 2.4 0 0 1-2.2-2.5 2.4 2.4 0 0 1 4.4 0 2.4 2.4 0 0 1-2.2 2.5z"/></svg>;
+  }
+}
+
+function Social3DCard({ href, name, handle, gradient, icon }: { href: string; name: string; handle: string; gradient: string; icon: string }) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, lift: 0 });
+  const onMove = (e: MouseEvent) => {
+    const el = ref.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    setT({ rx: (0.5 - y) * 18, ry: (x - 0.5) * 22, mx: x * 100, my: y * 100, lift: 12 });
+  };
+  const onLeave = () => setT({ rx: 0, ry: 0, mx: 50, my: 50, lift: 0 });
+  return (
+    <a
+      ref={ref}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      style={{
+        transform: `perspective(900px) rotateX(${t.rx}deg) rotateY(${t.ry}deg) translateZ(${t.lift}px)`,
+        transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1)",
+      }}
+      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} p-6 aspect-square flex flex-col items-center justify-center text-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] hover:shadow-[0_30px_80px_-15px_var(--flame-glow)] border border-white/10`}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay"
+        style={{ background: `radial-gradient(300px circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.45), transparent 60%)` }}
+      />
+      <div aria-hidden className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-60 blur-xl transition-opacity" style={{ background: `radial-gradient(circle at ${t.mx}% ${t.my}%, rgba(255,255,255,0.3), transparent 60%)` }} />
+      <div style={{ transform: `translateZ(40px)` }} className="relative flex flex-col items-center gap-3">
+        <SocialIcon name={icon} />
+        <div className="font-display font-bold text-lg md:text-xl uppercase tracking-wider">{name}</div>
+        <div className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-white/80">{handle}</div>
+      </div>
+      <div className="absolute bottom-3 right-3 text-[10px] uppercase tracking-widest text-white/60 group-hover:text-white transition">→ Ir</div>
+    </a>
+  );
+}
