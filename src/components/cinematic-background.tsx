@@ -68,19 +68,19 @@ export function CinematicBackground() {
         float n = fbm(p*1.6 + 3.5*r + par);
 
         // edge mask: high near edges/corners, low in center
-        float vignette = smoothstep(0.15, 0.95, length(p*vec2(0.85,1.05)));
+        float vignette = smoothstep(0.02, 0.82, length(p*vec2(0.85,1.05)));
 
         // two volumetric light sources (orange top-right, blue bottom-left)
-        vec2 orangeC = vec2(0.55, 0.35) + par*1.2;
-        vec2 blueC   = vec2(-0.55,-0.35) - par*1.2;
+        vec2 orangeC = vec2(-0.80, 0.32) + par*1.2;
+        vec2 blueC   = vec2(0.72,-0.24) - par*1.2;
         float orangeD = length(p - orangeC);
         float blueD   = length(p - blueC);
 
         float breathO = 0.85 + 0.15 * u_pulse;
         float breathB = 0.85 + 0.15 * (1.0 - u_pulse);
 
-        float orangeGlow = exp(-orangeD * 2.2) * breathO;
-        float blueGlow   = exp(-blueD   * 2.0) * breathB;
+        float orangeGlow = exp(-orangeD * 1.25) * breathO;
+        float blueGlow   = exp(-blueD   * 1.15) * breathB;
 
         // smoke density modulated by noise + vignette so center stays clean
         float smoke = pow(n, 1.6) * (0.35 + 0.85 * vignette);
@@ -90,11 +90,11 @@ export function CinematicBackground() {
         vec3 base      = vec3(0.005, 0.008, 0.015); // deep black
 
         vec3 col = base;
-        col += colOrange * (orangeGlow * 0.9 + smoke * orangeGlow * 1.6);
-        col += colBlue   * (blueGlow   * 0.9 + smoke * blueGlow   * 1.6);
+        col += colOrange * (orangeGlow * 1.85 + smoke * orangeGlow * 2.9);
+        col += colBlue   * (blueGlow   * 1.85 + smoke * blueGlow   * 2.9);
 
         // subtle ambient haze in mid tones, kept off center
-        col += mix(colBlue, colOrange, n) * smoke * 0.08 * vignette;
+        col += mix(colBlue, colOrange, n) * smoke * 0.16 * vignette;
 
         // minimal floating particles via high-freq noise threshold
         float sp = noise(p*180.0 + t*8.0);
@@ -192,19 +192,28 @@ export function CinematicBackground() {
       style={{ background: "#03060d" }}
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      <div
+        className="absolute inset-0 opacity-80"
+        style={{
+          background:
+            "radial-gradient(ellipse 44% 58% at 0% 34%, color-mix(in oklab, var(--flame) 48%, transparent), transparent 72%), radial-gradient(ellipse 52% 58% at 100% 24%, color-mix(in oklab, var(--blue) 46%, transparent), transparent 74%), radial-gradient(ellipse 48% 48% at 82% 92%, color-mix(in oklab, var(--blue) 34%, transparent), transparent 72%)",
+          filter: "blur(34px) saturate(1.35)",
+          mixBlendMode: "screen",
+          animation: "cinematic-breathe 7s ease-in-out infinite",
+        }}
+      />
       {/* center readability mask */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 55% at 50% 45%, rgba(3,6,13,0.55), rgba(3,6,13,0) 70%)",
-          mixBlendMode: "multiply",
+            "radial-gradient(ellipse 46% 40% at 50% 44%, rgba(3,6,13,0.24), rgba(3,6,13,0) 72%)",
         }}
       />
       {/* edge vignette */}
       <div
         className="absolute inset-0"
-        style={{ boxShadow: "inset 0 0 260px 60px rgba(0,0,0,0.85)" }}
+        style={{ boxShadow: "inset 0 0 180px 35px rgba(0,0,0,0.62)" }}
       />
     </div>
   );

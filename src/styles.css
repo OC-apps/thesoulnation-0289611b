@@ -37,7 +37,7 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.20 0.20 255);
+  --background: oklch(0.055 0.028 255);
   --foreground: oklch(0.98 0.01 260);
   --card: oklch(0.16 0.20 255);
   --card-foreground: oklch(0.98 0.01 260);
@@ -69,7 +69,7 @@
   * { border-color: var(--color-border); }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--background);
+    background: #03060d;
     color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -96,6 +96,7 @@
 
 @keyframes float-slow { 0%,100% { transform: translateY(0) rotate(0deg);} 50% { transform: translateY(-20px) rotate(3deg);} }
 @keyframes pulse-glow { 0%,100% { opacity: 0.4; transform: scale(1);} 50% { opacity: 0.7; transform: scale(1.1);} }
+@keyframes cinematic-breathe { 0%,100% { opacity: 0.66; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.045); } }
 @keyframes marquee { from { transform: translateX(0);} to { transform: translateX(-50%);} }
 @keyframes fade-up { from { opacity:0; transform: translateY(24px);} to { opacity:1; transform: translateY(0);} }
 
@@ -139,10 +140,9 @@
 }
 .tilt-idle { animation: tilt-idle 8s ease-in-out infinite; transform-style: preserve-3d; }
 
-/* Aurora mesh background — premium ambient */
+/* Legacy aurora layer disabled so the WebGL cinematic background remains visible */
 .aurora-field {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-  background: var(--background);
+  display: none;
 }
 .aurora-field::before {
   content: ""; position: absolute;
