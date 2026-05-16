@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { EffectsLayer } from "@/components/effects-layer";
+import { CinematicBackground } from "@/components/cinematic-background";
 
 function NotFoundComponent() {
   return (
