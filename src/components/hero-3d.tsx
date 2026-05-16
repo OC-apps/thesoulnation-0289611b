@@ -191,8 +191,8 @@ function Extruded({
 
   const gradient =
     variant === "flame"
-      ? "linear-gradient(180deg, #ffd9a8 0%, #ff9a3c 38%, #ff5a18 62%, #b53306 100%)"
-      : "linear-gradient(180deg, #ffffff 0%, #e6ecf5 35%, #aab4c4 60%, #5c6878 100%)";
+      ? "linear-gradient(180deg, #fff1d6 0%, #ffaa55 30%, #ff6a1a 60%, #c1370a 100%)"
+      : "linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #e8ecf3 80%, #c4ccd8 100%)";
 
   return (
     <motion.span
