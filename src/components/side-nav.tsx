@@ -51,17 +51,17 @@ export function SideNav() {
     <nav className="fixed inset-x-0 bottom-3 z-50 px-3 sm:bottom-5 pointer-events-none" aria-label="Navegación rápida">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
         <div
-          className={`w-full rounded-2xl border border-border bg-background/95 p-2 shadow-[0_22px_70px_-35px_var(--flame-glow)] backdrop-blur-xl transition-all duration-300 pointer-events-auto ${
+          className={`max-w-[calc(100vw-1.5rem)] rounded-full border border-border bg-background/95 p-1.5 shadow-[0_22px_70px_-35px_var(--flame-glow)] backdrop-blur-xl transition-all duration-300 pointer-events-auto ${
             open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none"
           }`}
         >
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+          <div className="flex max-w-full gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:justify-center">
             {SECTIONS.map((section) => (
               <button
                 key={section.id}
                 type="button"
                 onClick={() => go(section.id)}
-                className={`min-h-11 rounded-xl border px-3 py-2 text-[10px] font-bold uppercase tracking-[0.18em] transition active:scale-95 ${
+                className={`min-h-9 shrink-0 rounded-full border px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.16em] transition active:scale-95 ${
                   active === section.id
                     ? "border-flame bg-flame text-primary-foreground shadow-[0_0_30px_-12px_var(--flame-glow)]"
                     : "border-border bg-card/60 text-muted-foreground hover:border-flame hover:text-foreground"
