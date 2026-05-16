@@ -66,11 +66,6 @@ export function EffectsLayer() {
     <>
       <div className="scanlines" aria-hidden="true" />
       <div className="vignette-edges" aria-hidden="true" />
-      <div className="cogs-layer" aria-hidden="true">
-        <CogSvg className="cog cog-1" />
-        <CogSvg className="cog cog-2" />
-        <CogSvg className="cog cog-3" />
-      </div>
     </>
   );
 }
