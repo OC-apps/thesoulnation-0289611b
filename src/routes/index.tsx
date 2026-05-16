@@ -156,7 +156,7 @@ function Index() {
           <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-start">
             <div className="md:col-span-5">
               <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
-              <h2 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.95]">
+              <h2 className="mt-3 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
                 ¿Quiénes <span className="italic text-flame">Somos?</span>
               </h2>
               <img src={soulLogo} alt="" width={160} height={160} loading="lazy" className="hidden md:block mt-6 w-24 lg:w-32 opacity-80 animate-float" />
