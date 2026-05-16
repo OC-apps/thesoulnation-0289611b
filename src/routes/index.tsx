@@ -581,23 +581,17 @@ function Index() {
           <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
             síguenos en nuestras <br /><span className="text-flame italic">redes sociales</span>
           </h2>
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 bg-flame text-primary-foreground px-10 py-5 rounded-full font-bold text-lg shadow-[0_0_80px_-10px_var(--flame-glow)] hover:scale-105 transition">
-              Discord
-            </a>
-            <a href={SOCIALS.youtube} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
-              YouTube
-            </a>
-            <a href={SOCIALS.tiktok} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
-              TikTok
-            </a>
-            <a href={SOCIALS.facebook} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
-              Facebook
-            </a>
-            <a href={SOCIALS.x} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 px-8 py-5 rounded-full font-bold text-lg border border-border hover:bg-accent hover:border-flame transition">
-              X / Twitter
-            </a>
+          <p className="mt-6 text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
+            Únete a la comunidad y vive el día a día de <span className="text-flame font-bold">The Soul Nation</span>.
+          </p>
+          <div className="perspective mt-14 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+            <Social3DCard href={SOCIALS.discord} name="Discord" handle="ADPyNMFggc" gradient="from-[#5865F2] to-[#404EED]" icon="discord" />
+            <Social3DCard href={SOCIALS.youtube} name="YouTube" handle="@TheSoulNationHD" gradient="from-[#FF0000] to-[#CC0000]" icon="youtube" />
+            <Social3DCard href={SOCIALS.tiktok} name="TikTok" handle="@thesoulnation" gradient="from-[#FF0050] via-[#000000] to-[#00F2EA]" icon="tiktok" />
+            <Social3DCard href={SOCIALS.facebook} name="Facebook" handle="TheSoulNationHD" gradient="from-[#1877F2] to-[#0A5AC9]" icon="facebook" />
+            <Social3DCard href={SOCIALS.x} name="X / Twitter" handle="@TheSoulNation" gradient="from-[#1a1a1a] to-[#000000]" icon="x" />
           </div>
+
         </div>
       </section>
 
