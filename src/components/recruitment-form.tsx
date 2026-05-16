@@ -46,8 +46,16 @@ export function RecruitmentForm() {
     }
   };
 
+  const SOCIALS = ["TikTok", "YouTube", "Twitch", "Facebook", "Instagram"] as const;
+
   return (
     <>
+      {/* Aviso área */}
+      <div className="mb-4 text-center">
+        <p className="text-sm md:text-base uppercase tracking-[0.25em] text-flame font-bold">
+          ↓ Selecciona el área en la que deseas ingresar ↓
+        </p>
+      </div>
       {/* Selector de área 3D */}
       <div className="perspective grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
         {AREAS.map((a) => {
