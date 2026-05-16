@@ -120,9 +120,10 @@ export function RecruitmentForm() {
             }}
           />
 
-          <input type="hidden" name="_subject" value="RECLUTAMIENTO THE SOUL NATION" />
+          <input type="hidden" name="_subject" value="🔥 NUEVA POSTULACIÓN — THE SOUL NATION" />
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_autoresponse" value="¡Gracias por postularte a The Soul Nation! 🔥 Recibimos tu RC correctamente. Si eres seleccionado, te contactaremos por una de tus redes sociales. — The Soul Nation" />
           <input type="hidden" name="Area" value={area} />
           <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
 
