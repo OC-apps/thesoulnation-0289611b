@@ -119,14 +119,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="hitodama-field" aria-hidden="true">
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-        <span className="hitodama" />
-      </div>
+      <CinematicBackground />
       <EffectsLayer />
       <Outlet />
     </QueryClientProvider>
