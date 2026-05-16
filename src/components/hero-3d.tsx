@@ -61,53 +61,8 @@ export function Hero3D() {
       {/* Particles */}
       <Particles />
 
-      {/* Energy lines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.18] mix-blend-screen">
-        <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="el1" x1="0" x2="1">
-              <stop offset="0" stopColor="#ff7a18" stopOpacity="0" />
-              <stop offset=".5" stopColor="#ff9a3c" stopOpacity=".9" />
-              <stop offset="1" stopColor="#3aa7ff" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <path
-              key={i}
-              d={`M0 ${120 + i * 110} C 300 ${80 + i * 100}, 800 ${200 + i * 80}, 1200 ${100 + i * 110}`}
-              stroke="url(#el1)"
-              strokeWidth="1"
-              fill="none"
-            />
-          ))}
-        </svg>
-      </div>
-
-      {/* Volumetric soft blobs */}
-      <motion.div
-        className="absolute -left-40 top-1/3 w-[55vw] h-[55vw] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(255,120,40,0.55), rgba(255,120,40,0) 70%)",
-          filter: "blur(40px)",
-          x: useTransform(sx, [-1, 1], [30, -30]),
-          y: useTransform(sy, [-1, 1], [20, -20]),
-        }}
-        animate={{ opacity: [0.55, 0.8, 0.55] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -right-40 top-1/4 w-[55vw] h-[55vw] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(60,150,255,0.55), rgba(60,150,255,0) 70%)",
-          filter: "blur(40px)",
-          x: useTransform(sx, [-1, 1], [-30, 30]),
-          y: useTransform(sy, [-1, 1], [-20, 20]),
-        }}
-        animate={{ opacity: [0.55, 0.85, 0.55] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
-      />
+      {/* Volumetric moving smoke / fabric — blue & orange */}
+      <SmokeFabric sx={sx} sy={sy} />
 
       {/* Center stage */}
       <div className="absolute inset-0 grid place-items-center">
