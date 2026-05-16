@@ -14,7 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      recruitment_submissions: {
+        Row: {
+          area: string
+          created_at: string
+          email: string | null
+          id: string
+          link_rc: string | null
+          nombre_nickname: string
+          red_facebook: string | null
+          red_instagram: string | null
+          red_tiktok: string | null
+          red_twitch: string | null
+          red_youtube: string | null
+          sobre_ti: string
+        }
+        Insert: {
+          area: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          link_rc?: string | null
+          nombre_nickname: string
+          red_facebook?: string | null
+          red_instagram?: string | null
+          red_tiktok?: string | null
+          red_twitch?: string | null
+          red_youtube?: string | null
+          sobre_ti: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          link_rc?: string | null
+          nombre_nickname?: string
+          red_facebook?: string | null
+          red_instagram?: string | null
+          red_tiktok?: string | null
+          red_twitch?: string | null
+          red_youtube?: string | null
+          sobre_ti?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
