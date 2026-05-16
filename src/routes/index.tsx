@@ -98,11 +98,6 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen text-foreground relative">
-      {/* AURORA — fondo ambiente premium */}
-      <div className="aurora-field" aria-hidden="true">
-        <div className="aurora-grid" />
-        <div className="aurora-scan" />
-      </div>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
