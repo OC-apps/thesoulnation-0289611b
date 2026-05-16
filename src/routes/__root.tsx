@@ -120,9 +120,13 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <div
         className="fixed inset-0 -z-50"
+        style={{ background: "oklch(0.30 0.24 255)" }}
+      />
+      <div
+        className="fixed inset-0 -z-40 pointer-events-none"
         style={{
           background:
-            "radial-gradient(70% 60% at 85% 15%, rgba(255,120,40,0.55) 0%, rgba(255,120,40,0) 60%), radial-gradient(60% 55% at 10% 90%, rgba(255,140,50,0.45) 0%, rgba(255,140,50,0) 60%), radial-gradient(120% 90% at 50% 30%, #3b82f6 0%, #1e4fd1 30%, #0c2da8 60%, #061a6e 85%, #02093a 100%)",
+            "radial-gradient(50% 45% at 85% 10%, rgba(255,130,40,0.22), transparent 70%), radial-gradient(45% 40% at 8% 90%, rgba(255,150,60,0.18), transparent 70%), radial-gradient(80% 60% at 50% 50%, rgba(255,255,255,0.04), transparent 70%)",
         }}
       />
       <EffectsLayer />
