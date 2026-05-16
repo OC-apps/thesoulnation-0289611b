@@ -353,52 +353,8 @@ function Index() {
       </section>
 
       {/* WALLPAPERS */}
-      <section id="wallpapers" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
-        <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[140px]" />
-        <div className="relative mx-auto max-w-7xl px-6">
-          <div className="text-center mb-16">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
-            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
-              Wallpapers <span className="italic text-flame">Oficiales</span>
-            </h2>
-            <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
-              Tres series exclusivas para vestir tu pantalla con la identidad de The Soul Nation. Da clic, descarga y representa.
-            </p>
-          </div>
-          <div className="perspective grid md:grid-cols-3 gap-8">
-            {WALLPAPERS.map((wp, i) => (
-              <a
-                key={wp.title}
-                href={wp.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="wp-card group block"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-deep">
-                  <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-                  <span className="wp-shine" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
-                    Serie · 0{i + 1}
-                  </span>
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="font-display font-bold text-2xl md:text-3xl leading-tight text-foreground">
-                      {wp.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-foreground/80">{wp.tagline}</p>
-                    <div className="wp-cta mt-4 inline-flex items-center gap-2 text-sm font-bold text-flame">
-                      <span>Descargar en Drive</span>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14M13 5l7 7-7 7"/>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WallpapersSection />
+
 
       {/* JERSEY */}
       <section id="jersey" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
@@ -869,5 +825,184 @@ function Social3DCard({ href, name, handle, icon }: { href: string; name: string
         <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current"><path d="M5 12h12.2l-4.6-4.6L14 6l7 6-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
       </span>
     </a>
+  );
+}
+
+function WallpapersSection() {
+  const [active, setActive] = useState(0);
+  const [pos, setPos] = useState({ x: 50, y: 50 });
+  const wp = WALLPAPERS[active];
+
+  const onMove = (e: MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setPos({
+      x: ((e.clientX - r.left) / r.width) * 100,
+      y: ((e.clientY - r.top) / r.height) * 100,
+    });
+  };
+
+  return (
+    <section id="wallpapers" className="relative py-20 md:py-28 border-t border-border overflow-hidden">
+      <div
+        className="absolute -top-32 right-1/4 w-[600px] h-[600px] rounded-full blur-[160px] opacity-30 transition-all duration-1000"
+        style={{ background: `radial-gradient(circle, var(--flame), transparent 70%)` }}
+      />
+      <div className="relative mx-auto max-w-7xl px-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
+          <div>
+            <div className="text-xs uppercase tracking-[0.3em] text-flame">06 · Wallpapers</div>
+            <h2 className="mt-4 font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
+              Vestí tu <span className="italic text-flame">pantalla</span>
+            </h2>
+          </div>
+          <div className="font-display text-foreground/60 text-sm md:text-base max-w-sm">
+            Pasá el mouse sobre cada serie. Hacé clic para descargar en Drive.
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
+          {/* PREVIEW */}
+          <div className="lg:col-span-8 perspective">
+            <a
+              href={wp.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onMouseMove={onMove}
+              onMouseLeave={() => setPos({ x: 50, y: 50 })}
+              className="group relative block aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-deep"
+              style={{
+                transform: `perspective(1200px) rotateX(${(50 - pos.y) / 18}deg) rotateY(${(pos.x - 50) / 14}deg)`,
+                transition: "transform 0.2s ease-out",
+              }}
+            >
+              {WALLPAPERS.map((w, i) => (
+                <img
+                  key={w.title}
+                  src={w.img}
+                  alt={w.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
+                  style={{
+                    opacity: i === active ? 1 : 0,
+                    transform: i === active
+                      ? `scale(1.06) translate(${(50 - pos.x) / 8}px, ${(50 - pos.y) / 8}px)`
+                      : "scale(1.15)",
+                    filter: i === active ? "saturate(1.15) contrast(1.05)" : "blur(8px)",
+                  }}
+                />
+              ))}
+
+              {/* spotlight */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: `radial-gradient(400px circle at ${pos.x}% ${pos.y}%, oklch(1 0 0 / 0.18), transparent 50%)`,
+                  mixBlendMode: "overlay",
+                }}
+              />
+
+              {/* gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+              <div className={`absolute inset-0 bg-gradient-to-br ${wp.accent} opacity-40 mix-blend-overlay transition-all duration-700`} />
+
+              {/* corner ticks */}
+              {[
+                "top-3 left-3 border-t-2 border-l-2",
+                "top-3 right-3 border-t-2 border-r-2",
+                "bottom-3 left-3 border-b-2 border-l-2",
+                "bottom-3 right-3 border-b-2 border-r-2",
+              ].map((c) => (
+                <span key={c} className={`absolute w-6 h-6 border-flame ${c} transition-opacity duration-500 opacity-60 group-hover:opacity-100`} />
+              ))}
+
+              {/* badge */}
+              <span className="absolute top-5 left-5 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-3 py-1.5 rounded-full border border-flame/40 font-mono">
+                Serie · 0{active + 1} / 0{WALLPAPERS.length}
+              </span>
+
+              {/* live counter */}
+              <span className="absolute top-5 right-5 flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-foreground/80 bg-background/70 backdrop-blur px-3 py-1.5 rounded-full border border-border font-mono">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-flame" />
+                </span>
+                LIVE
+              </span>
+
+              {/* info */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+                <div key={wp.title} className="animate-fade-up">
+                  <h3 className="font-display font-bold text-3xl md:text-5xl leading-[1] text-foreground text-3d">
+                    {wp.title}
+                  </h3>
+                  <p className="mt-3 text-base md:text-lg text-foreground/85 max-w-lg">{wp.tagline}</p>
+                  <div className="mt-5 inline-flex items-center gap-3 bg-flame text-primary-foreground font-display font-bold px-5 py-3 rounded-full text-sm uppercase tracking-wider transition-transform group-hover:translate-x-1">
+                    <span>Descargar en Drive</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          {/* THUMBS */}
+          <div className="lg:col-span-4 flex flex-col gap-4">
+            {WALLPAPERS.map((w, i) => (
+              <button
+                key={w.title}
+                type="button"
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
+                onClick={() => window.open(w.href, "_blank", "noopener,noreferrer")}
+                className={`group relative overflow-hidden rounded-xl border text-left transition-all duration-500 ${
+                  i === active
+                    ? "border-flame scale-[1.02] shadow-[0_20px_60px_-20px_var(--flame-glow)]"
+                    : "border-border opacity-70 hover:opacity-100"
+                }`}
+              >
+                <div className="relative flex items-center gap-4 p-3">
+                  <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg">
+                    <img src={w.img} alt={w.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${w.accent} opacity-40 mix-blend-overlay`} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-mono text-[10px] tracking-[0.25em] text-flame">0{i + 1}</div>
+                    <div className="font-display font-bold text-sm md:text-base leading-tight truncate">{w.title}</div>
+                    <div className="text-xs text-muted-foreground truncate">{w.tagline}</div>
+                  </div>
+                  <svg
+                    width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                    className={`shrink-0 transition-all ${i === active ? "text-flame translate-x-0" : "text-muted-foreground -translate-x-2"}`}
+                  >
+                    <path d="M5 12h14M13 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                {/* progress bar on active */}
+                {i === active && (
+                  <span className="absolute bottom-0 left-0 h-0.5 w-full bg-flame/30">
+                    <span className="block h-full bg-flame animate-[marquee_3s_linear]" style={{ width: "100%" }} />
+                  </span>
+                )}
+              </button>
+            ))}
+
+            {/* stats */}
+            <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+              {[
+                { k: "03", l: "Series" },
+                { k: "4K", l: "Calidad" },
+                { k: "∞", l: "Gratis" },
+              ].map((s) => (
+                <div key={s.l} className="rounded-lg border border-border bg-card/40 backdrop-blur p-3">
+                  <div className="font-display font-bold text-2xl text-flame">{s.k}</div>
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
