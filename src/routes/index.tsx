@@ -275,7 +275,7 @@ function Index() {
                 <article key={c.name} className="snap-center shrink-0 w-[78%] wave-card rounded-2xl overflow-hidden flex flex-col">
                   <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
                     <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-[color:var(--background)]/40" />
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent" />
                     <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
                     <div className="absolute bottom-0 left-0 right-0 p-4">
                       <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
