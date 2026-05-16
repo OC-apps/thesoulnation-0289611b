@@ -575,7 +575,6 @@ function Index() {
 
       {/* REDES */}
       <section id="redes" className="relative py-16 md:py-24 overflow-hidden border-t border-border">
-        <div className="absolute inset-0 bg-hero opacity-80" />
         <img src={soulLogo} alt="" width={500} height={500} loading="lazy" className="absolute right-[-5%] top-1/2 -translate-y-1/2 w-[40vw] max-w-[500px] opacity-20 animate-float" />
         <div className="relative mx-auto max-w-5xl px-6 text-center">
           <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
