@@ -126,7 +126,7 @@ function Index() {
       </header>
 
       {/* HERO */}
-      <section id="top" className="relative overflow-hidden grain bg-hero">
+      <section id="top" className="relative overflow-hidden grain">
         <img
           src={soulMascot}
           alt=""
