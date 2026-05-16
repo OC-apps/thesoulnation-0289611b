@@ -259,8 +259,8 @@ body {
   transition: opacity 0.6s;
 }
 .wave-card img {
-  filter: grayscale(0.6) contrast(1.05) brightness(0.85);
-  transition: filter 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  filter: contrast(1.05) saturate(1.1);
+  transition: transform 0.9s cubic-bezier(0.22,1,0.36,1), filter 0.7s;
 }
 .wave-card:hover {
   transform: translateY(-6px);
@@ -269,7 +269,7 @@ body {
 }
 .wave-card:hover::before { transform: translateX(130%); }
 .wave-card:hover::after { opacity: 0.55; }
-.wave-card:hover img { filter: grayscale(0) contrast(1.1) brightness(1); transform: scale(1.06); }
+.wave-card:hover img { filter: contrast(1.1) saturate(1.15); transform: scale(1.06); }
 
 /* ========== GEARS-STYLE INTERACTIVE LAYER ========== */
 
