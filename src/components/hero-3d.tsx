@@ -61,53 +61,8 @@ export function Hero3D() {
       {/* Particles */}
       <Particles />
 
-      {/* Energy lines */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.18] mix-blend-screen">
-        <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="el1" x1="0" x2="1">
-              <stop offset="0" stopColor="#ff7a18" stopOpacity="0" />
-              <stop offset=".5" stopColor="#ff9a3c" stopOpacity=".9" />
-              <stop offset="1" stopColor="#3aa7ff" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <path
-              key={i}
-              d={`M0 ${120 + i * 110} C 300 ${80 + i * 100}, 800 ${200 + i * 80}, 1200 ${100 + i * 110}`}
-              stroke="url(#el1)"
-              strokeWidth="1"
-              fill="none"
-            />
-          ))}
-        </svg>
-      </div>
-
-      {/* Volumetric soft blobs */}
-      <motion.div
-        className="absolute -left-40 top-1/3 w-[55vw] h-[55vw] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(255,120,40,0.55), rgba(255,120,40,0) 70%)",
-          filter: "blur(40px)",
-          x: useTransform(sx, [-1, 1], [30, -30]),
-          y: useTransform(sy, [-1, 1], [20, -20]),
-        }}
-        animate={{ opacity: [0.55, 0.8, 0.55] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -right-40 top-1/4 w-[55vw] h-[55vw] rounded-full pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgba(60,150,255,0.55), rgba(60,150,255,0) 70%)",
-          filter: "blur(40px)",
-          x: useTransform(sx, [-1, 1], [-30, 30]),
-          y: useTransform(sy, [-1, 1], [-20, 20]),
-        }}
-        animate={{ opacity: [0.55, 0.85, 0.55] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
-      />
+      {/* Volumetric moving smoke / fabric — blue & orange */}
+      <SmokeFabric sx={sx} sy={sy} />
 
       {/* Center stage */}
       <div className="absolute inset-0 grid place-items-center">
@@ -145,7 +100,7 @@ export function Hero3D() {
               className="relative shrink-0"
               style={{ transformStyle: "preserve-3d" }}
             >
-              <SCrest />
+              <SCrest src={soulLogo} />
             </motion.div>
 
             {/* Stacked title */}
@@ -236,8 +191,8 @@ function Extruded({
 
   const gradient =
     variant === "flame"
-      ? "linear-gradient(180deg, #ffd9a8 0%, #ff9a3c 38%, #ff5a18 62%, #b53306 100%)"
-      : "linear-gradient(180deg, #ffffff 0%, #e6ecf5 35%, #aab4c4 60%, #5c6878 100%)";
+      ? "linear-gradient(180deg, #fff1d6 0%, #ffaa55 30%, #ff6a1a 60%, #c1370a 100%)"
+      : "linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #e8ecf3 80%, #c4ccd8 100%)";
 
   return (
     <motion.span
@@ -289,92 +244,117 @@ function Extruded({
   );
 }
 
-function SCrest() {
-  // Stylized "S" crest built in SVG with metallic + flame gradients
+function SCrest({ src }: { src: string }) {
   return (
     <motion.div
-      className="relative w-[28vw] max-w-[360px] min-w-[160px] aspect-square"
-      animate={{ y: [0, -6, 0] }}
+      className="relative w-[30vw] max-w-[420px] min-w-[180px] aspect-square"
+      animate={{ y: [0, -8, 0] }}
       transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       style={{ transformStyle: "preserve-3d" }}
     >
-      {/* outer glow */}
+      {/* breathing orange aura */}
       <motion.div
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-[-12%] rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(255,120,40,0.55), rgba(255,120,40,0) 70%)",
-          filter: "blur(30px)",
+            "radial-gradient(closest-side, rgba(255,120,40,0.65), rgba(255,120,40,0) 70%)",
+          filter: "blur(34px)",
         }}
-        animate={{ opacity: [0.6, 1, 0.6] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [0.55, 1, 0.55], scale: [1, 1.06, 1] }}
+        transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
       />
-
-      <svg viewBox="0 0 200 200" className="relative w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.75)]">
-        <defs>
-          <linearGradient id="ringFlame" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#ffd089" />
-            <stop offset=".45" stopColor="#ff7a18" />
-            <stop offset="1" stopColor="#7a1f00" />
-          </linearGradient>
-          <linearGradient id="ringFlameHi" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#fff3d6" stopOpacity=".9" />
-            <stop offset=".5" stopColor="#fff" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="metalS" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset=".4" stopColor="#dfe5ee" />
-            <stop offset=".7" stopColor="#8a95a6" />
-            <stop offset="1" stopColor="#3a4250" />
-          </linearGradient>
-          <radialGradient id="innerCore" cx=".5" cy=".5" r=".5">
-            <stop offset="0" stopColor="#1a0a05" />
-            <stop offset="1" stopColor="#06090f" />
-          </radialGradient>
-          <filter id="bevel" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="blur" />
-            <feSpecularLighting in="blur" surfaceScale="3" specularConstant="1" specularExponent="20" lightingColor="#fff" result="spec">
-              <feDistantLight azimuth="135" elevation="55" />
-            </feSpecularLighting>
-            <feComposite in="spec" in2="SourceAlpha" operator="in" result="specMask" />
-            <feMerge>
-              <feMergeNode in="SourceGraphic" />
-              <feMergeNode in="specMask" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* flame ring */}
-        <circle cx="100" cy="100" r="86" fill="none" stroke="url(#ringFlame)" strokeWidth="18" filter="url(#bevel)" />
-        <circle cx="100" cy="100" r="86" fill="none" stroke="url(#ringFlameHi)" strokeWidth="3" />
-        {/* dark inner */}
-        <circle cx="100" cy="100" r="74" fill="url(#innerCore)" />
-
-        {/* S */}
-        <path
-          d="M132 70c-6-9-18-14-32-14-18 0-30 10-30 24 0 14 12 20 30 24 18 4 30 10 30 24 0 14-12 24-32 24-14 0-26-5-32-14"
-          fill="none"
-          stroke="url(#metalS)"
-          strokeWidth="14"
-          strokeLinecap="round"
-          filter="url(#bevel)"
-        />
-        {/* S highlight */}
-        <path
-          d="M132 70c-6-9-18-14-32-14-18 0-30 10-30 24"
-          fill="none"
-          stroke="#ffffff"
-          strokeOpacity=".55"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        {/* hot tip */}
-        <circle cx="100" cy="34" r="6" fill="#ff8a2a">
-          <animate attributeName="r" values="6;8;6" dur="3.2s" repeatCount="indefinite" />
-          <animate attributeName="fill-opacity" values=".9;1;.9" dur="3.2s" repeatCount="indefinite" />
-        </circle>
-      </svg>
+      {/* secondary blue rim */}
+      <motion.div
+        className="absolute inset-[-6%] rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(70,160,255,0.35), rgba(70,160,255,0) 70%)",
+          filter: "blur(24px)",
+        }}
+        animate={{ opacity: [0.35, 0.7, 0.35] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+      />
+      <img
+        src={src}
+        alt="The Soul Nation"
+        className="relative w-full h-full object-contain drop-shadow-[0_25px_60px_rgba(255,100,30,0.55)]"
+        draggable={false}
+      />
     </motion.div>
+  );
+}
+
+function SmokeFabric({
+  sx,
+  sy,
+}: {
+  sx: ReturnType<typeof useSpring>;
+  sy: ReturnType<typeof useSpring>;
+}) {
+  const ox = useTransform(sx, [-1, 1], [40, -40]);
+  const oy = useTransform(sy, [-1, 1], [25, -25]);
+  const bx = useTransform(sx, [-1, 1], [-40, 40]);
+  const by = useTransform(sy, [-1, 1], [-25, 25]);
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Orange smoke ribbon (left/bottom) */}
+      <motion.div
+        className="absolute -left-[20%] top-[10%] w-[90%] h-[90%]"
+        style={{
+          x: ox,
+          y: oy,
+          background:
+            "radial-gradient(40% 60% at 30% 60%, rgba(255,120,40,0.55), rgba(255,120,40,0) 70%), radial-gradient(35% 50% at 55% 40%, rgba(255,80,20,0.45), rgba(255,80,20,0) 75%)",
+          filter: "blur(50px) saturate(1.2)",
+          mixBlendMode: "screen",
+        }}
+        animate={{
+          rotate: [0, 4, -3, 0],
+          scale: [1, 1.08, 1],
+          opacity: [0.7, 0.95, 0.7],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Blue smoke ribbon (right/top) */}
+      <motion.div
+        className="absolute -right-[20%] top-[5%] w-[95%] h-[95%]"
+        style={{
+          x: bx,
+          y: by,
+          background:
+            "radial-gradient(45% 55% at 60% 40%, rgba(60,150,255,0.6), rgba(60,150,255,0) 72%), radial-gradient(35% 45% at 40% 65%, rgba(80,180,255,0.45), rgba(80,180,255,0) 75%)",
+          filter: "blur(55px) saturate(1.25)",
+          mixBlendMode: "screen",
+        }}
+        animate={{
+          rotate: [0, -4, 3, 0],
+          scale: [1, 1.1, 1],
+          opacity: [0.7, 1, 0.7],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      />
+      {/* Wispy diagonal sweep */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(115deg, transparent 35%, rgba(255,140,60,0.18) 48%, rgba(60,150,255,0.18) 55%, transparent 70%)",
+          filter: "blur(40px)",
+          mixBlendMode: "screen",
+        }}
+        animate={{ backgroundPositionX: ["0%", "100%", "0%"] }}
+        transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Center clean breathing room */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(45% 40% at 50% 55%, rgba(2,4,10,0.85), rgba(2,4,10,0) 75%)",
+        }}
+      />
+    </div>
   );
 }
 
