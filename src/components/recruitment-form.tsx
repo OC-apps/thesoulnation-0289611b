@@ -17,6 +17,7 @@ export function RecruitmentForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
   const [tilt, setTilt] = useState({ rx: 0, ry: 0, mx: 50, my: 50 });
   const cardRef = useRef<HTMLFormElement>(null);
+  const sendDiscord = useServerFn(sendDiscordRecruitment);
 
   const onMove = (e: MouseEvent) => {
     const el = cardRef.current;
