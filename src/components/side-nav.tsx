@@ -64,7 +64,7 @@ export function SideNav() {
                 className={`min-h-9 shrink-0 rounded-full border px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.16em] transition active:scale-95 ${
                   active === section.id
                     ? "border-flame bg-flame text-primary-foreground shadow-[0_0_30px_-12px_var(--flame-glow)]"
-                    : "border-border bg-card/60 text-muted-foreground hover:border-flame hover:text-foreground"
+                    : "border-border bg-card/60 text-muted-foreground hover:border-flame hover:bg-flame hover:text-primary-foreground"
                 }`}
               >
                 {section.label}
