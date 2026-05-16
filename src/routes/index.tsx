@@ -69,7 +69,7 @@ const CREW = [
   "SOUL VELFI", "SOUL VOLCANO", "SOUL XANS", "SOUL PEYERZ", "SOUL PAKAL",
   "SOUL BOUNSS", "SOUL GHOOST", "SOUL NEXUS Z", "SOUL XCENFE",
   "SOUL CASTERIZE", "SOUL ADVERSL", "SOUL SLADE X", "SOUL ZAINT", "SOUL ARID",
-  "SOUL RAVENANT",
+  "SOUL RAVENANT", "SOUL NOIRR",
 ];
 
 const WAVES: { name: string; redes: string; bio: string; photo: string }[] = [
