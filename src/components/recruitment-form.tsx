@@ -130,8 +130,6 @@ export function RecruitmentForm() {
           <p className="text-sm text-muted-foreground mb-8">Rellena todos los campos.</p>
 
           <div className="grid gap-6 relative z-10">
-            <FloatField label="Nombre real y Nickname *" name="Nombre y Nickname" required placeholder="Ej: Juan Pérez · SOUL JUANP" />
-
             <div>
               <span className="text-sm font-bold uppercase tracking-wider">Área seleccionada *</span>
               <div
@@ -145,26 +143,37 @@ export function RecruitmentForm() {
               </div>
             </div>
 
+            <FloatField label="Nombre real y Nickname *" name="Nombre y Nickname" required placeholder="Ej: Juan Pérez · SOUL JUANP" />
+
             <div>
               <FloatField
-                label="Link de tu RC *"
+                label="Link de tu RC"
                 name="Link RC"
                 type="url"
-                required
                 placeholder="https://youtube.com/..."
               />
-              <span className="block text-xs text-muted-foreground mt-1">
-                Para The Soul Legends: video con tus mejores clips de Gears of War subido a YouTube con el título "The Soul Nation RC".
+              <span className="block text-xs text-flame mt-1 font-semibold">
+                Solo aplica para el área de Soul Legends — video con tus mejores clips de Gears of War subido a YouTube con el título "The Soul Nation RC".
               </span>
             </div>
 
             <FloatField
-              label="Cuéntanos sobre ti y deja tus redes sociales *"
-              name="Sobre ti y redes"
+              label="Cuéntanos sobre ti *"
+              name="Sobre ti"
               required
               textarea
-              placeholder="Edad, experiencia, juegos, plataformas, redes sociales, gamertag, etc."
+              placeholder="Edad, experiencia, juegos, plataformas, gamertag, etc."
             />
+
+            <div>
+              <span className="text-sm font-bold uppercase tracking-wider">Redes sociales *</span>
+              <p className="text-xs text-muted-foreground mt-1 mb-3">Selecciona las redes que tienes y escribe tu usuario o link.</p>
+              <div className="grid gap-3">
+                {SOCIALS.map((s) => (
+                  <SocialField key={s} network={s} />
+                ))}
+              </div>
+            </div>
 
             <FloatField label="Correo de contacto" name="email" type="email" placeholder="tucorreo@ejemplo.com" />
           </div>
