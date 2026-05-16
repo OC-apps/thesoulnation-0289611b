@@ -1,4 +1,5 @@
 import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import soulLegendsLogo from "@/assets/soul-legends.png";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import soulKillersLogo from "@/assets/soul-killers.png";
