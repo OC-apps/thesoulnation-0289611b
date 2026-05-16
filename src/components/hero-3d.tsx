@@ -177,51 +177,71 @@ function Extruded({
   delay: number;
   variant: "metal" | "flame";
 }) {
-  // Build the extrusion via layered text-shadow
-  const depth = 14;
-  const sideColor = "rgba(0,0,0,0.55)";
+  // Deep chunky extrusion via stacked text-shadows
+  const depth = 28;
+  const sideDark = variant === "flame" ? "#5a1a05" : "#1f2530";
+  const sideMid = variant === "flame" ? "#8a2a08" : "#2a313e";
   const extrude = Array.from({ length: depth })
-    .map((_, i) => `${i * 0.7}px ${i * 0.9}px 0 ${sideColor}`)
+    .map((_, i) => {
+      const c = i < depth * 0.6 ? sideMid : sideDark;
+      return `${i * 0.9}px ${i * 1.1}px 0 ${c}`;
+    })
     .join(", ");
 
-  const baseShadow =
+  const rimGlow =
     variant === "flame"
-      ? `${extrude}, 0 0 28px rgba(255,120,40,0.55), 0 0 60px rgba(255,90,20,0.35)`
-      : `${extrude}, 0 0 22px rgba(120,180,255,0.35), 0 0 60px rgba(40,120,255,0.18)`;
+      ? "0 0 30px rgba(255,120,40,0.7), 0 0 70px rgba(255,80,20,0.45), 0 30px 60px rgba(0,0,0,0.65)"
+      : "0 0 26px rgba(150,200,255,0.5), 0 0 70px rgba(60,140,255,0.3), 0 30px 60px rgba(0,0,0,0.65)";
 
-  const gradient =
+  const fill =
     variant === "flame"
-      ? "linear-gradient(180deg, #fff1d6 0%, #ffaa55 30%, #ff6a1a 60%, #c1370a 100%)"
-      : "linear-gradient(180deg, #ffffff 0%, #ffffff 55%, #e8ecf3 80%, #c4ccd8 100%)";
+      ? "linear-gradient(180deg, #fff0c8 0%, #ffb84a 22%, #ff7a18 50%, #d44208 78%, #7a1f00 100%)"
+      : "linear-gradient(180deg, #ffffff 0%, #f4f7fb 30%, #c8d0dc 65%, #8a93a3 100%)";
+
+  // bevel highlight (top edge)
+  const bevelTop =
+    variant === "flame"
+      ? "linear-gradient(180deg, rgba(255,235,180,0.95) 0%, rgba(255,200,120,0.4) 18%, transparent 30%)"
+      : "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.45) 22%, transparent 38%)";
 
   return (
     <motion.span
       initial={{ opacity: 0, y: 60, rotateX: -35 }}
       animate={{ opacity: 1, y: 0, rotateX: 0 }}
       transition={{ delay, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-      className="relative inline-block font-display font-black italic tracking-tight text-[clamp(2.6rem,8.5vw,9rem)]"
+      className="relative inline-block font-display font-black italic tracking-tight text-[clamp(2.8rem,9vw,10rem)]"
       style={{ transformStyle: "preserve-3d" }}
     >
-      {/* Back glow */}
+      {/* Back atmospheric glow */}
       <span
         aria-hidden
-        className="absolute inset-0 blur-2xl opacity-70"
+        className="absolute inset-0 blur-[28px] opacity-80 pointer-events-none"
+        style={{ color: variant === "flame" ? "#ff6a1a" : "#6fb0ff" }}
+      >
+        {text}
+      </span>
+
+      {/* Extruded depth body */}
+      <span
+        className="relative bg-clip-text text-transparent"
         style={{
-          color: variant === "flame" ? "#ff7a18" : "#5aa6ff",
+          backgroundImage: fill,
+          WebkitTextStroke:
+            variant === "metal"
+              ? "1.5px rgba(40,50,65,0.9)"
+              : "1.5px rgba(60,18,4,0.95)",
+          textShadow: `${extrude}, ${rimGlow}`,
+          filter: "drop-shadow(0 18px 40px rgba(0,0,0,0.7))",
         }}
       >
         {text}
       </span>
 
-      {/* The extruded body */}
+      {/* Top bevel highlight */}
       <span
-        className="relative bg-clip-text text-transparent"
-        style={{
-          backgroundImage: gradient,
-          WebkitTextStroke: variant === "metal" ? "1px rgba(255,255,255,0.25)" : "1px rgba(255,180,90,0.45)",
-          textShadow: baseShadow,
-          filter: "drop-shadow(0 12px 30px rgba(0,0,0,0.6))",
-        }}
+        aria-hidden
+        className="absolute inset-0 bg-clip-text text-transparent pointer-events-none"
+        style={{ backgroundImage: bevelTop, mixBlendMode: "screen" }}
       >
         {text}
       </span>
@@ -232,7 +252,7 @@ function Extruded({
         className="absolute inset-0 bg-clip-text text-transparent pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.85) 48%, rgba(255,255,255,0.0) 60%)",
+            "linear-gradient(110deg, transparent 32%, rgba(255,255,255,0.9) 48%, rgba(255,255,255,0) 60%)",
           backgroundSize: "250% 100%",
           animation: "hero-sheen 6.5s ease-in-out infinite",
           mixBlendMode: "screen",
