@@ -321,7 +321,7 @@ function Index() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
             <div>
               <div className="text-xs uppercase tracking-[0.3em] text-flame">05 · Reel</div>
-              <h2 className="mt-6 font-display text-5xl md:text-7xl font-bold leading-[0.95]">
+              <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
                 Nuestros <span className="italic text-flame">Videos</span>
               </h2>
               <p className="mt-6 text-muted-foreground max-w-2xl">
