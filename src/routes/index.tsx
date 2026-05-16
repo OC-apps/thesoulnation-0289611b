@@ -860,14 +860,14 @@ function Social3DCard({ href, name, handle, icon }: { href: string; name: string
       rel="noopener noreferrer"
       className="group flex min-h-20 items-center gap-3 rounded-2xl border border-border bg-card/60 p-3 text-left backdrop-blur transition hover:-translate-y-1 hover:border-flame hover:bg-flame hover:text-primary-foreground hover:shadow-[0_18px_50px_-28px_var(--flame-glow)] active:scale-95 lg:min-h-36 lg:flex-col lg:items-start lg:justify-between"
     >
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#1d4ed8] bg-[#1d4ed8] text-white transition">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#0a1e8f] bg-[#0a1e8f] text-white transition">
         <SocialIcon name={icon} />
       </span>
       <span className="min-w-0 flex-1 lg:w-full">
         <span className="block font-display text-base font-bold text-foreground transition group-hover:text-primary-foreground lg:text-lg">{name}</span>
         <span className="mt-1 block truncate text-xs text-muted-foreground transition group-hover:text-primary-foreground/80 lg:text-[11px]">{handle}</span>
       </span>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#1d4ed8] bg-[#1d4ed8] text-white transition group-hover:translate-x-1 lg:self-end">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#0a1e8f] bg-[#0a1e8f] text-white transition group-hover:translate-x-1 lg:self-end">
         <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current"><path d="M5 12h12.2l-4.6-4.6L14 6l7 6-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
       </span>
     </a>
