@@ -108,8 +108,6 @@ function Index() {
           </a>
           <nav className="hidden md:flex gap-6 text-sm uppercase tracking-widest text-muted-foreground">
             <a href="#about" className="hover:text-foreground transition">¿Quiénes Somos?</a>
-            <a href="#vision" className="hover:text-foreground transition">Visión</a>
-            <a href="#objetivo" className="hover:text-foreground transition">Objetivo</a>
             <a href="#roster" className="hover:text-foreground transition">Roster</a>
             <a href="#videos" className="hover:text-foreground transition">Videos</a>
             <a href="#wallpapers" className="hover:text-foreground transition">Wallpapers</a>
