@@ -271,8 +271,19 @@ function FloatField({
   );
 }
 
+const SOCIAL_PREFIXES: Record<string, string> = {
+  TikTok: "https://tiktok.com/@",
+  YouTube: "https://youtube.com/@",
+  Twitch: "https://twitch.tv/",
+  Facebook: "https://facebook.com/",
+  Instagram: "https://instagram.com/",
+};
+
 function SocialField({ network }: { network: string }) {
   const [checked, setChecked] = useState(false);
+  const [user, setUser] = useState("");
+  const prefix = SOCIAL_PREFIXES[network] ?? "https://";
+  const clean = user.replace(/^@+/, "").trim();
   return (
     <div
       className={`rounded-xl border transition overflow-hidden ${
@@ -290,13 +301,20 @@ function SocialField({ network }: { network: string }) {
       </label>
       {checked && (
         <div className="px-4 pb-3">
-          <input
-            required
-            type="text"
-            name={`Red ${network}`}
-            placeholder={`Tu @usuario o link de ${network}`}
-            className="w-full bg-background/60 border border-border rounded-lg px-3 py-2 outline-none focus:border-flame focus:shadow-[0_0_0_4px_var(--flame-glow)] transition text-sm"
-          />
+          <div className="flex items-stretch rounded-lg overflow-hidden border border-border bg-background/60 focus-within:border-flame focus-within:shadow-[0_0_0_4px_var(--flame-glow)] transition">
+            <span className="px-3 py-2 text-xs md:text-sm font-mono text-muted-foreground bg-background/80 border-r border-border flex items-center select-all">
+              {prefix}
+            </span>
+            <input
+              required
+              type="text"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              placeholder="tuusuario"
+              className="flex-1 bg-transparent px-3 py-2 outline-none text-sm"
+            />
+            <input type="hidden" name={`Red ${network}`} value={clean ? prefix + clean : ""} />
+          </div>
         </div>
       )}
     </div>
