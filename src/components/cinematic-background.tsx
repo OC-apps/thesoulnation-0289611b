@@ -79,8 +79,8 @@ export function CinematicBackground() {
         float breathO = 0.85 + 0.15 * u_pulse;
         float breathB = 0.85 + 0.15 * (1.0 - u_pulse);
 
-        float orangeGlow = exp(-orangeD * 1.65) * breathO;
-        float blueGlow   = exp(-blueD   * 1.45) * breathB;
+        float orangeGlow = exp(-orangeD * 1.25) * breathO;
+        float blueGlow   = exp(-blueD   * 1.15) * breathB;
 
         // smoke density modulated by noise + vignette so center stays clean
         float smoke = pow(n, 1.6) * (0.35 + 0.85 * vignette);
@@ -90,8 +90,8 @@ export function CinematicBackground() {
         vec3 base      = vec3(0.005, 0.008, 0.015); // deep black
 
         vec3 col = base;
-        col += colOrange * (orangeGlow * 1.35 + smoke * orangeGlow * 2.2);
-        col += colBlue   * (blueGlow   * 1.35 + smoke * blueGlow   * 2.2);
+        col += colOrange * (orangeGlow * 1.85 + smoke * orangeGlow * 2.9);
+        col += colBlue   * (blueGlow   * 1.85 + smoke * blueGlow   * 2.9);
 
         // subtle ambient haze in mid tones, kept off center
         col += mix(colBlue, colOrange, n) * smoke * 0.16 * vignette;
@@ -197,13 +197,13 @@ export function CinematicBackground() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 50% 45% at 50% 44%, rgba(3,6,13,0.38), rgba(3,6,13,0) 72%)",
+            "radial-gradient(ellipse 46% 40% at 50% 44%, rgba(3,6,13,0.24), rgba(3,6,13,0) 72%)",
         }}
       />
       {/* edge vignette */}
       <div
         className="absolute inset-0"
-        style={{ boxShadow: "inset 0 0 260px 60px rgba(0,0,0,0.85)" }}
+        style={{ boxShadow: "inset 0 0 180px 35px rgba(0,0,0,0.62)" }}
       />
     </div>
   );
