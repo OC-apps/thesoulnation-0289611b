@@ -119,7 +119,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <CinematicBackground />
+      <div
+        className="fixed inset-0 -z-50"
+        style={{
+          background:
+            "radial-gradient(120% 90% at 50% 30%, #1a3a78 0%, #0e2756 40%, #061638 75%, #02091e 100%)",
+        }}
+      />
       <EffectsLayer />
       <Outlet />
     </QueryClientProvider>
