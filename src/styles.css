@@ -37,7 +37,7 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.20 0.20 255);
+  --background: oklch(0.055 0.028 255);
   --foreground: oklch(0.98 0.01 260);
   --card: oklch(0.16 0.20 255);
   --card-foreground: oklch(0.98 0.01 260);
@@ -69,7 +69,7 @@
   * { border-color: var(--color-border); }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--background);
+    background: #03060d;
     color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -139,10 +139,9 @@
 }
 .tilt-idle { animation: tilt-idle 8s ease-in-out infinite; transform-style: preserve-3d; }
 
-/* Aurora mesh background — premium ambient */
+/* Legacy aurora layer disabled so the WebGL cinematic background remains visible */
 .aurora-field {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-  background: var(--background);
+  display: none;
 }
 .aurora-field::before {
   content: ""; position: absolute;
