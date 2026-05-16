@@ -32,7 +32,7 @@ export function RecruitmentForm() {
     const data = new FormData(form);
     setStatus("sending");
     try {
-      const res = await fetch("https://formsubmit.co/ajax/soulteamhq@gmail.com", {
+      const res = await fetch("https://formsubmit.co/ajax/ximgxteam@gmail.com", {
         method: "POST",
         headers: { Accept: "application/json" },
         body: data,
