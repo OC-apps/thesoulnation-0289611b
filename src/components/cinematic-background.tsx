@@ -193,13 +193,20 @@ export function CinematicBackground() {
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
       <div
-        className="absolute inset-0 opacity-80"
+        className="absolute inset-0 opacity-70"
         style={{
           background:
-            "radial-gradient(ellipse 44% 58% at 0% 34%, color-mix(in oklab, var(--flame) 48%, transparent), transparent 72%), radial-gradient(ellipse 52% 58% at 100% 24%, color-mix(in oklab, var(--blue) 46%, transparent), transparent 74%), radial-gradient(ellipse 48% 48% at 82% 92%, color-mix(in oklab, var(--blue) 34%, transparent), transparent 72%)",
-          filter: "blur(34px) saturate(1.35)",
+            "radial-gradient(ellipse 34% 56% at -6% 34%, rgba(255, 82, 0, 0.34), transparent 72%), radial-gradient(ellipse 42% 56% at 106% 24%, rgba(0, 92, 255, 0.26), transparent 76%), radial-gradient(ellipse 34% 40% at 86% 92%, rgba(0, 70, 220, 0.18), transparent 72%)",
+          filter: "blur(42px) saturate(1.25)",
           mixBlendMode: "screen",
           animation: "cinematic-breathe 7s ease-in-out infinite",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 68% 58% at 50% 42%, rgba(2,4,10,0.88), rgba(2,4,10,0.38) 62%, rgba(2,4,10,0.12) 100%)",
         }}
       />
       {/* center readability mask */}
