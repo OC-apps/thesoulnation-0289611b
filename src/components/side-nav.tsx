@@ -46,9 +46,10 @@ export function SideNav() {
       aria-label="Navegación rápida"
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
-      className="hidden md:flex fixed right-4 top-1/2 -translate-y-1/2 z-50 flex-col items-end gap-2"
+      onClick={() => setExpanded((v) => !v)}
+      className="flex fixed right-2 md:right-4 top-1/2 -translate-y-1/2 z-50 flex-col items-end gap-2"
     >
-      <div className="flex flex-col gap-2 p-2 rounded-2xl bg-background/40 backdrop-blur-xl border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
+      <div className="flex flex-col gap-1.5 md:gap-2 p-1.5 md:p-2 rounded-2xl bg-background/50 backdrop-blur-xl border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
         {SECTIONS.map((s) => {
           const isActive = active === s.id;
           return (
@@ -56,7 +57,7 @@ export function SideNav() {
               key={s.id}
               type="button"
               onClick={() => go(s.id)}
-              className="group relative flex items-center justify-end gap-3 h-9 pr-2"
+              className="group relative flex items-center justify-end gap-3 h-8 md:h-9 pr-1.5 md:pr-2"
               aria-label={`Ir a ${s.label}`}
             >
               <span
@@ -88,7 +89,7 @@ export function SideNav() {
         type="button"
         onClick={() => go("top")}
         aria-label="Subir arriba"
-        className={`w-11 h-11 rounded-full bg-flame text-primary-foreground flex items-center justify-center shadow-[0_0_40px_-5px_var(--flame-glow)] hover:scale-110 active:scale-95 transition-all duration-300 ${
+        className={`w-10 h-10 md:w-11 md:h-11 rounded-full bg-flame text-primary-foreground flex items-center justify-center shadow-[0_0_40px_-5px_var(--flame-glow)] hover:scale-110 active:scale-95 transition-all duration-300 ${
           showTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
         }`}
       >
