@@ -21,6 +21,7 @@ import wpComic from "@/assets/wallpaper-comic.jpg";
 import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
+import { Hero3D } from "@/components/hero-3d";
 
 const WALLPAPERS = [
   {
