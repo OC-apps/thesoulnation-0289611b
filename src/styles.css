@@ -425,3 +425,14 @@ section:hover .animate-marquee { animation-duration: 18s; transition: animation-
   .cog { animation: none; }
   .soul-cursor { display: none; }
 }
+
+/* Hero 3D animations */
+@keyframes hero-sheen {
+  0%, 100% { background-position: -120% 0; opacity: 0; }
+  45% { opacity: 1; }
+  60% { background-position: 220% 0; opacity: 0; }
+}
+@keyframes hero-float {
+  0%, 100% { transform: translate3d(0,0,0); opacity: .35; }
+  50% { transform: translate3d(0,-40px,0); opacity: .9; }
+}
