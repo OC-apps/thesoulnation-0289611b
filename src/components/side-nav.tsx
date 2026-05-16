@@ -60,9 +60,7 @@ export function SideNav() {
   return (
     <div
       data-sidenav
-      className={`fixed bottom-5 right-5 md:bottom-7 md:right-7 z-50 transition-all duration-500 ${
-        scrolled || open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
-      }`}
+      className="fixed bottom-5 right-5 md:bottom-7 md:right-7 z-50"
     >
       {/* Backdrop blur cuando está abierto */}
       <div
