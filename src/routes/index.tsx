@@ -376,9 +376,8 @@ function Index() {
                 className="wp-card group block"
               >
                 <div className="relative aspect-[16/10] overflow-hidden bg-deep">
-                  <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className={`absolute inset-0 bg-flame opacity-30 mix-blend-multiply`} />
-                  <div className="absolute inset-0 bg-[color:var(--background)]/40" />
+                  <img src={wp.img} alt={wp.title} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
                   <span className="wp-shine" />
                   <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
                     Serie · 0{i + 1}
