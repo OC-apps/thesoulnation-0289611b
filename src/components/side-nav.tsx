@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 const SECTIONS = [
   { id: "top", label: "Inicio" },
   { id: "about", label: "Quiénes somos" },
-  { id: "vision", label: "Visión" },
-  { id: "objetivo", label: "Objetivo" },
   { id: "roster", label: "Roster" },
   { id: "videos", label: "Videos" },
   { id: "wallpapers", label: "Wallpapers" },
