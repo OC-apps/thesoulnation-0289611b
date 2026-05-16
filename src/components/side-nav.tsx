@@ -90,16 +90,16 @@ export function SideNav() {
             type="button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
-            className="flex min-h-12 items-center gap-3 rounded-full border border-flame bg-background/95 px-4 py-2 text-left shadow-[0_18px_60px_-28px_var(--flame-glow)] backdrop-blur-xl transition active:scale-95 hover:bg-card/80 sm:px-5"
+            className="group flex min-h-12 items-center gap-3 rounded-full border border-flame bg-background/95 px-4 py-2 text-left shadow-[0_18px_60px_-28px_var(--flame-glow)] backdrop-blur-xl transition active:scale-95 hover:bg-flame sm:px-5"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-flame text-primary-foreground">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1d4ed8] text-white">
               <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
                 <path d="M4 7h16v2H4zm0 4h16v2H4zm0 4h16v2H4z" />
               </svg>
             </span>
             <span className="min-w-0">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.25em] text-flame">Secciones</span>
-              <span className="block max-w-[44vw] truncate text-xs text-foreground sm:max-w-none sm:text-sm">{activeLabel}</span>
+              <span className="block text-[10px] font-bold uppercase tracking-[0.25em] text-flame transition group-hover:text-primary-foreground">Secciones</span>
+              <span className="block max-w-[44vw] truncate text-xs text-foreground transition group-hover:text-primary-foreground sm:max-w-none sm:text-sm">{activeLabel}</span>
             </span>
           </button>
         </div>
