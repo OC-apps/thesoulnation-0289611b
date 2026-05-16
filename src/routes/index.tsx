@@ -296,7 +296,7 @@ function Index() {
               <article key={c.name} className="group wave-card rounded-2xl overflow-hidden flex flex-col">
                 <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
                   <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-[color:var(--background)]/30" />
+                  
                   <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
                     Wave · 0{i + 1}
                   </span>
