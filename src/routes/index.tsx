@@ -833,7 +833,7 @@ function WallpapersSection() {
   const [pos, setPos] = useState({ x: 50, y: 50 });
   const wp = WALLPAPERS[active];
 
-  const onMove = (e: MouseEvent<HTMLDivElement>) => {
+  const onMove = (e: MouseEvent<HTMLAnchorElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     setPos({
       x: ((e.clientX - r.left) / r.width) * 100,
