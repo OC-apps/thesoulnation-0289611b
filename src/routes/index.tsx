@@ -791,7 +791,7 @@ function IndexContent() {
               <div className="lg:col-span-4 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-white/10 bg-gradient-to-b from-[#081245]/40 to-[#0a1a4a]/20">
                 <div className="relative aspect-square rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(255,107,53,0.5)]">
                   <img
-                    src="https://i.scdn.co/image/ab67616d0000b2700d0bbb70f5062454d416517a"
+                    src={somosCover}
                     alt="Somos The Soul Nation - cover"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
