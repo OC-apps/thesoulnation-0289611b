@@ -47,9 +47,9 @@ export function Hero3D() {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-16 sm:pb-16 md:pb-16 lg:pb-16 grid md:grid-cols-12 gap-4 md:gap-6 lg:gap-8 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 pt-6 sm:pt-8 md:pt-10 lg:pt-12 pb-16 sm:pb-16 md:pb-16 lg:pb-16 grid lg:grid-cols-12 gap-4 md:gap-6 lg:gap-8 items-center">
         {/* Left: copy */}
-        <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
+        <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
           {/* Banner: emblem + text logo together (mobile + tablet) */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -72,14 +72,14 @@ export function Hero3D() {
               <img
                 src={soulLogo}
                 alt="The Soul Nation"
-                className="relative z-10 w-24 sm:w-36 md:w-44 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
+                className="relative z-10 w-24 sm:w-32 md:w-40 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
                 draggable={false}
               />
             </div>
             <img
               src={soulTextLogo}
               alt="THE SOUL NATION"
-              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[360px] md:max-w-[460px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
+              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[340px] md:max-w-[420px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
               draggable={false}
             />
           </motion.div>
