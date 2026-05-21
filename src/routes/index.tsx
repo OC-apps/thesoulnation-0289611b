@@ -306,7 +306,7 @@ function Index() {
 }
 
 function IndexContent() {
-  const { playing, toggle: toggleAudio } = useAudio();
+  const { playing, toggle: toggleAudio, stop: stopAudio, skip: skipAudio, currentTime, duration, seek } = useAudio();
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
