@@ -962,7 +962,7 @@ function WallpapersSection() {
               rel="noopener noreferrer"
               onMouseMove={onMove}
               onMouseLeave={() => setPos({ x: 50, y: 50 })}
-              className="group relative block aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-deep"
+              className="group relative block aspect-[4/5] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-deep"
               style={{
                 transform: `perspective(1200px) rotateX(${(50 - pos.y) / 18}deg) rotateY(${(pos.x - 50) / 14}deg)`,
                 transition: "transform 0.2s ease-out",
@@ -1004,16 +1004,16 @@ function WallpapersSection() {
                 "bottom-3 left-3 border-b-2 border-l-2",
                 "bottom-3 right-3 border-b-2 border-r-2",
               ].map((c) => (
-                <span key={c} className={`absolute w-6 h-6 border-flame ${c} transition-opacity duration-500 opacity-60 group-hover:opacity-100`} />
+                <span key={c} className={`absolute w-5 h-5 sm:w-6 sm:h-6 border-flame ${c} transition-opacity duration-500 opacity-60 group-hover:opacity-100`} />
               ))}
 
               {/* badge */}
-              <span className="absolute top-5 left-5 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-3 py-1.5 rounded-full border border-flame/40 font-mono">
+              <span className="absolute top-3 left-3 sm:top-5 sm:left-5 text-[9px] sm:text-[10px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-flame/40 font-mono">
                 Serie · 0{active + 1} / 0{WALLPAPERS.length}
               </span>
 
               {/* live counter */}
-              <span className="absolute top-5 right-5 flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-foreground/80 bg-background/70 backdrop-blur px-3 py-1.5 rounded-full border border-border font-mono">
+              <span className="absolute top-3 right-3 sm:top-5 sm:right-5 flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-foreground/80 bg-background/70 backdrop-blur px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full border border-border font-mono">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-flame" />
@@ -1022,15 +1022,15 @@ function WallpapersSection() {
               </span>
 
               {/* info */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-10">
                 <div key={wp.title} className="animate-fade-up">
-                  <h3 className="font-display font-bold text-3xl md:text-5xl leading-[1] text-foreground text-3d">
+                  <h3 className="font-display font-bold text-2xl sm:text-3xl md:text-5xl leading-[1] text-foreground text-3d">
                     {wp.title}
                   </h3>
-                  <p className="mt-3 text-base md:text-lg text-foreground/85 max-w-lg">{wp.tagline}</p>
-                  <div className="mt-5 inline-flex items-center gap-3 bg-flame text-primary-foreground font-display font-bold px-5 py-3 rounded-full text-sm uppercase tracking-wider transition-transform group-hover:translate-x-1">
-                    <span>Descargar en Drive</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <p className="mt-2 sm:mt-3 text-sm sm:text-base md:text-lg text-foreground/85 max-w-lg line-clamp-2">{wp.tagline}</p>
+                  <div className="mt-4 sm:mt-5 inline-flex items-center gap-2 sm:gap-3 bg-flame text-primary-foreground font-display font-bold px-4 py-2.5 sm:px-5 sm:py-3 rounded-full text-xs sm:text-sm uppercase tracking-wider transition-transform group-hover:translate-x-1">
+                    <span>Descargar</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M13 5l7 7-7 7" />
                     </svg>
                   </div>
@@ -1039,46 +1039,55 @@ function WallpapersSection() {
             </a>
           </div>
 
-          {/* THUMBS */}
-          <div className="lg:col-span-4 flex flex-col gap-4">
-            {WALLPAPERS.map((w, i) => (
-              <button
-                key={w.title}
-                type="button"
-                onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
-                onClick={() => window.open(w.href, "_blank", "noopener,noreferrer")}
-                className={`group relative overflow-hidden rounded-xl border text-left transition-all duration-500 ${
-                  i === active
-                    ? "border-flame scale-[1.02] shadow-[0_20px_60px_-20px_var(--flame-glow)]"
-                    : "border-border opacity-70 hover:opacity-100"
-                }`}
-              >
-                <div className="relative flex items-center gap-4 p-3">
-                  <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg">
-                    <img src={w.img} alt={w.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${w.accent} opacity-40 mix-blend-overlay`} />
+          {/* THUMBS — horizontal scroll on mobile, vertical stack on desktop */}
+          <div className="lg:col-span-4 -mx-6 px-6 lg:mx-0 lg:px-0 overflow-x-auto lg:overflow-visible">
+            <div className="flex lg:flex-col gap-3 lg:gap-4 snap-x snap-mandatory lg:snap-none pb-2 lg:pb-0">
+              {WALLPAPERS.map((w, i) => (
+                <button
+                  key={w.title}
+                  type="button"
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onClick={() => {
+                    if (i === active) {
+                      window.open(w.href, "_blank", "noopener,noreferrer");
+                    } else {
+                      setActive(i);
+                    }
+                  }}
+                  className={`group relative overflow-hidden rounded-xl border text-left transition-all duration-500 shrink-0 w-[260px] lg:w-auto snap-start ${
+                    i === active
+                      ? "border-flame lg:scale-[1.02] shadow-[0_20px_60px_-20px_var(--flame-glow)]"
+                      : "border-border opacity-70 hover:opacity-100"
+                  }`}
+                >
+                  <div className="relative flex items-center gap-3 p-2.5 lg:p-3">
+                    <div className="relative h-16 w-20 lg:h-20 lg:w-32 shrink-0 overflow-hidden rounded-lg">
+                      <img src={w.img} alt={w.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <div className={`absolute inset-0 bg-gradient-to-br ${w.accent} opacity-40 mix-blend-overlay`} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-mono text-[10px] tracking-[0.25em] text-flame">0{i + 1}</div>
+                      <div className="font-display font-bold text-sm md:text-base leading-tight truncate">{w.title}</div>
+                      <div className="text-xs text-muted-foreground truncate">{w.tagline}</div>
+                    </div>
+                    <svg
+                      width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                      className={`shrink-0 transition-all ${i === active ? "text-flame translate-x-0" : "text-muted-foreground -translate-x-2"}`}
+                    >
+                      <path d="M5 12h14M13 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-mono text-[10px] tracking-[0.25em] text-flame">0{i + 1}</div>
-                    <div className="font-display font-bold text-sm md:text-base leading-tight truncate">{w.title}</div>
-                    <div className="text-xs text-muted-foreground truncate">{w.tagline}</div>
-                  </div>
-                  <svg
-                    width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-                    className={`shrink-0 transition-all ${i === active ? "text-flame translate-x-0" : "text-muted-foreground -translate-x-2"}`}
-                  >
-                    <path d="M5 12h14M13 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                {/* progress bar on active */}
-                {i === active && (
-                  <span className="absolute bottom-0 left-0 h-0.5 w-full bg-flame/30">
-                    <span className="block h-full bg-flame animate-[marquee_3s_linear]" style={{ width: "100%" }} />
-                  </span>
-                )}
-              </button>
-            ))}
+                  {i === active && (
+                    <span className="absolute bottom-0 left-0 h-0.5 w-full bg-flame/30">
+                      <span className="block h-full bg-flame animate-[marquee_3s_linear]" style={{ width: "100%" }} />
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+
 
             {/* stats */}
             <div className="mt-2 grid grid-cols-3 gap-2 text-center">
