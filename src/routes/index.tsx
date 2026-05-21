@@ -389,27 +389,68 @@ function IndexContent() {
       {/* ABOUT + VISIÓN + OBJETIVO — compacto y responsive */}
       <section id="about" className="relative py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          {/* Encabezado */}
-          <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-start">
-            <div className="md:col-span-5">
-              <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
-              <h2 className="mt-3 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
-                ¿Quiénes <span className="italic text-flame">Somos?</span>
-              </h2>
-              <div className="mt-6 relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)]">
-                <img
-                  src={soulNationTeam}
-                  alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
-                  loading="lazy"
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+          {/* Encabezado + foto + highlights */}
+          <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-stretch">
+            {/* Imagen del equipo */}
+            <div className="md:col-span-5 group relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)]">
+              <img
+                src={soulNationTeam}
+                alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
+              <div className="absolute left-4 bottom-4 right-4 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em]">
+                <span className="text-flame">★ Roster Oficial</span>
+                <span className="text-foreground/70">2012 — Hoy</span>
               </div>
             </div>
-            <div className="md:col-span-7">
-              <p className="text-base sm:text-lg md:text-xl text-foreground/90 font-light leading-relaxed">
+
+            {/* Columna derecha: título + texto + highlights */}
+            <div className="md:col-span-7 flex flex-col gap-5">
+              <div>
+                <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
+                <h2 className="mt-2 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.9]">
+                  ¿Quiénes <span className="italic text-flame">Somos?</span>
+                </h2>
+              </div>
+              <p className="text-sm sm:text-base md:text-lg text-foreground/90 font-light leading-relaxed">
                 The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en la creación de clips de Gears of War. Con el tiempo, expandimos nuestros horizontes y nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad para una variedad de juegos competitivos. Nos caracteriza la pasión por el gaming y el compromiso de elevar la escena de los esports en Latinoamérica, trabajando como una familia unida, donde cada miembro puede crecer y destacar en lo que mejor sabe hacer.
               </p>
+
+              {/* Highlights interactivos — rellena el espacio */}
+              <div className="mt-auto grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { v: "12+", k: "Años activos" },
+                  { v: "35", k: "Miembros" },
+                  { v: "4", k: "Divisiones" },
+                  { v: "MX", k: "Origen" },
+                ].map((s) => (
+                  <div
+                    key={s.k}
+                    className="group/stat relative rounded-xl border border-flame/20 bg-background/40 backdrop-blur px-3 py-3 sm:px-4 sm:py-4 transition hover:border-flame hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_var(--flame-glow)] cursor-default"
+                  >
+                    <div className="font-display font-black text-2xl sm:text-3xl text-foreground group-hover/stat:text-flame transition">
+                      {s.v}
+                    </div>
+                    <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                      {s.k}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Divisiones — chips interactivos */}
+              <div className="flex flex-wrap gap-2">
+                {["The Soul Legends", "The Soul Crew", "The Soul Killers", "The Soul Waves", "The Soul Media"].map((d) => (
+                  <span
+                    key={d}
+                    className="px-3 py-1.5 rounded-full border border-flame/30 bg-flame/5 text-[11px] font-mono uppercase tracking-[0.2em] text-foreground/80 hover:bg-flame hover:text-background hover:border-flame transition cursor-default"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
