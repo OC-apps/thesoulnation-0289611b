@@ -220,14 +220,14 @@ function WavesHUD() {
 
                   <div className="flex justify-between items-center pt-2 border-t border-flame/20 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                     <button
-                      onClick={() => setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length)}
+                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length); }}
                       className="hover:text-flame transition"
                     >
                       ◄ prev
                     </button>
-                    <span>The Soul Nation · 2012</span>
+                    <span>Toca afuera para cerrar</span>
                     <button
-                      onClick={() => setOpenIdx((openIdx! + 1) % WAVES.length)}
+                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! + 1) % WAVES.length); }}
                       className="hover:text-flame transition"
                     >
                       next ►
