@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import soulLogo from "@/assets/soul-logo.png";
+import soulTextLogo from "@/assets/soul-nation-textlogo.png";
 
 /**
  * Bold, content-rich hero — no particle/snow effect.
@@ -59,17 +60,15 @@ export function Hero3D() {
             EST. 10 · NOV · 2012
           </motion.div>
 
-          <motion.h1
+          <motion.img
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7 }}
-            className="mt-5 font-display font-black italic tracking-tight leading-[0.85] text-[clamp(3rem,11vw,8.5rem)]"
-          >
-            <span className="block text-foreground">THE SOUL</span>
-            <span className="block text-flame drop-shadow-[0_0_30px_var(--flame-glow)]">
-              NATION
-            </span>
-          </motion.h1>
+            src={soulTextLogo}
+            alt="THE SOUL NATION"
+            className="mt-5 w-full max-w-[640px] h-auto drop-shadow-[0_0_40px_var(--flame-glow)]"
+            draggable={false}
+          />
 
           <motion.div
             initial={{ opacity: 0, y: 12 }}
