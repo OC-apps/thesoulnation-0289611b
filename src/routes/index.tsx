@@ -136,12 +136,12 @@ function renderWaveCard(
           : "border-flame/20 hover:border-flame hover:shadow-[0_20px_50px_-20px_var(--flame-glow)]"
       }`}
     >
-      <div className="relative aspect-square overflow-hidden">
+      <div className={`relative overflow-hidden ${leader ? "aspect-[16/7]" : "aspect-square"}`}>
         <img
           src={c.photo}
           alt={c.name}
           loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="absolute inset-0 w-full h-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-110"
         />
         <span className="pointer-events-none absolute inset-x-0 -top-1 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.4s_ease-in-out_infinite] shadow-[0_0_12px_var(--flame-glow)]" />
         <div className="absolute inset-0 bg-flame/0 group-hover:bg-flame/10 transition-colors" />
