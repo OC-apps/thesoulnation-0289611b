@@ -1039,51 +1039,41 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
 }
 
 function VideoCard({ video, index, featured }: { video: { title: string; id: string }; index: number; featured?: boolean }) {
-  const [playing, setPlaying] = useState(false);
   return (
     <article
       className={`group relative tilt-card roster-card rounded-2xl overflow-hidden ${featured ? "lg:col-span-2 lg:row-span-2" : ""}`}
     >
       <div className={`relative ${featured ? "aspect-video lg:aspect-[16/10]" : "aspect-video"} bg-black overflow-hidden`}>
-        {playing ? (
-          <iframe
-            src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 w-full h-full border-0"
+        <a
+          href={`https://www.youtube.com/watch?v=${video.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-0 w-full h-full group/play"
+          aria-label={`Ver ${video.title} en YouTube`}
+        >
+          <img
+            src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
+            alt={video.title}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/play:scale-110"
           />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setPlaying(true)}
-            className="absolute inset-0 w-full h-full group/play"
-            aria-label={`Reproducir ${video.title}`}
-          >
-            <img
-              src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
-              alt={video.title}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/play:scale-110"
-            />
-            <div className="absolute inset-0 bg-[color:var(--background)]/40" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-flame/90 text-primary-foreground shadow-[0_0_60px_-5px_var(--flame-glow)] transition-transform duration-300 group-hover/play:scale-110">
-                <span className="absolute inset-0 rounded-full bg-flame/40 animate-ping" />
-                <svg viewBox="0 0 24 24" className="relative w-8 h-8 ml-1 fill-current"><path d="M8 5v14l11-7z" /></svg>
-              </span>
-            </div>
-            <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
-              #{String(index + 1).padStart(2, "0")}
+          <div className="absolute inset-0 bg-[color:var(--background)]/40" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-flame/90 text-primary-foreground shadow-[0_0_60px_-5px_var(--flame-glow)] transition-transform duration-300 group-hover/play:scale-110">
+              <span className="absolute inset-0 rounded-full bg-flame/40 animate-ping" />
+              <svg viewBox="0 0 24 24" className="relative w-8 h-8 ml-1 fill-current"><path d="M8 5v14l11-7z" /></svg>
             </span>
-            <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
-              <h3 className="font-display font-bold text-lg md:text-xl text-foreground/95 drop-shadow">{video.title}</h3>
-              <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-flame" /> YouTube · The Soul Nation
-              </div>
+          </div>
+          <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
+            #{String(index + 1).padStart(2, "0")}
+          </span>
+          <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
+            <h3 className="font-display font-bold text-lg md:text-xl text-foreground/95 drop-shadow">{video.title}</h3>
+            <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-flame" /> Ver en YouTube ↗
             </div>
-          </button>
-        )}
+          </div>
+        </a>
       </div>
     </article>
   );
