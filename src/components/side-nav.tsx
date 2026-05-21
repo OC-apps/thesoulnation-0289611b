@@ -47,7 +47,8 @@ export function SideNav() {
 
   return (
     <nav className="fixed inset-x-0 bottom-3 z-50 px-3 sm:bottom-5 pointer-events-none" aria-label="Navegación rápida">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
+      <div className="mx-auto flex max-w-3xl flex-col items-start sm:items-center gap-2">
+
         <div
           className={`max-w-[calc(100vw-1.5rem)] rounded-full border border-border bg-background/95 p-1.5 shadow-[0_22px_70px_-35px_var(--flame-glow)] backdrop-blur-xl transition-all duration-300 pointer-events-auto ${
             open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none"
@@ -77,7 +78,7 @@ export function SideNav() {
               type="button"
               onClick={() => go("top")}
               aria-label="Subir al inicio"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background/90 text-flame shadow-lg backdrop-blur-xl transition active:scale-95 hover:border-flame"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-flame bg-background/95 text-flame shadow-[0_18px_60px_-28px_var(--flame-glow)] backdrop-blur-xl transition active:scale-95 hover:bg-flame hover:text-background"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
                 <path d="M12 5 5 12l1.4 1.4L11 8.8V20h2V8.8l4.6 4.6L19 12z" />
@@ -88,18 +89,19 @@ export function SideNav() {
             type="button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
-            className="group flex min-h-12 items-center gap-3 rounded-full border border-flame bg-background/95 px-4 py-2 text-left shadow-[0_18px_60px_-28px_var(--flame-glow)] backdrop-blur-xl transition active:scale-95 hover:bg-flame sm:px-5"
+            className="group flex h-11 items-center gap-2 rounded-full border border-flame bg-background/95 px-3 py-1.5 text-left shadow-[0_18px_60px_-28px_var(--flame-glow)] backdrop-blur-xl transition active:scale-95 hover:bg-flame sm:px-5"
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0a1e8f] text-white">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-flame text-background">
               <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
                 <path d="M4 7h16v2H4zm0 4h16v2H4zm0 4h16v2H4z" />
               </svg>
             </span>
-            <span className="min-w-0">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.25em] text-flame transition group-hover:text-primary-foreground">Secciones</span>
-              <span className="block max-w-[44vw] truncate text-xs text-foreground transition group-hover:text-primary-foreground sm:max-w-none sm:text-sm">{activeLabel}</span>
+            <span className="min-w-0 leading-tight">
+              <span className="block text-[8px] font-bold uppercase tracking-[0.25em] text-flame transition group-hover:text-primary-foreground">Secciones</span>
+              <span className="block max-w-[28vw] truncate text-[11px] font-bold text-foreground transition group-hover:text-primary-foreground sm:max-w-none sm:text-sm">{activeLabel}</span>
             </span>
           </button>
+
         </div>
       </div>
     </nav>
