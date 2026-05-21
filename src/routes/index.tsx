@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
@@ -97,8 +98,73 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    a.volume = 0.55;
+    const tryPlay = async () => {
+      try {
+        a.muted = false;
+        await a.play();
+        setMuted(false);
+        setPlaying(true);
+      } catch {
+        try {
+          a.muted = true;
+          await a.play();
+          setMuted(true);
+          setPlaying(true);
+        } catch {/* ignore */}
+      }
+    };
+    tryPlay();
+    const unlock = async () => {
+      if (!a) return;
+      a.muted = false;
+      try { await a.play(); setMuted(false); setPlaying(true); } catch {/* ignore */}
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+    window.addEventListener("pointerdown", unlock, { once: true });
+    window.addEventListener("keydown", unlock, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+  }, []);
+
+  const toggleAudio = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) {
+      a.muted = false;
+      a.play().then(() => { setPlaying(true); setMuted(false); }).catch(() => {});
+    } else if (a.muted) {
+      a.muted = false;
+      setMuted(false);
+    } else {
+      a.muted = true;
+      setMuted(true);
+    }
+  };
+
   return (
     <div className="min-h-screen text-foreground relative">
+      <audio ref={audioRef} src="/teamtage.mp3" loop preload="auto" playsInline />
+      <button
+        onClick={toggleAudio}
+        aria-label={muted ? "Activar sonido" : "Silenciar"}
+        className="fixed bottom-5 right-5 z-[60] h-12 w-12 rounded-full bg-flame text-background shadow-[0_0_30px_var(--flame-glow)] flex items-center justify-center hover:scale-110 transition active:scale-95"
+      >
+        {playing && !muted ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
+        {playing && !muted && (
+          <span className="absolute inset-0 rounded-full border-2 border-flame animate-ping opacity-60" />
+        )}
+      </button>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
@@ -123,28 +189,6 @@ function Index() {
       <section id="top" className="relative overflow-hidden grain">
         <Hero3D />
 
-        {/* marquee */}
-        <div className="absolute bottom-0 inset-x-0 border-y border-border bg-background/40 backdrop-blur py-4 overflow-hidden">
-          <div className="flex gap-12 whitespace-nowrap animate-marquee font-display text-2xl md:text-3xl font-bold tracking-tight items-center">
-            {Array.from({ length: 2 }).map((_, i) => (
-              <div key={i} className="flex gap-12 items-center shrink-0">
-                {["THE SOUL NATION", "ghost", "DESDE EL 2012", "ghost", "THE SOUL LEGENDS", "ghost", "THE SOUL MEDIA", "ghost", "THE SOUL WAVES", "ghost", "THE SOUL CREW", "ghost"].map((t, j) =>
-                  t === "ghost" ? (
-                    <img
-                      key={j}
-                      src={soulMascot}
-                      alt=""
-                      aria-hidden="true"
-                      className="h-7 md:h-9 w-auto opacity-90 drop-shadow-[0_0_10px_var(--flame-glow)] shrink-0"
-                    />
-                  ) : (
-                    <span key={j} className={j % 2 === 0 ? "text-flame" : "text-foreground/70"}>{t}</span>
-                  ),
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* ABOUT + VISIÓN + OBJETIVO — compacto y responsive */}
