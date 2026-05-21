@@ -1084,7 +1084,10 @@ function WallpapersSection() {
                     </span>
                   )}
                 </button>
-            ))}
+              ))}
+            </div>
+
+
 
             {/* stats */}
             <div className="mt-2 grid grid-cols-3 gap-2 text-center">
