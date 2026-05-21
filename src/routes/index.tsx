@@ -944,7 +944,7 @@ function IndexContent() {
                         title={`The Soul Nation · Single ${i + 1}`}
                         src={`https://open.spotify.com/embed/album/${id}?utm_source=generator&theme=0`}
                         width="100%"
-                        height="232"
+                        height="274"
                         loading="lazy"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         className="border-0 block"
