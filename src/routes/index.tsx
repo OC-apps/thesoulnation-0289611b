@@ -494,15 +494,22 @@ function IndexContent() {
                   </AnimatePresence>
                 </div>
 
-                {/* Chips divisiones */}
-                <div className="mt-5 pt-4 border-t border-flame/15 flex flex-wrap gap-2">
-                  {["Legends", "Crew", "Killers", "Waves", "Media"].map((d) => (
-                    <span
-                      key={d}
-                      className="px-3 py-1 rounded-full border border-flame/30 bg-flame/5 text-[10px] font-mono uppercase tracking-[0.2em] text-foreground/80 hover:bg-flame hover:text-background transition cursor-default"
+                {/* Botones a divisiones */}
+                <div className="mt-5 pt-4 border-t border-flame/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {[
+                    { label: "Waves", href: "#waves" },
+                    { label: "Killers", href: "#killers" },
+                    { label: "Legends", href: "#legends" },
+                    { label: "Crew", href: "#crew" },
+                  ].map((d) => (
+                    <a
+                      key={d.label}
+                      href={d.href}
+                      className="group/btn relative overflow-hidden rounded-xl bg-flame text-background px-3 py-3 text-center font-display font-bold uppercase tracking-[0.2em] text-xs sm:text-sm shadow-[0_8px_24px_-8px_var(--flame-glow)] hover:scale-[1.04] hover:shadow-[0_12px_36px_-6px_var(--flame-glow)] active:scale-95 transition"
                     >
-                      The Soul {d}
-                    </span>
+                      <span className="relative z-10">{d.label}</span>
+                      <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-full transition-transform duration-700" />
+                    </a>
                   ))}
                 </div>
               </div>
@@ -527,7 +534,7 @@ function IndexContent() {
           </div>
 
           {/* WAVES — creators */}
-          <div className="text-center mb-12 flex flex-col items-center">
+          <div id="waves" className="text-center mb-12 flex flex-col items-center scroll-mt-24">
             <img
               src={soulWavesLogo}
               alt="The Soul Waves"
@@ -548,7 +555,7 @@ function IndexContent() {
               { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Modo Guardian · Gears 5", desc: "Equipo enfocado en grindear el modo Guardian de Gears 5.", members: KILLERS },
               { logo: soulLegendsLogo, title: "THE SOUL LEGENDS", subtitle: "Montagers · Clips & Highlights", desc: "Jugadores habilidosos y creadores de clips para montajes editados.", members: LEGENDS },
             ].map((sq) => (
-              <div key={sq.title} className="tilt-card roster-card rounded-3xl p-10 md:p-14">
+              <div key={sq.title} id={sq.title.includes("KILLERS") ? "killers" : "legends"} className="tilt-card roster-card rounded-3xl p-10 md:p-14 scroll-mt-24">
                 <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
                   <div className="md:col-span-5">
                     <img src={sq.logo} alt={sq.title} className="layer-up h-24 md:h-36 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
@@ -570,7 +577,7 @@ function IndexContent() {
           </div>
 
           {/* CREW — banner + grid de nombres */}
-          <div className="perspective">
+          <div id="crew" className="perspective scroll-mt-24">
             <div className="tilt-card roster-card rounded-3xl p-10 md:p-14">
               <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
                 <div className="md:col-span-5">
