@@ -461,7 +461,7 @@ function IndexContent() {
             </div>
 
             {/* Columna derecha: título + texto + tab animado */}
-            <div className="lg:col-span-7 flex flex-col gap-5">
+            <div className="col-span-7 md:col-span-8 lg:col-span-7 flex flex-col gap-5">
               <div>
                 <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
                 <h2 className="mt-2 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.9]">
