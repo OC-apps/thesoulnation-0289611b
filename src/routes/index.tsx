@@ -143,7 +143,7 @@ function WavesHUD() {
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
-        <DialogContent className="max-w-3xl border-flame/40 bg-blue-deep/95 backdrop-blur-xl p-0 overflow-hidden [&>button]:hidden">
+        <DialogContent onClick={() => setOpenIdx(null)} className="max-w-3xl border-flame/40 bg-blue-deep/95 backdrop-blur-xl p-0 overflow-hidden cursor-pointer [&>button]:hidden">
           {active && (
             <div className="relative">
               {/* scanlines */}
