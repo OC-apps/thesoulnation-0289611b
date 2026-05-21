@@ -5,6 +5,7 @@ import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
 import soulNationTeam from "@/assets/soul-nation-team.png";
+import somosCover from "@/assets/somos-soul-nation-cover.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
 import soulCrewLogo from "@/assets/soul-crew.png";
 import soulLegendsLogo from "@/assets/soul-legends.png";
