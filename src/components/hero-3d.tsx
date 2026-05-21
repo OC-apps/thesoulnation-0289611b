@@ -72,14 +72,14 @@ export function Hero3D() {
               <img
                 src={soulLogo}
                 alt="The Soul Nation"
-                className="relative z-10 w-24 sm:w-36 md:w-44 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
+                className="relative z-10 w-24 sm:w-32 md:w-40 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
                 draggable={false}
               />
             </div>
             <img
               src={soulTextLogo}
               alt="THE SOUL NATION"
-              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[360px] md:max-w-[460px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
+              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[340px] md:max-w-[420px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
               draggable={false}
             />
           </motion.div>
