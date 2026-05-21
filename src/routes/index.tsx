@@ -926,18 +926,25 @@ function IndexContent() {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13M9 9l12-2"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {[
-                    { id: "0BA5VLFK2p44KzjuRqmlyF", title: "Álbum 1" },
-                    { id: "1wmiGzheoOkSnVqeZ6TZ5f", title: "Álbum 2" },
-                    { id: "14RYTx4G2qVYMz56Og4pKC", title: "Álbum 3" },
-                  ].map((al) => (
-                    <div key={al.id} className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="md:row-span-2 rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
+                    <iframe
+                      title="The Soul Nation · Álbum"
+                      src="https://open.spotify.com/embed/album/0BA5VLFK2p44KzjuRqmlyF?utm_source=generator&theme=0"
+                      width="100%"
+                      height="560"
+                      loading="lazy"
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      className="border-0 block"
+                    />
+                  </div>
+                  {["1wmiGzheoOkSnVqeZ6TZ5f", "14RYTx4G2qVYMz56Og4pKC"].map((id, i) => (
+                    <div key={id} className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
                       <iframe
-                        title={`The Soul Nation · ${al.title}`}
-                        src={`https://open.spotify.com/embed/album/${al.id}?utm_source=generator&theme=0`}
+                        title={`The Soul Nation · Single ${i + 1}`}
+                        src={`https://open.spotify.com/embed/album/${id}?utm_source=generator&theme=0`}
                         width="100%"
-                        height="420"
+                        height="232"
                         loading="lazy"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         className="border-0 block"
