@@ -189,12 +189,10 @@ function WavesHUD() {
           ];
           return (
             <>
-              {/* Leader row */}
+              {/* Leader row - full width rectangle */}
               {ordered[0]?.leader && (
-                <div className="flex justify-center">
-                  <div className="w-[55%] sm:w-[36%] md:w-[24%] lg:w-[20%]">
-                    {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i))}
-                  </div>
+                <div className="w-full">
+                  {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i))}
                 </div>
               )}
               {/* Rest 4+4 */}
