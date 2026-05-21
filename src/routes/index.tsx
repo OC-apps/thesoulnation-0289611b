@@ -308,6 +308,8 @@ function IndexContent() {
   const { playing, toggle: toggleAudio } = useAudio();
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
+  const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
+
 
   return (
     <div className="min-h-screen text-foreground relative">
