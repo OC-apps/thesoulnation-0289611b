@@ -78,7 +78,7 @@ export function SideNav() {
               type="button"
               onClick={() => go("top")}
               aria-label="Subir al inicio"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background/90 text-flame shadow-lg backdrop-blur-xl transition active:scale-95 hover:border-flame"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-flame bg-background/95 text-flame shadow-[0_18px_60px_-28px_var(--flame-glow)] backdrop-blur-xl transition active:scale-95 hover:bg-flame hover:text-background"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
                 <path d="M12 5 5 12l1.4 1.4L11 8.8V20h2V8.8l4.6 4.6L19 12z" />
