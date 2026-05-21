@@ -117,16 +117,22 @@ function WavesHUD() {
                 src={c.photo}
                 alt={c.name}
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+              {/* HUD scan line on hover */}
+              <span className="pointer-events-none absolute inset-x-0 -top-1 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.4s_ease-in-out_infinite] shadow-[0_0_12px_var(--flame-glow)]" />
+              {/* hover tint only on hover */}
+              <div className="absolute inset-0 bg-flame/0 group-hover:bg-flame/10 transition-colors" />
               {/* HUD corners */}
-              <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame" />
-              <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame" />
-              <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame" />
-              <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame" />
+              <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+              <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+              <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+              <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
               <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
                 W·0{i + 1}
+              </span>
+              <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                ► OPEN
               </span>
             </div>
             <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
@@ -166,22 +172,17 @@ function WavesHUD() {
 
               <div className="grid md:grid-cols-5 gap-0">
                 {/* Photo panel */}
-                <div className="relative md:col-span-2 aspect-square md:aspect-auto md:min-h-[420px] overflow-hidden bg-background">
+                <div className="relative md:col-span-2 aspect-square md:aspect-auto md:min-h-[420px] overflow-hidden bg-background group">
                   <img src={active.photo} alt={active.name} className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-background via-background/20 to-transparent" />
+                  {/* subtle edge fade only towards info side */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-background/70 via-transparent to-transparent" />
+                  {/* animated scan line */}
+                  <span className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent shadow-[0_0_14px_var(--flame-glow)] animate-[scan_2.6s_ease-in-out_infinite]" />
                   {/* corners */}
                   <span className="absolute top-2 left-2 w-5 h-5 border-l-2 border-t-2 border-flame" />
                   <span className="absolute top-2 right-2 w-5 h-5 border-r-2 border-t-2 border-flame" />
                   <span className="absolute bottom-2 left-2 w-5 h-5 border-l-2 border-b-2 border-flame" />
                   <span className="absolute bottom-2 right-2 w-5 h-5 border-r-2 border-b-2 border-flame" />
-                  {/* targeting reticle */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-flame/40 rounded-full flex items-center justify-center">
-                    <div className="w-1 h-1 bg-flame rounded-full" />
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-px h-3 bg-flame/60" />
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-px h-3 bg-flame/60" />
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-3 h-px bg-flame/60" />
-                    <span className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 w-3 h-px bg-flame/60" />
-                  </div>
                 </div>
 
                 {/* Info panel */}
