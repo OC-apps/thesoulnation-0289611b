@@ -23,6 +23,8 @@ import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { Hero3D } from "@/components/hero-3d";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { X, Zap, Radio, Trophy } from "lucide-react";
 
 const WALLPAPERS = [
   {
@@ -97,7 +99,152 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+function WavesHUD() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const active = openIdx !== null ? WAVES[openIdx] : null;
+
+  return (
+    <>
+      <div className="mb-20 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+        {WAVES.map((c, i) => (
+          <button
+            key={c.name}
+            onClick={() => setOpenIdx(i)}
+            className="group relative overflow-hidden rounded-xl border border-flame/20 bg-blue-deep/60 backdrop-blur text-left transition-all hover:border-flame hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_var(--flame-glow)] focus:outline-none focus:ring-2 focus:ring-flame"
+          >
+            <div className="relative aspect-square overflow-hidden">
+              <img
+                src={c.photo}
+                alt={c.name}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+              {/* HUD corners */}
+              <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame" />
+              <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame" />
+              <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame" />
+              <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame" />
+              <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
+                W·0{i + 1}
+              </span>
+            </div>
+            <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
+              <h4 className="font-display font-bold text-[11px] sm:text-sm text-flame leading-tight truncate">
+                {c.name}
+              </h4>
+              <div className="mt-1 flex items-center gap-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                online
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
+        <DialogContent className="max-w-3xl border-flame/40 bg-blue-deep/95 backdrop-blur-xl p-0 overflow-hidden [&>button]:hidden">
+          {active && (
+            <div className="relative">
+              {/* scanlines */}
+              <div className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-screen" style={{ backgroundImage: "repeating-linear-gradient(0deg, #fff 0, #fff 1px, transparent 1px, transparent 3px)" }} />
+              {/* HUD top bar */}
+              <div className="flex items-center justify-between px-4 py-2 border-b border-flame/30 bg-background/40 font-mono text-[10px] uppercase tracking-[0.3em] text-flame">
+                <div className="flex items-center gap-2">
+                  <Radio className="w-3 h-3 animate-pulse" />
+                  <span>SOUL · INTEL · PROFILE</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES.length}</span>
+                  <button onClick={() => setOpenIdx(null)} className="hover:text-foreground transition" aria-label="Cerrar">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <DialogTitle className="sr-only">{active.name}</DialogTitle>
+
+              <div className="grid md:grid-cols-5 gap-0">
+                {/* Photo panel */}
+                <div className="relative md:col-span-2 aspect-square md:aspect-auto md:min-h-[420px] overflow-hidden bg-background">
+                  <img src={active.photo} alt={active.name} className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-background via-background/20 to-transparent" />
+                  {/* corners */}
+                  <span className="absolute top-2 left-2 w-5 h-5 border-l-2 border-t-2 border-flame" />
+                  <span className="absolute top-2 right-2 w-5 h-5 border-r-2 border-t-2 border-flame" />
+                  <span className="absolute bottom-2 left-2 w-5 h-5 border-l-2 border-b-2 border-flame" />
+                  <span className="absolute bottom-2 right-2 w-5 h-5 border-r-2 border-b-2 border-flame" />
+                  {/* targeting reticle */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-flame/40 rounded-full flex items-center justify-center">
+                    <div className="w-1 h-1 bg-flame rounded-full" />
+                    <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-px h-3 bg-flame/60" />
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-px h-3 bg-flame/60" />
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-3 h-px bg-flame/60" />
+                    <span className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 w-3 h-px bg-flame/60" />
+                  </div>
+                </div>
+
+                {/* Info panel */}
+                <div className="md:col-span-3 p-5 sm:p-7 flex flex-col gap-4">
+                  <div>
+                    <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-muted-foreground">Wave · 0{(openIdx ?? 0) + 1}</div>
+                    <h3 className="mt-1 font-display font-bold text-3xl sm:text-4xl text-flame leading-none">{active.name}</h3>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 font-mono text-[10px] uppercase">
+                    <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
+                      <div className="flex items-center gap-1 text-flame"><Zap className="w-3 h-3" /> Status</div>
+                      <div className="mt-1 text-emerald-400">ACTIVE</div>
+                    </div>
+                    <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
+                      <div className="flex items-center gap-1 text-flame"><Trophy className="w-3 h-3" /> Role</div>
+                      <div className="mt-1 text-foreground">Creator</div>
+                    </div>
+                    <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
+                      <div className="flex items-center gap-1 text-flame"><Radio className="w-3 h-3" /> Squad</div>
+                      <div className="mt-1 text-foreground">WAVES</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Networks</div>
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{active.redes}</div>
+                  </div>
+
+                  <div className="relative">
+                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Bio · Intel</div>
+                    <div className="max-h-56 overflow-y-auto pr-2 text-sm text-foreground/90 leading-relaxed whitespace-pre-line border-l-2 border-flame/40 pl-3">
+                      {active.bio}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-2 border-t border-flame/20 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                    <button
+                      onClick={() => setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length)}
+                      className="hover:text-flame transition"
+                    >
+                      ◄ prev
+                    </button>
+                    <span>The Soul Nation · 2012</span>
+                    <button
+                      onClick={() => setOpenIdx((openIdx! + 1) % WAVES.length)}
+                      className="hover:text-flame transition"
+                    >
+                      next ►
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
 function Index() {
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
@@ -261,46 +408,8 @@ function Index() {
             </p>
           </div>
 
-          {/* Mobile: carrusel */}
-          <div className="sm:hidden mb-12">
-            <MobileCarousel>
-              {WAVES.map((c, i) => (
-                <article key={c.name} className="snap-center shrink-0 w-[78%] wave-card rounded-2xl overflow-hidden flex flex-col">
-                  <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
-                    <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background/80 to-transparent" />
-                    <span className="absolute top-3 left-3 text-[9px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">Wave · 0{i + 1}</span>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h4 className="font-display font-bold text-xl text-flame drop-shadow">{c.name}</h4>
-                      <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
-                    </div>
-                  </div>
-                  <div className="p-4 relative z-10">
-                    <p className="text-xs text-foreground/85 leading-relaxed line-clamp-5">{c.bio}</p>
-                  </div>
-                </article>
-              ))}
-            </MobileCarousel>
-          </div>
+          <WavesHUD />
 
-          {/* Desktop/tablet: grid */}
-          <div className="hidden sm:grid perspective sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-            {WAVES.map((c, i) => (
-              <article key={c.name} className="group wave-card rounded-2xl overflow-hidden flex flex-col">
-                <div className="relative aspect-[4/5] bg-blue-deep overflow-hidden">
-                  <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <span className="absolute top-4 left-4 text-[10px] uppercase tracking-[0.3em] text-flame bg-background/70 backdrop-blur px-2 py-1 rounded-full border border-border">
-                    Wave · 0{i + 1}
-                  </span>
-                </div>
-                <div className="p-6 flex flex-col gap-3 relative z-10">
-                  <h4 className="layer-up font-display font-bold text-2xl text-flame">{c.name}</h4>
-                  <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground">{c.redes}</p>
-                  <p className="text-sm text-foreground/85 leading-relaxed">{c.bio}</p>
-                </div>
-              </article>
-            ))}
-          </div>
 
           {/* KILLERS + LEGENDS — banner + grid de nombres */}
           <div className="perspective mb-12 space-y-8">
