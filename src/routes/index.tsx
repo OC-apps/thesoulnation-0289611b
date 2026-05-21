@@ -359,7 +359,7 @@ function IndexContent() {
             <img src={soulLogo} alt="The Soul Nation" width={28} height={28} className="drop-shadow-[0_0_12px_var(--flame-glow)]" />
             <span className="hidden sm:inline">THE SOUL <span className="text-flame">NATION</span></span>
           </a>
-          <nav className="hidden md:flex gap-6 text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+          <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
             <a href="#about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
             <a href="#roster" className="hover:text-foreground transition whitespace-nowrap">Roster</a>
             <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
