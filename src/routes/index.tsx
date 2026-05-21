@@ -570,7 +570,7 @@ function IndexContent() {
           </div>
 
           {/* CREW — banner + grid de nombres */}
-          <div className="perspective">
+          <div id="crew" className="perspective scroll-mt-24">
             <div className="tilt-card roster-card rounded-3xl p-10 md:p-14">
               <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
                 <div className="md:col-span-5">
