@@ -3,6 +3,7 @@ import { useRef, useState, type MouseEvent } from "react";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
+import soulNationTeam from "@/assets/soul-nation-team.jpg";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
 import soulCrewLogo from "@/assets/soul-crew.png";
 import soulLegendsLogo from "@/assets/soul-legends.png";
@@ -395,7 +396,15 @@ function IndexContent() {
               <h2 className="mt-3 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
                 ¿Quiénes <span className="italic text-flame">Somos?</span>
               </h2>
-              <img src={soulLogo} alt="" width={160} height={160} loading="lazy" className="hidden md:block mt-6 w-24 lg:w-32 opacity-80 animate-float" />
+              <div className="mt-6 relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)]">
+                <img
+                  src={soulNationTeam}
+                  alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
+                  loading="lazy"
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background/70 via-transparent to-transparent" />
+              </div>
             </div>
             <div className="md:col-span-7">
               <p className="text-base sm:text-lg md:text-xl text-foreground/90 font-light leading-relaxed">
