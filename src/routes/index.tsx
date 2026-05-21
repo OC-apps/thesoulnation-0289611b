@@ -143,7 +143,7 @@ function WavesHUD() {
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
-        <DialogContent className="max-w-3xl border-flame/40 bg-blue-deep/95 backdrop-blur-xl p-0 overflow-hidden [&>button]:hidden">
+        <DialogContent onClick={() => setOpenIdx(null)} className="max-w-3xl border-flame/40 bg-blue-deep/95 backdrop-blur-xl p-0 overflow-hidden cursor-pointer [&>button]:hidden">
           {active && (
             <div className="relative">
               {/* scanlines */}
@@ -220,14 +220,14 @@ function WavesHUD() {
 
                   <div className="flex justify-between items-center pt-2 border-t border-flame/20 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                     <button
-                      onClick={() => setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length)}
+                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length); }}
                       className="hover:text-flame transition"
                     >
                       ◄ prev
                     </button>
-                    <span>The Soul Nation · 2012</span>
+                    <span>Toca afuera para cerrar</span>
                     <button
-                      onClick={() => setOpenIdx((openIdx! + 1) % WAVES.length)}
+                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! + 1) % WAVES.length); }}
                       className="hover:text-flame transition"
                     >
                       next ►
