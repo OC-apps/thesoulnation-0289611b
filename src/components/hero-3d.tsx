@@ -47,26 +47,61 @@ export function Hero3D() {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-20 md:py-28 grid md:grid-cols-12 gap-8 md:gap-12 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-16 md:py-28 grid md:grid-cols-12 gap-8 md:gap-12 items-center">
         {/* Left: copy */}
-        <div className="md:col-span-7 flex flex-col items-start text-left">
+        <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
+          {/* Banner: emblem + text logo together */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="relative flex md:hidden items-center justify-center gap-3 w-full"
+          >
+            <div className="relative flex-shrink-0">
+              <motion.div
+                aria-hidden
+                className="absolute inset-0 m-auto w-full aspect-square rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(circle, color-mix(in oklab, var(--flame) 45%, transparent), transparent 70%)",
+                  filter: "blur(22px)",
+                }}
+                animate={{ opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <img
+                src={soulLogo}
+                alt="The Soul Nation"
+                className="relative z-10 w-24 sm:w-28 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
+                draggable={false}
+              />
+            </div>
+            <img
+              src={soulTextLogo}
+              alt="THE SOUL NATION"
+              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[260px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
+              draggable={false}
+            />
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
+            className="mt-4 md:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-flame animate-pulse" />
             EST. 10 · NOV · 2012
           </motion.div>
 
+          {/* Desktop text logo */}
           <motion.img
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7 }}
             src={soulTextLogo}
             alt="THE SOUL NATION"
-            className="mt-5 w-full max-w-[640px] h-auto drop-shadow-[0_0_40px_var(--flame-glow)]"
+            className="hidden md:block mt-5 w-full max-w-[640px] h-auto drop-shadow-[0_0_40px_var(--flame-glow)]"
             draggable={false}
           />
 
@@ -102,7 +137,7 @@ export function Hero3D() {
               { v: "35", k: "Miembros" },
               { v: "∞", k: "Familia" },
             ].map((s) => (
-              <div key={s.k} className="border-l-2 border-flame/60 pl-3">
+              <div key={s.k} className="border-l-2 border-flame/60 pl-3 text-left">
                 <div className="font-display font-black text-2xl sm:text-3xl text-foreground">
                   {s.v}
                 </div>
@@ -114,8 +149,8 @@ export function Hero3D() {
           </motion.div>
         </div>
 
-        {/* Right: logo emblem */}
-        <div className="md:col-span-5 relative flex items-center justify-center order-first md:order-last">
+        {/* Right: logo emblem (desktop only) */}
+        <div className="hidden md:flex md:col-span-5 relative items-center justify-center">
           <motion.div
             aria-hidden
             className="absolute inset-0 m-auto w-[80%] aspect-square rounded-full border border-flame/30"
