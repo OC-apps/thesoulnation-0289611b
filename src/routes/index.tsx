@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
@@ -340,28 +340,70 @@ function Index() {
     if (a.paused) {
       a.muted = false;
       a.play().then(() => { setPlaying(true); setMuted(false); }).catch(() => {});
-    } else if (a.muted) {
-      a.muted = false;
-      setMuted(false);
     } else {
-      a.muted = true;
-      setMuted(true);
+      a.pause();
+      setPlaying(false);
     }
   };
+
+  const [socialsOpen, setSocialsOpen] = useState(false);
 
   return (
     <div className="min-h-screen text-foreground relative">
       <audio ref={audioRef} src="/teamtage.mp3" loop preload="auto" playsInline />
-      <button
-        onClick={toggleAudio}
-        aria-label={muted ? "Activar sonido" : "Silenciar"}
-        className="fixed top-20 right-4 sm:right-6 z-[60] h-12 w-12 rounded-full bg-flame text-background shadow-[0_0_30px_var(--flame-glow)] flex items-center justify-center hover:scale-110 transition active:scale-95"
-      >
-        {playing && !muted ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
-        {playing && !muted && (
-          <span className="absolute inset-0 rounded-full border-2 border-flame animate-ping opacity-60" />
-        )}
-      </button>
+      {/* Floating control stack — always visible */}
+      <div className="fixed top-20 right-4 sm:right-6 z-[60] flex flex-col items-end gap-3">
+        <button
+          onClick={toggleAudio}
+          aria-label={playing ? "Detener música" : "Reproducir música"}
+          className="group relative h-12 w-12 rounded-full bg-flame text-background shadow-[0_0_30px_var(--flame-glow)] flex items-center justify-center hover:scale-110 transition active:scale-95"
+        >
+          {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+          {playing && (
+            <span className="absolute inset-0 rounded-full border-2 border-flame animate-ping opacity-60" />
+          )}
+          <span className="pointer-events-none absolute right-full mr-2 px-2 py-1 rounded bg-background/90 border border-flame/40 text-flame text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            {playing ? "Detener" : "Reproducir"}
+          </span>
+        </button>
+
+        <div className="relative">
+          <button
+            onClick={() => setSocialsOpen((v) => !v)}
+            aria-label="Redes sociales"
+            aria-expanded={socialsOpen}
+            className="group relative h-12 w-12 rounded-full bg-background border-2 border-flame text-flame shadow-[0_0_24px_var(--flame-glow)] flex items-center justify-center hover:scale-110 hover:bg-flame hover:text-background transition active:scale-95"
+          >
+            <Share2 className="h-5 w-5" />
+            <span className="pointer-events-none absolute right-full mr-2 px-2 py-1 rounded bg-background/90 border border-flame/40 text-flame text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+              Redes
+            </span>
+          </button>
+          {socialsOpen && (
+            <div className="absolute top-0 right-full mr-3 w-48 rounded-lg border border-flame/40 bg-background/95 backdrop-blur-md shadow-[0_0_30px_var(--flame-glow)] p-2 flex flex-col gap-1 animate-in fade-in slide-in-from-right-2">
+              <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame px-2 pt-1 pb-2 border-b border-flame/20">Síguenos</div>
+              {[
+                { label: "YouTube", href: SOCIALS.youtube, icon: <Youtube className="h-4 w-4" /> },
+                { label: "TikTok", href: SOCIALS.tiktok, icon: <span className="text-sm font-bold">♪</span> },
+                { label: "Facebook", href: SOCIALS.facebook, icon: <Facebook className="h-4 w-4" /> },
+                { label: "X / Twitter", href: SOCIALS.x, icon: <span className="text-sm font-bold">𝕏</span> },
+                { label: "Discord", href: SOCIALS.discord, icon: <span className="text-sm font-bold">◆</span> },
+              ].map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-3 py-2 rounded text-sm text-foreground hover:bg-flame hover:text-background transition"
+                >
+                  <span className="text-flame group-hover:text-background">{s.icon}</span>
+                  {s.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
