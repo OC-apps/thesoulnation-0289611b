@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useRef, useState, type MouseEvent } from "react";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
