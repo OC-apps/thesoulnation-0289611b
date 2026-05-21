@@ -548,7 +548,7 @@ function IndexContent() {
               { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Modo Guardian · Gears 5", desc: "Equipo enfocado en grindear el modo Guardian de Gears 5.", members: KILLERS },
               { logo: soulLegendsLogo, title: "THE SOUL LEGENDS", subtitle: "Montagers · Clips & Highlights", desc: "Jugadores habilidosos y creadores de clips para montajes editados.", members: LEGENDS },
             ].map((sq) => (
-              <div key={sq.title} className="tilt-card roster-card rounded-3xl p-10 md:p-14">
+              <div key={sq.title} id={sq.title.includes("KILLERS") ? "killers" : "legends"} className="tilt-card roster-card rounded-3xl p-10 md:p-14 scroll-mt-24">
                 <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
                   <div className="md:col-span-5">
                     <img src={sq.logo} alt={sq.title} className="layer-up h-24 md:h-36 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
