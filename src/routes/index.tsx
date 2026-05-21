@@ -24,7 +24,7 @@ import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { Hero3D } from "@/components/hero-3d";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { X, Zap, Radio, Trophy } from "lucide-react";
+import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
 
 const WALLPAPERS = [
   {
@@ -76,7 +76,7 @@ const CREW = [
 ];
 
 const WAVES: { name: string; redes: string; bio: string; photo: string }[] = [
-  { name: "SOUL MAVERICK", redes: "Facebook · TikTok · YouTube · X", photo: waveMaverick, bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War." },
+  { name: "SOUL MAVERICK Z", redes: "Facebook · TikTok · YouTube · X", photo: waveMaverick, bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War." },
   { name: "SOUL ALEMAN", redes: "Facebook · TikTok · YouTube · X", photo: waveAleman, bio: "Uno de los integrantes más recientes de Soul, Mendoza la Crew y dio el salto a The Waves con ganas reales de aprender y crecer. Se caracteriza por su rápida conexión con los viewers, sus chistes rancios y su carisma natural. No es el mejor jugador, pero juega con el corazón, especialmente Gears of War, un juego que lo marcó desde sus inicios gracias a su hermano mayor." },
   { name: "SOUL GIZZMO", redes: "TikTok · Twitch · X", photo: waveGizzmo, bio: "Creador de contenido mexicano que transmite su pasión por los videojuegos en Twitch y TikTok, crea videos y memes para YouTube, y conecta con su comunidad a través del humor y una energía intensa. Cada stream es más que juego: es un show donde se vive el momento y la gente se siente parte de la experiencia." },
   { name: "SOUL PXLMAA", redes: "Facebook · TikTok · YouTube · X", photo: wavePxlmaa, bio: "Palma es gamer de corazón y clavado con la música urbana. Le gusta prender stream, echar la reta, cotorrear sin filtro con la banda y reírse un rato mientras juega. También le entra al básquet y le late todo lo que sea competir en equipo. Cuida su flow al vestir y siempre anda con ganas de convivir y pasarla bien con la comunidad." },
@@ -134,6 +134,11 @@ function WavesHUD() {
               <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
                 ► OPEN
               </span>
+              {c.name === "SOUL MAVERICK Z" && (
+                <span className="absolute top-1 right-1 z-10 flex items-center gap-0.5 text-[7px] font-mono tracking-[0.2em] text-background bg-flame px-1 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
+                  <Crown className="w-2.5 h-2.5" /> LEADER
+                </span>
+              )}
             </div>
             <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
               <h4 className="font-display font-bold text-[11px] sm:text-sm text-flame leading-tight truncate">
@@ -189,7 +194,14 @@ function WavesHUD() {
                 <div className="md:col-span-3 p-5 sm:p-7 flex flex-col gap-4">
                   <div>
                     <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-muted-foreground">Wave · 0{(openIdx ?? 0) + 1}</div>
-                    <h3 className="mt-1 font-display font-bold text-3xl sm:text-4xl text-flame leading-none">{active.name}</h3>
+                    <h3 className="mt-1 font-display font-bold text-3xl sm:text-4xl text-flame leading-none flex items-center gap-2 flex-wrap">
+                      {active.name}
+                      {active.name === "SOUL MAVERICK Z" && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono tracking-[0.3em] text-background bg-flame px-2 py-1 rounded shadow-[0_0_16px_var(--flame-glow)]">
+                          <Crown className="w-3 h-3" /> LEADER · FOUNDER
+                        </span>
+                      )}
+                    </h3>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 font-mono text-[10px] uppercase">
@@ -199,7 +211,7 @@ function WavesHUD() {
                     </div>
                     <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
                       <div className="flex items-center gap-1 text-flame"><Trophy className="w-3 h-3" /> Role</div>
-                      <div className="mt-1 text-foreground">{active.name === "SOUL MAVERICK" ? "Leader / Creator" : "Streamer"}</div>
+                      <div className="mt-1 text-foreground">{active.name === "SOUL MAVERICK Z" ? "Leader / Content Creator" : "Streamer"}</div>
                     </div>
                     <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
                       <div className="flex items-center gap-1 text-flame"><Radio className="w-3 h-3" /> Squad</div>
