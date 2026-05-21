@@ -50,12 +50,12 @@ export function Hero3D() {
       <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-16 md:py-28 grid md:grid-cols-12 gap-8 md:gap-12 items-center">
         {/* Left: copy */}
         <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
-          {/* Banner: emblem + text logo together */}
+          {/* Banner: emblem + text logo together (mobile + tablet) */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="relative flex md:hidden items-center justify-center gap-3 w-full"
+            className="relative flex lg:hidden items-center justify-center gap-3 sm:gap-5 w-full"
           >
             <div className="relative flex-shrink-0">
               <motion.div
@@ -72,14 +72,14 @@ export function Hero3D() {
               <img
                 src={soulLogo}
                 alt="The Soul Nation"
-                className="relative z-10 w-24 sm:w-28 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
+                className="relative z-10 w-24 sm:w-36 md:w-44 aspect-square object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)]"
                 draggable={false}
               />
             </div>
             <img
               src={soulTextLogo}
               alt="THE SOUL NATION"
-              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[260px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
+              className="relative z-10 flex-1 max-w-[220px] sm:max-w-[360px] md:max-w-[460px] h-auto object-contain drop-shadow-[0_0_30px_var(--flame-glow)]"
               draggable={false}
             />
           </motion.div>
@@ -88,7 +88,7 @@ export function Hero3D() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-4 md:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
+            className="mt-4 lg:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-flame animate-pulse" />
             EST. 10 · NOV · 2012
@@ -101,7 +101,7 @@ export function Hero3D() {
             transition={{ delay: 0.1, duration: 0.7 }}
             src={soulTextLogo}
             alt="THE SOUL NATION"
-            className="hidden md:block mt-5 w-full max-w-[640px] h-auto drop-shadow-[0_0_40px_var(--flame-glow)]"
+            className="hidden lg:block mt-5 w-full max-w-[640px] h-auto drop-shadow-[0_0_40px_var(--flame-glow)]"
             draggable={false}
           />
 
@@ -109,48 +109,26 @@ export function Hero3D() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-6 flex flex-row flex-nowrap items-stretch justify-center md:justify-start gap-2 sm:gap-3 w-full"
+            className="mt-6 flex flex-row flex-nowrap items-stretch justify-center lg:justify-start gap-2 sm:gap-3 w-full"
           >
             <a
               href="#roster"
-              className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 rounded-full bg-flame text-background font-display font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-xs sm:text-sm whitespace-nowrap shadow-[0_0_28px_var(--flame-glow)] hover:scale-105 transition active:scale-95"
+              className="flex-1 lg:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-6 py-3 rounded-full bg-flame text-background font-display font-bold uppercase tracking-[0.08em] sm:tracking-[0.2em] text-[11px] sm:text-sm whitespace-nowrap shadow-[0_0_28px_var(--flame-glow)] hover:scale-105 transition active:scale-95"
             >
               ► Conoce el Roster
             </a>
             <a
               href="#reclutamiento"
-              className="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 rounded-full border-2 border-flame text-flame font-display font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-xs sm:text-sm whitespace-nowrap hover:bg-flame hover:text-background transition active:scale-95"
+              className="flex-1 lg:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-6 py-3 rounded-full border-2 border-flame text-flame font-display font-bold uppercase tracking-[0.08em] sm:tracking-[0.2em] text-[11px] sm:text-sm whitespace-nowrap hover:bg-flame hover:text-background transition active:scale-95"
             >
               Únete a la Nación
             </a>
           </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-            className="mt-10 grid grid-cols-3 gap-4 sm:gap-8 w-full max-w-md"
-          >
-            {[
-              { v: "12+", k: "Años" },
-              { v: "35", k: "Miembros" },
-              { v: "∞", k: "Familia" },
-            ].map((s) => (
-              <div key={s.k} className="border-l-2 border-flame/60 pl-3 text-left">
-                <div className="font-display font-black text-2xl sm:text-3xl text-foreground">
-                  {s.v}
-                </div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground">
-                  {s.k}
-                </div>
-              </div>
-            ))}
-          </motion.div>
         </div>
 
         {/* Right: logo emblem (desktop only) */}
-        <div className="hidden md:flex md:col-span-5 relative items-center justify-center">
+        <div className="hidden lg:flex md:col-span-5 relative items-center justify-center">
+
           <motion.div
             aria-hidden
             className="absolute inset-0 m-auto w-[80%] aspect-square rounded-full border border-flame/30"
