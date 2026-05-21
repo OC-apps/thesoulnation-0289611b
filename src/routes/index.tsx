@@ -352,64 +352,12 @@ function Index() {
     <div className="min-h-screen text-foreground relative">
       <audio ref={audioRef} src="/teamtage.mp3" loop preload="auto" playsInline />
       {/* Floating control stack — always visible */}
-      <div className="fixed top-20 right-4 sm:right-6 z-[60] flex flex-col items-end gap-3">
-        <button
-          onClick={toggleAudio}
-          aria-label={playing ? "Detener música" : "Reproducir música"}
-          className="group relative h-12 w-12 rounded-full bg-flame text-background shadow-[0_0_30px_var(--flame-glow)] flex items-center justify-center hover:scale-110 transition active:scale-95"
-        >
-          {playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-          {playing && (
-            <span className="absolute inset-0 rounded-full border-2 border-flame animate-ping opacity-60" />
-          )}
-          <span className="pointer-events-none absolute right-full mr-2 px-2 py-1 rounded bg-background/90 border border-flame/40 text-flame text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-            {playing ? "Detener" : "Reproducir"}
-          </span>
-        </button>
-
-        <div className="relative">
-          <button
-            onClick={() => setSocialsOpen((v) => !v)}
-            aria-label="Redes sociales"
-            aria-expanded={socialsOpen}
-            className="group relative h-12 w-12 rounded-full bg-background border-2 border-flame text-flame shadow-[0_0_24px_var(--flame-glow)] flex items-center justify-center hover:scale-110 hover:bg-flame hover:text-background transition active:scale-95"
-          >
-            <Share2 className="h-5 w-5" />
-            <span className="pointer-events-none absolute right-full mr-2 px-2 py-1 rounded bg-background/90 border border-flame/40 text-flame text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-              Redes
-            </span>
-          </button>
-          {socialsOpen && (
-            <div className="absolute top-0 right-full mr-3 w-48 rounded-lg border border-flame/40 bg-background/95 backdrop-blur-md shadow-[0_0_30px_var(--flame-glow)] p-2 flex flex-col gap-1 animate-in fade-in slide-in-from-right-2">
-              <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame px-2 pt-1 pb-2 border-b border-flame/20">Síguenos</div>
-              {[
-                { label: "YouTube", href: SOCIALS.youtube, icon: <Youtube className="h-4 w-4" /> },
-                { label: "TikTok", href: SOCIALS.tiktok, icon: <span className="text-sm font-bold">♪</span> },
-                { label: "Facebook", href: SOCIALS.facebook, icon: <Facebook className="h-4 w-4" /> },
-                { label: "X / Twitter", href: SOCIALS.x, icon: <span className="text-sm font-bold">𝕏</span> },
-                { label: "Discord", href: SOCIALS.discord, icon: <span className="text-sm font-bold">◆</span> },
-              ].map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-3 py-2 rounded text-sm text-foreground hover:bg-flame hover:text-background transition"
-                >
-                  <span className="text-flame group-hover:text-background">{s.icon}</span>
-                  {s.label}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-          <a href="#top" className="flex items-center gap-2 font-display font-bold tracking-tight">
+        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
+          <a href="#top" className="flex items-center gap-2 font-display font-bold tracking-tight shrink-0">
             <img src={soulLogo} alt="The Soul Nation" width={28} height={28} className="drop-shadow-[0_0_12px_var(--flame-glow)]" />
-            <span>THE SOUL <span className="text-flame">NATION</span></span>
+            <span className="hidden sm:inline">THE SOUL <span className="text-flame">NATION</span></span>
           </a>
           <nav className="hidden md:flex gap-6 text-sm uppercase tracking-widest text-muted-foreground">
             <a href="#about" className="hover:text-foreground transition">¿Quiénes Somos?</a>
@@ -421,6 +369,56 @@ function Index() {
             <a href="#reclutamiento" className="hover:text-foreground transition">Reclutamiento</a>
             <a href="#redes" className="hover:text-foreground transition">Redes</a>
           </nav>
+
+          {/* Action controls — always visible next to sections */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={toggleAudio}
+              aria-label={playing ? "Detener música" : "Reproducir música"}
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-flame text-background text-[10px] font-mono uppercase tracking-[0.2em] shadow-[0_0_18px_var(--flame-glow)] hover:scale-105 transition active:scale-95"
+            >
+              {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+              <span className="hidden sm:inline">{playing ? "Pausar" : "Música"}</span>
+            </button>
+
+            <div className="relative">
+              <button
+                onClick={() => setSocialsOpen((v) => !v)}
+                aria-label="Redes sociales"
+                aria-expanded={socialsOpen}
+                className="inline-flex items-center gap-1.5 h-9 px-3 rounded-full bg-background border border-flame text-flame text-[10px] font-mono uppercase tracking-[0.2em] hover:bg-flame hover:text-background transition active:scale-95"
+              >
+                <Share2 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Redes</span>
+              </button>
+              {socialsOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setSocialsOpen(false)} />
+                  <div className="absolute top-full right-0 mt-2 w-52 z-50 rounded-lg border border-flame/40 bg-background/95 backdrop-blur-md shadow-[0_0_30px_var(--flame-glow)] p-2 flex flex-col gap-1">
+                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame px-2 pt-1 pb-2 border-b border-flame/20">Síguenos</div>
+                    {[
+                      { label: "YouTube", href: SOCIALS.youtube, icon: <Youtube className="h-4 w-4" /> },
+                      { label: "TikTok", href: SOCIALS.tiktok, icon: <span className="text-sm font-bold">♪</span> },
+                      { label: "Facebook", href: SOCIALS.facebook, icon: <Facebook className="h-4 w-4" /> },
+                      { label: "X / Twitter", href: SOCIALS.x, icon: <span className="text-sm font-bold">𝕏</span> },
+                      { label: "Discord", href: SOCIALS.discord, icon: <span className="text-sm font-bold">◆</span> },
+                    ].map((s) => (
+                      <a
+                        key={s.label}
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 px-3 py-2 rounded text-sm text-foreground hover:bg-flame hover:text-background transition"
+                      >
+                        <span className="text-flame">{s.icon}</span>
+                        {s.label}
+                      </a>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
