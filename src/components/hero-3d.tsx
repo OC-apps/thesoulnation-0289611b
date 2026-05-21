@@ -8,7 +8,7 @@ import soulTextLogo from "@/assets/soul-nation-textlogo.png";
  */
 export function Hero3D() {
   return (
-    <div className="relative w-full min-h-[auto] lg:min-h-[88vh] overflow-hidden select-none flex items-center">
+    <div className="relative w-full overflow-hidden select-none flex items-center">
       {/* Animated gradient mesh */}
       <motion.div
         aria-hidden
@@ -47,7 +47,7 @@ export function Hero3D() {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-6 sm:py-10 md:py-16 lg:py-28 grid md:grid-cols-12 gap-4 md:gap-8 lg:gap-12 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-6 sm:py-8 md:py-10 lg:py-12 grid md:grid-cols-12 gap-4 md:gap-6 lg:gap-8 items-center">
         {/* Left: copy */}
         <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
           {/* Banner: emblem + text logo together (mobile + tablet) */}
