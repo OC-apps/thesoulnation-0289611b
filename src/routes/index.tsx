@@ -117,16 +117,22 @@ function WavesHUD() {
                 src={c.photo}
                 alt={c.name}
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+              {/* HUD scan line on hover */}
+              <span className="pointer-events-none absolute inset-x-0 -top-1 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.4s_ease-in-out_infinite] shadow-[0_0_12px_var(--flame-glow)]" />
+              {/* hover tint only on hover */}
+              <div className="absolute inset-0 bg-flame/0 group-hover:bg-flame/10 transition-colors" />
               {/* HUD corners */}
-              <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame" />
-              <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame" />
-              <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame" />
-              <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame" />
+              <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+              <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+              <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+              <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
               <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
                 W·0{i + 1}
+              </span>
+              <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                ► OPEN
               </span>
             </div>
             <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
