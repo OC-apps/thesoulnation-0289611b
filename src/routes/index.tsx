@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState, type MouseEvent } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
@@ -306,6 +307,7 @@ function Index() {
 function IndexContent() {
   const { playing, toggle: toggleAudio } = useAudio();
   const [socialsOpen, setSocialsOpen] = useState(false);
+  const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
 
   return (
     <div className="min-h-screen text-foreground relative">
@@ -386,27 +388,37 @@ function IndexContent() {
 
       </section>
 
-      {/* ABOUT + VISIÓN + OBJETIVO — compacto y responsive */}
+      {/* ABOUT — integrado: foto + texto + tab animado (Visión / Objetivo) */}
       <section id="about" className="relative py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          {/* Encabezado + foto + highlights */}
           <div className="grid md:grid-cols-12 gap-6 md:gap-8 items-stretch">
             {/* Imagen del equipo */}
-            <div className="md:col-span-5 group relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)]">
+            <div className="md:col-span-5 group relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)] min-h-[420px]">
               <img
                 src={soulNationTeam}
                 alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
-              <div className="absolute left-4 bottom-4 right-4 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em]">
-                <span className="text-flame">★ Roster Oficial</span>
-                <span className="text-foreground/70">2012 — Hoy</span>
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background via-background/30 to-transparent" />
+              <div className="absolute left-4 top-4 px-3 py-1 rounded-full border border-flame/50 bg-background/60 backdrop-blur text-[10px] font-mono uppercase tracking-[0.3em] text-flame">
+                ★ Roster Oficial
+              </div>
+              <div className="absolute left-4 bottom-4 right-4 grid grid-cols-3 gap-2">
+                {[
+                  { v: "12+", k: "Años" },
+                  { v: "35", k: "Miembros" },
+                  { v: "4", k: "Divisiones" },
+                ].map((s) => (
+                  <div key={s.k} className="rounded-lg bg-background/70 backdrop-blur border border-flame/20 px-2 py-2 text-center">
+                    <div className="font-display font-black text-lg sm:text-xl text-flame leading-none">{s.v}</div>
+                    <div className="mt-0.5 text-[9px] font-mono uppercase tracking-[0.2em] text-foreground/70">{s.k}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Columna derecha: título + texto + highlights */}
+            {/* Columna derecha: título + texto + tab animado */}
             <div className="md:col-span-7 flex flex-col gap-5">
               <div>
                 <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
@@ -414,69 +426,91 @@ function IndexContent() {
                   ¿Quiénes <span className="italic text-flame">Somos?</span>
                 </h2>
               </div>
-              <p className="text-sm sm:text-base md:text-lg text-foreground/90 font-light leading-relaxed">
-                The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en la creación de clips de Gears of War. Con el tiempo, expandimos nuestros horizontes y nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad para una variedad de juegos competitivos. Nos caracteriza la pasión por el gaming y el compromiso de elevar la escena de los esports en Latinoamérica, trabajando como una familia unida, donde cada miembro puede crecer y destacar en lo que mejor sabe hacer.
+              <p className="text-sm sm:text-base text-foreground/85 font-light leading-relaxed">
+                The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en clips de Gears of War. Con el tiempo nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad, impulsando la escena de los esports en Latinoamérica como una familia unida.
               </p>
 
-              {/* Highlights interactivos — rellena el espacio */}
-              <div className="mt-auto grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { v: "12+", k: "Años activos" },
-                  { v: "35", k: "Miembros" },
-                  { v: "4", k: "Divisiones" },
-                  { v: "MX", k: "Origen" },
-                ].map((s) => (
-                  <div
-                    key={s.k}
-                    className="group/stat relative rounded-xl border border-flame/20 bg-background/40 backdrop-blur px-3 py-3 sm:px-4 sm:py-4 transition hover:border-flame hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_var(--flame-glow)] cursor-default"
-                  >
-                    <div className="font-display font-black text-2xl sm:text-3xl text-foreground group-hover/stat:text-flame transition">
-                      {s.v}
-                    </div>
-                    <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
-                      {s.k}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {/* Tab animado Visión / Objetivo */}
+              <div id="vision" className="roster-card rounded-2xl p-5 sm:p-6 md:p-7 flex-1 flex flex-col">
+                <div className="flex items-center gap-2 border-b border-flame/20 pb-3">
+                  {([
+                    { id: "vision", n: "02", label: "Visión" },
+                    { id: "objetivo", n: "03", label: "Objetivo" },
+                  ] as const).map((tab) => {
+                    const active = aboutTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setAboutTab(tab.id)}
+                        className={`relative px-4 py-2 rounded-full text-xs font-mono uppercase tracking-[0.25em] transition ${
+                          active ? "text-background" : "text-foreground/60 hover:text-flame"
+                        }`}
+                      >
+                        {active && (
+                          <motion.span
+                            layoutId="aboutTabPill"
+                            className="absolute inset-0 rounded-full bg-flame shadow-[0_0_20px_var(--flame-glow)]"
+                            transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                          />
+                        )}
+                        <span className="relative flex items-center gap-2">
+                          <span className="opacity-70">{tab.n}</span>
+                          <span>{tab.label}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="relative mt-4 flex-1">
+                  <AnimatePresence mode="wait">
+                    {aboutTab === "vision" ? (
+                      <motion.div
+                        key="vision"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight">Visión</h3>
+                        <p className="mt-3 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                          Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región.
+                        </p>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="objetivo"
+                        id="objetivo"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight">Objetivo</h3>
+                        <p className="mt-3 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                          Impulsar el potencial de cada miembro de The Soul Nation —jugador, creador o parte de nuestras divisiones Legends, Media, Waves y Crew—. Queremos expandir nuestra organización, fortalecer la comunidad gamer y colaborar con otras organizaciones de Latinoamérica para construir juntos el futuro de los esports en la región.
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              {/* Divisiones — chips interactivos */}
-              <div className="flex flex-wrap gap-2">
-                {["The Soul Legends", "The Soul Crew", "The Soul Killers", "The Soul Waves", "The Soul Media"].map((d) => (
-                  <span
-                    key={d}
-                    className="px-3 py-1.5 rounded-full border border-flame/30 bg-flame/5 text-[11px] font-mono uppercase tracking-[0.2em] text-foreground/80 hover:bg-flame hover:text-background hover:border-flame transition cursor-default"
-                  >
-                    {d}
-                  </span>
-                ))}
+                {/* Chips divisiones */}
+                <div className="mt-5 pt-4 border-t border-flame/15 flex flex-wrap gap-2">
+                  {["Legends", "Crew", "Killers", "Waves", "Media"].map((d) => (
+                    <span
+                      key={d}
+                      className="px-3 py-1 rounded-full border border-flame/30 bg-flame/5 text-[10px] font-mono uppercase tracking-[0.2em] text-foreground/80 hover:bg-flame hover:text-background transition cursor-default"
+                    >
+                      The Soul {d}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-
-          {/* Visión + Objetivo — grid 2 columnas en md+, stack en móvil */}
-          <div id="vision" className="mt-10 md:mt-14 grid sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
-            {[
-              { n: "02", t: "Visión", body: "Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de la creación de contenido de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región." },
-              { n: "03", t: "Objetivo", body: "Nuestro objetivo principal es impulsar el potencial de cada miembro de The Soul Nation, ya sea como jugador, creador de contenido, o parte de nuestras divisiones como The Soul Legends, The Soul Media, The Soul Waves y The Soul Crew. Queremos expandir nuestra organización, fortalecer la comunidad gamer y apoyar a otras organizaciones de calidad en Latinoamérica, sin necesidad de competir, sino colaborando para un crecimiento conjunto. Buscamos crear un ambiente en el que todos podamos avanzar, aprender y aportar para construir el futuro de los esports en la región." },
-            ].map((s) => (
-              <article
-                key={s.n}
-                id={s.t === "Objetivo" ? "objetivo" : undefined}
-                className="roster-card rounded-2xl p-5 sm:p-6 md:p-7"
-              >
-                <div className="text-[10px] uppercase tracking-[0.3em] text-flame">{s.n}</div>
-                <h3 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl font-bold italic text-flame leading-tight">
-                  {s.t}
-                </h3>
-                <p className="mt-3 sm:mt-4 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
-                  {s.body}
-                </p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
+
 
       {/* ROSTER */}
       <section id="roster" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
