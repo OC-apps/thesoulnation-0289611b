@@ -121,58 +121,91 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+function renderWaveCard(
+  c: (typeof WAVES)[number],
+  i: number,
+  leader: boolean,
+  onClick: () => void,
+) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group relative overflow-hidden rounded-xl border bg-blue-deep/60 backdrop-blur text-left transition-all hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-flame w-full ${
+        leader
+          ? "border-flame shadow-[0_25px_60px_-15px_var(--flame-glow)] hover:shadow-[0_30px_80px_-15px_var(--flame-glow)]"
+          : "border-flame/20 hover:border-flame hover:shadow-[0_20px_50px_-20px_var(--flame-glow)]"
+      }`}
+    >
+      <div className="relative aspect-square overflow-hidden">
+        <img
+          src={c.photo}
+          alt={c.name}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <span className="pointer-events-none absolute inset-x-0 -top-1 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.4s_ease-in-out_infinite] shadow-[0_0_12px_var(--flame-glow)]" />
+        <div className="absolute inset-0 bg-flame/0 group-hover:bg-flame/10 transition-colors" />
+        <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+        <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+        <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+        <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
+        <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
+          W·0{i + 1}
+        </span>
+        <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+          ► OPEN
+        </span>
+        {leader && (
+          <span className="absolute top-1 right-1 z-10 flex items-center gap-0.5 text-[8px] font-mono tracking-[0.2em] text-background bg-flame px-1.5 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
+            <Crown className="w-3 h-3" /> LEADER
+          </span>
+        )}
+      </div>
+      <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
+        <h4 className={`font-display font-bold leading-tight truncate text-flame ${leader ? "text-sm sm:text-base" : "text-[11px] sm:text-sm"}`}>
+          {c.name}
+        </h4>
+        <div className="mt-1 flex items-center gap-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          online
+        </div>
+      </div>
+    </button>
+  );
+}
+
 function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const active = openIdx !== null ? WAVES[openIdx] : null;
 
   return (
     <>
-      <div className="mb-20 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
-        {WAVES.map((c, i) => (
-          <button
-            key={c.name}
-            onClick={() => setOpenIdx(i)}
-            className="group relative overflow-hidden rounded-xl border border-flame/20 bg-blue-deep/60 backdrop-blur text-left transition-all hover:border-flame hover:-translate-y-1 hover:shadow-[0_20px_50px_-20px_var(--flame-glow)] focus:outline-none focus:ring-2 focus:ring-flame"
-          >
-            <div className="relative aspect-square overflow-hidden">
-              <img
-                src={c.photo}
-                alt={c.name}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              {/* HUD scan line on hover */}
-              <span className="pointer-events-none absolute inset-x-0 -top-1 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.4s_ease-in-out_infinite] shadow-[0_0_12px_var(--flame-glow)]" />
-              {/* hover tint only on hover */}
-              <div className="absolute inset-0 bg-flame/0 group-hover:bg-flame/10 transition-colors" />
-              {/* HUD corners */}
-              <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-              <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-              <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-              <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-              <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
-                W·0{i + 1}
-              </span>
-              <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                ► OPEN
-              </span>
-              {c.name === "SOUL MAVERICK Z" && (
-                <span className="absolute top-1 right-1 z-10 flex items-center gap-0.5 text-[7px] font-mono tracking-[0.2em] text-background bg-flame px-1 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
-                  <Crown className="w-2.5 h-2.5" /> LEADER
-                </span>
+      <div className="mb-20 space-y-4">
+        {(() => {
+          const leaderIdx = WAVES.findIndex((c) => c.name === "SOUL MAVERICK Z");
+          const ordered = [
+            ...(leaderIdx >= 0 ? [{ c: WAVES[leaderIdx], i: leaderIdx, leader: true }] : []),
+            ...WAVES.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
+          ];
+          return (
+            <>
+              {/* Leader row */}
+              {ordered[0]?.leader && (
+                <div className="flex justify-center">
+                  <div className="w-[55%] sm:w-[36%] md:w-[24%] lg:w-[20%]">
+                    {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i))}
+                  </div>
+                </div>
               )}
-            </div>
-            <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
-              <h4 className="font-display font-bold text-[11px] sm:text-sm text-flame leading-tight truncate">
-                {c.name}
-              </h4>
-              <div className="mt-1 flex items-center gap-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                online
+              {/* Rest 4+4 */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                {ordered.slice(1).map(({ c, i }) => (
+                  <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i))}</div>
+                ))}
               </div>
-            </div>
-          </button>
-        ))}
+            </>
+          );
+        })()}
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
