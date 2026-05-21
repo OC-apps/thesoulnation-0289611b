@@ -294,64 +294,19 @@ function WavesHUD() {
 }
 
 function Index() {
+  return (
+    <AudioProvider>
+      <IndexContent />
+    </AudioProvider>
+  );
+}
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
-
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    a.volume = 0.55;
-    const tryPlay = async () => {
-      try {
-        a.muted = false;
-        await a.play();
-        setMuted(false);
-        setPlaying(true);
-      } catch {
-        try {
-          a.muted = true;
-          await a.play();
-          setMuted(true);
-          setPlaying(true);
-        } catch {/* ignore */}
-      }
-    };
-    tryPlay();
-    const unlock = async () => {
-      if (!a) return;
-      a.muted = false;
-      try { await a.play(); setMuted(false); setPlaying(true); } catch {/* ignore */}
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
-    };
-    window.addEventListener("pointerdown", unlock, { once: true });
-    window.addEventListener("keydown", unlock, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
-    };
-  }, []);
-
-  const toggleAudio = () => {
-    const a = audioRef.current;
-    if (!a) return;
-    if (a.paused) {
-      a.muted = false;
-      a.play().then(() => { setPlaying(true); setMuted(false); }).catch(() => {});
-    } else {
-      a.pause();
-      setPlaying(false);
-    }
-  };
-
+function IndexContent() {
+  const { playing, toggle: toggleAudio } = useAudio();
   const [socialsOpen, setSocialsOpen] = useState(false);
 
   return (
     <div className="min-h-screen text-foreground relative">
-      <audio ref={audioRef} src="/teamtage.mp3" loop preload="auto" playsInline />
-      {/* Floating control stack — always visible */}
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
