@@ -589,7 +589,7 @@ function IndexContent() {
             <ul className="mt-8 space-y-3">
               {[
                 { k: "Material", v: "Poliéster premium dry-fit" },
-                { k: "Diseño", v: "Naranja flama · negro abismo" },
+                { k: "Diseño", v: "The Soul Nation Blue/Orange" },
                 { k: "Edición", v: "Drop oficial · cantidades limitadas" },
                 { k: "Para", v: "Player · Streamer · Soul Family" },
               ].map((s) => (
