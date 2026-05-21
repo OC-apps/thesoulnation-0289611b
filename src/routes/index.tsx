@@ -75,8 +75,17 @@ const CREW = [
   "SOUL RAVENANT", "SOUL NOIRR",
 ];
 
-const WAVES: { name: string; redes: string; bio: string; photo: string }[] = [
-  { name: "SOUL MAVERICK Z", redes: "Facebook · TikTok · YouTube · X", photo: waveMaverick, bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War." },
+type Social = { label: string; href: string };
+const WAVES: { name: string; redes: string; bio: string; photo: string; socials?: Social[] }[] = [
+  {
+    name: "SOUL MAVERICK Z",
+    redes: "TikTok · Facebook · YouTube · X",
+    photo: waveMaverick,
+    bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War.",
+    socials: [
+      { label: "TikTok", href: "https://www.tiktok.com/@soulmaverickz" },
+    ],
+  },
   { name: "SOUL ALEMAN", redes: "Facebook · TikTok · YouTube · X", photo: waveAleman, bio: "Uno de los integrantes más recientes de Soul, Mendoza la Crew y dio el salto a The Waves con ganas reales de aprender y crecer. Se caracteriza por su rápida conexión con los viewers, sus chistes rancios y su carisma natural. No es el mejor jugador, pero juega con el corazón, especialmente Gears of War, un juego que lo marcó desde sus inicios gracias a su hermano mayor." },
   { name: "SOUL GIZZMO", redes: "TikTok · Twitch · X", photo: waveGizzmo, bio: "Creador de contenido mexicano que transmite su pasión por los videojuegos en Twitch y TikTok, crea videos y memes para YouTube, y conecta con su comunidad a través del humor y una energía intensa. Cada stream es más que juego: es un show donde se vive el momento y la gente se siente parte de la experiencia." },
   { name: "SOUL PXLMAA", redes: "Facebook · TikTok · YouTube · X", photo: wavePxlmaa, bio: "Palma es gamer de corazón y clavado con la música urbana. Le gusta prender stream, echar la reta, cotorrear sin filtro con la banda y reírse un rato mientras juega. También le entra al básquet y le late todo lo que sea competir en equipo. Cuida su flow al vestir y siempre anda con ganas de convivir y pasarla bien con la comunidad." },
@@ -221,7 +230,33 @@ function WavesHUD() {
 
                   <div>
                     <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Networks</div>
-                    <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{active.redes}</div>
+                    {active.socials && active.socials.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {active.socials.map((s) => (
+                          <a
+                            key={s.label}
+                            href={s.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] border border-flame/40 hover:border-flame hover:bg-flame hover:text-background text-flame px-2 py-1 rounded transition"
+                          >
+                            ► {s.label}
+                          </a>
+                        ))}
+                        {active.redes
+                          .split("·")
+                          .map((r) => r.trim())
+                          .filter((r) => r && !active.socials!.some((s) => s.label.toLowerCase() === r.toLowerCase()))
+                          .map((r) => (
+                            <span key={r} className="inline-flex items-center text-[10px] uppercase tracking-[0.25em] border border-flame/20 text-muted-foreground px-2 py-1 rounded">
+                              {r}
+                            </span>
+                          ))}
+                      </div>
+                    ) : (
+                      <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{active.redes}</div>
+                    )}
                   </div>
 
                   <div className="relative">
