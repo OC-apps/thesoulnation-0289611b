@@ -527,7 +527,7 @@ function IndexContent() {
           </div>
 
           {/* WAVES — creators */}
-          <div className="text-center mb-12 flex flex-col items-center">
+          <div id="waves" className="text-center mb-12 flex flex-col items-center scroll-mt-24">
             <img
               src={soulWavesLogo}
               alt="The Soul Waves"
