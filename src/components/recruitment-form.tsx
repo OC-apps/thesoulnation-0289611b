@@ -169,7 +169,7 @@ export function RecruitmentForm() {
               </div>
             </div>
 
-            <FloatField label="Nombre real y Nickname *" name="Nombre y Nickname" required placeholder="Ej: Juan Pérez · SOUL JUANP" />
+            <FloatField label="Nombre real y Nickname *" name="Nombre y Nickname" required placeholder="Ej: Gael Cruz - FlameGhost" />
 
             <div>
               <FloatField
