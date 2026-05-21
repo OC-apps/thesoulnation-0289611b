@@ -111,7 +111,7 @@ export function Hero3D() {
           >
             {[
               { v: "12+", k: "Años" },
-              { v: "10", k: "Waves" },
+              { v: "35", k: "Miembros" },
               { v: "∞", k: "Familia" },
             ].map((s) => (
               <div key={s.k} className="border-l-2 border-flame/60 pl-3">
