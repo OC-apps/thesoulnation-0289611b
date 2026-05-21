@@ -852,7 +852,7 @@ function WallpapersSection() {
           <div>
             <div className="text-xs uppercase tracking-[0.3em] text-flame">06 · Wallpapers</div>
             <h2 className="mt-4 font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
-              Vestí tu <span className="italic text-flame">pantalla</span>
+              Wallpapers para tu <span className="italic text-flame">pantalla</span>
             </h2>
           </div>
           <div className="font-display text-foreground/60 text-sm md:text-base max-w-sm">
