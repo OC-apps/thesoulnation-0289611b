@@ -88,7 +88,7 @@ export function Hero3D() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-4 lg:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
+            className="mt-3 lg:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-flame animate-pulse" />
             EST. 10 · NOV · 2012
