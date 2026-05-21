@@ -154,7 +154,6 @@ function WavesHUD() {
           );
         })()}
       </div>
-      </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
         <DialogContent onClick={() => setOpenIdx(null)} className="max-w-3xl border-flame/40 bg-blue-deep/95 backdrop-blur-xl p-0 overflow-hidden cursor-pointer [&>button]:hidden">
