@@ -230,7 +230,33 @@ function WavesHUD() {
 
                   <div>
                     <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Networks</div>
-                    <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{active.redes}</div>
+                    {active.socials && active.socials.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {active.socials.map((s) => (
+                          <a
+                            key={s.label}
+                            href={s.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] border border-flame/40 hover:border-flame hover:bg-flame hover:text-background text-flame px-2 py-1 rounded transition"
+                          >
+                            ► {s.label}
+                          </a>
+                        ))}
+                        {active.redes
+                          .split("·")
+                          .map((r) => r.trim())
+                          .filter((r) => r && !active.socials!.some((s) => s.label.toLowerCase() === r.toLowerCase()))
+                          .map((r) => (
+                            <span key={r} className="inline-flex items-center text-[10px] uppercase tracking-[0.25em] border border-flame/20 text-muted-foreground px-2 py-1 rounded">
+                              {r}
+                            </span>
+                          ))}
+                      </div>
+                    ) : (
+                      <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{active.redes}</div>
+                    )}
                   </div>
 
                   <div className="relative">
