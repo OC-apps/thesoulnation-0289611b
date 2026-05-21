@@ -432,9 +432,9 @@ function IndexContent() {
       {/* ABOUT — integrado: foto + texto + tab animado (Visión / Objetivo) */}
       <section id="about" className="relative py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          <div className="grid lg:grid-cols-12 gap-6 md:gap-8 items-stretch">
+          <div className="grid grid-cols-12 gap-5 md:gap-6 lg:gap-8 items-stretch">
             {/* Imagen del equipo */}
-            <div className="lg:col-span-5 group relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)] aspect-[9/16] md:aspect-[16/10] lg:aspect-[9/16] bg-background">
+            <div className="col-span-5 md:col-span-4 lg:col-span-5 group relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)] aspect-[9/16] bg-background">
               <img
                 src={soulNationTeam}
                 alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
@@ -461,7 +461,7 @@ function IndexContent() {
             </div>
 
             {/* Columna derecha: título + texto + tab animado */}
-            <div className="lg:col-span-7 flex flex-col gap-5">
+            <div className="col-span-7 md:col-span-8 lg:col-span-7 flex flex-col gap-5">
               <div>
                 <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
                 <h2 className="mt-2 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.9]">
