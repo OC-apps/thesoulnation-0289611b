@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import soulLogo from "@/assets/soul-logo.png";
+import soulTextLogo from "@/assets/soul-nation-textlogo.png";
 
 /**
  * Bold, content-rich hero — no particle/snow effect.
