@@ -134,6 +134,11 @@ function WavesHUD() {
               <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
                 ► OPEN
               </span>
+              {c.name === "SOUL MAVERICK Z" && (
+                <span className="absolute top-1 right-1 z-10 flex items-center gap-0.5 text-[7px] font-mono tracking-[0.2em] text-background bg-flame px-1 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
+                  <Crown className="w-2.5 h-2.5" /> LEADER
+                </span>
+              )}
             </div>
             <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
               <h4 className="font-display font-bold text-[11px] sm:text-sm text-flame leading-tight truncate">
