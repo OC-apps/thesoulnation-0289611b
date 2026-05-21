@@ -158,7 +158,7 @@ function Index() {
       <button
         onClick={toggleAudio}
         aria-label={muted ? "Activar sonido" : "Silenciar"}
-        className="fixed bottom-5 right-5 z-[60] h-12 w-12 rounded-full bg-flame text-background shadow-[0_0_30px_var(--flame-glow)] flex items-center justify-center hover:scale-110 transition active:scale-95"
+        className="fixed top-20 right-4 sm:right-6 z-[60] h-12 w-12 rounded-full bg-flame text-background shadow-[0_0_30px_var(--flame-glow)] flex items-center justify-center hover:scale-110 transition active:scale-95"
       >
         {playing && !muted ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
         {playing && !muted && (
