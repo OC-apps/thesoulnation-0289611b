@@ -109,7 +109,7 @@ export function Hero3D() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-6 flex flex-row flex-nowrap items-stretch justify-center lg:justify-start gap-2 sm:gap-3 w-full"
+            className="mt-4 lg:mt-6 flex flex-row flex-nowrap items-stretch justify-center lg:justify-start gap-2 sm:gap-3 w-full"
           >
             <a
               href="#roster"
