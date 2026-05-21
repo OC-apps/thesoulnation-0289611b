@@ -8,7 +8,7 @@ import soulTextLogo from "@/assets/soul-nation-textlogo.png";
  */
 export function Hero3D() {
   return (
-    <div className="relative w-full min-h-[88vh] overflow-hidden select-none flex items-center">
+    <div className="relative w-full min-h-[auto] lg:min-h-[88vh] overflow-hidden select-none flex items-center">
       {/* Animated gradient mesh */}
       <motion.div
         aria-hidden
@@ -47,7 +47,7 @@ export function Hero3D() {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-16 md:py-28 grid md:grid-cols-12 gap-8 md:gap-12 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-6 sm:py-10 md:py-16 lg:py-28 grid md:grid-cols-12 gap-4 md:gap-8 lg:gap-12 items-center">
         {/* Left: copy */}
         <div className="md:col-span-7 flex flex-col items-center md:items-start text-center md:text-left">
           {/* Banner: emblem + text logo together (mobile + tablet) */}
@@ -88,7 +88,7 @@ export function Hero3D() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-4 lg:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
+            className="mt-3 lg:mt-0 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-flame animate-pulse" />
             EST. 10 · NOV · 2012
@@ -109,7 +109,7 @@ export function Hero3D() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-6 flex flex-row flex-nowrap items-stretch justify-center lg:justify-start gap-2 sm:gap-3 w-full"
+            className="mt-4 lg:mt-6 flex flex-row flex-nowrap items-stretch justify-center lg:justify-start gap-2 sm:gap-3 w-full"
           >
             <a
               href="#roster"
