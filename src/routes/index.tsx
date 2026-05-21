@@ -823,6 +823,62 @@ function IndexContent() {
                   ))}
                 </div>
 
+                {/* TRANSPORT CONTROLS */}
+                <div className="mt-5 rounded-2xl border border-white/10 bg-[#040a2a]/70 p-4">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => skipAudio(-10)}
+                      aria-label="Retroceder 10s"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition active:scale-95"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 6V2L5 8l6 6V10c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H3c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleAudio}
+                      aria-label={playing ? "Pausar" : "Reproducir"}
+                      className="flex h-14 w-14 items-center justify-center rounded-full bg-flame text-primary-foreground shadow-[0_0_30px_-5px_var(--flame-glow)] hover:scale-105 transition active:scale-95"
+                    >
+                      {playing ? <Pause className="h-6 w-6" fill="currentColor" /> : <Play className="h-6 w-6 ml-0.5" fill="currentColor" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={stopAudio}
+                      aria-label="Detener"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition active:scale-95"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => skipAudio(10)}
+                      aria-label="Adelantar 10s"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition active:scale-95"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 6V2l6 6-6 6v-4c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+                    </button>
+                  </div>
+
+                  {/* Progress */}
+                  <div className="mt-4">
+                    <input
+                      type="range"
+                      min={0}
+                      max={duration || 0}
+                      step={0.1}
+                      value={Math.min(currentTime, duration || 0)}
+                      onChange={(e) => seek(parseFloat(e.target.value))}
+                      className="w-full h-1 accent-flame cursor-pointer"
+                      aria-label="Progreso"
+                    />
+                    <div className="mt-1.5 flex justify-between text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="mt-6 grid grid-cols-3 gap-2 text-center">
                   <div className="rounded-xl border border-white/10 bg-[#081245]/60 p-3">
                     <div className="font-display text-xl font-bold text-flame">12</div>
