@@ -24,7 +24,7 @@ import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { Hero3D } from "@/components/hero-3d";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { X, Zap, Radio, Trophy } from "lucide-react";
+import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
 
 const WALLPAPERS = [
   {
