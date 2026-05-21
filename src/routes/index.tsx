@@ -268,30 +268,6 @@ function WavesHUD() {
                     </div>
                   </div>
 
-                  {active.name === "SOUL MAVERICK Z" && (
-                    <div>
-                      <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-2 flex items-center justify-between">
-                        <span>Contenido Destacado</span>
-                        <span className="text-muted-foreground">YouTube · Top</span>
-                      </div>
-                      <div className="relative aspect-video w-full overflow-hidden rounded border border-flame/40 shadow-[0_0_18px_var(--flame-glow)]">
-                        <iframe
-                          src="https://www.youtube.com/embed/brSLX4Vx77Q"
-                          title="Soul Maverick Z - YouTube"
-                          loading="lazy"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          onClick={(e) => e.stopPropagation()}
-                          className="absolute inset-0 w-full h-full"
-                        />
-                        <span className="pointer-events-none absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame" />
-                        <span className="pointer-events-none absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame" />
-                        <span className="pointer-events-none absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame" />
-                        <span className="pointer-events-none absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame" />
-                      </div>
-                    </div>
-                  )}
-
                   <div className="flex justify-between items-center pt-2 border-t border-flame/20 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                     <button
                       onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length); }}
