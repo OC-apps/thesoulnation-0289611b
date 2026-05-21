@@ -494,15 +494,22 @@ function IndexContent() {
                   </AnimatePresence>
                 </div>
 
-                {/* Chips divisiones */}
-                <div className="mt-5 pt-4 border-t border-flame/15 flex flex-wrap gap-2">
-                  {["Legends", "Crew", "Killers", "Waves", "Media"].map((d) => (
-                    <span
-                      key={d}
-                      className="px-3 py-1 rounded-full border border-flame/30 bg-flame/5 text-[10px] font-mono uppercase tracking-[0.2em] text-foreground/80 hover:bg-flame hover:text-background transition cursor-default"
+                {/* Botones a divisiones */}
+                <div className="mt-5 pt-4 border-t border-flame/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {[
+                    { label: "Waves", href: "#waves" },
+                    { label: "Killers", href: "#killers" },
+                    { label: "Legends", href: "#legends" },
+                    { label: "Crew", href: "#crew" },
+                  ].map((d) => (
+                    <a
+                      key={d.label}
+                      href={d.href}
+                      className="group/btn relative overflow-hidden rounded-xl bg-flame text-background px-3 py-3 text-center font-display font-bold uppercase tracking-[0.2em] text-xs sm:text-sm shadow-[0_8px_24px_-8px_var(--flame-glow)] hover:scale-[1.04] hover:shadow-[0_12px_36px_-6px_var(--flame-glow)] active:scale-95 transition"
                     >
-                      The Soul {d}
-                    </span>
+                      <span className="relative z-10">{d.label}</span>
+                      <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-full transition-transform duration-700" />
+                    </a>
                   ))}
                 </div>
               </div>
