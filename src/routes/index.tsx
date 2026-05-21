@@ -437,46 +437,139 @@ function Index() {
         <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-10 blur-[160px]" />
         <div className="absolute -bottom-40 left-0 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
             <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               The Soul Nation <span className="italic text-flame">Music</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
-              El sonido oficial de The Soul Nation. Escucha nuestros tracks directamente desde Spotify.
+              El sonido oficial de The Soul Nation. Dale play y siente la nación.
             </p>
           </div>
-          <div className="perspective grid md:grid-cols-12 gap-8 items-center">
-            <div className="md:col-span-7 tilt-card roster-card rounded-3xl p-3 md:p-4 overflow-hidden">
-              <iframe
-                title="The Soul Nation en Spotify"
-                src="https://open.spotify.com/embed/artist/56ieAbEEuRbD3pg8xtIRt7?utm_source=generator&theme=0"
-                width="100%"
-                height="520"
-                loading="lazy"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                className="rounded-2xl border-0 relative z-10"
-              />
+
+          {/* MUSIC APP CHROME */}
+          <div className="relative rounded-[28px] border border-border bg-gradient-to-br from-card/80 via-background/60 to-card/40 backdrop-blur-xl shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)] overflow-hidden">
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-5 md:px-7 py-4 border-b border-border/60 bg-background/40">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-flame/80 shadow-[0_0_12px_var(--flame-glow)]" />
+                <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
+                <span className="w-3 h-3 rounded-full bg-emerald-400/70" />
+                <span className="ml-4 text-[11px] uppercase tracking-[0.3em] text-muted-foreground hidden sm:inline">soul.player · v2025</span>
+              </div>
+              <div className="hidden md:flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
+                streaming live
+              </div>
             </div>
-            <div className="md:col-span-5 relative z-10">
-              <div className="text-xs uppercase tracking-[0.3em] text-flame mb-4">Now Playing</div>
-              <h3 className="font-display text-3xl md:text-4xl font-bold leading-tight">
-                Identidad <span className="italic text-flame">sonora</span> de la nación
-              </h3>
-              <p className="mt-5 text-foreground/85 leading-relaxed">
-                Música hecha por y para la comunidad. Dale play, sigue al artista y haz que cada track suene en tus partidas, montajes y streams.
-              </p>
-              <a
-                href="https://open.spotify.com/intl-es/artist/56ieAbEEuRbD3pg8xtIRt7?si=1IirEmBPSKKvZSjk2_Q4JA"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-3 bg-flame text-primary-foreground px-8 py-4 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
-              >
-                Abrir en Spotify
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 17L17 7M9 7h8v8"/>
-                </svg>
-              </a>
+
+            <div className="grid lg:grid-cols-12 gap-0">
+              {/* LEFT: Album art + meta */}
+              <div className="lg:col-span-4 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-border/60 bg-gradient-to-b from-background/40 to-card/20">
+                <div className="relative aspect-square rounded-2xl overflow-hidden group">
+                  <div className="absolute inset-0 bg-[conic-gradient(from_0deg,_var(--flame)_0%,_#0a0a0a_25%,_var(--flame)_50%,_#0a0a0a_75%,_var(--flame)_100%)] opacity-30" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-flame/40 via-background to-emerald-900/30" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <img src={soulLogo} alt="Soul Nation cover" className="w-2/3 h-2/3 object-contain drop-shadow-[0_0_40px_var(--flame-glow)] animate-[spin_18s_linear_infinite] group-hover:scale-110 transition-transform duration-700" />
+                  </div>
+                  <div className="absolute inset-4 rounded-full border border-white/5" />
+                  <div className="absolute inset-10 rounded-full border border-white/5" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent" />
+                </div>
+
+                <div className="mt-6">
+                  <div className="text-[11px] uppercase tracking-[0.3em] text-flame">Now Playing</div>
+                  <h3 className="mt-2 font-display text-2xl md:text-3xl font-bold leading-tight">
+                    Identidad <span className="italic text-flame">sonora</span>
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1">The Soul Nation · Official Artist</p>
+                </div>
+
+                {/* Equalizer visualizer */}
+                <div className="mt-5 flex items-end gap-1 h-10">
+                  {[0.4, 0.7, 0.5, 0.9, 0.6, 1, 0.55, 0.8, 0.45, 0.7, 0.5, 0.85, 0.6, 0.4, 0.75, 0.5, 0.9, 0.6, 0.7, 0.4].map((h, i) => (
+                    <span
+                      key={i}
+                      className="flex-1 rounded-sm bg-gradient-to-t from-flame to-flame/30 origin-bottom animate-pulse"
+                      style={{ height: `${h * 100}%`, animationDelay: `${i * 80}ms`, animationDuration: `${800 + (i % 5) * 200}ms` }}
+                    />
+                  ))}
+                </div>
+
+                <div className="mt-6 grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+                    <div className="font-display text-xl font-bold text-flame">12</div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">Tracks</div>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+                    <div className="font-display text-xl font-bold text-flame">HD</div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">Quality</div>
+                  </div>
+                  <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+                    <div className="font-display text-xl font-bold text-flame">∞</div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">Vibes</div>
+                  </div>
+                </div>
+
+                <a
+                  href="https://open.spotify.com/intl-es/artist/56ieAbEEuRbD3pg8xtIRt7?si=1IirEmBPSKKvZSjk2_Q4JA"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 w-full inline-flex items-center justify-center gap-3 bg-flame text-primary-foreground px-6 py-3.5 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-[1.02] transition"
+                >
+                  Abrir en Spotify
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M9 7h8v8"/>
+                  </svg>
+                </a>
+              </div>
+
+              {/* RIGHT: Spotify embed */}
+              <div className="lg:col-span-8 p-4 md:p-6 bg-gradient-to-br from-background/20 to-card/30">
+                <div className="flex items-center justify-between mb-3 px-2">
+                  <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
+                    Playlist · Soul Nation Radio
+                  </div>
+                  <div className="flex items-center gap-3 text-muted-foreground">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18V5l12-2v13M9 9l12-2"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                  </div>
+                </div>
+                <div className="rounded-2xl overflow-hidden border border-border/60 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
+                  <iframe
+                    title="The Soul Nation en Spotify"
+                    src="https://open.spotify.com/embed/artist/56ieAbEEuRbD3pg8xtIRt7?utm_source=generator&theme=0"
+                    width="100%"
+                    height="560"
+                    loading="lazy"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    className="border-0 block"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom player bar */}
+            <div className="flex items-center justify-between gap-4 px-5 md:px-7 py-4 border-t border-border/60 bg-background/60 backdrop-blur">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-flame to-flame/40 flex items-center justify-center shrink-0">
+                  <img src={soulLogo} alt="" className="w-6 h-6 object-contain" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">Soul Nation Radio</div>
+                  <div className="text-[11px] text-muted-foreground truncate">Official Mix · 2025</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-muted-foreground">
+                <button className="hover:text-foreground transition" aria-label="prev"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM9.5 12l8.5 6V6z"/></svg></button>
+                <button className="w-11 h-11 rounded-full bg-flame text-primary-foreground flex items-center justify-center shadow-[0_0_30px_-5px_var(--flame-glow)] hover:scale-110 transition" aria-label="play"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+                <button className="hover:text-foreground transition" aria-label="next"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg></button>
+              </div>
+              <div className="hidden md:flex items-center gap-2 text-muted-foreground min-w-[160px] justify-end">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg>
+                <div className="w-24 h-1 rounded-full bg-border overflow-hidden"><div className="h-full w-3/4 bg-flame" /></div>
+              </div>
             </div>
           </div>
         </div>
