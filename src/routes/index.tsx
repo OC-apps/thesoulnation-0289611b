@@ -84,6 +84,8 @@ const WAVES: { name: string; redes: string; bio: string; photo: string; socials?
     bio: "Líder y fundador de The Soul Nation. Creador de contenido en YouTube desde 2012. Su fuerte no es el nivel de juego, es la creatividad, el humor y la forma directa de decir las cosas. Destaca por su carisma y liderazgo, cualidades con las que ha construido y sostenido a The Soul Nation, llevándolo a ganarse un lugar real y respetado en el corazón de la comunidad de Gears of War.",
     socials: [
       { label: "TikTok", href: "https://www.tiktok.com/@soulmaverickz" },
+      { label: "Facebook", href: "https://www.facebook.com/Soulmaverickz" },
+      { label: "YouTube", href: "https://www.youtube.com/@SoulMaverickZ" },
     ],
   },
   { name: "SOUL ALEMAN", redes: "Facebook · TikTok · YouTube · X", photo: waveAleman, bio: "Uno de los integrantes más recientes de Soul, Mendoza la Crew y dio el salto a The Waves con ganas reales de aprender y crecer. Se caracteriza por su rápida conexión con los viewers, sus chistes rancios y su carisma natural. No es el mejor jugador, pero juega con el corazón, especialmente Gears of War, un juego que lo marcó desde sus inicios gracias a su hermano mayor." },
