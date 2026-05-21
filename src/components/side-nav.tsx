@@ -47,7 +47,8 @@ export function SideNav() {
 
   return (
     <nav className="fixed inset-x-0 bottom-3 z-50 px-3 sm:bottom-5 pointer-events-none" aria-label="Navegación rápida">
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-2">
+      <div className="mx-auto flex max-w-3xl flex-col items-start sm:items-center gap-2">
+
         <div
           className={`max-w-[calc(100vw-1.5rem)] rounded-full border border-border bg-background/95 p-1.5 shadow-[0_22px_70px_-35px_var(--flame-glow)] backdrop-blur-xl transition-all duration-300 pointer-events-auto ${
             open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0 pointer-events-none"
