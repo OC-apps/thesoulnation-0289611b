@@ -8,7 +8,7 @@ import soulTextLogo from "@/assets/soul-nation-textlogo.png";
  */
 export function Hero3D() {
   return (
-    <div className="relative w-full min-h-[88vh] overflow-hidden select-none flex items-center">
+    <div className="relative w-full min-h-[auto] lg:min-h-[88vh] overflow-hidden select-none flex items-center">
       {/* Animated gradient mesh */}
       <motion.div
         aria-hidden
