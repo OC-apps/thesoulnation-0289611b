@@ -194,7 +194,14 @@ function WavesHUD() {
                 <div className="md:col-span-3 p-5 sm:p-7 flex flex-col gap-4">
                   <div>
                     <div className="text-[10px] font-mono uppercase tracking-[0.4em] text-muted-foreground">Wave · 0{(openIdx ?? 0) + 1}</div>
-                    <h3 className="mt-1 font-display font-bold text-3xl sm:text-4xl text-flame leading-none">{active.name}</h3>
+                    <h3 className="mt-1 font-display font-bold text-3xl sm:text-4xl text-flame leading-none flex items-center gap-2 flex-wrap">
+                      {active.name}
+                      {active.name === "SOUL MAVERICK Z" && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono tracking-[0.3em] text-background bg-flame px-2 py-1 rounded shadow-[0_0_16px_var(--flame-glow)]">
+                          <Crown className="w-3 h-3" /> LEADER · FOUNDER
+                        </span>
+                      )}
+                    </h3>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 font-mono text-[10px] uppercase">
