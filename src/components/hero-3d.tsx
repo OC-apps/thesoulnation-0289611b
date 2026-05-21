@@ -2,100 +2,182 @@ import { motion } from "framer-motion";
 import soulLogo from "@/assets/soul-logo.png";
 
 /**
- * Minimal hero — transparent (uses page background), bigger logo,
- * subtle particles + soft pulse glow. No hex grid, no brackets.
+ * Bold, content-rich hero — no particle/snow effect.
+ * Big logo + name, tagline, CTAs, animated gradient + tag marquee.
  */
 export function Hero3D() {
   return (
-    <div className="relative w-full h-[46vh] min-h-[380px] overflow-hidden select-none">
-      {/* Soft pulsing glow behind logo */}
+    <div className="relative w-full min-h-[88vh] overflow-hidden select-none flex items-center">
+      {/* Animated gradient mesh */}
       <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[700px] max-h-[700px] pointer-events-none"
+        aria-hidden
+        className="absolute -top-1/3 -left-1/4 w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(150,210,255,0.35), rgba(60,140,255,0.12) 45%, transparent 70%)",
-          filter: "blur(20px)",
-          mixBlendMode: "screen",
+            "radial-gradient(closest-side, color-mix(in oklab, var(--flame) 55%, transparent), transparent 70%)",
+          filter: "blur(60px)",
         }}
-        animate={{ opacity: [0.6, 1, 0.6], scale: [0.97, 1.03, 0.97] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [0.55, 0.9, 0.55], scale: [1, 1.08, 1] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        aria-hidden
+        className="absolute -bottom-1/3 -right-1/4 w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(closest-side, rgba(120,180,255,0.45), transparent 70%)",
+          filter: "blur(70px)",
+        }}
+        animate={{ opacity: [0.4, 0.75, 0.4], scale: [1.05, 1, 1.05] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Subtle floating particles */}
-      <Particles />
+      {/* Subtle grid overlay */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage:
+            "radial-gradient(ellipse at center, black 40%, transparent 80%)",
+        }}
+      />
 
-      {/* Center stage */}
-      <div className="absolute inset-0 grid place-items-center px-6">
-        <div className="flex flex-col items-center text-center">
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-7xl w-full px-5 sm:px-8 py-20 md:py-28 grid md:grid-cols-12 gap-8 md:gap-12 items-center">
+        {/* Left: copy */}
+        <div className="md:col-span-7 flex flex-col items-start text-left">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.3em]"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-flame animate-pulse" />
+            EST. 10 · NOV · 2012
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.7 }}
+            className="mt-5 font-display font-black italic tracking-tight leading-[0.85] text-[clamp(3rem,11vw,8.5rem)]"
+          >
+            <span className="block text-foreground">THE SOUL</span>
+            <span className="block text-flame drop-shadow-[0_0_30px_var(--flame-glow)]">
+              NATION
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.6 }}
+            className="mt-6 text-base sm:text-lg md:text-xl text-foreground/75 max-w-xl leading-relaxed"
+          >
+            Comunidad gamer mexicana forjada en{" "}
+            <span className="text-flame font-bold">Gears of War</span>. Clips,
+            streams, torneos y una nación que no se rinde.
+          </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.6 }}
-            className="flex items-center gap-3 mb-5"
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="mt-8 flex flex-wrap gap-3"
           >
-            <span className="h-px w-10 bg-white/50" />
-            <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-white/80">
-              Desde el 2012
-            </span>
-            <span className="h-px w-10 bg-white/50" />
+            <a
+              href="#roster"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-flame text-background font-display font-bold uppercase tracking-[0.2em] text-sm shadow-[0_0_28px_var(--flame-glow)] hover:scale-105 transition active:scale-95"
+            >
+              ► Conoce el Roster
+            </a>
+            <a
+              href="#reclutamiento"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-flame text-flame font-display font-bold uppercase tracking-[0.2em] text-sm hover:bg-flame hover:text-background transition active:scale-95"
+            >
+              Únete a la Nación
+            </a>
           </motion.div>
 
-          <div className="flex items-center justify-center gap-5 md:gap-8">
-            <motion.img
-              initial={{ opacity: 0, scale: 0.75 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.25, duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}
-              src={soulLogo}
-              alt="The Soul Nation"
-              className="w-[26vw] max-w-[320px] min-w-[160px] aspect-square object-contain drop-shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
-              draggable={false}
-            />
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="mt-10 grid grid-cols-3 gap-4 sm:gap-8 w-full max-w-md"
+          >
+            {[
+              { v: "12+", k: "Años" },
+              { v: "10", k: "Waves" },
+              { v: "∞", k: "Familia" },
+            ].map((s) => (
+              <div key={s.k} className="border-l-2 border-flame/60 pl-3">
+                <div className="font-display font-black text-2xl sm:text-3xl text-foreground">
+                  {s.v}
+                </div>
+                <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground">
+                  {s.k}
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.9 }}
-              className="font-display font-black italic tracking-tight leading-[0.85] text-left"
-            >
-              <span className="block text-white text-[clamp(2.2rem,7vw,7rem)]">
-                THE SOUL
-              </span>
-              <span className="block text-white text-[clamp(2.2rem,7vw,7rem)]">
-                NATION
-              </span>
-            </motion.h1>
-          </div>
+        {/* Right: logo emblem */}
+        <div className="md:col-span-5 relative flex items-center justify-center order-first md:order-last">
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 m-auto w-[80%] aspect-square rounded-full border border-flame/30"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 m-auto w-[95%] aspect-square rounded-full border border-flame/15 border-dashed"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 m-auto w-[60%] aspect-square rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, color-mix(in oklab, var(--flame) 40%, transparent), transparent 70%)",
+              filter: "blur(30px)",
+            }}
+            animate={{ opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.img
+            initial={{ opacity: 0, scale: 0.7, rotate: -8 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ delay: 0.2, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+            src={soulLogo}
+            alt="The Soul Nation"
+            className="relative z-10 w-[65%] max-w-[360px] min-w-[200px] aspect-square object-contain drop-shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
+            draggable={false}
+          />
         </div>
       </div>
-    </div>
-  );
-}
 
-function Particles() {
-  const items = Array.from({ length: 18 });
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {items.map((_, i) => {
-        const left = (i * 37) % 100;
-        const top = (i * 53) % 100;
-        const dur = 9 + ((i * 7) % 8);
-        const delay = (i * 0.4) % 6;
-        return (
-          <span
-            key={i}
-            className="absolute block rounded-full bg-white"
-            style={{
-              left: `${left}%`,
-              top: `${top}%`,
-              width: 2 + ((i * 3) % 3),
-              height: 2 + ((i * 3) % 3),
-              boxShadow: "0 0 8px rgba(200,225,255,0.8)",
-              opacity: 0.45,
-              animation: `hero-float ${dur}s ease-in-out ${delay}s infinite`,
-            }}
-          />
-        );
-      })}
+      {/* Bottom marquee */}
+      <div className="absolute bottom-0 inset-x-0 border-t border-flame/30 bg-background/40 backdrop-blur-sm py-2 overflow-hidden">
+        <div className="flex gap-8 whitespace-nowrap animate-marquee font-mono text-[10px] uppercase tracking-[0.4em] text-flame">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <span key={i} className="flex items-center gap-8">
+              <span>★ The Soul Nation</span>
+              <span className="text-muted-foreground">Gears of War</span>
+              <span>★ Streamers</span>
+              <span className="text-muted-foreground">México</span>
+              <span>★ Desde 2012</span>
+              <span className="text-muted-foreground">Familia</span>
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
