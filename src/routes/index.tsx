@@ -5,6 +5,7 @@ import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo.png";
 import soulNationTeam from "@/assets/soul-nation-team.png";
+import somosCover from "@/assets/somos-soul-nation-cover.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
 import soulCrewLogo from "@/assets/soul-crew.png";
 import soulLegendsLogo from "@/assets/soul-legends.png";
@@ -28,6 +29,13 @@ import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
+
+const formatTime = (s: number) => {
+  if (!isFinite(s) || s < 0) return "0:00";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60).toString().padStart(2, "0");
+  return `${m}:${sec}`;
+};
 
 const WALLPAPERS = [
   {
@@ -305,7 +313,7 @@ function Index() {
 }
 
 function IndexContent() {
-  const { playing, toggle: toggleAudio } = useAudio();
+  const { playing, toggle: toggleAudio, stop: stopAudio, skip: skipAudio, currentTime, duration, seek } = useAudio();
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
@@ -790,7 +798,7 @@ function IndexContent() {
               <div className="lg:col-span-4 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-white/10 bg-gradient-to-b from-[#081245]/40 to-[#0a1a4a]/20">
                 <div className="relative aspect-square rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(255,107,53,0.5)]">
                   <img
-                    src="https://i.scdn.co/image/ab67616d0000b2700d0bbb70f5062454d416517a"
+                    src={somosCover}
                     alt="Somos The Soul Nation - cover"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
@@ -820,6 +828,62 @@ function IndexContent() {
                       }}
                     />
                   ))}
+                </div>
+
+                {/* TRANSPORT CONTROLS */}
+                <div className="mt-5 rounded-2xl border border-white/10 bg-[#040a2a]/70 p-4">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => skipAudio(-10)}
+                      aria-label="Retroceder 10s"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition active:scale-95"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 6V2L5 8l6 6V10c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H3c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleAudio}
+                      aria-label={playing ? "Pausar" : "Reproducir"}
+                      className="flex h-14 w-14 items-center justify-center rounded-full bg-flame text-primary-foreground shadow-[0_0_30px_-5px_var(--flame-glow)] hover:scale-105 transition active:scale-95"
+                    >
+                      {playing ? <Pause className="h-6 w-6" fill="currentColor" /> : <Play className="h-6 w-6 ml-0.5" fill="currentColor" />}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={stopAudio}
+                      aria-label="Detener"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition active:scale-95"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => skipAudio(10)}
+                      aria-label="Adelantar 10s"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white transition active:scale-95"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 6V2l6 6-6 6v-4c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/></svg>
+                    </button>
+                  </div>
+
+                  {/* Progress */}
+                  <div className="mt-4">
+                    <input
+                      type="range"
+                      min={0}
+                      max={duration || 0}
+                      step={0.1}
+                      value={Math.min(currentTime, duration || 0)}
+                      onChange={(e) => seek(parseFloat(e.target.value))}
+                      className="w-full h-1 accent-flame cursor-pointer"
+                      aria-label="Progreso"
+                    />
+                    <div className="mt-1.5 flex justify-between text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">
+                      <span>{formatTime(currentTime)}</span>
+                      <span>{formatTime(duration)}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mt-6 grid grid-cols-3 gap-2 text-center">
