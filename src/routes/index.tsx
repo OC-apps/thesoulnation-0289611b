@@ -30,6 +30,13 @@ import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
 
+const formatTime = (s: number) => {
+  if (!isFinite(s) || s < 0) return "0:00";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60).toString().padStart(2, "0");
+  return `${m}:${sec}`;
+};
+
 const WALLPAPERS = [
   {
     title: "OLIMPO SERIES",
