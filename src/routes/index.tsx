@@ -652,11 +652,12 @@ function IndexContent() {
 
       {/* JERSEY */}
       <section id="jersey" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
+      <section id="jersey" className="relative py-10 md:py-16 border-t border-border overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="absolute inset-x-0 top-0 h-px bg-flame" />
 
         {/* Marquee superior con specs */}
-        <div className="relative overflow-hidden border-y border-border bg-background/40 backdrop-blur py-3 mb-16">
+        <div className="relative overflow-hidden border-y border-border bg-background/40 backdrop-blur py-2 mb-8">
           <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
             {Array.from({ length: 2 }).map((_, i) => (
               <div key={i} className="flex gap-10 items-center shrink-0">
@@ -668,33 +669,52 @@ function IndexContent() {
           </div>
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 grid md:grid-cols-12 gap-12 items-center">
-          {/* Texto + specs */}
-          <div className="md:col-span-5">
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-6 grid md:grid-cols-12 gap-6 md:gap-10 items-start">
+          {/* Texto */}
+          <div className="md:col-span-5 md:order-1 order-2">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">06</div>
-            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
+            <h2 className="mt-3 font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95]">
               Jersey <span className="italic text-flame">Oficial</span>
             </h2>
-            <p className="mt-6 text-lg text-foreground/85 leading-relaxed">
+            <p className="mt-3 text-sm md:text-base text-foreground/85 leading-relaxed">
               Los colores de la nación. Diseño oficial de The Soul Nation, hecho para representar dentro y fuera del juego.
             </p>
 
-            {/* Specs interactivas */}
-            <ul className="mt-8 space-y-3">
-              {[
-                { k: "Material", v: "Poliéster premium dry-fit" },
-                { k: "Diseño", v: "The Soul Nation Blue/Orange" },
-                { k: "Edición", v: "Drop oficial · cantidades limitadas" },
-                { k: "Para", v: "Player · Streamer · Soul Family" },
-              ].map((s) => (
-                <li key={s.k} className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl border border-border bg-card/40 backdrop-blur hover:border-flame hover:bg-card/60 transition group">
-                  <span className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground group-hover:text-flame transition">{s.k}</span>
-                  <span className="text-sm font-bold text-right">{s.v}</span>
-                </li>
-              ))}
-            </ul>
+            {/* Hint: toca la imagen */}
+            <button
+              type="button"
+              onClick={() => setJerseySpecsOpen((v) => !v)}
+              aria-expanded={jerseySpecsOpen}
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.25em] hover:bg-flame hover:text-background transition active:scale-95"
+            >
+              <span className={`transition-transform ${jerseySpecsOpen ? "rotate-180" : ""}`}>▾</span>
+              {jerseySpecsOpen ? "Ocultar specs" : "Ver specs · toca la jersey"}
+            </button>
 
-            <div className="mt-8 rounded-2xl border border-border bg-card/40 backdrop-blur p-5">
+            {/* Specs colapsables */}
+            <div
+              className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${
+                jerseySpecsOpen ? "grid-rows-[1fr] opacity-100 mt-4" : "grid-rows-[0fr] opacity-0 mt-0"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <ul className="space-y-2">
+                  {[
+                    { k: "Material", v: "Poliéster premium dry-fit" },
+                    { k: "Diseño", v: "The Soul Nation Blue/Orange" },
+                    { k: "Edición", v: "Drop oficial · cantidades limitadas" },
+                    { k: "Para", v: "Player · Streamer · Soul Family" },
+                  ].map((s) => (
+                    <li key={s.k} className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg border border-border bg-card/40 backdrop-blur hover:border-flame hover:bg-card/60 transition group">
+                      <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground group-hover:text-flame transition">{s.k}</span>
+                      <span className="text-xs md:text-sm font-bold text-right">{s.v}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-border bg-card/40 backdrop-blur p-4">
               <p className="text-sm text-foreground/85 leading-relaxed">
                 Puedes pedir tu Jersey enviando un <span className="font-bold text-flame">mensaje privado por TikTok</span>.
               </p>
@@ -702,17 +722,17 @@ function IndexContent() {
                 href="https://www.tiktok.com/@thesoulnation"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 bg-flame text-primary-foreground px-6 py-3 rounded-full font-bold shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
+                className="mt-3 inline-flex items-center gap-2 bg-flame text-primary-foreground px-5 py-2.5 rounded-full font-bold text-sm shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
               >
                 @thesoulnation en TikTok
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
               </a>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+              <div className="mt-3 flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border text-[9px] uppercase tracking-[0.25em] text-muted-foreground">
                   <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
                   Stock limitado
                 </span>
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/40 text-[10px] uppercase tracking-[0.25em] text-flame font-bold">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-flame/40 text-[9px] uppercase tracking-[0.25em] text-flame font-bold">
                   Drop 2026
                 </span>
               </div>
@@ -720,11 +740,19 @@ function IndexContent() {
           </div>
 
           {/* Showcase interactivo */}
-          <div className="md:col-span-7">
-            <JerseyShowcase front={jerseyFront} back={jerseyBack} />
+          <div className="md:col-span-7 md:order-2 order-1">
+            <button
+              type="button"
+              onClick={() => setJerseySpecsOpen((v) => !v)}
+              aria-label={jerseySpecsOpen ? "Ocultar specs de la jersey" : "Mostrar specs de la jersey"}
+              className="block w-full text-left cursor-pointer group"
+            >
+              <JerseyShowcase front={jerseyFront} back={jerseyBack} />
+            </button>
           </div>
         </div>
       </section>
+
 
       {/* MUSIC — SPOTIFY */}
       <section id="music" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
