@@ -199,7 +199,7 @@ function WavesHUD() {
                     </div>
                     <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
                       <div className="flex items-center gap-1 text-flame"><Trophy className="w-3 h-3" /> Role</div>
-                      <div className="mt-1 text-foreground">Creator</div>
+                      <div className="mt-1 text-foreground">{active.name === "SOUL MAVERICK" ? "Leader / Creator" : "Streamer"}</div>
                     </div>
                     <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
                       <div className="flex items-center gap-1 text-flame"><Radio className="w-3 h-3" /> Squad</div>
