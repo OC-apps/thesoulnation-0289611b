@@ -71,22 +71,11 @@ export function Hero3D() {
             </span>
           </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.6 }}
-            className="mt-6 text-base sm:text-lg md:text-xl text-foreground/75 max-w-xl leading-relaxed"
-          >
-            Comunidad gamer mexicana forjada en{" "}
-            <span className="text-flame font-bold">Gears of War</span>. Clips,
-            streams, torneos y una nación que no se rinde.
-          </motion.p>
-
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="mt-8 flex flex-wrap gap-3"
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="mt-6 flex flex-wrap gap-3"
           >
             <a
               href="#roster"
