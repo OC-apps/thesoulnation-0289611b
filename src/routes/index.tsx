@@ -471,90 +471,92 @@ function IndexContent() {
               <p className="text-sm sm:text-base text-foreground/85 font-light leading-relaxed">
                 The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en clips de Gears of War. Con el tiempo nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad, impulsando la escena de los esports en Latinoamérica como una familia unida.
               </p>
+            </div>
+          </div>
 
-              {/* Tab animado Visión / Objetivo */}
-              <div id="vision" className="roster-card rounded-2xl p-5 sm:p-6 md:p-7 flex-1 flex flex-col">
-                <div className="flex items-center gap-2 border-b border-flame/20 pb-3">
-                  {([
-                    { id: "vision", n: "02", label: "Visión" },
-                    { id: "objetivo", n: "03", label: "Objetivo" },
-                  ] as const).map((tab) => {
-                    const active = aboutTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setAboutTab(tab.id)}
-                        className={`relative px-4 py-2 rounded-full text-xs font-mono uppercase tracking-[0.25em] transition ${
-                          active ? "text-background" : "text-foreground/60 hover:text-flame"
-                        }`}
-                      >
-                        {active && (
-                          <motion.span
-                            layoutId="aboutTabPill"
-                            className="absolute inset-0 rounded-full bg-flame shadow-[0_0_20px_var(--flame-glow)]"
-                            transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                          />
-                        )}
-                        <span className="relative flex items-center gap-2">
-                          <span className="opacity-70">{tab.n}</span>
-                          <span>{tab.label}</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="relative mt-4 flex-1">
-                  <AnimatePresence mode="wait">
-                    {aboutTab === "vision" ? (
-                      <motion.div
-                        key="vision"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight">Visión</h3>
-                        <p className="mt-3 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
-                          Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región.
-                        </p>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="objetivo"
-                        id="objetivo"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight">Objetivo</h3>
-                        <p className="mt-3 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
-                          Impulsar el potencial de cada miembro de The Soul Nation —jugador, creador o parte de nuestras divisiones Legends, Media, Waves y Crew—. Queremos expandir nuestra organización, fortalecer la comunidad gamer y colaborar con otras organizaciones de Latinoamérica para construir juntos el futuro de los esports en la región.
-                        </p>
-                      </motion.div>
+          {/* Tab animado Visión / Objetivo — full width */}
+          <div id="vision" className="roster-card rounded-2xl p-5 sm:p-6 md:p-7 mt-6 md:mt-8 flex flex-col">
+            <div className="flex items-center gap-2 border-b border-flame/20 pb-3">
+              {([
+                { id: "vision", n: "02", label: "Visión" },
+                { id: "objetivo", n: "03", label: "Objetivo" },
+              ] as const).map((tab) => {
+                const active = aboutTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setAboutTab(tab.id)}
+                    className={`relative px-4 py-2 rounded-full text-xs font-mono uppercase tracking-[0.25em] transition ${
+                      active ? "text-background" : "text-foreground/60 hover:text-flame"
+                    }`}
+                  >
+                    {active && (
+                      <motion.span
+                        layoutId="aboutTabPill"
+                        className="absolute inset-0 rounded-full bg-flame shadow-[0_0_20px_var(--flame-glow)]"
+                        transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                      />
                     )}
-                  </AnimatePresence>
-                </div>
+                    <span className="relative flex items-center gap-2">
+                      <span className="opacity-70">{tab.n}</span>
+                      <span>{tab.label}</span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="relative mt-4 grid md:grid-cols-[auto,1fr] gap-3 md:gap-6 items-start">
+              <AnimatePresence mode="wait">
+                {aboutTab === "vision" ? (
+                  <motion.div
+                    key="vision"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="contents"
+                  >
+                    <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight md:min-w-[140px]">Visión</h3>
+                    <p className="text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                      Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="objetivo"
+                    id="objetivo"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="contents"
+                  >
+                    <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight md:min-w-[140px]">Objetivo</h3>
+                    <p className="text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                      Impulsar el potencial de cada miembro de The Soul Nation —jugador, creador o parte de nuestras divisiones Legends, Media, Waves y Crew—. Queremos expandir nuestra organización, fortalecer la comunidad gamer y colaborar con otras organizaciones de Latinoamérica para construir juntos el futuro de los esports en la región.
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-                {/* Botones a divisiones */}
-                <div className="mt-5 pt-4 border-t border-flame/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  {[
-                    { label: "Waves", href: "#waves" },
-                    { label: "Killers", href: "#killers" },
-                    { label: "Legends", href: "#legends" },
-                    { label: "Crew", href: "#crew" },
-                  ].map((d) => (
-                    <a
-                      key={d.label}
-                      href={d.href}
-                      className="group/btn relative overflow-hidden rounded-xl bg-flame text-background px-3 py-3 text-center font-display font-bold uppercase tracking-[0.2em] text-xs sm:text-sm shadow-[0_8px_24px_-8px_var(--flame-glow)] hover:scale-[1.04] hover:shadow-[0_12px_36px_-6px_var(--flame-glow)] active:scale-95 transition"
-                    >
-                      <span className="relative z-10">{d.label}</span>
-                      <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-full transition-transform duration-700" />
-                    </a>
-                  ))}
-                </div>
-              </div>
+            {/* Botones a divisiones */}
+            <div className="mt-5 pt-4 border-t border-flame/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {[
+                { label: "Waves", href: "#waves" },
+                { label: "Killers", href: "#killers" },
+                { label: "Legends", href: "#legends" },
+                { label: "Crew", href: "#crew" },
+              ].map((d) => (
+                <a
+                  key={d.label}
+                  href={d.href}
+                  className="group/btn relative overflow-hidden rounded-xl bg-flame text-background px-3 py-3 text-center font-display font-bold uppercase tracking-[0.2em] text-xs sm:text-sm shadow-[0_8px_24px_-8px_var(--flame-glow)] hover:scale-[1.04] hover:shadow-[0_12px_36px_-6px_var(--flame-glow)] active:scale-95 transition"
+                >
+                  <span className="relative z-10">{d.label}</span>
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-full transition-transform duration-700" />
+                </a>
+              ))}
             </div>
           </div>
         </div>
