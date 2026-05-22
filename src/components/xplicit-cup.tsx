@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import xplicitLogo from "@/assets/xplicit-cup-logo.png";
+import xplicitTrophy from "@/assets/xplicit-cup-trophy.png";
 
 const teams = ["Essence", "Logic", "Guns", "HzE", "Da Best", "Resurrection K", "The Soul Nation", "Otros invitados"];
 const casters = [
@@ -167,6 +168,11 @@ export function XplicitCup() {
         @keyframes trophy-float { 0%,100% { translate: 0 0;} 50% { translate: 0 -4px;} }
         @keyframes trophy-pulse { 0%,100% { opacity: 0.4;} 50% { opacity: 0.9;} }
         .group:hover .trophy-3d { animation-duration: 1.6s, 3s; }
+        .trophy-hero { animation: trophy-hero-float 4s ease-in-out infinite; transform-origin: center; }
+        @keyframes trophy-hero-float {
+          0%, 100% { transform: translateY(0) rotate(-1deg); filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)) drop-shadow(0 0 30px oklch(0.75 0.20 70 / 0.4)); }
+          50% { transform: translateY(-12px) rotate(1deg); filter: drop-shadow(0 30px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 50px oklch(0.75 0.20 70 / 0.7)); }
+        }
 
       `}</style>
     </section>
@@ -281,6 +287,14 @@ function PanelContent({ which }: { which: PanelKey }) {
       <div>
         <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Hall of Fame</div>
         <h3 className="font-display text-3xl md:text-5xl font-black mb-6">Equipos campeones</h3>
+        <div className="relative flex justify-center mb-8">
+          <div className="absolute inset-0 -m-12 rounded-full blur-[80px] opacity-60 pointer-events-none" style={{ background: "radial-gradient(circle, oklch(0.75 0.20 70 / 0.5), transparent 65%)" }} />
+          <img
+            src={xplicitTrophy}
+            alt="Trofeo Xplicit Cup"
+            className="relative w-48 md:w-64 h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.6)] trophy-hero"
+          />
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {champions.map((c, i) => (
             <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 p-4 overflow-hidden group hover:border-flame transition" style={{ perspective: "800px" }}>
