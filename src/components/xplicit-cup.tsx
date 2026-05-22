@@ -72,7 +72,7 @@ export function XplicitCup() {
         <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex gap-10 items-center shrink-0">
-              {["● LIVE BROADCAST", "Xplicit Cup", "10·02·2013", "Gears of War", "Soul Nation Champion", "★"].map((t, j) => (
+              {["Gears of War", "The Soul Nation", "El primer torneo en vivo", "10.02.2013", "★"].map((t, j) => (
                 <span key={j} className={j % 2 === 0 ? "text-flame" : "text-foreground/70"}>{t}</span>
               ))}
             </div>
