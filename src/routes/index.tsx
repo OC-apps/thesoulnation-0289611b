@@ -788,8 +788,20 @@ function IndexContent() {
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
-            <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
-              The Soul Nation <span className="italic text-flame">Music</span>
+            <h2 className="mt-6 font-display font-bold leading-[0.95]">
+              <span className="block whitespace-nowrap text-[clamp(2rem,8vw,7rem)]">The Soul Nation</span>
+              <span
+                className="block mt-2 text-flame text-[clamp(3.5rem,14vw,11rem)] leading-none"
+                style={{
+                  fontFamily: "'Rubik Spray Paint', 'Permanent Marker', cursive",
+                  textShadow:
+                    "0 0 18px var(--flame-glow), 0 0 40px oklch(0.70 0.24 45 / 0.55), 4px 6px 0 oklch(0 0 0 / 0.45)",
+                  transform: "rotate(-3deg)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                Music
+              </span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
               El sonido oficial de The Soul Nation. Dale play y siente la nación.
