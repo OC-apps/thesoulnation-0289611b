@@ -282,6 +282,14 @@ function PanelContent({ which }: { which: PanelKey }) {
       <div>
         <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Hall of Fame</div>
         <h3 className="font-display text-3xl md:text-5xl font-black mb-6">Equipos campeones</h3>
+        <div className="relative flex justify-center mb-8">
+          <div className="absolute inset-0 -m-12 rounded-full blur-[80px] opacity-60 pointer-events-none" style={{ background: "radial-gradient(circle, oklch(0.75 0.20 70 / 0.5), transparent 65%)" }} />
+          <img
+            src={xplicitTrophy}
+            alt="Trofeo Xplicit Cup"
+            className="relative w-48 md:w-64 h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.6)] trophy-hero"
+          />
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {champions.map((c, i) => (
             <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 p-4 overflow-hidden group hover:border-flame transition" style={{ perspective: "800px" }}>
