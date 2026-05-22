@@ -124,7 +124,7 @@ export function XplicitCup() {
           </div>
           <div className="relative w-full flex justify-center">
             <div className="absolute inset-0 -m-8 rounded-full blur-[80px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }} />
-            <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-full max-w-xl md:max-w-2xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]" />
+            <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-[125%] max-w-none md:w-full md:max-w-2xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]" />
           </div>
           <p className="mt-6 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
             El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
