@@ -8,7 +8,7 @@ const casters = [
   { name: "EMK Krauser", role: "Caster invitado" },
   { name: "xCJVx Howard", role: "Caster invitado" },
 ];
-const proPlayers = ["Identives", "Sleafer", "Cristalize", "Crack", "Summuns"];
+const proPlayers = ["Identives", "Summuns", "Sleafer", "Crack", "Cristalize", "Xploidz", "Involving"];
 const champions = ["The Soul Nation", "Resurrection K", "Guns", "Fireball", "Logic"];
 const stats = [
   { k: "2013", v: "Año del debut" },
@@ -166,7 +166,7 @@ export function XplicitCup() {
               El <span className="text-flame font-bold">10 de febrero de 2013</span>, The Soul Nation hizo historia dentro de la comunidad competitiva de Gears of War de habla hispana con la creación de <span className="text-foreground font-bold">Xplicit Cup</span>, uno de los primeros torneos transmitidos completamente <span className="text-flame">en vivo por YouTube</span> para la escena latina.
             </p>
             <p className="mt-4 text-foreground/80 leading-relaxed">
-              La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">Essence, Logic, Guns, HzE, Da Best, Resurrection K</span>, entre otros.
+              La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">{teams.join(", ")}</span>.
             </p>
             <p className="mt-4 text-foreground/80 leading-relaxed">
               En esa primera edición, <span className="text-flame font-bold">The Soul Nation se coronó campeón</span>, consolidando su presencia como una organización capaz de competir, producir y liderar dentro de la comunidad.
@@ -193,30 +193,8 @@ export function XplicitCup() {
           </aside>
         </div>
 
-        {/* EQUIPOS */}
-        <div className="mt-20">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Roster · Edición 01</div>
-          <h3 className="font-display text-3xl md:text-5xl font-bold mb-6">Equipos participantes</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-            {teams.map((t, i) => (
-              <div
-                key={t}
-                className="group relative rounded-xl border border-border bg-background/60 backdrop-blur p-4 overflow-hidden hover:border-flame transition cursor-default"
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                  style={{ background: "linear-gradient(115deg, transparent 40%, oklch(0.70 0.24 45 / 0.18) 50%, transparent 60%)" }} />
-                <div className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                  style={{ boxShadow: "0 0 30px -5px var(--flame-glow), inset 0 0 20px oklch(0.70 0.24 45 / 0.1)" }} />
-                <div className="relative flex items-center justify-between">
-                  <span className="font-mono text-[10px] text-flame/70">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-                <div className="relative mt-2 font-display font-bold text-base md:text-lg tracking-wide">{t}</div>
-                <div className="relative mt-1 text-[9px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Gears of War · 2013</div>
-              </div>
-            ))}
-          </div>
-        </div>
+
+
 
         {/* CASTERS */}
         <div className="mt-20">
@@ -257,7 +235,7 @@ export function XplicitCup() {
         <div className="mt-20">
           <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legacy</div>
           <h3 className="font-display text-3xl md:text-5xl font-bold mb-2">Del torneo a la escena <span className="italic text-flame">Pro</span></h3>
-          <p className="text-foreground/70 mb-6 max-w-2xl">Jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
+          <p className="text-foreground/70 mb-6 max-w-2xl">Algunos jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
             {proPlayers.map((p) => (
               <div key={p} className="group relative rounded-xl border border-flame/30 bg-background/70 backdrop-blur p-5 overflow-hidden hover:scale-[1.03] transition-transform">
@@ -265,7 +243,7 @@ export function XplicitCup() {
                   style={{ background: "radial-gradient(circle at 50% 100%, var(--flame-glow), transparent 70%)" }} />
                 <div className="relative text-[9px] uppercase tracking-[0.3em] text-flame font-mono font-bold">★ Pro Player Legacy</div>
                 <div className="relative mt-3 font-display font-black text-xl md:text-2xl">{p}</div>
-                <div className="relative mt-1 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Alumni</div>
+                <div className="relative mt-1 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Legends</div>
               </div>
             ))}
           </div>
