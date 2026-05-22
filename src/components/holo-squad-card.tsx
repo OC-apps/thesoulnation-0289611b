@@ -115,16 +115,6 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
           }}
         />
 
-        {/* Holographic sweep */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-70"
-          style={{
-            background:
-              "linear-gradient(115deg, transparent 35%, oklch(1 0 0 / 0.18) 50%, transparent 65%)",
-            transform: `translateX(${((tilt.mx - 50) / 50) * 30}%)`,
-            mixBlendMode: "screen",
-          }}
-        />
 
         {/* Scanline overlay */}
         <div
