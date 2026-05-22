@@ -243,7 +243,7 @@ export function XplicitCup() {
                   style={{ background: "radial-gradient(circle at 50% 100%, var(--flame-glow), transparent 70%)" }} />
                 <div className="relative text-[9px] uppercase tracking-[0.3em] text-flame font-mono font-bold">★ Pro Player Legacy</div>
                 <div className="relative mt-3 font-display font-black text-xl md:text-2xl">{p}</div>
-                <div className="relative mt-1 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Alumni</div>
+                <div className="relative mt-1 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Legends</div>
               </div>
             ))}
           </div>
