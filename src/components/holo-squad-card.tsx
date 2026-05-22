@@ -178,8 +178,8 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
               />
             </div>
             <p
-              className="mt-5 text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame font-mono"
-              style={{ transform: "translateZ(30px)" }}
+              className="mt-5 text-[10px] sm:text-xs uppercase tracking-[0.3em] font-mono"
+              style={{ transform: "translateZ(30px)", color: "oklch(0.75 0.18 250)" }}
             >
               ► {subtitle}
             </p>
