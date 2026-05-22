@@ -559,8 +559,11 @@ function IndexContent() {
               ))}
             </div>
           </div>
+            </div>
+          </div>
         </div>
       </section>
+
 
 
       {/* ROSTER */}
