@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import xplicitLogo from "@/assets/xplicit-cup-logo.png";
+import xplicitLogo from "@/assets/xplicit-cup-header.jpeg";
 import xplicitTrophy from "@/assets/xplicit-cup-trophy.png";
 
 const teams = ["Essence", "Logic", "Guns", "HzE", "Da Best", "Resurrection K", "The Soul Nation", "Otros invitados"];
@@ -84,23 +84,9 @@ export function XplicitCup() {
             Archivo histórico · 2013
           </div>
           <div className="relative w-full flex justify-center">
-            <div className="absolute inset-0 -m-8 rounded-full blur-[80px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }} />
-            <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-[125%] max-w-none md:w-full md:max-w-2xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]" />
+            <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-full max-w-4xl h-auto object-contain rounded-2xl" />
           </div>
-          <p className="mt-3 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
-            El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-3 justify-center">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-xs font-mono uppercase tracking-[0.25em] font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" /> 10 · Febrero · 2013
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/50 bg-red-500/10 text-red-400 text-xs font-mono uppercase tracking-[0.25em] font-bold">
-              ● Transmitido en vivo · YouTube
-            </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-yellow-500/50 bg-yellow-500/10 text-yellow-300 text-xs font-mono uppercase tracking-[0.25em] font-bold">
-              🏆 Soul Nation · Campeón
-            </span>
-          </div>
+
         </div>
 
         {/* STATS compactos */}
