@@ -166,7 +166,7 @@ export function XplicitCup() {
               El <span className="text-flame font-bold">10 de febrero de 2013</span>, The Soul Nation hizo historia dentro de la comunidad competitiva de Gears of War de habla hispana con la creación de <span className="text-foreground font-bold">Xplicit Cup</span>, uno de los primeros torneos transmitidos completamente <span className="text-flame">en vivo por YouTube</span> para la escena latina.
             </p>
             <p className="mt-4 text-foreground/80 leading-relaxed">
-              La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">Essence, Logic, Guns, HzE, Da Best, Resurrection K</span>, entre otros.
+              La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">{teams.join(", ")}</span>.
             </p>
             <p className="mt-4 text-foreground/80 leading-relaxed">
               En esa primera edición, <span className="text-flame font-bold">The Soul Nation se coronó campeón</span>, consolidando su presencia como una organización capaz de competir, producir y liderar dentro de la comunidad.
