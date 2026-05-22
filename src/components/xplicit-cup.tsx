@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { EasterEgg } from "@/components/easter-egg";
 import xplicitLogo from "@/assets/xplicit-cup-header.jpeg";
 import xplicitTrophy from "@/assets/xplicit-cup-trophy.png";
 
