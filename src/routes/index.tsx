@@ -784,6 +784,9 @@ function IndexContent() {
         </div>
       </section>
 
+      {/* XPLICIT CUP */}
+      <XplicitCup />
+
 
       {/* MUSIC — SPOTIFY */}
       <section id="music" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
