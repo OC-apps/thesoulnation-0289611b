@@ -195,7 +195,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
             className="md:col-span-7 w-full"
             style={{ transform: "translateZ(40px)", transformStyle: "preserve-3d" }}
           >
-            <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "oklch(0.75 0.18 250 / 0.85)" }}>
+            <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-flame/80">
               <span>◢ Roster · {members.length.toString().padStart(2, "0")}</span>
               <span className="hidden sm:inline">STATUS · ACTIVE</span>
             </div>
