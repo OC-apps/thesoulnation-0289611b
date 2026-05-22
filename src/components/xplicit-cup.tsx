@@ -72,18 +72,8 @@ function Panel3D({ children }: { children: React.ReactNode }) {
 
 export function XplicitCup() {
   const { ref: heroRef, seen: heroSeen } = useReveal<HTMLDivElement>();
-  const [open, setOpen] = useState<PanelKey | null>(null);
+  const [active, setActive] = useState<PanelKey>("historia");
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open]);
 
   return (
     <section
@@ -162,78 +152,78 @@ export function XplicitCup() {
           ))}
         </div>
 
-        {/* BOTONES INTERACTIVOS */}
-        <div className="mt-12">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-3 text-center">◢ Explora el archivo · Toca para abrir</div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            {panels.map((p, i) => (
-              <button
-                key={p.key}
-                type="button"
-                onClick={() => setOpen(p.key)}
-                className="xc-btn group relative rounded-2xl border border-flame/30 bg-background/60 backdrop-blur p-5 text-left overflow-hidden hover:border-flame transition"
-                style={{ animationDelay: `${i * 60}ms` }}
+        {/* HUD INTERACTIVO · Rail vertical + panel inline */}
+        <div className="mt-14">
+          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-4 flex items-center gap-3">
+            <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
+            Archivo interactivo · Selecciona un capítulo
+          </div>
+
+          <div className="grid md:grid-cols-[280px_1fr] gap-4 md:gap-6">
+            {/* RAIL */}
+            <div
+              className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0 snap-x snap-mandatory md:snap-none scrollbar-thin"
+              role="tablist"
+            >
+              {panels.map((p, i) => {
+                const isActive = active === p.key;
+                return (
+                  <button
+                    key={p.key}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActive(p.key)}
+                    className={`group relative shrink-0 snap-start text-left rounded-xl border backdrop-blur px-4 py-3 transition overflow-hidden min-w-[180px] md:min-w-0 ${
+                      isActive
+                        ? "border-flame bg-flame/10"
+                        : "border-border bg-background/40 hover:border-flame/60"
+                    }`}
+                  >
+                    {isActive && (
+                      <span className="absolute left-0 top-0 bottom-0 w-1 bg-flame shadow-[0_0_18px_var(--flame-glow)]" />
+                    )}
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <div className={`font-mono text-[10px] uppercase tracking-[0.3em] ${isActive ? "text-flame" : "text-foreground/50"}`}>
+                          CH · 0{i + 1}
+                        </div>
+                        <div className={`font-display font-black text-base md:text-lg leading-tight ${isActive ? "text-foreground" : "text-foreground/85"}`}>
+                          {p.label}
+                        </div>
+                        <div className="text-[10px] text-foreground/55 font-mono uppercase tracking-[0.2em]">{p.sub}</div>
+                      </div>
+                      <span className={`text-xl transition ${isActive ? "drop-shadow-[0_0_12px_var(--flame-glow)] scale-110" : "opacity-60"}`}>{p.icon}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* PANEL */}
+            <Panel3D>
+              <div
+                key={active}
+                className="relative rounded-2xl border border-flame/40 bg-gradient-to-br from-background/90 via-background/70 to-background/40 backdrop-blur p-6 md:p-8 overflow-hidden shadow-[0_30px_80px_-30px_var(--flame-glow)]"
+                style={{ animation: "xc-pop 0.5s cubic-bezier(0.22,1,0.36,1) both" }}
               >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                  style={{ background: "radial-gradient(circle at 30% 0%, oklch(0.70 0.24 45 / 0.3), transparent 70%)" }} />
-                <div className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                  style={{ boxShadow: "0 0 40px -5px var(--flame-glow), inset 0 0 30px oklch(0.70 0.24 45 / 0.15)" }} />
-                <div className="relative flex items-start justify-between gap-3">
-                  <div>
-                    <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-flame/80">0{i + 1}</div>
-                    <div className="mt-1 font-display font-black text-xl md:text-2xl">{p.label}</div>
-                    <div className="mt-0.5 text-xs text-foreground/60 font-mono uppercase tracking-[0.2em]">{p.sub}</div>
-                  </div>
-                  <span className="text-2xl md:text-3xl drop-shadow-[0_0_12px_var(--flame-glow)] group-hover:scale-110 transition-transform">{p.icon}</span>
+                <span className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-flame" />
+                <span className="absolute top-3 right-3 w-6 h-6 border-r-2 border-t-2 border-flame" />
+                <span className="absolute bottom-3 left-3 w-6 h-6 border-l-2 border-b-2 border-flame" />
+                <span className="absolute bottom-3 right-3 w-6 h-6 border-r-2 border-b-2 border-flame" />
+                <div
+                  className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-[80px] opacity-30 pointer-events-none"
+                  style={{ background: "var(--flame-glow)" }}
+                />
+                <div className="relative">
+                  <PanelContent which={active} />
                 </div>
-                <div className="relative mt-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-flame font-mono font-bold">
-                  Abrir
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-                </div>
-              </button>
-            ))}
+              </div>
+            </Panel3D>
           </div>
         </div>
       </div>
 
-      {/* MODAL */}
-      {open && (
-        <div
-          className="fixed inset-0 z-[80] flex items-center justify-center p-4 md:p-8"
-          style={{ animation: "xc-fade 0.25s ease-out both" }}
-        >
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
-            onClick={() => setOpen(null)}
-          />
-          <Panel3D>
-            <div
-              className="relative w-[min(92vw,900px)] max-h-[85vh] overflow-y-auto rounded-3xl border border-flame/40 bg-gradient-to-br from-background via-background to-background/80 shadow-[0_30px_120px_-20px_var(--flame-glow)]"
-              style={{ animation: "xc-pop 0.45s cubic-bezier(0.22,1,0.36,1) both" }}
-            >
-              {/* glow corners */}
-              <span className="absolute top-3 left-3 w-8 h-8 border-l-2 border-t-2 border-flame rounded-tl-2xl" />
-              <span className="absolute top-3 right-3 w-8 h-8 border-r-2 border-t-2 border-flame rounded-tr-2xl" />
-              <span className="absolute bottom-3 left-3 w-8 h-8 border-l-2 border-b-2 border-flame rounded-bl-2xl" />
-              <span className="absolute bottom-3 right-3 w-8 h-8 border-r-2 border-b-2 border-flame rounded-br-2xl" />
-              <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-[80px] opacity-40 pointer-events-none" style={{ background: "var(--flame-glow)" }} />
-
-              <button
-                type="button"
-                onClick={() => setOpen(null)}
-                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full border border-flame/40 bg-background/80 backdrop-blur flex items-center justify-center text-flame hover:bg-flame hover:text-primary-foreground transition"
-                aria-label="Cerrar"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-              </button>
-
-              <div className="relative p-6 md:p-10">
-                <PanelContent which={open} />
-              </div>
-            </div>
-          </Panel3D>
-        </div>
-      )}
 
       <style>{`
         @keyframes xc-fade { from { opacity: 0; } to { opacity: 1; } }
