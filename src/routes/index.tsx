@@ -1097,6 +1097,7 @@ function IndexContent() {
 
       {/* RECLUTAMIENTO */}
       <section id="reclutamiento" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
+        <div className="absolute top-3 left-3 z-30"><EasterEgg id="recruitment-key" label="Llave de reclutamiento oculta" size="xs" /></div>
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
