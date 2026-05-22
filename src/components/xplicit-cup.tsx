@@ -168,6 +168,9 @@ export function XplicitCup() {
         }
 
       `}</style>
+      <div className="absolute bottom-4 right-4 z-30">
+        <EasterEgg id="xplicit-legacy" label="Legado Xplicit oculto" size="sm" />
+      </div>
     </section>
   );
 }
