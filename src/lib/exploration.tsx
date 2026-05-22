@@ -93,6 +93,9 @@ type Ctx = {
   progressInLevel: number;
   complete: boolean;
   reset: () => void;
+  panelOpen: boolean;
+  togglePanel: () => void;
+  setPanelOpen: (open: boolean) => void;
 };
 
 const ExplorationCtx = createContext<Ctx | null>(null);
