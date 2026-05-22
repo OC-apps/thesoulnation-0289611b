@@ -212,8 +212,11 @@ export function ExplorationProvider({ children }: { children: ReactNode }) {
       progressInLevel,
       complete: state.found.length >= total,
       reset,
+      panelOpen,
+      togglePanel: () => setPanelOpen((v) => !v),
+      setPanelOpen,
     };
-  }, [state, reset]);
+  }, [state, reset, panelOpen]);
 
   return (
     <ExplorationCtx.Provider value={value}>{children}</ExplorationCtx.Provider>
