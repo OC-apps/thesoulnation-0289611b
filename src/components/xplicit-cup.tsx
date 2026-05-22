@@ -8,7 +8,7 @@ const casters = [
   { name: "EMK Krauser", role: "Caster invitado" },
   { name: "xCJVx Howard", role: "Caster invitado" },
 ];
-const proPlayers = ["Identives", "Sleafer", "Cristalize", "Crack", "Summuns"];
+const proPlayers = ["Identives", "Summuns", "Sleafer", "Crack", "Cristalize", "Xploidz", "Involving"];
 const champions = ["The Soul Nation", "Resurrection K", "Guns", "Fireball", "Logic"];
 const stats = [
   { k: "2013", v: "Año del debut" },
