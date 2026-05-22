@@ -26,7 +26,7 @@ import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
-import { XplicitCup } from "@/components/xplicit-cup";
+
 import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
