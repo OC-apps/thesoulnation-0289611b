@@ -239,11 +239,11 @@ function PanelContent({ which }: { which: PanelKey }) {
             ))}
           </div>
         </div>
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-2 gap-2">
           {casters.map((c) => (
-            <div key={c.name} className="rounded-xl border border-border bg-background/70 p-4 hover:border-flame transition">
-              <div className="text-flame text-[10px] uppercase tracking-[0.25em] font-mono">{c.role}</div>
-              <div className="mt-1 font-display font-bold text-lg">{c.name}</div>
+            <div key={c.name} className="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/70 px-3 py-2 hover:border-flame transition">
+              <div className="font-display font-bold text-base truncate">{c.name}</div>
+              <div className="text-flame text-[9px] uppercase tracking-[0.25em] font-mono whitespace-nowrap">{c.role}</div>
             </div>
           ))}
         </div>
