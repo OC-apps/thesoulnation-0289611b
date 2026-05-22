@@ -84,7 +84,7 @@ export function ExplorationHUD() {
   // Default position: bottom-center aligned with side-nav row
   const style: React.CSSProperties = pos
     ? { left: pos.x, top: pos.y, right: "auto", bottom: "auto" }
-    : { left: "50%", bottom: "0.75rem", transform: "translateX(-50%)" };
+    : { left: "50%", bottom: "3.75rem", transform: "translateX(-50%)" };
 
   return (
     <div
