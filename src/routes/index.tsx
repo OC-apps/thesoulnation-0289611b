@@ -367,6 +367,7 @@ function IndexContent() {
             <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
             <a href="#wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
             <a href="#jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
+            <a href="#xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</a>
             <a href="#music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
             <a href="#reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
             <a href="#redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
