@@ -272,7 +272,7 @@ function PanelContent({ which }: { which: PanelKey }) {
   return (
     <div>
       <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legado</div>
-      <h3 className="font-display text-3xl md:text-5xl font-black mb-4">No fue solo un torneo. Fue un <span className="italic text-flame">inicio</span>.</h3>
+      <h3 className="font-display text-3xl md:text-5xl font-black mb-4"><span className="block">No fue solo un torneo.</span><span className="block">Fue un <span className="italic text-flame">inicio</span>.</span></h3>
       <div className="space-y-4 text-foreground/85 leading-relaxed">
         <p>
           Más allá de los resultados, <span className="text-foreground font-bold">Xplicit Cup</span> se convirtió en un referente por su organización, calidad gráfica, transmisión en vivo y nivel competitivo. Fue una muestra temprana de lo que The Soul Nation siempre ha buscado construir: <span className="text-flame">comunidad, espectáculo, competencia e identidad visual</span> fuerte alrededor de Gears of War.
