@@ -287,40 +287,51 @@ function PanelContent({ which }: { which: PanelKey }) {
       <div>
         <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Hall of Fame</div>
         <h3 className="font-display text-3xl md:text-5xl font-black mb-6">Equipos campeones</h3>
-        <div className="relative flex justify-center mb-8">
-          <div className="absolute inset-0 -m-12 rounded-full blur-[80px] opacity-60 pointer-events-none" style={{ background: "radial-gradient(circle, oklch(0.75 0.20 70 / 0.5), transparent 65%)" }} />
-          <img
-            src={xplicitTrophy}
-            alt="Trofeo Xplicit Cup"
-            className="relative w-48 md:w-64 h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.6)] trophy-hero"
-          />
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {champions.map((c, i) => (
-            <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 p-4 overflow-hidden group hover:border-flame transition" style={{ perspective: "800px" }}>
-              <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-[40px] opacity-30 group-hover:opacity-60 transition" style={{ background: "var(--flame-glow)" }} />
-              <div className="relative flex flex-col items-center text-center">
-                {/* Trofeo 3D animado */}
-                <div className="trophy-3d" style={{ animationDelay: `${i * 0.15}s` }}>
-                  <div className="trophy-face trophy-front">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-yellow-300 drop-shadow-[0_0_14px_var(--flame-glow)]">
-                      <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z" />
-                      <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3" />
-                    </svg>
+
+        <div className="grid md:grid-cols-[1fr_1.1fr] gap-6 md:gap-10 items-center">
+          {/* Trofeo hero */}
+          <div className="relative flex justify-center md:justify-end">
+            <div className="absolute inset-0 -m-8 rounded-full blur-[90px] opacity-70 pointer-events-none" style={{ background: "radial-gradient(circle, oklch(0.78 0.20 70 / 0.55), transparent 60%)" }} />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-3 rounded-full bg-black/60 blur-md opacity-60" />
+            <img
+              src={xplicitTrophy}
+              alt="Trofeo Xplicit Cup"
+              className="relative w-56 md:w-[22rem] h-auto object-contain trophy-hero"
+            />
+          </div>
+
+          {/* Lista de campeones */}
+          <ol className="relative space-y-2">
+            {champions.map((c, i) => {
+              const isFirst = i === 0;
+              return (
+                <li
+                  key={c}
+                  className={`group relative flex items-center gap-4 rounded-xl border px-4 py-3 backdrop-blur transition-all hover:translate-x-1 ${
+                    isFirst
+                      ? "border-yellow-400/60 bg-gradient-to-r from-yellow-500/15 via-yellow-500/5 to-transparent"
+                      : "border-flame/20 bg-background/40 hover:border-flame/60"
+                  }`}
+                >
+                  <div className={`font-display font-black text-2xl md:text-3xl tabular-nums w-10 text-center ${isFirst ? "text-yellow-300" : "text-flame/50"}`} style={isFirst ? { textShadow: "0 0 18px oklch(0.85 0.18 80 / 0.6)" } : undefined}>
+                    {String(i + 1).padStart(2, "0")}
                   </div>
-                  <div className="trophy-face trophy-back">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-flame drop-shadow-[0_0_14px_var(--flame-glow)]">
-                      <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z" />
-                      <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3" />
-                    </svg>
+                  <div className="h-10 w-px bg-gradient-to-b from-transparent via-flame/40 to-transparent" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-mono text-[9px] uppercase tracking-[0.3em] text-flame/70">
+                      {isFirst ? "★ Campeón inaugural · 2013" : `Edición ${String(i + 1).padStart(2, "0")}`}
+                    </div>
+                    <div className="font-display font-bold text-base md:text-lg truncate">{c}</div>
                   </div>
-                  <span className="trophy-shine" />
-                </div>
-                <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-flame/80">Edición {String(i + 1).padStart(2, "0")}</div>
-                <div className="mt-1 font-display font-bold text-sm md:text-base whitespace-nowrap">{c}</div>
-              </div>
-            </div>
-          ))}
+                  {isFirst && (
+                    <span className="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-full border border-yellow-400/50 bg-yellow-500/10 text-yellow-300 text-[9px] font-mono uppercase tracking-[0.25em]">
+                      🏆 #1
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </div>
     );
