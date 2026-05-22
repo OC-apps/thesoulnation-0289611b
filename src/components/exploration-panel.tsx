@@ -58,14 +58,14 @@ export function ExplorationPanel() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label="Misiones de exploración"
-        className="fixed bottom-4 left-4 z-[100] flex items-center gap-2 rounded-full border border-flame/60 bg-background/80 px-3 py-2 text-xs font-bold uppercase tracking-wider text-flame backdrop-blur-md transition-all hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_22px_var(--flame-glow)]"
+        className="fixed bottom-3 left-3 z-[100] flex h-9 items-center gap-1.5 rounded-full border border-flame/60 bg-background/90 px-2.5 text-[10px] font-bold uppercase tracking-wider text-flame backdrop-blur-md transition-all hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_22px_var(--flame-glow)] sm:bottom-5 sm:h-10 sm:px-3 sm:text-xs"
       >
-        <span className="relative flex h-2 w-2">
+        <span className="relative flex h-1.5 w-1.5">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-flame" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-flame" />
         </span>
-        <span>Misiones</span>
-        <span className="rounded bg-flame/15 px-1.5 py-0.5 text-[10px] text-flame">
+        <span className="hidden xs:inline sm:inline">Misiones</span>
+        <span className="rounded bg-flame/15 px-1 py-0.5 text-[9px] text-flame sm:text-[10px]">
           {found.length}/{total}
         </span>
       </button>
