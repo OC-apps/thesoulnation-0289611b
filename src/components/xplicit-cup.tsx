@@ -112,9 +112,11 @@ export function XplicitCup() {
               <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
               Archivo histórico · 2013
             </div>
-            <h2 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight">
-              Xplicit <span className="italic text-flame" style={{ textShadow: "0 0 40px var(--flame-glow)" }}>Cup</span>
-            </h2>
+            <img
+              src={xplicitLogo}
+              alt="Xplicit Cup"
+              className="w-full max-w-md md:max-w-xl h-auto object-contain drop-shadow-[0_0_40px_var(--flame-glow)]"
+            />
             <p className="mt-4 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
               El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
             </p>
