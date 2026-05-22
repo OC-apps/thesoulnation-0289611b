@@ -25,17 +25,18 @@ export const Route = createFileRoute("/xplicit-cup")({
 function XplicitCupPage() {
   return (
     <div className="relative min-h-screen text-foreground overflow-hidden">
-      {/* Fondo azul con degradado tipo home */}
+      {/* Fondo azul vivo tipo home */}
       <div
         aria-hidden
-        className="fixed inset-0 -z-10 pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse at 20% 0%, oklch(0.30 0.18 258 / 0.55), transparent 55%), radial-gradient(ellipse at 80% 100%, oklch(0.55 0.24 255 / 0.35), transparent 60%), linear-gradient(180deg, oklch(0.10 0.10 258), oklch(0.06 0.06 258) 60%, #03060d)",
+            "radial-gradient(ellipse 80% 60% at 25% 10%, oklch(0.42 0.22 268 / 0.95), transparent 65%), radial-gradient(ellipse 70% 60% at 80% 90%, oklch(0.32 0.24 285 / 0.85), transparent 65%), linear-gradient(180deg, oklch(0.28 0.20 265), oklch(0.18 0.18 262) 55%, oklch(0.10 0.14 260))",
         }}
       />
-      <div aria-hidden className="fixed -top-40 -right-40 w-[600px] h-[600px] rounded-full blur-[160px] opacity-25 -z-10 pointer-events-none" style={{ background: "oklch(0.70 0.24 45)" }} />
-      <div aria-hidden className="fixed -bottom-40 -left-40 w-[600px] h-[600px] rounded-full blur-[160px] opacity-30 -z-10 pointer-events-none" style={{ background: "oklch(0.55 0.24 255)" }} />
+      <div aria-hidden className="fixed -top-40 -right-40 w-[600px] h-[600px] rounded-full blur-[160px] opacity-30 z-0 pointer-events-none" style={{ background: "oklch(0.70 0.24 45)" }} />
+      <div aria-hidden className="fixed -bottom-40 -left-40 w-[700px] h-[700px] rounded-full blur-[180px] opacity-50 z-0 pointer-events-none" style={{ background: "oklch(0.50 0.26 270)" }} />
+
 
       <header className="sticky top-0 z-50 border-b border-border bg-background/60 backdrop-blur">
         <div className="mx-auto max-w-7xl px-5 sm:px-6 h-14 flex items-center justify-between">
@@ -63,7 +64,7 @@ function XplicitCupPage() {
         </div>
       </header>
 
-      <main>
+      <main className="relative z-10">
         <XplicitCup />
       </main>
     </div>
