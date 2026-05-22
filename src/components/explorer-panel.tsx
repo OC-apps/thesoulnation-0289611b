@@ -15,21 +15,21 @@ export function ExplorerPanel() {
         type="button"
         onClick={togglePanel}
         aria-label="Progreso de explorador"
-        className="fixed bottom-4 right-4 z-[100] flex items-center gap-2 rounded-full border border-flame/60 bg-background/80 px-3 py-2 text-xs font-bold uppercase tracking-wider text-flame backdrop-blur-md transition-all hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_22px_var(--flame-glow)]"
+        className="fixed bottom-3 left-[7.5rem] z-[100] flex h-9 items-center gap-1.5 rounded-full border border-flame/60 bg-background/90 px-2.5 text-[10px] font-bold uppercase tracking-wider text-flame backdrop-blur-md transition-all hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_22px_var(--flame-glow)] sm:bottom-5 sm:left-auto sm:right-4 sm:h-10 sm:px-3 sm:text-xs"
       >
-        <span className="relative flex h-2 w-2">
+        <span className="relative flex h-1.5 w-1.5">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-flame" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-flame" />
         </span>
         <span>Explorador</span>
-        <span className="rounded bg-flame/15 px-1.5 py-0.5 text-[10px] text-flame">
+        <span className="rounded bg-flame/15 px-1 py-0.5 text-[9px] text-flame sm:text-[10px]">
           {found}/{total}
         </span>
       </button>
 
       {/* Panel */}
       <div
-        className={`fixed bottom-20 right-4 z-[100] w-[min(360px,calc(100vw-2rem))] origin-bottom-right transition-all duration-300 ${
+        className={`fixed bottom-14 left-3 z-[100] w-[min(360px,calc(100vw-1.5rem))] origin-bottom-left transition-all duration-300 sm:bottom-20 sm:left-auto sm:right-4 sm:origin-bottom-right ${
           panelOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}
       >
