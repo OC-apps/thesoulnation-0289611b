@@ -85,14 +85,15 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
 
 
       <div
-        className="relative rounded-[1.75rem] overflow-hidden border-2 border-flame/40 transition-transform duration-200 will-change-transform"
+        className="relative rounded-[1.75rem] overflow-hidden border-2 transition-transform duration-200 will-change-transform"
         style={{
+          borderColor: "oklch(0.65 0.18 250 / 0.55)",
           transform: `rotateX(${rx}deg) rotateY(${ry}deg) ${pressed ? "scale(0.985)" : "scale(1)"}`,
           transformStyle: "preserve-3d",
           background:
-            "linear-gradient(135deg, oklch(0.18 0.18 258 / 0.92), oklch(0.08 0.10 258 / 0.92))",
+            "linear-gradient(135deg, oklch(0.20 0.16 258 / 0.94), oklch(0.07 0.10 258 / 0.94))",
           boxShadow:
-            "0 30px 80px -25px var(--flame-glow), inset 0 0 40px oklch(0 0 0 / 0.6)",
+            "0 30px 80px -25px oklch(0.55 0.24 255 / 0.55), inset 0 0 40px oklch(0 0 0 / 0.6)",
         }}
       >
         {/* Holographic grid */}
@@ -100,7 +101,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
           className="absolute inset-0 opacity-30 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(oklch(0.70 0.24 45 / 0.18) 1px, transparent 1px), linear-gradient(90deg, oklch(0.70 0.24 45 / 0.18) 1px, transparent 1px)",
+              "linear-gradient(oklch(0.65 0.20 250 / 0.22) 1px, transparent 1px), linear-gradient(90deg, oklch(0.65 0.20 250 / 0.22) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
             transform: `translate3d(${(tilt.mx - 50) * 0.4}px, ${(tilt.my - 50) * 0.4}px, 0)`,
             maskImage: "radial-gradient(ellipse at center, black 30%, transparent 80%)",
@@ -111,20 +112,11 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
         <div
           className="absolute inset-0 pointer-events-none mix-blend-screen"
           style={{
-            background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.70 0.28 45 / 0.35), transparent 60%)`,
+            background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.65 0.24 255 / 0.35), transparent 60%)`,
           }}
         />
 
-        {/* Holographic sweep */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-70"
-          style={{
-            background:
-              "linear-gradient(115deg, transparent 35%, oklch(1 0 0 / 0.18) 50%, transparent 65%)",
-            transform: `translateX(${((tilt.mx - 50) / 50) * 30}%)`,
-            mixBlendMode: "screen",
-          }}
-        />
+
 
         {/* Scanline overlay */}
         <div
@@ -142,15 +134,16 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
           "bottom-3 left-3 border-l-2 border-b-2",
           "bottom-3 right-3 border-r-2 border-b-2",
         ].map((c) => (
-          <span key={c} className={`absolute ${c} w-6 h-6 border-flame pointer-events-none`} />
+          <span key={c} className={`absolute ${c} w-6 h-6 pointer-events-none`} style={{ borderColor: "oklch(0.70 0.20 250)" }} />
         ))}
 
         {/* Animated scan bar */}
         <span
-          className="pointer-events-none absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent"
+          className="pointer-events-none absolute inset-x-0 h-[2px]"
           style={{
             top: `${((Math.sin(idle * 1.5 + accentSeed) + 1) / 2) * 100}%`,
-            filter: "drop-shadow(0 0 12px var(--flame-glow))",
+            background: "linear-gradient(to right, transparent, oklch(0.70 0.22 250), transparent)",
+            filter: "drop-shadow(0 0 12px oklch(0.65 0.24 255 / 0.7))",
           }}
         />
 
@@ -168,7 +161,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
                 className="relative h-28 sm:h-32 md:h-40 w-auto object-contain"
                 style={{
                   filter:
-                    "drop-shadow(0 0 24px var(--flame-glow)) drop-shadow(0 0 60px oklch(0.55 0.24 255 / 0.5))",
+                    "drop-shadow(0 0 24px oklch(0.65 0.24 255 / 0.6)) drop-shadow(0 0 60px oklch(0.55 0.24 255 / 0.5))",
                   transform: `translate3d(${(tilt.mx - 50) * 0.15}px, ${(tilt.my - 50) * 0.15}px, 40px)`,
                 }}
               />
@@ -185,8 +178,8 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
               />
             </div>
             <p
-              className="mt-5 text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame font-mono"
-              style={{ transform: "translateZ(30px)" }}
+              className="mt-5 text-[10px] sm:text-xs uppercase tracking-[0.3em] font-mono"
+              style={{ transform: "translateZ(30px)", color: "oklch(0.75 0.18 250)" }}
             >
               ► {subtitle}
             </p>
@@ -203,7 +196,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
             className="md:col-span-7 w-full"
             style={{ transform: "translateZ(40px)", transformStyle: "preserve-3d" }}
           >
-            <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-flame/80">
+            <div className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em]" style={{ color: "oklch(0.75 0.18 250 / 0.85)" }}>
               <span>◢ Roster · {members.length.toString().padStart(2, "0")}</span>
               <span className="hidden sm:inline">STATUS · ACTIVE</span>
             </div>
@@ -211,7 +204,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
               {members.map((m, i) => (
                 <li
                   key={m}
-                  className="group/chip relative overflow-hidden rounded-lg border border-flame/30 bg-background/50 backdrop-blur px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-flame hover:text-flame hover:bg-flame/10 active:scale-95"
+                  className="group/chip relative overflow-hidden rounded-lg border border-sky-400/30 bg-background/50 backdrop-blur px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-sky-400 hover:text-sky-300 hover:bg-sky-400/10 active:scale-95"
                   style={{
                     transform: revealed
                       ? `translate3d(0,0,${20 + (i % 3) * 10}px)`
@@ -221,7 +214,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
                   }}
                 >
                   <span className="relative z-10 block truncate">{m}</span>
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-flame/30 to-transparent transition-transform duration-700 group-hover/chip:translate-x-full" />
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-sky-400/30 to-transparent transition-transform duration-700 group-hover/chip:translate-x-full" />
                 </li>
               ))}
             </ul>
@@ -229,7 +222,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
         </div>
 
         {/* Bottom HUD strip */}
-        <div className="relative border-t border-flame/20 bg-background/40 px-4 py-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.3em] text-flame/70">
+        <div className="relative border-t border-sky-400/20 bg-background/40 px-4 py-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: "oklch(0.75 0.18 250 / 0.75)" }}>
           <span>◤ {title}</span>
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
