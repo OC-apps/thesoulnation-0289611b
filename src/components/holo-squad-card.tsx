@@ -101,7 +101,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
           className="absolute inset-0 opacity-30 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(oklch(0.65 0.20 250 / 0.22) 1px, transparent 1px), linear-gradient(90deg, oklch(0.65 0.20 250 / 0.22) 1px, transparent 1px)",
+              "linear-gradient(oklch(0.70 0.24 45 / 0.22) 1px, transparent 1px), linear-gradient(90deg, oklch(0.70 0.24 45 / 0.22) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
             transform: `translate3d(${(tilt.mx - 50) * 0.4}px, ${(tilt.my - 50) * 0.4}px, 0)`,
             maskImage: "radial-gradient(ellipse at center, black 30%, transparent 80%)",
