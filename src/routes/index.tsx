@@ -472,8 +472,7 @@ function IndexContent() {
               <p className="text-sm sm:text-base text-foreground/85 font-light leading-relaxed">
                 The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en clips de Gears of War. Con el tiempo nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad, impulsando la escena de los esports en Latinoamérica como una familia unida.
               </p>
-            </div>
-          </div>
+
 
           {/* Tab animado Visión / Objetivo — full width */}
           <div id="vision" className="roster-card rounded-2xl p-5 sm:p-6 md:p-7 mt-6 md:mt-8 flex flex-col">
