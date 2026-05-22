@@ -130,7 +130,7 @@ export function ExplorerPanel() {
                         {ok ? e.nombre : "???"}
                       </div>
                       <div className="truncate text-[10px] uppercase tracking-wider opacity-70">
-                        {e.seccion}
+                        {ok ? e.seccion : "???"}
                       </div>
                     </div>
                     <span
