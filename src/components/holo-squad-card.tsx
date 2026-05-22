@@ -134,15 +134,16 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
           "bottom-3 left-3 border-l-2 border-b-2",
           "bottom-3 right-3 border-r-2 border-b-2",
         ].map((c) => (
-          <span key={c} className={`absolute ${c} w-6 h-6 border-flame pointer-events-none`} />
+          <span key={c} className={`absolute ${c} w-6 h-6 pointer-events-none`} style={{ borderColor: "oklch(0.70 0.20 250)" }} />
         ))}
 
         {/* Animated scan bar */}
         <span
-          className="pointer-events-none absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent"
+          className="pointer-events-none absolute inset-x-0 h-[2px]"
           style={{
             top: `${((Math.sin(idle * 1.5 + accentSeed) + 1) / 2) * 100}%`,
-            filter: "drop-shadow(0 0 12px var(--flame-glow))",
+            background: "linear-gradient(to right, transparent, oklch(0.70 0.22 250), transparent)",
+            filter: "drop-shadow(0 0 12px oklch(0.65 0.24 255 / 0.7))",
           }}
         />
 
