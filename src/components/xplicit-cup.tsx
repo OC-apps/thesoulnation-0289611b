@@ -44,35 +44,10 @@ function useReveal<T extends HTMLElement>() {
   return { ref, seen };
 }
 
-function Panel3D({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(1200px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
-  };
-  const reset = () => {
-    if (ref.current) ref.current.style.transform = "perspective(1200px) rotateY(0) rotateX(0)";
-  };
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      className="relative will-change-transform transition-transform duration-300"
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 export function XplicitCup() {
   const { ref: heroRef, seen: heroSeen } = useReveal<HTMLDivElement>();
-  const [active, setActive] = useState<PanelKey>("historia");
+
+
 
 
   return (
