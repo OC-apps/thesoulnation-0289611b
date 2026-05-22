@@ -84,56 +84,45 @@ export function XplicitCup() {
         {/* HERO */}
         <div
           ref={heroRef}
-          className="grid md:grid-cols-12 gap-8 md:gap-10 items-center"
+          className="flex flex-col items-center text-center"
           style={{
             opacity: heroSeen ? 1 : 0,
             transform: heroSeen ? "translateY(0)" : "translateY(40px)",
             transition: "opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          <div className="md:col-span-5 flex flex-col items-center md:items-start">
-            <div className="relative">
-              <div
-                className="absolute inset-0 -m-8 rounded-full blur-[60px] opacity-60"
-                style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }}
-              />
-              <img
-                src={xplicitLogo}
-                alt="Xplicit Cup"
-                className="relative w-56 sm:w-64 md:w-80 h-auto object-contain drop-shadow-[0_0_40px_var(--flame-glow)]"
-                style={{
-                  animation: heroSeen ? "xc-float 6s ease-in-out infinite" : "none",
-                }}
-              />
-            </div>
+          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.35em] text-flame font-mono mb-6">
+            <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
+            Archivo histórico · 2013
           </div>
-          <div className="md:col-span-7">
-            <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.35em] text-flame font-mono mb-3">
-              <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
-              Archivo histórico · 2013
-            </div>
+          <div className="relative w-full flex justify-center">
+            <div
+              className="absolute inset-0 -m-8 rounded-full blur-[80px] opacity-50 pointer-events-none"
+              style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }}
+            />
             <img
               src={xplicitLogo}
               alt="Xplicit Cup"
-              className="w-full max-w-md md:max-w-xl h-auto object-contain drop-shadow-[0_0_40px_var(--flame-glow)]"
+              className="relative w-full max-w-2xl md:max-w-3xl lg:max-w-4xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]"
             />
-            <p className="mt-4 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
-              El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-xs font-mono uppercase tracking-[0.25em] font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
-                10 · Febrero · 2013
-              </span>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/50 bg-red-500/10 text-red-400 text-xs font-mono uppercase tracking-[0.25em] font-bold">
-                ● Transmitido en vivo · YouTube
-              </span>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-yellow-500/50 bg-yellow-500/10 text-yellow-300 text-xs font-mono uppercase tracking-[0.25em] font-bold">
-                🏆 Soul Nation · Campeón
-              </span>
-            </div>
+          </div>
+          <p className="mt-6 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
+            El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3 justify-center">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-xs font-mono uppercase tracking-[0.25em] font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
+              10 · Febrero · 2013
+            </span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/50 bg-red-500/10 text-red-400 text-xs font-mono uppercase tracking-[0.25em] font-bold">
+              ● Transmitido en vivo · YouTube
+            </span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-yellow-500/50 bg-yellow-500/10 text-yellow-300 text-xs font-mono uppercase tracking-[0.25em] font-bold">
+              🏆 Soul Nation · Campeón
+            </span>
           </div>
         </div>
+
 
         {/* STATS */}
         <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
