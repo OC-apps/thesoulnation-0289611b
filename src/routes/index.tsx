@@ -690,6 +690,9 @@ function IndexContent() {
               <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
           </div>
+          <div className="mt-10 flex justify-end">
+            <EasterEgg id="hall-of-champions" label="Salón de Campeones oculto" size="sm" />
+          </div>
         </div>
       </section>
 
