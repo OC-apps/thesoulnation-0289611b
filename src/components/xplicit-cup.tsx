@@ -17,6 +17,17 @@ const stats = [
   { k: "∞", v: "Legado competitivo" },
 ];
 
+type PanelKey = "historia" | "timeline" | "broadcast" | "legacy" | "hall" | "legado";
+
+const panels: { key: PanelKey; label: string; sub: string; icon: string }[] = [
+  { key: "historia", label: "Historia", sub: "El origen", icon: "📜" },
+  { key: "timeline", label: "Timeline", sub: "Línea de tiempo", icon: "◐" },
+  { key: "broadcast", label: "Broadcast", sub: "La voz del torneo", icon: "🎙" },
+  { key: "legacy", label: "Pro Legacy", sub: "Xplicit Legends", icon: "★" },
+  { key: "hall", label: "Hall of Fame", sub: "Campeones", icon: "🏆" },
+  { key: "legado", label: "Legado", sub: "Lo que dejó", icon: "✦" },
+];
+
 function useReveal<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [seen, setSeen] = useState(false);
@@ -33,19 +44,56 @@ function useReveal<T extends HTMLElement>() {
   return { ref, seen };
 }
 
+function Panel3D({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const onMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `perspective(1200px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+  };
+  const reset = () => {
+    if (ref.current) ref.current.style.transform = "perspective(1200px) rotateY(0) rotateX(0)";
+  };
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={reset}
+      className="relative will-change-transform transition-transform duration-300"
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function XplicitCup() {
   const { ref: heroRef, seen: heroSeen } = useReveal<HTMLDivElement>();
+  const [open, setOpen] = useState<PanelKey | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <section
       id="xplicit-cup"
-      className="relative py-20 md:py-28 border-t border-border overflow-hidden scroll-mt-24"
+      className="relative py-20 md:py-24 border-t border-border overflow-hidden scroll-mt-24"
       style={{
         background:
           "radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.18 0.18 258 / 0.35), transparent 70%), linear-gradient(180deg, #03060d 0%, #050810 100%)",
       }}
     >
-      {/* Grid técnico */}
       <div
         className="absolute inset-0 opacity-[0.07] pointer-events-none"
         style={{
@@ -55,19 +103,12 @@ export function XplicitCup() {
           maskImage: "radial-gradient(ellipse at center, black 30%, transparent 80%)",
         }}
       />
-      {/* Diagonal esports */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-flame to-transparent" />
       <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-flame to-transparent" />
-      <div
-        className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-30"
-        style={{ background: "oklch(0.55 0.24 255)" }}
-      />
-      <div
-        className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25"
-        style={{ background: "oklch(0.70 0.24 45)" }}
-      />
+      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-30" style={{ background: "oklch(0.55 0.24 255)" }} />
+      <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25" style={{ background: "oklch(0.70 0.24 45)" }} />
 
-      {/* LIVE BROADCAST marquee */}
+      {/* LIVE marquee */}
       <div className="relative overflow-hidden border-y border-flame/30 bg-background/60 backdrop-blur py-2 mb-12">
         <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -96,23 +137,15 @@ export function XplicitCup() {
             Archivo histórico · 2013
           </div>
           <div className="relative w-full flex justify-center">
-            <div
-              className="absolute inset-0 -m-8 rounded-full blur-[80px] opacity-50 pointer-events-none"
-              style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }}
-            />
-            <img
-              src={xplicitLogo}
-              alt="Xplicit Cup"
-              className="relative w-full max-w-2xl md:max-w-3xl lg:max-w-4xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]"
-            />
+            <div className="absolute inset-0 -m-8 rounded-full blur-[80px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }} />
+            <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-full max-w-xl md:max-w-2xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]" />
           </div>
           <p className="mt-6 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
             El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 justify-center">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-xs font-mono uppercase tracking-[0.25em] font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
-              10 · Febrero · 2013
+              <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" /> 10 · Febrero · 2013
             </span>
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/50 bg-red-500/10 text-red-400 text-xs font-mono uppercase tracking-[0.25em] font-bold">
               ● Transmitido en vivo · YouTube
@@ -123,175 +156,243 @@ export function XplicitCup() {
           </div>
         </div>
 
-
-        {/* STATS */}
-        <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {stats.map((s, i) => (
-            <div
-              key={s.k}
-              className="relative rounded-xl border border-flame/20 bg-background/60 backdrop-blur p-4 md:p-5 overflow-hidden group hover:border-flame/60 transition"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                style={{ background: "radial-gradient(circle at 50% 0%, oklch(0.70 0.24 45 / 0.25), transparent 70%)" }} />
-              <div className="relative font-display text-3xl md:text-4xl font-black text-flame" style={{ textShadow: "0 0 20px var(--flame-glow)" }}>
-                {s.k}
-              </div>
-              <div className="relative mt-1 text-[10px] uppercase tracking-[0.25em] text-foreground/60 font-mono">{s.v}</div>
+        {/* STATS compactos */}
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+          {stats.map((s) => (
+            <div key={s.k} className="rounded-xl border border-flame/20 bg-background/60 backdrop-blur p-3 md:p-4">
+              <div className="font-display text-2xl md:text-3xl font-black text-flame" style={{ textShadow: "0 0 20px var(--flame-glow)" }}>{s.k}</div>
+              <div className="mt-0.5 text-[10px] uppercase tracking-[0.25em] text-foreground/60 font-mono">{s.v}</div>
             </div>
           ))}
         </div>
 
-        {/* HISTORIA */}
-        <div className="mt-16 grid md:grid-cols-12 gap-6">
-          <div className="md:col-span-12">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Historia</div>
-            <h3 className="font-display text-3xl md:text-5xl font-bold leading-tight">
-              El torneo que <span className="italic text-flame">marcó historia</span>
-            </h3>
-          </div>
-          <article className="md:col-span-7 relative rounded-2xl border border-border bg-card/40 backdrop-blur p-6 md:p-8 overflow-hidden">
-            <span className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-flame" />
-            <span className="absolute bottom-3 right-3 w-6 h-6 border-r-2 border-b-2 border-flame" />
-            <p className="text-foreground/85 leading-relaxed">
-              El <span className="text-flame font-bold">10 de febrero de 2013</span>, The Soul Nation hizo historia dentro de la comunidad competitiva de Gears of War de habla hispana con la creación de <span className="text-foreground font-bold">Xplicit Cup</span>, uno de los primeros torneos transmitidos completamente <span className="text-flame">en vivo por YouTube</span> para la escena latina.
-            </p>
-            <p className="mt-4 text-foreground/80 leading-relaxed">
-              La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">{teams.join(", ")}</span>.
-            </p>
-            <p className="mt-4 text-foreground/80 leading-relaxed">
-              En esa primera edición, <span className="text-flame font-bold">The Soul Nation se coronó campeón</span>, consolidando su presencia como una organización capaz de competir, producir y liderar dentro de la comunidad.
-            </p>
-          </article>
-          {/* Timeline */}
-          <aside className="md:col-span-5 relative rounded-2xl border border-flame/30 bg-background/50 backdrop-blur p-6 md:p-8">
-            <div className="text-[10px] uppercase tracking-[0.3em] text-flame font-mono mb-4">◤ Timeline</div>
-            <ol className="relative border-l border-flame/40 space-y-5 ml-2">
-              {[
-                { d: "10·02·2013", t: "Debut Xplicit Cup", s: "Primera transmisión en vivo por YouTube." },
-                { d: "Final 1", t: "Soul Nation Campeón", s: "Primer título oficial de la organización." },
-                { d: "Legacy", t: "Próxima generación", s: "Pro players nacidos del torneo." },
-                { d: "Hoy", t: "Referente latino", s: "Producción, comunidad y competencia." },
-              ].map((m, i) => (
-                <li key={i} className="ml-4 relative">
-                  <span className="absolute -left-[1.42rem] top-1 w-3 h-3 rounded-full bg-flame shadow-[0_0_18px_var(--flame-glow)]" />
-                  <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-flame/80">{m.d}</div>
-                  <div className="font-display font-bold mt-0.5">{m.t}</div>
-                  <div className="text-xs text-foreground/65 mt-0.5">{m.s}</div>
-                </li>
-              ))}
-            </ol>
-          </aside>
-        </div>
-
-
-
-
-        {/* CASTERS */}
-        <div className="mt-20">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Broadcast</div>
-          <h3 className="font-display text-3xl md:text-5xl font-bold mb-6">La voz del torneo</h3>
-          <div className="relative rounded-2xl border border-flame/30 bg-gradient-to-br from-background/80 to-background/40 backdrop-blur p-6 md:p-8 overflow-hidden">
-            <span className="absolute top-3 left-3 inline-flex items-center gap-2 px-2 py-1 rounded bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-mono uppercase tracking-[0.3em]">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
-            </span>
-            {/* waves */}
-            <div className="absolute bottom-3 right-4 flex items-end gap-0.5 h-6 opacity-50">
-              {Array.from({ length: 18 }).map((_, i) => (
-                <span
-                  key={i}
-                  className="w-0.5 bg-flame rounded-full"
-                  style={{
-                    height: `${20 + Math.sin(i * 0.7) * 50 + 30}%`,
-                    animation: `xc-wave 1.2s ease-in-out ${i * 60}ms infinite`,
-                  }}
-                />
-              ))}
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-8">
-              {casters.map((c) => (
-                <div key={c.name} className="group relative rounded-xl border border-border bg-background/70 p-4 hover:border-flame transition">
-                  <div className="flex items-center gap-2 text-flame text-[10px] uppercase tracking-[0.25em] font-mono">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
-                    {c.role}
+        {/* BOTONES INTERACTIVOS */}
+        <div className="mt-12">
+          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-3 text-center">◢ Explora el archivo · Toca para abrir</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {panels.map((p, i) => (
+              <button
+                key={p.key}
+                type="button"
+                onClick={() => setOpen(p.key)}
+                className="xc-btn group relative rounded-2xl border border-flame/30 bg-background/60 backdrop-blur p-5 text-left overflow-hidden hover:border-flame transition"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none"
+                  style={{ background: "radial-gradient(circle at 30% 0%, oklch(0.70 0.24 45 / 0.3), transparent 70%)" }} />
+                <div className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition pointer-events-none"
+                  style={{ boxShadow: "0 0 40px -5px var(--flame-glow), inset 0 0 30px oklch(0.70 0.24 45 / 0.15)" }} />
+                <div className="relative flex items-start justify-between gap-3">
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-flame/80">0{i + 1}</div>
+                    <div className="mt-1 font-display font-black text-xl md:text-2xl">{p.label}</div>
+                    <div className="mt-0.5 text-xs text-foreground/60 font-mono uppercase tracking-[0.2em]">{p.sub}</div>
                   </div>
-                  <div className="mt-2 font-display font-bold text-lg">{c.name}</div>
+                  <span className="text-2xl md:text-3xl drop-shadow-[0_0_12px_var(--flame-glow)] group-hover:scale-110 transition-transform">{p.icon}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* PRO PLAYERS */}
-        <div className="mt-20">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legacy</div>
-          <h3 className="font-display text-3xl md:text-5xl font-bold mb-2">Del torneo a la escena <span className="italic text-flame">Pro</span></h3>
-          <p className="text-foreground/70 mb-6 max-w-2xl">Algunos jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-            {proPlayers.map((p) => (
-              <div key={p} className="group relative rounded-xl border border-flame/30 bg-background/70 backdrop-blur p-5 overflow-hidden hover:scale-[1.03] transition-transform">
-                <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition pointer-events-none"
-                  style={{ background: "radial-gradient(circle at 50% 100%, var(--flame-glow), transparent 70%)" }} />
-                <div className="relative text-[9px] uppercase tracking-[0.3em] text-flame font-mono font-bold">★ Pro Player Legacy</div>
-                <div className="relative mt-3 font-display font-black text-xl md:text-2xl">{p}</div>
-                <div className="relative mt-1 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Legends</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CAMPEONES */}
-        <div className="mt-20">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Hall of Fame</div>
-          <h3 className="font-display text-3xl md:text-5xl font-bold mb-6">Equipos campeones</h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
-            {champions.map((c, i) => (
-              <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 backdrop-blur p-5 overflow-hidden group hover:border-flame transition">
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-[40px] opacity-30 group-hover:opacity-60 transition"
-                  style={{ background: "var(--flame-glow)" }} />
-                <div className="relative flex flex-col items-center text-center">
-                  <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-flame drop-shadow-[0_0_12px_var(--flame-glow)]">
-                    <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/>
-                    <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3"/>
-                  </svg>
-                  <div className="mt-3 font-mono text-[9px] uppercase tracking-[0.3em] text-flame/80">Edición {String(i + 1).padStart(2, "0")}</div>
-                  <div className="mt-1 font-display font-bold text-xs sm:text-sm md:text-base whitespace-nowrap">{c}</div>
+                <div className="relative mt-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-flame font-mono font-bold">
+                  Abrir
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* LEGADO */}
-        <div className="mt-20 relative rounded-2xl border border-flame/30 bg-background/60 backdrop-blur p-6 md:p-10 overflow-hidden">
-          <div className="absolute inset-0 opacity-40 pointer-events-none"
-            style={{ background: "radial-gradient(circle at 0% 100%, oklch(0.55 0.24 255 / 0.25), transparent 60%), radial-gradient(circle at 100% 0%, oklch(0.70 0.24 45 / 0.2), transparent 60%)" }} />
-          <div className="relative">
-            <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-3">◢ Legado</div>
-            <h3 className="font-display text-3xl md:text-5xl font-bold mb-4">No fue solo un torneo. Fue un <span className="italic text-flame">inicio</span>.</h3>
-            <p className="text-foreground/85 leading-relaxed max-w-3xl">
-              Más allá de los resultados, <span className="text-foreground font-bold">Xplicit Cup</span> se convirtió en un referente por su organización, calidad gráfica, transmisión en vivo y nivel competitivo. Fue una muestra temprana de lo que The Soul Nation siempre ha buscado construir: <span className="text-flame">comunidad, espectáculo, competencia e identidad visual</span> fuerte alrededor de Gears of War.
-            </p>
-            <p className="mt-4 text-foreground/75 leading-relaxed max-w-3xl">
-              Xplicit Cup fue el inicio de una etapa donde la comunidad competitiva latina comenzó a verse como una escena con <span className="text-foreground font-bold">voz, nivel y producción propia</span>.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#about" className="inline-flex items-center gap-2 bg-flame text-primary-foreground px-5 py-2.5 rounded-full font-bold text-sm shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition">
-                Ver historia de The Soul Nation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-              </a>
-              <button className="inline-flex items-center gap-2 border border-flame/50 text-flame px-5 py-2.5 rounded-full font-bold text-sm hover:bg-flame/10 transition" type="button">
-                Próximos torneos · Próximamente
               </button>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
+      {/* MODAL */}
+      {open && (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center p-4 md:p-8"
+          style={{ animation: "xc-fade 0.25s ease-out both" }}
+        >
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            onClick={() => setOpen(null)}
+          />
+          <Panel3D>
+            <div
+              className="relative w-[min(92vw,900px)] max-h-[85vh] overflow-y-auto rounded-3xl border border-flame/40 bg-gradient-to-br from-background via-background to-background/80 shadow-[0_30px_120px_-20px_var(--flame-glow)]"
+              style={{ animation: "xc-pop 0.45s cubic-bezier(0.22,1,0.36,1) both" }}
+            >
+              {/* glow corners */}
+              <span className="absolute top-3 left-3 w-8 h-8 border-l-2 border-t-2 border-flame rounded-tl-2xl" />
+              <span className="absolute top-3 right-3 w-8 h-8 border-r-2 border-t-2 border-flame rounded-tr-2xl" />
+              <span className="absolute bottom-3 left-3 w-8 h-8 border-l-2 border-b-2 border-flame rounded-bl-2xl" />
+              <span className="absolute bottom-3 right-3 w-8 h-8 border-r-2 border-b-2 border-flame rounded-br-2xl" />
+              <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-[80px] opacity-40 pointer-events-none" style={{ background: "var(--flame-glow)" }} />
+
+              <button
+                type="button"
+                onClick={() => setOpen(null)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full border border-flame/40 bg-background/80 backdrop-blur flex items-center justify-center text-flame hover:bg-flame hover:text-primary-foreground transition"
+                aria-label="Cerrar"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+
+              <div className="relative p-6 md:p-10">
+                <PanelContent which={open} />
+              </div>
+            </div>
+          </Panel3D>
+        </div>
+      )}
+
       <style>{`
-        @keyframes xc-float { 0%,100% { transform: translateY(0) rotate(-1deg);} 50% { transform: translateY(-12px) rotate(1deg);} }
+        @keyframes xc-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes xc-pop {
+          0% { opacity: 0; transform: perspective(1200px) rotateX(-8deg) translateY(40px) scale(0.92); }
+          100% { opacity: 1; transform: perspective(1200px) rotateX(0) translateY(0) scale(1); }
+        }
         @keyframes xc-wave { 0%,100% { transform: scaleY(0.4);} 50% { transform: scaleY(1);} }
+        .xc-btn { animation: xc-rise 0.6s ease-out both; }
+        @keyframes xc-rise { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
       `}</style>
     </section>
+  );
+}
+
+function PanelContent({ which }: { which: PanelKey }) {
+  if (which === "historia") {
+    return (
+      <div>
+        <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Historia</div>
+        <h3 className="font-display text-3xl md:text-5xl font-black leading-tight">
+          El torneo que <span className="italic text-flame">marcó historia</span>
+        </h3>
+        <div className="mt-6 space-y-4 text-foreground/85 leading-relaxed">
+          <p>
+            El <span className="text-flame font-bold">10 de febrero de 2013</span>, The Soul Nation hizo historia dentro de la comunidad competitiva de Gears of War de habla hispana con la creación de <span className="text-foreground font-bold">Xplicit Cup</span>, uno de los primeros torneos transmitidos completamente <span className="text-flame">en vivo por YouTube</span> para la escena latina.
+          </p>
+          <p>
+            La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">{teams.join(", ")}</span>.
+          </p>
+          <p>
+            En esa primera edición, <span className="text-flame font-bold">The Soul Nation se coronó campeón</span>, consolidando su presencia como una organización capaz de competir, producir y liderar dentro de la comunidad.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (which === "timeline") {
+    const items = [
+      { d: "10·02·2013", t: "Debut Xplicit Cup", s: "Primera transmisión en vivo por YouTube." },
+      { d: "Final 1", t: "Soul Nation Campeón", s: "Primer título oficial de la organización." },
+      { d: "Legacy", t: "Próxima generación", s: "Pro players nacidos del torneo." },
+      { d: "Hoy", t: "Referente latino", s: "Producción, comunidad y competencia." },
+    ];
+    return (
+      <div>
+        <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◤ Timeline</div>
+        <h3 className="font-display text-3xl md:text-5xl font-black mb-6">Línea de tiempo</h3>
+        <ol className="relative border-l border-flame/40 space-y-6 ml-2">
+          {items.map((m, i) => (
+            <li key={i} className="ml-4 relative">
+              <span className="absolute -left-[1.42rem] top-1 w-3 h-3 rounded-full bg-flame shadow-[0_0_18px_var(--flame-glow)]" />
+              <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-flame/80">{m.d}</div>
+              <div className="font-display font-bold mt-0.5 text-lg">{m.t}</div>
+              <div className="text-sm text-foreground/65 mt-0.5">{m.s}</div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+
+  if (which === "broadcast") {
+    return (
+      <div>
+        <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Broadcast</div>
+        <h3 className="font-display text-3xl md:text-5xl font-black mb-6">La voz del torneo</h3>
+        <div className="relative rounded-2xl border border-flame/30 bg-background/60 p-5 overflow-hidden mb-5">
+          <span className="absolute top-3 left-3 inline-flex items-center gap-2 px-2 py-1 rounded bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-mono uppercase tracking-[0.3em]">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
+          </span>
+          <div className="flex items-end gap-0.5 h-10 mt-6 justify-end">
+            {Array.from({ length: 24 }).map((_, i) => (
+              <span key={i} className="w-0.5 bg-flame rounded-full"
+                style={{ height: `${20 + Math.sin(i * 0.7) * 50 + 30}%`, animation: `xc-wave 1.2s ease-in-out ${i * 60}ms infinite` }} />
+            ))}
+          </div>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-3">
+          {casters.map((c) => (
+            <div key={c.name} className="rounded-xl border border-border bg-background/70 p-4 hover:border-flame transition">
+              <div className="text-flame text-[10px] uppercase tracking-[0.25em] font-mono">{c.role}</div>
+              <div className="mt-1 font-display font-bold text-lg">{c.name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (which === "legacy") {
+    return (
+      <div>
+        <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legacy</div>
+        <h3 className="font-display text-3xl md:text-5xl font-black mb-2">Xplicit <span className="italic text-flame">Legends</span></h3>
+        <p className="text-foreground/70 mb-6">Algunos jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {proPlayers.map((p) => (
+            <div key={p} className="group relative rounded-xl border border-flame/30 bg-background/70 p-4 overflow-hidden hover:scale-[1.03] transition-transform">
+              <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition pointer-events-none"
+                style={{ background: "radial-gradient(circle at 50% 100%, var(--flame-glow), transparent 70%)" }} />
+              <div className="relative text-[9px] uppercase tracking-[0.3em] text-flame font-mono font-bold">★ Pro Player</div>
+              <div className="relative mt-2 font-display font-black text-lg md:text-xl">{p}</div>
+              <div className="relative mt-0.5 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Legends</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (which === "hall") {
+    return (
+      <div>
+        <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Hall of Fame</div>
+        <h3 className="font-display text-3xl md:text-5xl font-black mb-6">Equipos campeones</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {champions.map((c, i) => (
+            <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 p-4 overflow-hidden group hover:border-flame transition">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-[40px] opacity-30 group-hover:opacity-60 transition" style={{ background: "var(--flame-glow)" }} />
+              <div className="relative flex flex-col items-center text-center">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-flame drop-shadow-[0_0_12px_var(--flame-glow)]">
+                  <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/>
+                  <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3"/>
+                </svg>
+                <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-flame/80">Edición {String(i + 1).padStart(2, "0")}</div>
+                <div className="mt-1 font-display font-bold text-sm md:text-base whitespace-nowrap">{c}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // legado
+  return (
+    <div>
+      <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legado</div>
+      <h3 className="font-display text-3xl md:text-5xl font-black mb-4">No fue solo un torneo. Fue un <span className="italic text-flame">inicio</span>.</h3>
+      <div className="space-y-4 text-foreground/85 leading-relaxed">
+        <p>
+          Más allá de los resultados, <span className="text-foreground font-bold">Xplicit Cup</span> se convirtió en un referente por su organización, calidad gráfica, transmisión en vivo y nivel competitivo. Fue una muestra temprana de lo que The Soul Nation siempre ha buscado construir: <span className="text-flame">comunidad, espectáculo, competencia e identidad visual</span> fuerte alrededor de Gears of War.
+        </p>
+        <p>
+          Xplicit Cup fue el inicio de una etapa donde la comunidad competitiva latina comenzó a verse como una escena con <span className="text-foreground font-bold">voz, nivel y producción propia</span>.
+        </p>
+      </div>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <a href="#about" className="inline-flex items-center gap-2 bg-flame text-primary-foreground px-5 py-2.5 rounded-full font-bold text-sm shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition">
+          Ver historia de The Soul Nation
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
   );
 }
