@@ -251,13 +251,25 @@ function PanelContent({ which }: { which: PanelKey }) {
         <h3 className="font-display text-3xl md:text-5xl font-black mb-6">Equipos campeones</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {champions.map((c, i) => (
-            <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 p-4 overflow-hidden group hover:border-flame transition">
+            <div key={c} className="relative rounded-2xl border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 to-background/60 p-4 overflow-hidden group hover:border-flame transition" style={{ perspective: "800px" }}>
               <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full blur-[40px] opacity-30 group-hover:opacity-60 transition" style={{ background: "var(--flame-glow)" }} />
               <div className="relative flex flex-col items-center text-center">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-flame drop-shadow-[0_0_12px_var(--flame-glow)]">
-                  <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/>
-                  <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3"/>
-                </svg>
+                {/* Trofeo 3D animado */}
+                <div className="trophy-3d" style={{ animationDelay: `${i * 0.15}s` }}>
+                  <div className="trophy-face trophy-front">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-yellow-300 drop-shadow-[0_0_14px_var(--flame-glow)]">
+                      <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z" />
+                      <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3" />
+                    </svg>
+                  </div>
+                  <div className="trophy-face trophy-back">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-flame drop-shadow-[0_0_14px_var(--flame-glow)]">
+                      <path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z" />
+                      <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3" />
+                    </svg>
+                  </div>
+                  <span className="trophy-shine" />
+                </div>
                 <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.3em] text-flame/80">Edición {String(i + 1).padStart(2, "0")}</div>
                 <div className="mt-1 font-display font-bold text-sm md:text-base whitespace-nowrap">{c}</div>
               </div>
