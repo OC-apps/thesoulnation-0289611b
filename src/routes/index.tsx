@@ -857,6 +857,7 @@ function IndexContent() {
 
       {/* MUSIC — SPOTIFY */}
       <section id="music" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
+        <div className="absolute bottom-3 left-3 z-30"><EasterEgg id="soul-anthem" label="Himno Soul oculto" size="xs" /></div>
         <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-10 blur-[160px]" />
         <div className="absolute -bottom-40 left-0 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-7xl px-6">
