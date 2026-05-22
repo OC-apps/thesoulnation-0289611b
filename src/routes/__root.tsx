@@ -15,6 +15,9 @@ import { EasterEggProvider } from "@/lib/easter-eggs";
 import { EasterEggNotification } from "@/components/easter-egg-notification";
 import { ExplorerPanel } from "@/components/explorer-panel";
 import { EasterEggCompletion } from "@/components/easter-egg-completion";
+import { ExplorationProvider } from "@/lib/exploration";
+import { ExplorationHUD } from "@/components/exploration-hud";
+import { ExplorationMax } from "@/components/exploration-max";
 
 function NotFoundComponent() {
   return (
@@ -135,12 +138,16 @@ function RootComponent() {
         }}
       />
       <EasterEggProvider>
-        <EffectsLayer />
-        <SideNav />
-        <Outlet />
-        <EasterEggNotification />
-        <ExplorerPanel />
-        <EasterEggCompletion />
+        <ExplorationProvider>
+          <EffectsLayer />
+          <SideNav />
+          <ExplorationHUD />
+          <Outlet />
+          <EasterEggNotification />
+          <ExplorerPanel />
+          <EasterEggCompletion />
+          <ExplorationMax />
+        </ExplorationProvider>
       </EasterEggProvider>
     </QueryClientProvider>
   );
