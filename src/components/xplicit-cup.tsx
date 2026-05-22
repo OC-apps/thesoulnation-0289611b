@@ -168,6 +168,11 @@ export function XplicitCup() {
         @keyframes trophy-float { 0%,100% { translate: 0 0;} 50% { translate: 0 -4px;} }
         @keyframes trophy-pulse { 0%,100% { opacity: 0.4;} 50% { opacity: 0.9;} }
         .group:hover .trophy-3d { animation-duration: 1.6s, 3s; }
+        .trophy-hero { animation: trophy-hero-float 4s ease-in-out infinite; transform-origin: center; }
+        @keyframes trophy-hero-float {
+          0%, 100% { transform: translateY(0) rotate(-1deg); filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)) drop-shadow(0 0 30px oklch(0.75 0.20 70 / 0.4)); }
+          50% { transform: translateY(-12px) rotate(1deg); filter: drop-shadow(0 30px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 50px oklch(0.75 0.20 70 / 0.7)); }
+        }
 
       `}</style>
     </section>
