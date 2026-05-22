@@ -204,7 +204,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
               {members.map((m, i) => (
                 <li
                   key={m}
-                  className="group/chip relative overflow-hidden rounded-lg border border-flame/30 bg-background/50 backdrop-blur px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-flame hover:text-flame hover:bg-flame/10 active:scale-95"
+                  className="group/chip relative overflow-hidden rounded-lg border border-sky-400/30 bg-background/50 backdrop-blur px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-sky-400 hover:text-sky-300 hover:bg-sky-400/10 active:scale-95"
                   style={{
                     transform: revealed
                       ? `translate3d(0,0,${20 + (i % 3) * 10}px)`
