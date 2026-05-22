@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { EasterEgg } from "@/components/easter-egg";
 import { useRef, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
