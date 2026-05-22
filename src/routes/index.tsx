@@ -800,7 +800,7 @@ function IndexContent() {
               <span
                 className="block mt-2 text-flame text-[clamp(3.5rem,14vw,11rem)] leading-none"
                 style={{
-                  fontFamily: "'Rubik Spray Paint', 'Permanent Marker', cursive",
+                  fontFamily: "'Bungee Shade', 'Monoton', cursive",
                   textShadow:
                     "0 0 18px var(--flame-glow), 0 0 40px oklch(0.70 0.24 45 / 0.55), 4px 6px 0 oklch(0 0 0 / 0.45)",
                   transform: "rotate(-3deg)",
