@@ -430,7 +430,11 @@ function IndexContent() {
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
         <Hero3D />
-
+        <div className="pointer-events-none absolute bottom-4 right-4 z-20">
+          <div className="pointer-events-auto">
+            <EasterEgg id="soul-flame" label="Llama Soul oculta" size="sm" />
+          </div>
+        </div>
       </section>
 
       {/* ABOUT — integrado: foto + texto + tab animado (Visión / Objetivo) */}
