@@ -84,7 +84,7 @@ export function XplicitCup() {
             Archivo histórico · 2013
           </div>
           <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[260px] md:h-[420px]">
-            <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" />
+            <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" style={{ filter: "saturate(1.6) contrast(1.15) brightness(1.05)" }} />
           </div>
 
 
