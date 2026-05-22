@@ -235,7 +235,7 @@ export function XplicitCup() {
         <div className="mt-20">
           <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legacy</div>
           <h3 className="font-display text-3xl md:text-5xl font-bold mb-2">Del torneo a la escena <span className="italic text-flame">Pro</span></h3>
-          <p className="text-foreground/70 mb-6 max-w-2xl">Jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
+          <p className="text-foreground/70 mb-6 max-w-2xl">Algunos jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
             {proPlayers.map((p) => (
               <div key={p} className="group relative rounded-xl border border-flame/30 bg-background/70 backdrop-blur p-5 overflow-hidden hover:scale-[1.03] transition-transform">
