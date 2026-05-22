@@ -71,7 +71,7 @@ export function ExplorationPanel() {
       </button>
 
       <div
-        className={`fixed bottom-20 left-4 z-[100] w-[min(380px,calc(100vw-2rem))] origin-bottom-left transition-all duration-300 ${
+        className={`fixed bottom-14 left-3 z-[100] w-[min(380px,calc(100vw-1.5rem))] origin-bottom-left transition-all duration-300 sm:bottom-20 sm:left-4 ${
           open ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}
       >
