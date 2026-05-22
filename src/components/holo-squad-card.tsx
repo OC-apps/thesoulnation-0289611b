@@ -85,14 +85,15 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
 
 
       <div
-        className="relative rounded-[1.75rem] overflow-hidden border-2 border-flame/40 transition-transform duration-200 will-change-transform"
+        className="relative rounded-[1.75rem] overflow-hidden border-2 transition-transform duration-200 will-change-transform"
         style={{
+          borderColor: "oklch(0.65 0.18 250 / 0.55)",
           transform: `rotateX(${rx}deg) rotateY(${ry}deg) ${pressed ? "scale(0.985)" : "scale(1)"}`,
           transformStyle: "preserve-3d",
           background:
-            "linear-gradient(135deg, oklch(0.18 0.18 258 / 0.92), oklch(0.08 0.10 258 / 0.92))",
+            "linear-gradient(135deg, oklch(0.20 0.16 258 / 0.94), oklch(0.07 0.10 258 / 0.94))",
           boxShadow:
-            "0 30px 80px -25px var(--flame-glow), inset 0 0 40px oklch(0 0 0 / 0.6)",
+            "0 30px 80px -25px oklch(0.55 0.24 255 / 0.55), inset 0 0 40px oklch(0 0 0 / 0.6)",
         }}
       >
         {/* Holographic grid */}
@@ -100,7 +101,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
           className="absolute inset-0 opacity-30 pointer-events-none"
           style={{
             backgroundImage:
-              "linear-gradient(oklch(0.70 0.24 45 / 0.18) 1px, transparent 1px), linear-gradient(90deg, oklch(0.70 0.24 45 / 0.18) 1px, transparent 1px)",
+              "linear-gradient(oklch(0.65 0.20 250 / 0.22) 1px, transparent 1px), linear-gradient(90deg, oklch(0.65 0.20 250 / 0.22) 1px, transparent 1px)",
             backgroundSize: "32px 32px",
             transform: `translate3d(${(tilt.mx - 50) * 0.4}px, ${(tilt.my - 50) * 0.4}px, 0)`,
             maskImage: "radial-gradient(ellipse at center, black 30%, transparent 80%)",
@@ -111,9 +112,10 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
         <div
           className="absolute inset-0 pointer-events-none mix-blend-screen"
           style={{
-            background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.70 0.28 45 / 0.35), transparent 60%)`,
+            background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.65 0.24 255 / 0.35), transparent 60%)`,
           }}
         />
+
 
 
         {/* Scanline overlay */}
