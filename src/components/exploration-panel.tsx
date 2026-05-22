@@ -32,10 +32,9 @@ const LABELS: Record<ExploreId, { nombre: string; seccion: string; icono: string
   "about:objetivo": { nombre: "Tab Objetivo", seccion: "About", icono: "📑" },
 };
 
-export function ExplorationPanel() {
-  const { found, points, totalPoints, total, level, nextLevel, complete, reset } =
+export function ExplorationPanel({ hideButton = false }: { hideButton?: boolean } = {}) {
+  const { found, points, totalPoints, total, level, nextLevel, complete, reset, panelOpen, togglePanel, setPanelOpen } =
     useExploration();
-  const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "missing" | "done">("missing");
   const isDev = typeof import.meta !== "undefined" && import.meta.env?.DEV;
 
@@ -51,27 +50,31 @@ export function ExplorationPanel() {
   }, {});
 
   const missingCount = total - found.length;
+  const open = panelOpen;
+  const setOpen = setPanelOpen;
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Misiones de exploración"
-        className="fixed bottom-3 left-3 z-[100] flex h-9 items-center gap-1.5 rounded-full border border-flame/60 bg-background/90 px-2.5 text-[10px] font-bold uppercase tracking-wider text-flame backdrop-blur-md transition-all hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_22px_var(--flame-glow)] sm:bottom-5 sm:h-10 sm:px-3 sm:text-xs"
-      >
-        <span className="relative flex h-1.5 w-1.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-60" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-flame" />
-        </span>
-        <span className="hidden xs:inline sm:inline">Misiones</span>
-        <span className="rounded bg-flame/15 px-1 py-0.5 text-[9px] text-flame sm:text-[10px]">
-          {found.length}/{total}
-        </span>
-      </button>
+      {!hideButton && (
+        <button
+          type="button"
+          onClick={togglePanel}
+          aria-label="Misiones de exploración"
+          className="fixed bottom-3 left-3 z-[100] flex h-9 items-center gap-1.5 rounded-full border border-flame/60 bg-background/90 px-2.5 text-[10px] font-bold uppercase tracking-wider text-flame backdrop-blur-md transition-all hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_22px_var(--flame-glow)] sm:bottom-5 sm:h-10 sm:px-3 sm:text-xs"
+        >
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-flame" />
+          </span>
+          <span>Misiones</span>
+          <span className="rounded bg-flame/15 px-1 py-0.5 text-[9px] text-flame sm:text-[10px]">
+            {found.length}/{total}
+          </span>
+        </button>
+      )}
 
       <div
-        className={`fixed bottom-14 left-3 z-[100] w-[min(380px,calc(100vw-1.5rem))] origin-bottom-left transition-all duration-300 sm:bottom-20 sm:left-4 ${
+        className={`fixed bottom-16 left-3 z-[100] w-[min(380px,calc(100vw-1.5rem))] origin-bottom-left transition-all duration-300 sm:bottom-20 sm:left-4 ${
           open ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}
       >
