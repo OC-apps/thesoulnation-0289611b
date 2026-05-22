@@ -75,10 +75,10 @@ const MAX_FLAG = "soul-exploration-max-celebrated-v1";
 
 export const LEVELS = [
   { name: "Recluta", min: 0 },
-  { name: "Cadete", min: 30 },
-  { name: "Soldado Soul", min: 60 },
-  { name: "Veterano", min: 100 },
-  { name: "Élite Soul", min: 140 },
+  { name: "Cadete", min: 60 },
+  { name: "Soldado Soul", min: 120 },
+  { name: "Veterano", min: 190 },
+  { name: "Élite Soul", min: 280 },
 ];
 
 type State = { found: ExploreId[] };
