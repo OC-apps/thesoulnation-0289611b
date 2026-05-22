@@ -18,6 +18,7 @@ import { EasterEggCompletion } from "@/components/easter-egg-completion";
 import { ExplorationProvider } from "@/lib/exploration";
 import { ExplorationHUD } from "@/components/exploration-hud";
 import { ExplorationMax } from "@/components/exploration-max";
+import { ExplorationPanel } from "@/components/exploration-panel";
 
 function NotFoundComponent() {
   return (
@@ -146,6 +147,7 @@ function RootComponent() {
           <EasterEggNotification />
           <ExplorerPanel />
           <EasterEggCompletion />
+          <ExplorationPanel />
           <ExplorationMax />
         </ExplorationProvider>
       </EasterEggProvider>
