@@ -141,13 +141,12 @@ function RootComponent() {
       <EasterEggProvider>
         <ExplorationProvider>
           <EffectsLayer />
-          <SideNav />
-          <ExplorationHUD />
+          <BottomBar />
           <Outlet />
           <EasterEggNotification />
-          <ExplorerPanel />
+          <ExplorerPanel hideButton />
           <EasterEggCompletion />
-          <ExplorationPanel />
+          <ExplorationPanel hideButton />
           <ExplorationMax />
         </ExplorationProvider>
       </EasterEggProvider>
