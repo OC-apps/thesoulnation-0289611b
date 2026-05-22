@@ -1176,23 +1176,24 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
             style={{
               transformStyle: "preserve-3d",
               transition: "transform 700ms cubic-bezier(.2,.8,.2,1)",
-              transform: `translateZ(80px) scale(${t.active ? 1.06 : 1}) rotateY(${side === "front" ? 0 : 180}deg)`,
+              transform: `translateZ(80px) scale(${t.active ? 1.36 : 1.3}) rotateY(${side === "front" ? 0 : 180}deg)`,
             }}
           >
             <img
               src={front}
               alt="Jersey oficial The Soul Nation - frente"
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-contain p-8"
+              className="absolute inset-0 w-full h-full object-contain p-1"
               style={{ backfaceVisibility: "hidden", filter: "drop-shadow(0 25px 60px var(--flame-glow))" }}
             />
             <img
               src={back}
               alt="Jersey oficial The Soul Nation - espalda"
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-contain p-8"
+              className="absolute inset-0 w-full h-full object-contain p-1"
               style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", filter: "drop-shadow(0 25px 60px var(--flame-glow))" }}
             />
+
           </div>
 
           {/* Shine */}
