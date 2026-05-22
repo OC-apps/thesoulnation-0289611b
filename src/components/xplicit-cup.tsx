@@ -259,14 +259,13 @@ function PanelContent({ which }: { which: PanelKey }) {
         <p className="text-foreground/80 mb-6 leading-relaxed">
           Por sus torneos pasaron jugadores que con el tiempo se consolidaron como figuras importantes de la escena, incluyendo nombres como <span className="text-foreground font-bold">Identives, Sleafer, Cristalize, Crack y Summuns</span>. Además, equipos como <span className="text-foreground font-bold">The Soul Nation, Resurrection K, Guns, Fireball y Logic</span> formaron parte de la historia de campeones de la Xplicit Cup.
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {proPlayers.map((p) => (
-            <div key={p} className="group relative rounded-xl border border-flame/30 bg-background/70 p-4 overflow-hidden hover:scale-[1.03] transition-transform">
-              <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition pointer-events-none"
+            <div key={p} className="group relative flex items-center justify-between gap-2 rounded-lg border border-flame/30 bg-background/70 px-3 py-2 overflow-hidden hover:scale-[1.02] transition-transform">
+              <div className="absolute inset-0 opacity-20 group-hover:opacity-50 transition pointer-events-none"
                 style={{ background: "radial-gradient(circle at 50% 100%, var(--flame-glow), transparent 70%)" }} />
-              <div className="relative text-[9px] uppercase tracking-[0.3em] text-flame font-mono font-bold">★ Pro Player</div>
-              <div className="relative mt-2 font-display font-black text-lg md:text-xl">{p}</div>
-              <div className="relative mt-0.5 text-[10px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Xplicit Legends</div>
+              <div className="relative font-display font-black text-base truncate">{p}</div>
+              <div className="relative text-[8px] uppercase tracking-[0.25em] text-flame font-mono font-bold whitespace-nowrap">★ Pro</div>
             </div>
           ))}
         </div>
