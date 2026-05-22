@@ -14,6 +14,7 @@ import { SideNav } from "@/components/side-nav";
 import { EasterEggProvider } from "@/lib/easter-eggs";
 import { EasterEggNotification } from "@/components/easter-egg-notification";
 import { ExplorerPanel } from "@/components/explorer-panel";
+import { EasterEggCompletion } from "@/components/easter-egg-completion";
 
 function NotFoundComponent() {
   return (
@@ -139,6 +140,7 @@ function RootComponent() {
         <Outlet />
         <EasterEggNotification />
         <ExplorerPanel />
+        <EasterEggCompletion />
       </EasterEggProvider>
     </QueryClientProvider>
   );
