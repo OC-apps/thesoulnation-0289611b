@@ -66,13 +66,25 @@ export function XplicitCup() {
             transition: "opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[380px] sm:h-[340px] md:h-[440px] lg:h-[500px]">
+          {/* Mobile: imagen arriba (mismo aspect que desktop) + texto debajo */}
+          <div className="sm:hidden w-screen left-1/2 -translate-x-1/2 relative">
+            <div className="w-full aspect-[16/7] overflow-hidden">
+              <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" style={{ filter: "saturate(1.6) contrast(1.15) brightness(1.05)" }} />
+            </div>
+            <div className="px-5 pt-5">
+              <h1 className="font-display font-black text-left text-[1.75rem] leading-[1.1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)]">
+                El primer torneo de <span className="italic text-flame">Gears of War</span> transmitido <span className="text-flame">en vivo</span> por YouTube
+              </h1>
+            </div>
+          </div>
+
+          {/* Desktop / tablet: overlay sobre la imagen */}
+          <div className="hidden sm:block relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[340px] md:h-[440px] lg:h-[500px]">
             <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" style={{ filter: "saturate(1.6) contrast(1.15) brightness(1.05)" }} />
-            {/* gradiente: en mobile de abajo hacia arriba, en desktop de izquierda a derecha */}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-transparent sm:bg-gradient-to-r sm:from-background sm:via-background/60 sm:to-transparent" />
-            <div className="absolute inset-0 flex items-end sm:items-center">
-              <div className="mx-auto max-w-7xl w-full px-5 pb-6 sm:pb-0 sm:px-10 md:px-14 lg:px-20">
-                <h1 className="font-display font-black text-left text-[1.6rem] leading-[1.1] sm:text-4xl md:text-5xl lg:text-6xl sm:leading-[1.05] max-w-[14ch] sm:max-w-xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)]">
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+            <div className="absolute inset-0 flex items-center">
+              <div className="mx-auto max-w-7xl w-full px-10 md:px-14 lg:px-20">
+                <h1 className="font-display font-black text-left text-4xl md:text-5xl lg:text-6xl leading-[1.05] max-w-xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)]">
                   El primer torneo de <span className="italic text-flame">Gears of War</span> transmitido <span className="text-flame">en vivo</span> por YouTube
                 </h1>
               </div>
