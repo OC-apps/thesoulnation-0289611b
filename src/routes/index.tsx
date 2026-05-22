@@ -341,11 +341,7 @@ function WavesHUD() {
 }
 
 function Index() {
-  return (
-    <AudioProvider>
-      <IndexContent />
-    </AudioProvider>
-  );
+  return <IndexContent />;
 }
 
 function IndexContent() {
