@@ -22,7 +22,21 @@ export type ExploreId =
   | "social:tiktok"
   | "social:facebook"
   | "social:x"
-  | "social:discord";
+  | "social:discord"
+  | "nav:about"
+  | "nav:roster"
+  | "nav:videos"
+  | "nav:wallpapers"
+  | "nav:jersey"
+  | "nav:xplicit-cup"
+  | "nav:music"
+  | "nav:reclutamiento"
+  | "nav:redes"
+  | "jersey:specs"
+  | "jersey:showcase"
+  | "jersey:tiktok"
+  | "about:vision"
+  | "about:objetivo";
 
 export const EXPLORE_IDS: ExploreId[] = [
   "member:soul-maverick-z",
@@ -39,6 +53,20 @@ export const EXPLORE_IDS: ExploreId[] = [
   "social:facebook",
   "social:x",
   "social:discord",
+  "nav:about",
+  "nav:roster",
+  "nav:videos",
+  "nav:wallpapers",
+  "nav:jersey",
+  "nav:xplicit-cup",
+  "nav:music",
+  "nav:reclutamiento",
+  "nav:redes",
+  "jersey:specs",
+  "jersey:showcase",
+  "jersey:tiktok",
+  "about:vision",
+  "about:objetivo",
 ];
 
 const POINTS_PER = 10;
