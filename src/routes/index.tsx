@@ -702,6 +702,7 @@ function IndexContent() {
 
       {/* JERSEY */}
       <section id="jersey" className="relative py-10 md:py-16 border-t border-border overflow-hidden">
+        <div className="absolute top-3 right-3 z-30"><EasterEgg id="jersey-code" label="Código del jersey oculto" size="xs" /></div>
 
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="absolute inset-x-0 top-0 h-px bg-flame" />
@@ -856,6 +857,7 @@ function IndexContent() {
 
       {/* MUSIC — SPOTIFY */}
       <section id="music" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
+        <div className="absolute bottom-3 left-3 z-30"><EasterEgg id="soul-anthem" label="Himno Soul oculto" size="xs" /></div>
         <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-10 blur-[160px]" />
         <div className="absolute -bottom-40 left-0 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-7xl px-6">
@@ -1095,6 +1097,7 @@ function IndexContent() {
 
       {/* RECLUTAMIENTO */}
       <section id="reclutamiento" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
+        <div className="absolute top-3 left-3 z-30"><EasterEgg id="recruitment-key" label="Llave de reclutamiento oculta" size="xs" /></div>
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">

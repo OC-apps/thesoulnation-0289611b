@@ -5,16 +5,17 @@ type Props = {
   id: EasterEggId;
   className?: string;
   label?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 };
 
 const SIZE: Record<NonNullable<Props["size"]>, string> = {
-  sm: "h-7 w-7",
-  md: "h-9 w-9",
-  lg: "h-11 w-11",
+  xs: "h-5 w-5",
+  sm: "h-6 w-6",
+  md: "h-8 w-8",
+  lg: "h-10 w-10",
 };
 
-export function EasterEgg({ id, className = "", label, size = "sm" }: Props) {
+export function EasterEgg({ id, className = "", label, size = "xs" }: Props) {
   const { discover, isFound } = useEasterEggs();
   const found = isFound(id);
 
@@ -26,7 +27,7 @@ export function EasterEgg({ id, className = "", label, size = "sm" }: Props) {
         e.stopPropagation();
         discover(id);
       }}
-      className={`group relative inline-flex items-center justify-center rounded-full border border-flame/25 bg-background/50 opacity-55 backdrop-blur-sm transition-all duration-300 hover:opacity-100 hover:scale-110 hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_18px_var(--flame-glow)] focus:outline-none focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-flame ${SIZE[size]} ${found ? "border-flame/60 opacity-80" : ""} ${className}`}
+      className={`group relative inline-flex items-center justify-center rounded-full border border-flame/15 bg-background/30 opacity-30 backdrop-blur-sm transition-all duration-300 hover:opacity-100 hover:scale-125 hover:border-flame hover:bg-flame/10 hover:shadow-[0_0_18px_var(--flame-glow)] focus:outline-none focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-flame ${SIZE[size]} ${found ? "border-flame/60 opacity-80" : ""} ${className}`}
     >
       <img
         src={eggLogo}

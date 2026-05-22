@@ -1,6 +1,16 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
-export type EasterEggId = "xplicit-legacy" | "soul-flame" | "og-member" | "maverick-signal" | "hall-of-champions";
+export type EasterEggId =
+  | "xplicit-legacy"
+  | "xplicit-broadcast"
+  | "xplicit-champion"
+  | "soul-flame"
+  | "og-member"
+  | "maverick-signal"
+  | "hall-of-champions"
+  | "jersey-code"
+  | "soul-anthem"
+  | "recruitment-key";
 
 export type EasterEggConfig = {
   id: EasterEggId;
@@ -9,19 +19,10 @@ export type EasterEggConfig = {
   xp: number;
   badge: string;
   seccion: string;
-  icono: string; // emoji or short symbol
+  icono: string;
 };
 
 export const EASTER_EGGS: EasterEggConfig[] = [
-  {
-    id: "xplicit-legacy",
-    nombre: "Xplicit Legacy",
-    mensaje: "Has encontrado el legado Xplicit Cup. +50 XP",
-    xp: 50,
-    badge: "Xplicit Legacy",
-    seccion: "Xplicit Cup",
-    icono: "🏆",
-  },
   {
     id: "soul-flame",
     nombre: "Soul Flame Hunter",
@@ -46,7 +47,7 @@ export const EASTER_EGGS: EasterEggConfig[] = [
     mensaje: "Señal de Maverick detectada. +100 XP",
     xp: 100,
     badge: "Maverick Signal",
-    seccion: "Líderes",
+    seccion: "Roster",
     icono: "📡",
   },
   {
@@ -55,8 +56,62 @@ export const EASTER_EGGS: EasterEggConfig[] = [
     mensaje: "Has encontrado el Salón de Campeones. +50 XP",
     xp: 50,
     badge: "Champion Hunter",
-    seccion: "Campeones",
+    seccion: "Videos",
     icono: "👑",
+  },
+  {
+    id: "jersey-code",
+    nombre: "Jersey Code",
+    mensaje: "Desbloqueaste el código del jersey oficial. +60 XP",
+    xp: 60,
+    badge: "Jersey Code",
+    seccion: "Jersey",
+    icono: "🎽",
+  },
+  {
+    id: "soul-anthem",
+    nombre: "Soul Anthem",
+    mensaje: "Escuchaste el himno Soul oculto. +40 XP",
+    xp: 40,
+    badge: "Soul Anthem",
+    seccion: "Música",
+    icono: "🎧",
+  },
+  {
+    id: "recruitment-key",
+    nombre: "Recruit Key",
+    mensaje: "Encontraste la llave de reclutamiento. +55 XP",
+    xp: 55,
+    badge: "Recruit Key",
+    seccion: "Reclutamiento",
+    icono: "🗝️",
+  },
+  {
+    id: "xplicit-legacy",
+    nombre: "Xplicit Legacy",
+    mensaje: "Has encontrado el legado Xplicit Cup. +50 XP",
+    xp: 50,
+    badge: "Xplicit Legacy",
+    seccion: "Xplicit Cup",
+    icono: "🏆",
+  },
+  {
+    id: "xplicit-broadcast",
+    nombre: "Broadcast Master",
+    mensaje: "Sintonizaste el broadcast original. +65 XP",
+    xp: 65,
+    badge: "Broadcast Master",
+    seccion: "Xplicit Cup",
+    icono: "🎙️",
+  },
+  {
+    id: "xplicit-champion",
+    nombre: "Cup Champion",
+    mensaje: "Coronaste al campeón oculto. +80 XP",
+    xp: 80,
+    badge: "Cup Champion",
+    seccion: "Xplicit Cup",
+    icono: "🥇",
   },
 ];
 
