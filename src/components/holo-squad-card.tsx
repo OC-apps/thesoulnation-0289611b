@@ -222,7 +222,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
         </div>
 
         {/* Bottom HUD strip */}
-        <div className="relative border-t border-flame/20 bg-background/40 px-4 py-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.3em] text-flame/70">
+        <div className="relative border-t border-sky-400/20 bg-background/40 px-4 py-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.3em]" style={{ color: "oklch(0.75 0.18 250 / 0.75)" }}>
           <span>◤ {title}</span>
           <span className="flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
