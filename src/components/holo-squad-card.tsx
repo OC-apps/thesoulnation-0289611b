@@ -112,7 +112,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
         <div
           className="absolute inset-0 pointer-events-none mix-blend-screen"
           style={{
-            background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.65 0.24 255 / 0.35), transparent 60%)`,
+            background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.70 0.28 45 / 0.35), transparent 60%)`,
           }}
         />
 
