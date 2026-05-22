@@ -141,6 +141,33 @@ export function XplicitCup() {
 
       <style>{`
         @keyframes xc-wave { 0%,100% { transform: scaleY(0.4);} 50% { transform: scaleY(1);} }
+        .trophy-3d {
+          position: relative;
+          width: 48px;
+          height: 48px;
+          transform-style: preserve-3d;
+          animation: trophy-spin 5s linear infinite, trophy-float 3s ease-in-out infinite;
+        }
+        .trophy-face {
+          position: absolute;
+          inset: 0;
+          backface-visibility: hidden;
+        }
+        .trophy-back { transform: rotateY(180deg); }
+        .trophy-shine {
+          position: absolute;
+          inset: -20%;
+          border-radius: 50%;
+          background: radial-gradient(circle, oklch(0.95 0.18 80 / 0.45), transparent 65%);
+          filter: blur(8px);
+          pointer-events: none;
+          animation: trophy-pulse 2.4s ease-in-out infinite;
+        }
+        @keyframes trophy-spin { from { transform: rotateY(0deg);} to { transform: rotateY(360deg);} }
+        @keyframes trophy-float { 0%,100% { translate: 0 0;} 50% { translate: 0 -4px;} }
+        @keyframes trophy-pulse { 0%,100% { opacity: 0.4;} 50% { opacity: 0.9;} }
+        .group:hover .trophy-3d { animation-duration: 1.6s, 3s; }
+
       `}</style>
     </section>
   );
