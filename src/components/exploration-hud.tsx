@@ -81,19 +81,19 @@ export function ExplorationHUD() {
     e.preventDefault();
   };
 
-  // Default position: bottom-center
+  // Default position: bottom-center aligned with side-nav row
   const style: React.CSSProperties = pos
     ? { left: pos.x, top: pos.y, right: "auto", bottom: "auto" }
-    : { left: "50%", bottom: "0.5rem", transform: "translateX(-50%)" };
+    : { left: "50%", bottom: "0.75rem", transform: "translateX(-50%)" };
 
   return (
     <div
       ref={hudRef}
-      className="fixed z-[90] w-[min(440px,calc(100vw-1rem))]"
+      className="fixed z-[80] w-[min(220px,calc(100vw-10rem))] sm:w-[min(440px,calc(100vw-1rem))]"
       style={style}
     >
       <div
-        className={`pointer-events-auto relative overflow-hidden rounded-full border border-flame/50 bg-background/85 backdrop-blur-xl px-2 py-1.5 shadow-[0_0_24px_var(--flame-glow)] ${
+        className={`pointer-events-auto relative overflow-hidden rounded-full border border-flame/50 bg-background/85 backdrop-blur-xl px-2 py-1 sm:py-1.5 shadow-[0_0_24px_var(--flame-glow)] ${
           dragging ? "cursor-grabbing select-none ring-2 ring-flame" : "cursor-grab"
         }`}
         onPointerDown={startDrag}
@@ -106,24 +106,23 @@ export function ExplorationHUD() {
               "repeating-linear-gradient(45deg, var(--flame) 0 1px, transparent 1px 10px)",
           }}
         />
-        <div className="relative flex items-center gap-2">
-          {/* Drag handle */}
+        <div className="relative flex items-center gap-1.5 sm:gap-2">
           <span
             aria-hidden="true"
-            className="flex flex-col items-center justify-center gap-[2px] px-1 text-flame/70"
+            className="hidden sm:flex flex-col items-center justify-center gap-[2px] px-1 text-flame/70"
           >
             <span className="block h-[2px] w-3 rounded-full bg-current" />
             <span className="block h-[2px] w-3 rounded-full bg-current" />
             <span className="block h-[2px] w-3 rounded-full bg-current" />
           </span>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-flame" />
             </span>
-            <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-flame whitespace-nowrap">
-              Lv {level.index + 1}/{LEVELS.length}
+            <span className="text-[8px] sm:text-[9px] font-mono uppercase tracking-[0.2em] text-flame whitespace-nowrap">
+              Lv{level.index + 1}<span className="hidden sm:inline">/{LEVELS.length}</span>
             </span>
           </div>
 
@@ -131,8 +130,8 @@ export function ExplorationHUD() {
             {level.name}
           </div>
 
-          <div className="flex-1 min-w-[60px]">
-            <div className="h-1.5 overflow-hidden rounded-full border border-flame/30 bg-background/60">
+          <div className="flex-1 min-w-[30px]">
+            <div className="h-1 sm:h-1.5 overflow-hidden rounded-full border border-flame/30 bg-background/60">
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{
@@ -146,11 +145,11 @@ export function ExplorationHUD() {
             </div>
           </div>
 
-          <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-flame whitespace-nowrap">
-            {points}/{totalPoints} XP
+          <span className="text-[8px] sm:text-[9px] font-mono uppercase tracking-[0.2em] text-flame whitespace-nowrap">
+            {found.length}/{total}
           </span>
           <span className="hidden sm:inline text-[9px] font-mono uppercase tracking-[0.2em] text-muted-foreground whitespace-nowrap">
-            {found.length}/{total}
+            {points}/{totalPoints} XP
           </span>
         </div>
 
