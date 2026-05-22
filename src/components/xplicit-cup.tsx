@@ -180,17 +180,17 @@ function PanelContent({ which }: { which: PanelKey }) {
       <div>
         <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Historia</div>
         <h3 className="font-display text-3xl md:text-5xl font-black leading-tight">
-          El torneo que <span className="italic text-flame">marcó historia</span>
+          Xplicit Cup: el torneo que <span className="italic text-flame">marcó historia</span>
         </h3>
         <div className="mt-6 space-y-4 text-foreground/85 leading-relaxed">
           <p>
             El <span className="text-flame font-bold">10 de febrero de 2013</span>, The Soul Nation hizo historia dentro de la comunidad competitiva de Gears of War de habla hispana con la creación de <span className="text-foreground font-bold">Xplicit Cup</span>, uno de los primeros torneos transmitidos completamente <span className="text-flame">en vivo por YouTube</span> para la escena latina.
           </p>
           <p>
-            La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana, incluyendo nombres como <span className="font-bold">{teams.join(", ")}</span>.
+            La primera edición reunió a algunos de los equipos más fuertes y respetados de la comunidad competitiva mexicana de Gears of War, incluyendo nombres como <span className="font-bold">Essence, Logic, Guns, HzE, Da Best, Resurrection K</span>, entre otros. La relevancia del torneo no solo estuvo en la competencia, sino en el nivel de los jugadores, la intensidad de los enfrentamientos y la participación de equipos que representaban lo más alto del panorama competitivo de aquella época.
           </p>
           <p>
-            En esa primera edición, <span className="text-flame font-bold">The Soul Nation se coronó campeón</span>, consolidando su presencia como una organización capaz de competir, producir y liderar dentro de la comunidad.
+            En esa primera edición, <span className="text-flame font-bold">The Soul Nation se coronó campeón</span>, dejando una marca importante en la historia del clan y consolidando su presencia como una organización capaz de competir, producir y liderar dentro de la comunidad.
           </p>
         </div>
       </div>
@@ -226,7 +226,10 @@ function PanelContent({ which }: { which: PanelKey }) {
     return (
       <div>
         <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Broadcast</div>
-        <h3 className="font-display text-3xl md:text-5xl font-black mb-6">La voz del torneo</h3>
+        <h3 className="font-display text-3xl md:text-5xl font-black mb-4">La voz del torneo</h3>
+        <p className="text-foreground/85 leading-relaxed mb-5">
+          La transmisión contó con <span className="text-flame font-bold">Soul Maverick</span> como host principal, acompañado por invitados al casteo como <span className="font-bold">Betrucci, EMK Krauser, xCJVx Howard</span>, entre otros. Esto convirtió a Xplicit Cup en una experiencia diferente para la época: no era solo un torneo, era un <span className="text-foreground font-bold">evento competitivo con identidad, narrativa, producción y comunidad</span>.
+        </p>
         <div className="relative rounded-2xl border border-flame/30 bg-background/60 p-5 overflow-hidden mb-5">
           <span className="absolute top-3 left-3 inline-flex items-center gap-2 px-2 py-1 rounded bg-red-500/20 border border-red-500/50 text-red-400 text-[9px] font-mono uppercase tracking-[0.3em]">
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" /> LIVE
@@ -255,7 +258,9 @@ function PanelContent({ which }: { which: PanelKey }) {
       <div>
         <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legacy</div>
         <h3 className="font-display text-3xl md:text-5xl font-black mb-2">Xplicit <span className="italic text-flame">Legends</span></h3>
-        <p className="text-foreground/70 mb-6">Algunos jugadores que participaron y luego se consolidaron como figuras importantes de la escena competitiva.</p>
+        <p className="text-foreground/80 mb-6 leading-relaxed">
+          Por sus torneos pasaron jugadores que con el tiempo se consolidaron como figuras importantes de la escena, incluyendo nombres como <span className="text-foreground font-bold">Identives, Sleafer, Cristalize, Crack y Summuns</span>. Además, equipos como <span className="text-foreground font-bold">The Soul Nation, Resurrection K, Guns, Fireball y Logic</span> formaron parte de la historia de campeones de la Xplicit Cup.
+        </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {proPlayers.map((p) => (
             <div key={p} className="group relative rounded-xl border border-flame/30 bg-background/70 p-4 overflow-hidden hover:scale-[1.03] transition-transform">
@@ -311,10 +316,10 @@ function PanelContent({ which }: { which: PanelKey }) {
   return (
     <div>
       <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Legado</div>
-      <h3 className="font-display text-3xl md:text-5xl font-black mb-4"><span className="block">No fue solo un torneo.</span><span className="block">Fue un <span className="italic text-flame">inicio</span>.</span></h3>
+      <h3 className="font-display text-3xl md:text-5xl font-black mb-4"><span className="block">Xplicit Cup no fue solo un torneo.</span><span className="block">Fue un <span className="italic text-flame">inicio</span>.</span></h3>
       <div className="space-y-4 text-foreground/85 leading-relaxed">
         <p>
-          Más allá de los resultados, <span className="text-foreground font-bold">Xplicit Cup</span> se convirtió en un referente por su organización, calidad gráfica, transmisión en vivo y nivel competitivo. Fue una muestra temprana de lo que The Soul Nation siempre ha buscado construir: <span className="text-flame">comunidad, espectáculo, competencia e identidad visual</span> fuerte alrededor de Gears of War.
+          Más allá de los resultados, <span className="text-foreground font-bold">Xplicit Cup</span> se convirtió en un referente por su organización, calidad gráfica, transmisión en vivo y nivel competitivo. Fue una muestra temprana de lo que The Soul Nation siempre ha buscado construir: <span className="text-flame">comunidad, espectáculo, competencia y una identidad visual fuerte</span> alrededor de Gears of War.
         </p>
         <p>
           Xplicit Cup fue el inicio de una etapa donde la comunidad competitiva latina comenzó a verse como una escena con <span className="text-foreground font-bold">voz, nivel y producción propia</span>.
