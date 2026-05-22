@@ -60,7 +60,7 @@ export function EffectsLayer() {
 
     return () => {
       window.removeEventListener("pointermove", onMove);
-      cursor.remove();
+      cursor?.remove();
       tiltHandlers.forEach((fn, el) => el.removeEventListener("pointermove", fn));
       leaveHandlers.forEach((fn, el) => el.removeEventListener("pointerleave", fn));
       io.disconnect();
