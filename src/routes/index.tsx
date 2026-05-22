@@ -638,8 +638,16 @@ function IndexContent() {
             members={CREW}
             accentSeed={3.4}
           />
+          <div className="mt-8 flex justify-center">
+            <EasterEgg id="maverick-signal" label="Señal Maverick oculta" size="sm" />
+          </div>
         </div>
       </section>
+
+
+
+
+
 
 
 
