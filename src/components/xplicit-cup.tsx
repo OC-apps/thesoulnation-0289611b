@@ -53,10 +53,10 @@ export function XplicitCup() {
   return (
     <section
       id="xplicit-cup"
-      className="relative py-20 md:py-24 overflow-hidden scroll-mt-24"
+      className="relative py-6 md:py-8 overflow-hidden scroll-mt-24"
     >
       {/* LIVE marquee */}
-      <div className="relative overflow-hidden border-y border-flame/30 bg-background/60 backdrop-blur py-2 mb-12">
+      <div className="relative overflow-hidden border-y border-flame/30 bg-background/60 backdrop-blur py-2 mb-6">
         <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex gap-10 items-center shrink-0">
@@ -79,7 +79,7 @@ export function XplicitCup() {
             transition: "opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.35em] text-flame font-mono mb-6">
+          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.35em] text-flame font-mono mb-3">
             <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
             Archivo histórico · 2013
           </div>
@@ -87,10 +87,10 @@ export function XplicitCup() {
             <div className="absolute inset-0 -m-8 rounded-full blur-[80px] opacity-50 pointer-events-none" style={{ background: "radial-gradient(circle, var(--flame-glow), transparent 70%)" }} />
             <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-[125%] max-w-none md:w-full md:max-w-2xl h-auto object-contain drop-shadow-[0_0_50px_var(--flame-glow)]" />
           </div>
-          <p className="mt-6 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
+          <p className="mt-3 text-base md:text-lg text-foreground/80 leading-relaxed max-w-2xl">
             El torneo que marcó historia en la escena competitiva latina de <span className="text-foreground font-bold">Gears of War</span>.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3 justify-center">
+          <div className="mt-3 flex flex-wrap gap-3 justify-center">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-xs font-mono uppercase tracking-[0.25em] font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" /> 10 · Febrero · 2013
             </span>
@@ -104,7 +104,7 @@ export function XplicitCup() {
         </div>
 
         {/* STATS compactos */}
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
           {stats.map((s) => (
             <div key={s.k} className="rounded-xl border border-flame/20 bg-background/60 backdrop-blur p-3 md:p-4">
               <div className="font-display text-2xl md:text-3xl font-black text-flame" style={{ textShadow: "0 0 20px var(--flame-glow)" }}>{s.k}</div>
@@ -114,18 +114,18 @@ export function XplicitCup() {
         </div>
 
         {/* TODOS LOS CAPÍTULOS — abiertos, sin botones */}
-        <div className="mt-16 space-y-10">
+        <div className="mt-8 space-y-6">
           {panels.map((p, i) => (
             <article
               key={p.key}
               id={p.key}
-              className="relative rounded-2xl border border-flame/30 bg-background/40 backdrop-blur p-6 md:p-10 overflow-hidden scroll-mt-24"
+              className="relative rounded-2xl border border-flame/30 bg-background/40 backdrop-blur p-5 md:p-7 overflow-hidden scroll-mt-24"
             >
               <span className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-flame/70" />
               <span className="absolute top-3 right-3 w-6 h-6 border-r-2 border-t-2 border-flame/70" />
               <span className="absolute bottom-3 left-3 w-6 h-6 border-l-2 border-b-2 border-flame/70" />
               <span className="absolute bottom-3 right-3 w-6 h-6 border-r-2 border-b-2 border-flame/70" />
-              <div className="relative mb-6 flex items-center gap-4">
+              <div className="relative mb-4 flex items-center gap-4">
                 <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-flame/80">CH · 0{i + 1}</span>
                 <span className="h-px flex-1 bg-gradient-to-r from-flame/50 to-transparent" />
                 <span className="text-xl opacity-80">{p.icon}</span>
