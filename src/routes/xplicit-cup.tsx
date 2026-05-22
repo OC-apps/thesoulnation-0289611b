@@ -64,7 +64,7 @@ function XplicitCupPage() {
         </div>
       </header>
 
-      <main>
+      <main className="relative z-10">
         <XplicitCup />
       </main>
     </div>
