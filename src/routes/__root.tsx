@@ -11,6 +11,9 @@ import {
 import appCss from "../styles.css?url";
 import { EffectsLayer } from "@/components/effects-layer";
 import { SideNav } from "@/components/side-nav";
+import { EasterEggProvider } from "@/lib/easter-eggs";
+import { EasterEggNotification } from "@/components/easter-egg-notification";
+import { ExplorerPanel } from "@/components/explorer-panel";
 
 function NotFoundComponent() {
   return (
