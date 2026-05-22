@@ -193,30 +193,8 @@ export function XplicitCup() {
           </aside>
         </div>
 
-        {/* EQUIPOS */}
-        <div className="mt-20">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-2">◢ Roster · Edición 01</div>
-          <h3 className="font-display text-3xl md:text-5xl font-bold mb-6">Equipos participantes</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-            {teams.map((t, i) => (
-              <div
-                key={t}
-                className="group relative rounded-xl border border-border bg-background/60 backdrop-blur p-4 overflow-hidden hover:border-flame transition cursor-default"
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                  style={{ background: "linear-gradient(115deg, transparent 40%, oklch(0.70 0.24 45 / 0.18) 50%, transparent 60%)" }} />
-                <div className="absolute -inset-px rounded-xl opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                  style={{ boxShadow: "0 0 30px -5px var(--flame-glow), inset 0 0 20px oklch(0.70 0.24 45 / 0.1)" }} />
-                <div className="relative flex items-center justify-between">
-                  <span className="font-mono text-[10px] text-flame/70">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-                <div className="relative mt-2 font-display font-bold text-base md:text-lg tracking-wide">{t}</div>
-                <div className="relative mt-1 text-[9px] uppercase tracking-[0.25em] text-foreground/50 font-mono">Gears of War · 2013</div>
-              </div>
-            ))}
-          </div>
-        </div>
+
+
 
         {/* CASTERS */}
         <div className="mt-20">
