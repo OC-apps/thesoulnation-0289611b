@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { EasterEgg } from "@/components/easter-egg";
 import xplicitLogo from "@/assets/xplicit-cup-header.jpeg";
 import xplicitTrophy from "@/assets/xplicit-cup-trophy.png";
 
@@ -167,6 +168,9 @@ export function XplicitCup() {
         }
 
       `}</style>
+      <div className="absolute bottom-4 right-4 z-30">
+        <EasterEgg id="xplicit-legacy" label="Legado Xplicit oculto" size="sm" />
+      </div>
     </section>
   );
 }

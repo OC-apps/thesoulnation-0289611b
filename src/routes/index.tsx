@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { EasterEgg } from "@/components/easter-egg";
 import { useRef, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
@@ -429,7 +430,11 @@ function IndexContent() {
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
         <Hero3D />
-
+        <div className="pointer-events-none absolute bottom-4 right-4 z-20">
+          <div className="pointer-events-auto">
+            <EasterEgg id="soul-flame" label="Llama Soul oculta" size="sm" />
+          </div>
+        </div>
       </section>
 
       {/* ABOUT — integrado: foto + texto + tab animado (Visión / Objetivo) */}
@@ -564,6 +569,9 @@ function IndexContent() {
             </div>
           </div>
         </div>
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 mt-6 flex justify-end">
+          <EasterEgg id="og-member" label="Marca OG oculta" size="sm" />
+        </div>
       </section>
 
 
@@ -630,8 +638,16 @@ function IndexContent() {
             members={CREW}
             accentSeed={3.4}
           />
+          <div className="mt-8 flex justify-center">
+            <EasterEgg id="maverick-signal" label="Señal Maverick oculta" size="sm" />
+          </div>
         </div>
       </section>
+
+
+
+
+
 
 
 
@@ -673,6 +689,9 @@ function IndexContent() {
             {VIDEOS.map((v, i) => (
               <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
+          </div>
+          <div className="mt-10 flex justify-end">
+            <EasterEgg id="hall-of-champions" label="Salón de Campeones oculto" size="sm" />
           </div>
         </div>
       </section>
