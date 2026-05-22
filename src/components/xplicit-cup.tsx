@@ -55,19 +55,6 @@ export function XplicitCup() {
       id="xplicit-cup"
       className="relative py-6 md:py-8 overflow-hidden scroll-mt-24"
     >
-      {/* LIVE marquee */}
-      <div className="relative overflow-hidden border-y border-flame/30 bg-background/60 backdrop-blur py-2 mb-6">
-        <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex gap-10 items-center shrink-0">
-              {["Gears of War", "The Soul Nation", "El primer torneo en vivo", "10.02.2013", "★"].map((t, j) => (
-                <span key={j} className={j % 2 === 0 ? "text-flame" : "text-foreground/70"}>{t}</span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
         {/* HERO */}
         <div
@@ -79,21 +66,18 @@ export function XplicitCup() {
             transition: "opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
           }}
         >
-          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.35em] text-flame font-mono mb-3">
-            <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
-            Archivo histórico · 2013
-          </div>
-          <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[260px] md:h-[420px]">
+          <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[280px] sm:h-[340px] md:h-[440px] lg:h-[500px]">
             <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" style={{ filter: "saturate(1.6) contrast(1.15) brightness(1.05)" }} />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent sm:via-background/50" />
             <div className="absolute inset-0 flex items-center">
-              <div className="mx-auto max-w-7xl w-full px-5 sm:px-6">
-                <h1 className="font-display font-black text-left text-3xl md:text-5xl lg:text-6xl leading-[1.05] max-w-xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+              <div className="mx-auto max-w-7xl w-full px-6 sm:px-10 md:px-14 lg:px-20">
+                <h1 className="font-display font-black text-left text-2xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] max-w-[18ch] sm:max-w-xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)]">
                   El primer torneo de <span className="italic text-flame">Gears of War</span> transmitido <span className="text-flame">en vivo</span> por YouTube
                 </h1>
               </div>
             </div>
           </div>
+
 
 
 
