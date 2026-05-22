@@ -87,13 +87,13 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
       <div
         className="relative rounded-[1.75rem] overflow-hidden border-2 transition-transform duration-200 will-change-transform"
         style={{
-          borderColor: "oklch(0.65 0.18 250 / 0.55)",
+          borderColor: "var(--flame)",
           transform: `rotateX(${rx}deg) rotateY(${ry}deg) ${pressed ? "scale(0.985)" : "scale(1)"}`,
           transformStyle: "preserve-3d",
           background:
             "linear-gradient(135deg, oklch(0.20 0.16 258 / 0.94), oklch(0.07 0.10 258 / 0.94))",
           boxShadow:
-            "0 30px 80px -25px oklch(0.55 0.24 255 / 0.55), inset 0 0 40px oklch(0 0 0 / 0.6)",
+            "0 30px 80px -25px var(--flame-glow), inset 0 0 40px oklch(0 0 0 / 0.6)",
         }}
       >
         {/* Holographic grid */}
