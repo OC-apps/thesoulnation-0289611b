@@ -213,7 +213,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
                   }}
                 >
                   <span className="relative z-10 block truncate">{m}</span>
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-sky-400/30 to-transparent transition-transform duration-700 group-hover/chip:translate-x-full" />
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-flame/30 to-transparent transition-transform duration-700 group-hover/chip:translate-x-full" />
                 </li>
               ))}
             </ul>
