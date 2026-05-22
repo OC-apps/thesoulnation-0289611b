@@ -140,6 +140,7 @@ function RootComponent() {
         <Outlet />
         <EasterEggNotification />
         <ExplorerPanel />
+        <EasterEggCompletion />
       </EasterEggProvider>
     </QueryClientProvider>
   );
