@@ -70,6 +70,13 @@ export function SideNav() {
                 {section.label}
               </button>
             ))}
+            <Link
+              to="/xplicit-cup"
+              onClick={() => setOpen(false)}
+              className="min-h-9 shrink-0 rounded-full border border-flame bg-card/60 px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.16em] text-flame transition active:scale-95 hover:bg-flame hover:text-primary-foreground flex items-center"
+            >
+              Xplicit Cup
+            </Link>
           </div>
         </div>
 
