@@ -2,14 +2,19 @@ import { useEffect } from "react";
 
 export function EffectsLayer() {
   useEffect(() => {
-    // Cursor flame follower
-    const cursor = document.createElement("div");
-    cursor.className = "soul-cursor";
-    document.body.appendChild(cursor);
+    // Cursor flame follower — only on desktop (fine pointer + hover capable + >=1024px)
+    const desktopMQ = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 1024px)");
+    const isDesktop = desktopMQ.matches;
+    let cursor: HTMLDivElement | null = null;
     const onMove = (e: MouseEvent) => {
-      cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      if (cursor) cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     };
-    window.addEventListener("pointermove", onMove);
+    if (isDesktop) {
+      cursor = document.createElement("div");
+      cursor.className = "soul-cursor";
+      document.body.appendChild(cursor);
+      window.addEventListener("pointermove", onMove);
+    }
 
     // 3D tilt on .tilt-card following mouse
     const tiltHandlers = new Map<HTMLElement, (e: PointerEvent) => void>();
@@ -55,7 +60,7 @@ export function EffectsLayer() {
 
     return () => {
       window.removeEventListener("pointermove", onMove);
-      cursor.remove();
+      cursor?.remove();
       tiltHandlers.forEach((fn, el) => el.removeEventListener("pointermove", fn));
       leaveHandlers.forEach((fn, el) => el.removeEventListener("pointerleave", fn));
       io.disconnect();
