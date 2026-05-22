@@ -93,6 +93,9 @@ type Ctx = {
   progressInLevel: number;
   complete: boolean;
   reset: () => void;
+  panelOpen: boolean;
+  togglePanel: () => void;
+  setPanelOpen: (open: boolean) => void;
 };
 
 const ExplorationCtx = createContext<Ctx | null>(null);
@@ -135,6 +138,8 @@ function chime() {
 
 export function ExplorationProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>({ found: [] });
+  const [panelOpen, setPanelOpen] = useState(false);
+
 
   useEffect(() => {
     setState(load());
@@ -207,8 +212,11 @@ export function ExplorationProvider({ children }: { children: ReactNode }) {
       progressInLevel,
       complete: state.found.length >= total,
       reset,
+      panelOpen,
+      togglePanel: () => setPanelOpen((v) => !v),
+      setPanelOpen,
     };
-  }, [state, reset]);
+  }, [state, reset, panelOpen]);
 
   return (
     <ExplorationCtx.Provider value={value}>{children}</ExplorationCtx.Provider>

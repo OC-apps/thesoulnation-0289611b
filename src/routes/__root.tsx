@@ -10,13 +10,13 @@ import {
 
 import appCss from "../styles.css?url";
 import { EffectsLayer } from "@/components/effects-layer";
-import { SideNav } from "@/components/side-nav";
+import { BottomBar } from "@/components/bottom-bar";
 import { EasterEggProvider } from "@/lib/easter-eggs";
 import { EasterEggNotification } from "@/components/easter-egg-notification";
 import { ExplorerPanel } from "@/components/explorer-panel";
 import { EasterEggCompletion } from "@/components/easter-egg-completion";
 import { ExplorationProvider } from "@/lib/exploration";
-import { ExplorationHUD } from "@/components/exploration-hud";
+
 import { ExplorationMax } from "@/components/exploration-max";
 import { ExplorationPanel } from "@/components/exploration-panel";
 
@@ -141,13 +141,12 @@ function RootComponent() {
       <EasterEggProvider>
         <ExplorationProvider>
           <EffectsLayer />
-          <SideNav />
-          <ExplorationHUD />
+          <BottomBar />
           <Outlet />
           <EasterEggNotification />
-          <ExplorerPanel />
+          <ExplorerPanel hideButton />
           <EasterEggCompletion />
-          <ExplorationPanel />
+          <ExplorationPanel hideButton />
           <ExplorationMax />
         </ExplorationProvider>
       </EasterEggProvider>
