@@ -85,7 +85,16 @@ export function XplicitCup() {
           </div>
           <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[260px] md:h-[420px]">
             <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" style={{ filter: "saturate(1.6) contrast(1.15) brightness(1.05)" }} />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-transparent" />
+            <div className="absolute inset-0 flex items-center">
+              <div className="mx-auto max-w-7xl w-full px-5 sm:px-6">
+                <h1 className="font-display font-black text-left text-3xl md:text-5xl lg:text-6xl leading-[1.05] max-w-xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+                  El primer torneo de <span className="italic text-flame">Gears of War</span> transmitido <span className="text-flame">en vivo</span> por YouTube
+                </h1>
+              </div>
+            </div>
           </div>
+
 
 
         </div>
