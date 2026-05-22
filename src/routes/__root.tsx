@@ -133,9 +133,13 @@ function RootComponent() {
             "radial-gradient(50% 45% at 85% 10%, rgba(255,130,40,0.22), transparent 70%), radial-gradient(45% 40% at 8% 90%, rgba(255,150,60,0.18), transparent 70%), radial-gradient(80% 60% at 50% 50%, rgba(255,255,255,0.04), transparent 70%)",
         }}
       />
-      <EffectsLayer />
-      <SideNav />
-      <Outlet />
+      <EasterEggProvider>
+        <EffectsLayer />
+        <SideNav />
+        <Outlet />
+        <EasterEggNotification />
+        <ExplorerPanel />
+      </EasterEggProvider>
     </QueryClientProvider>
   );
 }
