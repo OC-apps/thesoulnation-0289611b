@@ -569,6 +569,9 @@ function IndexContent() {
             </div>
           </div>
         </div>
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 mt-6 flex justify-end">
+          <EasterEgg id="og-member" label="Marca OG oculta" size="sm" />
+        </div>
       </section>
 
 
