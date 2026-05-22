@@ -291,12 +291,10 @@ function PanelContent({ which }: { which: PanelKey }) {
         <div className="grid md:grid-cols-[1fr_1.1fr] gap-6 md:gap-10 items-center">
           {/* Trofeo hero */}
           <div className="relative flex justify-center md:justify-end">
-            <div className="absolute inset-0 -m-8 rounded-full blur-[90px] opacity-70 pointer-events-none" style={{ background: "radial-gradient(circle, oklch(0.78 0.20 70 / 0.55), transparent 60%)" }} />
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-3 rounded-full bg-black/60 blur-md opacity-60" />
             <img
               src={xplicitTrophy}
               alt="Trofeo Xplicit Cup"
-              className="relative w-56 md:w-[22rem] h-auto object-contain trophy-hero"
+              className="relative w-56 md:w-[22rem] h-auto object-contain"
             />
           </div>
 
