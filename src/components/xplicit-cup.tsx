@@ -72,18 +72,8 @@ function Panel3D({ children }: { children: React.ReactNode }) {
 
 export function XplicitCup() {
   const { ref: heroRef, seen: heroSeen } = useReveal<HTMLDivElement>();
-  const [open, setOpen] = useState<PanelKey | null>(null);
+  const [active, setActive] = useState<PanelKey>("historia");
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [open]);
 
   return (
     <section
