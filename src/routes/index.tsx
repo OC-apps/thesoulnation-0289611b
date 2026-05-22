@@ -26,6 +26,7 @@ import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
+import { XplicitCup } from "@/components/xplicit-cup";
 import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -366,6 +367,7 @@ function IndexContent() {
             <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
             <a href="#wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
             <a href="#jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
+            <a href="#xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</a>
             <a href="#music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
             <a href="#reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
             <a href="#redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
@@ -781,6 +783,9 @@ function IndexContent() {
           </div>
         </div>
       </section>
+
+      {/* XPLICIT CUP */}
+      <XplicitCup />
 
 
       {/* MUSIC — SPOTIFY */}
