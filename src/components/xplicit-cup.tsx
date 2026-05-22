@@ -22,7 +22,6 @@ type PanelKey = "historia" | "timeline" | "broadcast" | "legacy" | "hall" | "leg
 
 const panels: { key: PanelKey; label: string; sub: string; icon: string }[] = [
   { key: "historia", label: "Historia", sub: "El origen", icon: "📜" },
-  { key: "timeline", label: "Timeline", sub: "Línea de tiempo", icon: "◐" },
   { key: "broadcast", label: "Broadcast", sub: "La voz del torneo", icon: "🎙" },
   { key: "legacy", label: "Pro Legacy", sub: "Xplicit Legends", icon: "★" },
   { key: "hall", label: "Hall of Fame", sub: "Campeones", icon: "🏆" },
