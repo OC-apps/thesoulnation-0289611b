@@ -138,6 +138,8 @@ function chime() {
 
 export function ExplorationProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>({ found: [] });
+  const [panelOpen, setPanelOpen] = useState(false);
+
 
   useEffect(() => {
     setState(load());
