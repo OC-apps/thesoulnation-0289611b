@@ -5,16 +5,17 @@ type Props = {
   id: EasterEggId;
   className?: string;
   label?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
 };
 
 const SIZE: Record<NonNullable<Props["size"]>, string> = {
-  sm: "h-7 w-7",
-  md: "h-9 w-9",
-  lg: "h-11 w-11",
+  xs: "h-5 w-5",
+  sm: "h-6 w-6",
+  md: "h-8 w-8",
+  lg: "h-10 w-10",
 };
 
-export function EasterEgg({ id, className = "", label, size = "sm" }: Props) {
+export function EasterEgg({ id, className = "", label, size = "xs" }: Props) {
   const { discover, isFound } = useEasterEggs();
   const found = isFound(id);
 
