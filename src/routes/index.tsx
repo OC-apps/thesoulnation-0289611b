@@ -25,6 +25,7 @@ import wpComic from "@/assets/wallpaper-comic.jpg";
 import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
+import { HoloSquadCard } from "@/components/holo-squad-card";
 import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -593,56 +594,41 @@ function IndexContent() {
           <WavesHUD />
 
 
-          {/* KILLERS + LEGENDS — banner + grid de nombres */}
-          <div className="perspective mb-12 space-y-8">
-            {[
-              { logo: soulKillersLogo, title: "THE SOUL KILLERS", subtitle: "Modo Guardian · Gears 5", desc: "Equipo enfocado en grindear el modo Guardian de Gears 5.", members: KILLERS },
-              { logo: soulLegendsLogo, title: "THE SOUL LEGENDS", subtitle: "Montagers · Clips & Highlights", desc: "Jugadores habilidosos y creadores de clips para montajes editados.", members: LEGENDS },
-            ].map((sq) => (
-              <div key={sq.title} id={sq.title.includes("KILLERS") ? "killers" : "legends"} className="tilt-card roster-card rounded-3xl p-10 md:p-14 scroll-mt-24">
-                <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
-                  <div className="md:col-span-5">
-                    <img src={sq.logo} alt={sq.title} className="layer-up h-24 md:h-36 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
-                    <p className="mt-6 text-sm uppercase tracking-widest text-flame">{sq.subtitle}</p>
-                    <p className="mt-3 text-muted-foreground">{sq.desc}</p>
-                  </div>
-                  <div className="md:col-span-7">
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-display font-bold">
-                      {sq.members.map((m) => (
-                        <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-xs sm:text-sm tracking-wide hover:border-flame hover:text-flame transition-colors whitespace-nowrap overflow-hidden">
-                          <RosterName name={m} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* KILLERS + LEGENDS — holographic 3D squad cards */}
+          <div className="mb-12 space-y-8">
+            <HoloSquadCard
+              id="killers"
+              logo={soulKillersLogo}
+              title="THE SOUL KILLERS"
+              subtitle="Modo Guardian · Gears 5"
+              desc="Equipo enfocado en grindear el modo Guardian de Gears 5."
+              members={KILLERS}
+              accentSeed={0}
+            />
+            <HoloSquadCard
+              id="legends"
+              logo={soulLegendsLogo}
+              title="THE SOUL LEGENDS"
+              subtitle="Montagers · Clips & Highlights"
+              desc="Jugadores habilidosos y creadores de clips para montajes editados."
+              members={LEGENDS}
+              accentSeed={1.7}
+            />
           </div>
 
-          {/* CREW — banner + grid de nombres */}
-          <div id="crew" className="perspective scroll-mt-24">
-            <div className="tilt-card roster-card rounded-3xl p-10 md:p-14">
-              <div className="grid md:grid-cols-12 gap-8 items-center relative z-10">
-                <div className="md:col-span-5">
-                  <img src={soulCrewLogo} alt="THE SOUL CREW" className="layer-up h-24 md:h-36 w-auto object-contain drop-shadow-[0_10px_30px_var(--flame-glow)]" />
-                  <p className="mt-6 text-sm uppercase tracking-widest text-flame">Apoyo y familia oficial</p>
-                  <p className="mt-3 text-muted-foreground">Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation.</p>
-                </div>
-                <div className="md:col-span-7">
-                  <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-display font-bold">
-                    {CREW.map((m) => (
-                      <li key={m} className="px-3 py-2 rounded-lg border border-border bg-background/40 backdrop-blur text-xs sm:text-sm tracking-wide hover:border-flame hover:text-flame transition-colors whitespace-nowrap overflow-hidden">
-                        <RosterName name={m} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* CREW — holographic 3D card */}
+          <HoloSquadCard
+            id="crew"
+            logo={soulCrewLogo}
+            title="THE SOUL CREW"
+            subtitle="Apoyo y familia oficial"
+            desc="Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation."
+            members={CREW}
+            accentSeed={3.4}
+          />
         </div>
       </section>
+
 
 
 
