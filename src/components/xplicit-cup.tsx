@@ -83,9 +83,10 @@ export function XplicitCup() {
             <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
             Archivo histórico · 2013
           </div>
-          <div className="relative w-full flex justify-center">
-            <img src={xplicitLogo} alt="Xplicit Cup" className="relative w-full max-w-4xl h-auto object-contain rounded-2xl" />
+          <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden h-[260px] md:h-[420px]">
+            <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" />
           </div>
+
 
         </div>
 
