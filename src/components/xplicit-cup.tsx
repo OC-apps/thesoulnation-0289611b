@@ -255,7 +255,7 @@ export function XplicitCup() {
                     <path d="M17 4h3v2a3 3 0 0 1-3 3M7 4H4v2a3 3 0 0 0 3 3"/>
                   </svg>
                   <div className="mt-3 font-mono text-[9px] uppercase tracking-[0.3em] text-flame/80">Edición {String(i + 1).padStart(2, "0")}</div>
-                  <div className="mt-1 font-display font-bold text-base md:text-lg">{c}</div>
+                  <div className="mt-1 font-display font-bold text-xs sm:text-sm md:text-base whitespace-nowrap">{c}</div>
                 </div>
               </div>
             ))}
