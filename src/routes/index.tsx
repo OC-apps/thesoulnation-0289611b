@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
@@ -367,7 +367,7 @@ function IndexContent() {
             <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
             <a href="#wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
             <a href="#jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
-            <a href="#xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</a>
+            <Link to="/xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</Link>
             <a href="#music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
             <a href="#reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
             <a href="#redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
@@ -784,8 +784,55 @@ function IndexContent() {
         </div>
       </section>
 
-      {/* XPLICIT CUP */}
-      <XplicitCup />
+      {/* XPLICIT CUP — CTA a página dedicada */}
+      <section id="xplicit-cup" className="relative py-16 md:py-24 border-t border-border overflow-hidden scroll-mt-24">
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25" style={{ background: "oklch(0.55 0.24 255)" }} />
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25" style={{ background: "oklch(0.70 0.24 45)" }} />
+        <div className="relative mx-auto max-w-5xl px-5 sm:px-6">
+          <Link
+            to="/xplicit-cup"
+            className="group relative block rounded-3xl border border-flame/40 bg-gradient-to-br from-background/90 via-background/70 to-background/40 backdrop-blur p-8 md:p-12 overflow-hidden shadow-[0_30px_80px_-30px_var(--flame-glow)] hover:border-flame transition"
+          >
+            <span className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-flame" />
+            <span className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-flame" />
+            <span className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-flame" />
+            <span className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-flame" />
+            <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-[80px] opacity-30 pointer-events-none" style={{ background: "var(--flame-glow)" }} />
+            <div className="relative flex flex-col md:flex-row md:items-center gap-8">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.35em] text-flame font-mono mb-4">
+                  <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
+                  Archivo histórico · 2013
+                </div>
+                <h2 className="font-display text-4xl md:text-6xl font-black leading-[0.95]">
+                  Xplicit <span className="italic text-flame">Cup</span>
+                </h2>
+                <p className="mt-4 text-foreground/80 leading-relaxed max-w-xl">
+                  El torneo que marcó historia en la escena competitiva latina de <span className="font-bold text-foreground">Gears of War</span>. Entra al archivo interactivo: historia, broadcast, leyendas y campeones.
+                </p>
+                <span className="mt-6 inline-flex items-center gap-2 bg-flame text-primary-foreground px-5 py-2.5 rounded-full font-bold text-sm shadow-[0_0_60px_-10px_var(--flame-glow)] group-hover:scale-105 transition">
+                  Explorar Xplicit Cup
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 md:w-72 shrink-0">
+                {[
+                  { k: "2013", v: "Debut" },
+                  { k: "LIVE", v: "YouTube" },
+                  { k: "01", v: "Soul Nation" },
+                  { k: "∞", v: "Legado" },
+                ].map((s) => (
+                  <div key={s.k} className="rounded-xl border border-flame/20 bg-background/60 p-3">
+                    <div className="font-display text-2xl font-black text-flame" style={{ textShadow: "0 0 20px var(--flame-glow)" }}>{s.k}</div>
+                    <div className="mt-0.5 text-[10px] uppercase tracking-[0.25em] text-foreground/60 font-mono">{s.v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
 
 
       {/* MUSIC — SPOTIFY */}
