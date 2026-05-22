@@ -89,10 +89,6 @@ export function XplicitCup() {
     <section
       id="xplicit-cup"
       className="relative py-20 md:py-24 border-t border-border overflow-hidden scroll-mt-24"
-      style={{
-        background:
-          "radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.18 0.18 258 / 0.35), transparent 70%), linear-gradient(180deg, #03060d 0%, #050810 100%)",
-      }}
     >
       <div
         className="absolute inset-0 opacity-[0.07] pointer-events-none"
