@@ -44,56 +44,17 @@ function useReveal<T extends HTMLElement>() {
   return { ref, seen };
 }
 
-function Panel3D({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(1200px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
-  };
-  const reset = () => {
-    if (ref.current) ref.current.style.transform = "perspective(1200px) rotateY(0) rotateX(0)";
-  };
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      className="relative will-change-transform transition-transform duration-300"
-      style={{ transformStyle: "preserve-3d" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 export function XplicitCup() {
   const { ref: heroRef, seen: heroSeen } = useReveal<HTMLDivElement>();
-  const [active, setActive] = useState<PanelKey>("historia");
+
+
 
 
   return (
     <section
       id="xplicit-cup"
-      className="relative py-20 md:py-24 border-t border-border overflow-hidden scroll-mt-24"
+      className="relative py-20 md:py-24 overflow-hidden scroll-mt-24"
     >
-      <div
-        className="absolute inset-0 opacity-[0.07] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(oklch(0.70 0.24 45) 1px, transparent 1px), linear-gradient(90deg, oklch(0.70 0.24 45) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-          maskImage: "radial-gradient(ellipse at center, black 30%, transparent 80%)",
-        }}
-      />
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-flame to-transparent" />
-      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-flame to-transparent" />
-      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-30" style={{ background: "oklch(0.55 0.24 255)" }} />
-      <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full blur-[140px] opacity-25" style={{ background: "oklch(0.70 0.24 45)" }} />
-
       {/* LIVE marquee */}
       <div className="relative overflow-hidden border-y border-flame/30 bg-background/60 backdrop-blur py-2 mb-12">
         <div className="flex gap-10 whitespace-nowrap animate-marquee font-display text-sm md:text-base font-bold tracking-[0.25em] uppercase">
@@ -152,92 +113,39 @@ export function XplicitCup() {
           ))}
         </div>
 
-        {/* HUD INTERACTIVO · Rail vertical + panel inline */}
-        <div className="mt-14">
-          <div className="text-xs uppercase tracking-[0.3em] text-flame font-mono mb-4 flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-flame animate-pulse" />
-            Archivo interactivo · Selecciona un capítulo
-          </div>
-
-          <div className="grid md:grid-cols-[280px_1fr] gap-4 md:gap-6">
-            {/* RAIL */}
-            <div
-              className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0 snap-x snap-mandatory md:snap-none scrollbar-thin"
-              role="tablist"
+        {/* TODOS LOS CAPÍTULOS — abiertos, sin botones */}
+        <div className="mt-16 space-y-10">
+          {panels.map((p, i) => (
+            <article
+              key={p.key}
+              id={p.key}
+              className="relative rounded-2xl border border-flame/30 bg-background/40 backdrop-blur p-6 md:p-10 overflow-hidden scroll-mt-24"
             >
-              {panels.map((p, i) => {
-                const isActive = active === p.key;
-                return (
-                  <button
-                    key={p.key}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => setActive(p.key)}
-                    className={`group relative shrink-0 snap-start text-left rounded-xl border backdrop-blur px-4 py-3 transition overflow-hidden min-w-[180px] md:min-w-0 ${
-                      isActive
-                        ? "border-flame bg-flame/10"
-                        : "border-border bg-background/40 hover:border-flame/60"
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-0 bottom-0 w-1 bg-flame shadow-[0_0_18px_var(--flame-glow)]" />
-                    )}
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <div className={`font-mono text-[10px] uppercase tracking-[0.3em] ${isActive ? "text-flame" : "text-foreground/50"}`}>
-                          CH · 0{i + 1}
-                        </div>
-                        <div className={`font-display font-black text-base md:text-lg leading-tight ${isActive ? "text-foreground" : "text-foreground/85"}`}>
-                          {p.label}
-                        </div>
-                        <div className="text-[10px] text-foreground/55 font-mono uppercase tracking-[0.2em]">{p.sub}</div>
-                      </div>
-                      <span className={`text-xl transition ${isActive ? "drop-shadow-[0_0_12px_var(--flame-glow)] scale-110" : "opacity-60"}`}>{p.icon}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* PANEL */}
-            <Panel3D>
-              <div
-                key={active}
-                className="relative rounded-2xl border border-flame/40 bg-gradient-to-br from-background/90 via-background/70 to-background/40 backdrop-blur p-6 md:p-8 overflow-hidden shadow-[0_30px_80px_-30px_var(--flame-glow)]"
-                style={{ animation: "xc-pop 0.5s cubic-bezier(0.22,1,0.36,1) both" }}
-              >
-                <span className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-flame" />
-                <span className="absolute top-3 right-3 w-6 h-6 border-r-2 border-t-2 border-flame" />
-                <span className="absolute bottom-3 left-3 w-6 h-6 border-l-2 border-b-2 border-flame" />
-                <span className="absolute bottom-3 right-3 w-6 h-6 border-r-2 border-b-2 border-flame" />
-                <div
-                  className="absolute -top-20 -right-20 w-72 h-72 rounded-full blur-[80px] opacity-30 pointer-events-none"
-                  style={{ background: "var(--flame-glow)" }}
-                />
-                <div className="relative">
-                  <PanelContent which={active} />
-                </div>
+              <span className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-flame/70" />
+              <span className="absolute top-3 right-3 w-6 h-6 border-r-2 border-t-2 border-flame/70" />
+              <span className="absolute bottom-3 left-3 w-6 h-6 border-l-2 border-b-2 border-flame/70" />
+              <span className="absolute bottom-3 right-3 w-6 h-6 border-r-2 border-b-2 border-flame/70" />
+              <div className="relative mb-6 flex items-center gap-4">
+                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-flame/80">CH · 0{i + 1}</span>
+                <span className="h-px flex-1 bg-gradient-to-r from-flame/50 to-transparent" />
+                <span className="text-xl opacity-80">{p.icon}</span>
               </div>
-            </Panel3D>
-          </div>
+              <div className="relative">
+                <PanelContent which={p.key} />
+              </div>
+            </article>
+          ))}
         </div>
       </div>
 
 
       <style>{`
-        @keyframes xc-fade { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes xc-pop {
-          0% { opacity: 0; transform: perspective(1200px) rotateX(-8deg) translateY(40px) scale(0.92); }
-          100% { opacity: 1; transform: perspective(1200px) rotateX(0) translateY(0) scale(1); }
-        }
         @keyframes xc-wave { 0%,100% { transform: scaleY(0.4);} 50% { transform: scaleY(1);} }
-        .xc-btn { animation: xc-rise 0.6s ease-out both; }
-        @keyframes xc-rise { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
       `}</style>
     </section>
   );
 }
+
 
 function PanelContent({ which }: { which: PanelKey }) {
   if (which === "historia") {
