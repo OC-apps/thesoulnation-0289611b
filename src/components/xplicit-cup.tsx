@@ -109,7 +109,8 @@ export function XplicitCup() {
         </div>
 
         {/* TODOS LOS CAPÍTULOS — abiertos, sin botones */}
-        <div className="mt-8 space-y-6">
+        <div className="mt-8 space-y-6 relative">
+          <div className="absolute bottom-2 left-2 z-30"><EasterEgg id="xplicit-champion" label="Campeón oculto" size="xs" /></div>
           {panels.map((p, i) => (
             <article
               key={p.key}
