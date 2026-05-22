@@ -98,7 +98,8 @@ export function XplicitCup() {
         </div>
 
         {/* STATS compactos */}
-        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 relative">
+          <div className="absolute -top-2 -right-2 z-30"><EasterEgg id="xplicit-broadcast" label="Broadcast oculto" size="xs" /></div>
           {stats.map((s) => (
             <div key={s.k} className="rounded-xl border border-flame/20 bg-background/60 backdrop-blur p-3 md:p-4">
               <div className="font-display text-2xl md:text-3xl font-black text-flame" style={{ textShadow: "0 0 20px var(--flame-glow)" }}>{s.k}</div>
