@@ -172,9 +172,11 @@ export function Hero3D() {
               <span>★ The Soul Nation</span>
               <span className="text-muted-foreground">Gears of War</span>
               <span>★ Streamers</span>
-              <span className="text-muted-foreground">México</span>
+              <span className="text-muted-foreground">Comunidad</span>
               <span>★ Desde 2012</span>
-              <span className="text-muted-foreground">Familia</span>
+              <span className="text-muted-foreground">Convivencia</span>
+              <span>★ Puro Poder Latino</span>
+
             </span>
           ))}
         </div>
