@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import xplicitLogo from "@/assets/xplicit-cup-logo.png";
+import xplicitLogo from "@/assets/xplicit-cup-header.jpeg";
 import xplicitTrophy from "@/assets/xplicit-cup-trophy.png";
 
 const teams = ["Essence", "Logic", "Guns", "HzE", "Da Best", "Resurrection K", "The Soul Nation", "Otros invitados"];
