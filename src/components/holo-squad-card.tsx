@@ -160,7 +160,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
                 className="relative h-28 sm:h-32 md:h-40 w-auto object-contain"
                 style={{
                   filter:
-                    "drop-shadow(0 0 24px oklch(0.65 0.24 255 / 0.6)) drop-shadow(0 0 60px oklch(0.55 0.24 255 / 0.5))",
+                    "drop-shadow(0 0 24px var(--flame-glow)) drop-shadow(0 0 60px oklch(0.55 0.24 255 / 0.5))",
                   transform: `translate3d(${(tilt.mx - 50) * 0.15}px, ${(tilt.my - 50) * 0.15}px, 40px)`,
                 }}
               />
