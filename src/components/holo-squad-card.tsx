@@ -81,14 +81,8 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
       onPointerUp={() => setPressed(false)}
       onPointerCancel={() => setPressed(false)}
     >
-      {/* Outer aura */}
-      <div
-        className="absolute -inset-3 rounded-[2rem] blur-2xl opacity-60 pointer-events-none transition-opacity duration-500"
-        style={{
-          background: `conic-gradient(from ${rx * 8}deg at ${tilt.mx}% ${tilt.my}%, var(--flame), var(--blue), var(--flame))`,
-          opacity: pressed ? 0.9 : 0.45,
-        }}
-      />
+      {/* Outer aura removed per request */}
+
 
       <div
         className="relative rounded-[1.75rem] overflow-hidden border-2 border-flame/40 transition-transform duration-200 will-change-transform"
