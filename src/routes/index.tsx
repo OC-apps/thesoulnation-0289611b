@@ -32,6 +32,7 @@ import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
+import { useLiveStatus } from "@/hooks/use-live-status";
 
 const formatTime = (s: number) => {
   if (!isFinite(s) || s < 0) return "0:00";
