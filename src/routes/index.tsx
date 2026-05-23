@@ -165,9 +165,7 @@ function renderWaveCard(
           ► OPEN
         </span>
         {leader && (
-          <span className="absolute top-2 left-2 z-10 flex items-center gap-1.5 text-[11px] sm:text-xs font-display font-black uppercase tracking-[0.3em] text-background bg-gradient-to-r from-amber-400 via-flame to-amber-500 px-3 py-1.5 rounded-md shadow-[0_0_24px_var(--flame-glow)] ring-2 ring-amber-300/70 animate-pulse-glow">
-            <Crown className="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-[0_0_6px_rgba(255,200,80,0.9)]" /> LEADER
-          </span>
+          <Crown className="absolute top-2 left-2 z-10 w-7 h-7 sm:w-9 sm:h-9 text-amber-300 drop-shadow-[0_0_12px_rgba(255,180,60,0.95)] animate-pulse-glow" strokeWidth={2.5} />
         )}
         {isLive && (
           <span className="absolute z-20 bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 text-[9px] font-mono tracking-[0.25em] text-white bg-red-600 px-2 py-0.5 rounded-sm shadow-[0_0_14px_rgba(220,38,38,0.9)] animate-pulse">
@@ -175,7 +173,7 @@ function renderWaveCard(
           </span>
         )}
       </div>
-      <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
+      <div className={`px-2 py-2 sm:py-3 border-t ${leader ? "bg-gradient-to-r from-flame/30 via-flame/20 to-flame/30 border-flame" : "border-flame/20"}`}>
         <h4 className={`font-display font-bold leading-tight truncate text-flame ${leader ? "text-sm sm:text-base" : "text-[11px] sm:text-sm"}`}>
           {c.name}
         </h4>
