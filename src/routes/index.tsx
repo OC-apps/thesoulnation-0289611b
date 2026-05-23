@@ -158,19 +158,19 @@ function renderWaveCard(
         <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
         <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
         <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-        <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
+        <span className="absolute top-1.5 right-1.5 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
           W·0{i + 1}
         </span>
-        <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
           ► OPEN
         </span>
         {leader && (
-          <span className="absolute top-1 right-1 z-10 flex items-center gap-0.5 text-[8px] font-mono tracking-[0.2em] text-background bg-flame px-1.5 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
+          <span className="absolute top-1 left-1 z-10 flex items-center gap-0.5 text-[8px] font-mono tracking-[0.2em] text-background bg-flame px-1.5 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
             <Crown className="w-3 h-3" /> LEADER
           </span>
         )}
         {isLive && (
-          <span className={`absolute z-20 flex items-center gap-1 text-[9px] font-mono tracking-[0.25em] text-white bg-red-600 px-2 py-0.5 rounded-sm shadow-[0_0_14px_rgba(220,38,38,0.9)] animate-pulse ${leader ? "bottom-2 right-2" : "top-7 left-1/2 -translate-x-1/2"}`}>
+          <span className="absolute z-20 bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 text-[9px] font-mono tracking-[0.25em] text-white bg-red-600 px-2 py-0.5 rounded-sm shadow-[0_0_14px_rgba(220,38,38,0.9)] animate-pulse">
             <span className="w-1.5 h-1.5 rounded-full bg-white" /> LIVE
           </span>
         )}
