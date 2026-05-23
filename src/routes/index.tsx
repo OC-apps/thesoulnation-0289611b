@@ -358,6 +358,11 @@ function IndexContent() {
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
+  const roster = useRoster();
+  const killersList = roster.killers.length ? roster.killers : KILLERS;
+  const legendsList = roster.legends.length ? roster.legends : LEGENDS;
+  const crewList = roster.crew.length ? roster.crew : CREW;
+
 
 
   return (
