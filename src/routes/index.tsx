@@ -1257,6 +1257,7 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
               key={s}
               type="button"
               onClick={() => setSide(s)}
+              data-explore={s === "front" ? "jersey:front" : "jersey:back"}
               className={`px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.3em] font-bold transition ${
                 side === s ? "bg-flame text-primary-foreground shadow-[0_0_30px_-5px_var(--flame-glow)]" : "text-muted-foreground hover:text-foreground"
               }`}
