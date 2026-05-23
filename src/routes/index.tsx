@@ -165,8 +165,8 @@ function renderWaveCard(
           ► OPEN
         </span>
         {leader && (
-          <span className="absolute top-1 left-1 z-10 flex items-center gap-0.5 text-[8px] font-mono tracking-[0.2em] text-background bg-flame px-1.5 py-0.5 rounded-sm shadow-[0_0_12px_var(--flame-glow)] animate-pulse-glow">
-            <Crown className="w-3 h-3" /> LEADER
+          <span className="absolute top-2 left-2 z-10 flex items-center gap-1.5 text-[11px] sm:text-xs font-display font-black uppercase tracking-[0.3em] text-background bg-gradient-to-r from-amber-400 via-flame to-amber-500 px-3 py-1.5 rounded-md shadow-[0_0_24px_var(--flame-glow)] ring-2 ring-amber-300/70 animate-pulse-glow">
+            <Crown className="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-[0_0_6px_rgba(255,200,80,0.9)]" /> LEADER
           </span>
         )}
         {isLive && (
