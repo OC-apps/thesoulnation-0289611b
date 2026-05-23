@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      live_status: {
+        Row: {
+          is_live: boolean
+          member_id: string
+          updated_at: string
+        }
+        Insert: {
+          is_live?: boolean
+          member_id: string
+          updated_at?: string
+        }
+        Update: {
+          is_live?: boolean
+          member_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       recruitment_submissions: {
         Row: {
           area: string
