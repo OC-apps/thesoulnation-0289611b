@@ -748,7 +748,7 @@ function IndexContent() {
               type="button"
               onClick={() => setJerseySpecsOpen((v) => !v)}
               aria-label={jerseySpecsOpen ? "Ocultar specs de la jersey" : "Mostrar specs de la jersey"}
-              data-explore="jersey:showcase"
+              
               className="block w-full text-left cursor-pointer group"
             >
               <JerseyShowcase front={jerseyFront} back={jerseyBack} />
