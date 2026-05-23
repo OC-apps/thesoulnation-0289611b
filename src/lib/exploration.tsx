@@ -23,20 +23,11 @@ export type ExploreId =
   | "social:facebook"
   | "social:x"
   | "social:discord"
-  | "nav:about"
-  | "nav:roster"
-  | "nav:videos"
-  | "nav:wallpapers"
-  | "nav:jersey"
+  | "music:play"
+  | "music:stop"
   | "nav:xplicit-cup"
-  | "nav:music"
-  | "nav:reclutamiento"
-  | "nav:redes"
-  | "jersey:specs"
-  | "jersey:showcase"
-  | "jersey:tiktok"
-  | "about:vision"
-  | "about:objetivo";
+  | "jersey:front"
+  | "jersey:back";
 
 export const EXPLORE_IDS: ExploreId[] = [
   "member:soul-maverick-z",
@@ -53,32 +44,23 @@ export const EXPLORE_IDS: ExploreId[] = [
   "social:facebook",
   "social:x",
   "social:discord",
-  "nav:about",
-  "nav:roster",
-  "nav:videos",
-  "nav:wallpapers",
-  "nav:jersey",
+  "music:play",
+  "music:stop",
   "nav:xplicit-cup",
-  "nav:music",
-  "nav:reclutamiento",
-  "nav:redes",
-  "jersey:specs",
-  "jersey:showcase",
-  "jersey:tiktok",
-  "about:vision",
-  "about:objetivo",
+  "jersey:front",
+  "jersey:back",
 ];
 
 const POINTS_PER = 10;
-const STORAGE_KEY = "soul-exploration-v1";
-const MAX_FLAG = "soul-exploration-max-celebrated-v1";
+const STORAGE_KEY = "soul-exploration-v2";
+const MAX_FLAG = "soul-exploration-max-celebrated-v2";
 
 export const LEVELS = [
   { name: "Recluta", min: 0 },
-  { name: "Cadete", min: 60 },
-  { name: "Soldado Soul", min: 120 },
-  { name: "Veterano", min: 190 },
-  { name: "Élite Soul", min: 280 },
+  { name: "Cadete", min: 50 },
+  { name: "Soldado Soul", min: 100 },
+  { name: "Veterano", min: 150 },
+  { name: "Élite Soul", min: 190 },
 ];
 
 type State = { found: ExploreId[] };
