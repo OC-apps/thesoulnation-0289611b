@@ -443,7 +443,6 @@ function IndexContent() {
                   <button
                     key={tab.id}
                     onClick={() => setAboutTab(tab.id)}
-                    data-explore={`about:${tab.id}`}
                     className={`relative px-4 py-2 rounded-full text-xs font-mono uppercase tracking-[0.25em] transition ${
                       active ? "text-background" : "text-foreground/60 hover:text-flame"
                     }`}
