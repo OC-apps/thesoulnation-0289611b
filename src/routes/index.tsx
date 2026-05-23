@@ -32,6 +32,7 @@ import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
+import { useLiveStatus } from "@/hooks/use-live-status";
 
 const formatTime = (s: number) => {
   if (!isFinite(s) || s < 0) return "0:00";
@@ -129,6 +130,7 @@ function renderWaveCard(
   i: number,
   leader: boolean,
   onClick: () => void,
+  isLive: boolean,
 ) {
   const exploreId = `member:${c.name.toLowerCase().replace(/\s+/g, "-")}`;
   return (
@@ -165,14 +167,19 @@ function renderWaveCard(
             <Crown className="w-3 h-3" /> LEADER
           </span>
         )}
+        {isLive && (
+          <span className={`absolute z-20 flex items-center gap-1 text-[9px] font-mono tracking-[0.25em] text-white bg-red-600 px-2 py-0.5 rounded-sm shadow-[0_0_14px_rgba(220,38,38,0.9)] animate-pulse ${leader ? "bottom-2 right-2" : "top-7 left-1/2 -translate-x-1/2"}`}>
+            <span className="w-1.5 h-1.5 rounded-full bg-white" /> LIVE
+          </span>
+        )}
       </div>
       <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
         <h4 className={`font-display font-bold leading-tight truncate text-flame ${leader ? "text-sm sm:text-base" : "text-[11px] sm:text-sm"}`}>
           {c.name}
         </h4>
         <div className="mt-1 flex items-center gap-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          online
+          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? "bg-red-500" : "bg-emerald-400"}`} />
+          {isLive ? "en vivo · tiktok" : "online"}
         </div>
       </div>
     </button>
@@ -182,6 +189,8 @@ function renderWaveCard(
 function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const active = openIdx !== null ? WAVES[openIdx] : null;
+  const liveSet = useLiveStatus();
+  const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
 
   return (
     <>
@@ -197,13 +206,13 @@ function WavesHUD() {
               {/* Leader row - full width rectangle */}
               {ordered[0]?.leader && (
                 <div className="w-full">
-                  {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i))}
+                  {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i), isLiveFor(ordered[0].c.name))}
                 </div>
               )}
               {/* Rest 4+4 */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                 {ordered.slice(1).map(({ c, i }) => (
-                  <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i))}</div>
+                  <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i), isLiveFor(c.name))}</div>
                 ))}
               </div>
             </>

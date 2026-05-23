@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as XplicitCupRouteImport } from './routes/xplicit-cup'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminLiveRouteImport } from './routes/admin.live'
 
 const XplicitCupRoute = XplicitCupRouteImport.update({
   id: '/xplicit-cup',
@@ -22,31 +23,40 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminLiveRoute = AdminLiveRouteImport.update({
+  id: '/admin/live',
+  path: '/admin/live',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/xplicit-cup': typeof XplicitCupRoute
+  '/admin/live': typeof AdminLiveRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/xplicit-cup': typeof XplicitCupRoute
+  '/admin/live': typeof AdminLiveRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/xplicit-cup': typeof XplicitCupRoute
+  '/admin/live': typeof AdminLiveRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/xplicit-cup'
+  fullPaths: '/' | '/xplicit-cup' | '/admin/live'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/xplicit-cup'
-  id: '__root__' | '/' | '/xplicit-cup'
+  to: '/' | '/xplicit-cup' | '/admin/live'
+  id: '__root__' | '/' | '/xplicit-cup' | '/admin/live'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   XplicitCupRoute: typeof XplicitCupRoute
+  AdminLiveRoute: typeof AdminLiveRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/live': {
+      id: '/admin/live'
+      path: '/admin/live'
+      fullPath: '/admin/live'
+      preLoaderRoute: typeof AdminLiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   XplicitCupRoute: XplicitCupRoute,
+  AdminLiveRoute: AdminLiveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
