@@ -181,6 +181,7 @@ export function BottomBar() {
           <button
             type="button"
             onClick={toggleAudio}
+            data-explore={playing ? "music:stop" : "music:play"}
             aria-label={playing ? "Pausar" : "Reproducir"}
             className="inline-flex h-8 shrink-0 items-center gap-1 rounded-full bg-flame px-2 text-[9px] font-mono uppercase tracking-[0.18em] text-background transition hover:scale-105 active:scale-95 sm:h-9 sm:px-3 sm:text-[10px]"
           >

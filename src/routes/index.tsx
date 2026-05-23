@@ -361,15 +361,15 @@ function IndexContent() {
             <span className="hidden sm:inline">THE SOUL <span className="text-flame">NATION</span></span>
           </a>
           <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-            <a href="#about" data-explore="nav:about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
-            <a href="#roster" data-explore="nav:roster" className="hover:text-foreground transition whitespace-nowrap">Roster</a>
-            <a href="#videos" data-explore="nav:videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
-            <a href="#wallpapers" data-explore="nav:wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
-            <a href="#jersey" data-explore="nav:jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
+            <a href="#about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
+            <a href="#roster" className="hover:text-foreground transition whitespace-nowrap">Roster</a>
+            <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
+            <a href="#wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
+            <a href="#jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
             <Link to="/xplicit-cup" data-explore="nav:xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</Link>
-            <a href="#music" data-explore="nav:music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
-            <a href="#reclutamiento" data-explore="nav:reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
-            <a href="#redes" data-explore="nav:redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
+            <a href="#music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
+            <a href="#reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
+            <a href="#redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
           </nav>
 
         </div>
@@ -443,7 +443,6 @@ function IndexContent() {
                   <button
                     key={tab.id}
                     onClick={() => setAboutTab(tab.id)}
-                    data-explore={`about:${tab.id}`}
                     className={`relative px-4 py-2 rounded-full text-xs font-mono uppercase tracking-[0.25em] transition ${
                       active ? "text-background" : "text-foreground/60 hover:text-flame"
                     }`}
@@ -687,7 +686,7 @@ function IndexContent() {
               type="button"
               onClick={() => setJerseySpecsOpen((v) => !v)}
               aria-expanded={jerseySpecsOpen}
-              data-explore="jersey:specs"
+              
               className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.25em] hover:bg-flame hover:text-background transition active:scale-95"
             >
               <span className={`transition-transform ${jerseySpecsOpen ? "rotate-180" : ""}`}>▾</span>
@@ -725,7 +724,7 @@ function IndexContent() {
                 href="https://www.tiktok.com/@thesoulnation"
                 target="_blank"
                 rel="noopener noreferrer"
-                data-explore="jersey:tiktok"
+                
                 className="mt-3 inline-flex items-center gap-2 bg-flame text-primary-foreground px-5 py-2.5 rounded-full font-bold text-sm shadow-[0_0_60px_-10px_var(--flame-glow)] hover:scale-105 transition"
               >
                 @thesoulnation en TikTok
@@ -749,7 +748,7 @@ function IndexContent() {
               type="button"
               onClick={() => setJerseySpecsOpen((v) => !v)}
               aria-label={jerseySpecsOpen ? "Ocultar specs de la jersey" : "Mostrar specs de la jersey"}
-              data-explore="jersey:showcase"
+              
               className="block w-full text-left cursor-pointer group"
             >
               <JerseyShowcase front={jerseyFront} back={jerseyBack} />
@@ -1258,6 +1257,7 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
               key={s}
               type="button"
               onClick={() => setSide(s)}
+              data-explore={s === "front" ? "jersey:front" : "jersey:back"}
               className={`px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.3em] font-bold transition ${
                 side === s ? "bg-flame text-primary-foreground shadow-[0_0_30px_-5px_var(--flame-glow)]" : "text-muted-foreground hover:text-foreground"
               }`}
