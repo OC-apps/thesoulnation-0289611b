@@ -188,6 +188,8 @@ function renderWaveCard(
 function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const active = openIdx !== null ? WAVES[openIdx] : null;
+  const liveSet = useLiveStatus();
+  const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
 
   return (
     <>
@@ -203,13 +205,13 @@ function WavesHUD() {
               {/* Leader row - full width rectangle */}
               {ordered[0]?.leader && (
                 <div className="w-full">
-                  {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i))}
+                  {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i), isLiveFor(ordered[0].c.name))}
                 </div>
               )}
               {/* Rest 4+4 */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                 {ordered.slice(1).map(({ c, i }) => (
-                  <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i))}</div>
+                  <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i), isLiveFor(c.name))}</div>
                 ))}
               </div>
             </>
