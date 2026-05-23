@@ -686,7 +686,7 @@ function IndexContent() {
               type="button"
               onClick={() => setJerseySpecsOpen((v) => !v)}
               aria-expanded={jerseySpecsOpen}
-              data-explore="jersey:specs"
+              
               className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.25em] hover:bg-flame hover:text-background transition active:scale-95"
             >
               <span className={`transition-transform ${jerseySpecsOpen ? "rotate-180" : ""}`}>▾</span>
