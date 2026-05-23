@@ -773,6 +773,7 @@ function IndexContent() {
         <div className="relative mx-auto max-w-5xl px-5 sm:px-6">
           <Link
             to="/xplicit-cup"
+            data-explore="nav:xplicit-cup"
             className="group relative block rounded-3xl border border-flame/40 bg-gradient-to-br from-background/90 via-background/70 to-background/40 backdrop-blur p-8 md:p-12 overflow-hidden shadow-[0_30px_80px_-30px_var(--flame-glow)] hover:border-flame transition"
           >
             <span className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-flame" />
