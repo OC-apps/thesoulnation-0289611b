@@ -27,6 +27,8 @@ import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
+import { useRoster } from "@/hooks/use-roster";
+
 
 import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
@@ -358,6 +360,11 @@ function IndexContent() {
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
+  const roster = useRoster();
+  const killersList = roster.killers.length ? roster.killers : KILLERS;
+  const legendsList = roster.legends.length ? roster.legends : LEGENDS;
+  const crewList = roster.crew.length ? roster.crew : CREW;
+
 
 
   return (
@@ -573,7 +580,7 @@ function IndexContent() {
               title="THE SOUL KILLERS"
               subtitle="Modo Guardian · Gears 5"
               desc="Equipo enfocado en grindear el modo Guardian de Gears 5."
-              members={KILLERS}
+              members={killersList}
               accentSeed={0}
             />
             <HoloSquadCard
@@ -582,7 +589,7 @@ function IndexContent() {
               title="THE SOUL LEGENDS"
               subtitle="Montagers · Clips & Highlights"
               desc="Jugadores habilidosos y creadores de clips para montajes editados."
-              members={LEGENDS}
+              members={legendsList}
               accentSeed={1.7}
             />
           </div>
@@ -594,9 +601,10 @@ function IndexContent() {
             title="THE SOUL CREW"
             subtitle="Apoyo y familia oficial"
             desc="Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation."
-            members={CREW}
+            members={crewList}
             accentSeed={3.4}
           />
+
           <div className="mt-8 flex justify-center">
             <EasterEgg id="maverick-signal" label="Señal Maverick oculta" size="sm" />
           </div>
