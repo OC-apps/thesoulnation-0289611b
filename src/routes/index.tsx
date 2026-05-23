@@ -580,7 +580,7 @@ function IndexContent() {
               title="THE SOUL KILLERS"
               subtitle="Modo Guardian · Gears 5"
               desc="Equipo enfocado en grindear el modo Guardian de Gears 5."
-              members={KILLERS}
+              members={killersList}
               accentSeed={0}
             />
             <HoloSquadCard
@@ -589,7 +589,7 @@ function IndexContent() {
               title="THE SOUL LEGENDS"
               subtitle="Montagers · Clips & Highlights"
               desc="Jugadores habilidosos y creadores de clips para montajes editados."
-              members={LEGENDS}
+              members={legendsList}
               accentSeed={1.7}
             />
           </div>
@@ -601,9 +601,10 @@ function IndexContent() {
             title="THE SOUL CREW"
             subtitle="Apoyo y familia oficial"
             desc="Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation."
-            members={CREW}
+            members={crewList}
             accentSeed={3.4}
           />
+
           <div className="mt-8 flex justify-center">
             <EasterEgg id="maverick-signal" label="Señal Maverick oculta" size="sm" />
           </div>
