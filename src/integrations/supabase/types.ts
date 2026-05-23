@@ -77,6 +77,30 @@ export type Database = {
         }
         Relationships: []
       }
+      roster_members: {
+        Row: {
+          category: Database["public"]["Enums"]["roster_category"]
+          created_at: string
+          id: string
+          nickname: string
+          sort_order: number
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["roster_category"]
+          created_at?: string
+          id?: string
+          nickname: string
+          sort_order?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["roster_category"]
+          created_at?: string
+          id?: string
+          nickname?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -85,7 +109,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      roster_category: "crew" | "legends" | "killers"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -212,6 +236,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      roster_category: ["crew", "legends", "killers"],
+    },
   },
 } as const
