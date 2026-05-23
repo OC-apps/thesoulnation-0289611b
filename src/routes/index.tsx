@@ -129,6 +129,7 @@ function renderWaveCard(
   i: number,
   leader: boolean,
   onClick: () => void,
+  isLive: boolean,
 ) {
   const exploreId = `member:${c.name.toLowerCase().replace(/\s+/g, "-")}`;
   return (
@@ -165,14 +166,19 @@ function renderWaveCard(
             <Crown className="w-3 h-3" /> LEADER
           </span>
         )}
+        {isLive && (
+          <span className={`absolute z-20 flex items-center gap-1 text-[9px] font-mono tracking-[0.25em] text-white bg-red-600 px-2 py-0.5 rounded-sm shadow-[0_0_14px_rgba(220,38,38,0.9)] animate-pulse ${leader ? "bottom-2 right-2" : "top-7 left-1/2 -translate-x-1/2"}`}>
+            <span className="w-1.5 h-1.5 rounded-full bg-white" /> LIVE
+          </span>
+        )}
       </div>
       <div className="px-2 py-2 sm:py-3 border-t border-flame/20">
         <h4 className={`font-display font-bold leading-tight truncate text-flame ${leader ? "text-sm sm:text-base" : "text-[11px] sm:text-sm"}`}>
           {c.name}
         </h4>
         <div className="mt-1 flex items-center gap-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          online
+          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? "bg-red-500" : "bg-emerald-400"}`} />
+          {isLive ? "en vivo · tiktok" : "online"}
         </div>
       </div>
     </button>
