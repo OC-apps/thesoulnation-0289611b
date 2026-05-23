@@ -361,15 +361,15 @@ function IndexContent() {
             <span className="hidden sm:inline">THE SOUL <span className="text-flame">NATION</span></span>
           </a>
           <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-            <a href="#about" data-explore="nav:about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
-            <a href="#roster" data-explore="nav:roster" className="hover:text-foreground transition whitespace-nowrap">Roster</a>
-            <a href="#videos" data-explore="nav:videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
-            <a href="#wallpapers" data-explore="nav:wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
-            <a href="#jersey" data-explore="nav:jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
+            <a href="#about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
+            <a href="#roster" className="hover:text-foreground transition whitespace-nowrap">Roster</a>
+            <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
+            <a href="#wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
+            <a href="#jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
             <Link to="/xplicit-cup" data-explore="nav:xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</Link>
-            <a href="#music" data-explore="nav:music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
-            <a href="#reclutamiento" data-explore="nav:reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
-            <a href="#redes" data-explore="nav:redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
+            <a href="#music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
+            <a href="#reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
+            <a href="#redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
           </nav>
 
         </div>
