@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Radio, Users, Waves as WavesIcon, Link2, Search, Plus, Trash2, EyeOff, Eye, Save, LogOut, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { updateWavePhoto } from "@/lib/wave-photo.functions";
@@ -323,6 +324,7 @@ function AdminLivePage() {
   
   const [socialQuery, setSocialQuery] = useState("");
   const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState<{ title: string; description: string; onConfirm: () => void } | null>(null);
 
 
   
@@ -472,7 +474,7 @@ function AdminLivePage() {
                             <li key={m.id} className="group inline-flex items-center gap-1.5 border border-flame/30 hover:border-flame rounded px-2 py-1 bg-background/60 transition">
                               <span className="font-mono text-[11px] text-foreground">{m.nickname}</span>
                               <button
-                                onClick={() => removeMember(m.id)}
+                                onClick={() => setConfirm({ title: "Eliminar miembro", description: `¿Seguro que quieres eliminar a "${m.nickname}" del roster? Esta acción no se puede deshacer.`, onConfirm: () => removeMember(m.id) })}
                                 disabled={rmBusy}
                                 className="text-muted-foreground hover:text-red-400 transition disabled:opacity-40"
                                 aria-label={`Eliminar ${m.nickname}`}
@@ -717,7 +719,7 @@ function AdminLivePage() {
                                     )}
                                     {c.dyn && (
                                       <button
-                                        onClick={() => removeWave(c.dyn!.id)}
+                                        onClick={() => setConfirm({ title: "Eliminar wave", description: `¿Seguro que quieres eliminar a "${c.name}" de Waves? Se borrará su foto y datos. Esta acción no se puede deshacer.`, onConfirm: () => removeWave(c.dyn!.id) })}
                                         disabled={rmBusy}
                                         className="inline-flex items-center gap-1.5 border border-red-500/50 text-red-300 hover:bg-red-950/40 font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded disabled:opacity-40"
                                       >
@@ -813,6 +815,26 @@ function AdminLivePage() {
 
         </Tabs>
       </div>
+
+      <AlertDialog open={!!confirm} onOpenChange={(o) => { if (!o) setConfirm(null); }}>
+        <AlertDialogContent className="bg-blue-deep border-flame/40">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-display text-flame">{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription className="font-mono text-xs text-muted-foreground">
+              {confirm?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="font-mono uppercase tracking-widest text-[10px]">Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => { confirm?.onConfirm(); setConfirm(null); }}
+              className="bg-red-600 hover:bg-red-700 text-white font-mono uppercase tracking-widest text-[10px]"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
