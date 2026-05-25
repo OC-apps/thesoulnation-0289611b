@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "wave photos public read" ON storage.objects;

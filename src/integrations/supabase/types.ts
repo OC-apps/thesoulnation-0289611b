@@ -101,6 +101,42 @@ export type Database = {
         }
         Relationships: []
       }
+      waves_members: {
+        Row: {
+          bio: string
+          created_at: string
+          id: string
+          name: string
+          photo_url: string
+          redes: string
+          social_href: string | null
+          social_label: string | null
+          sort_order: number
+        }
+        Insert: {
+          bio?: string
+          created_at?: string
+          id?: string
+          name: string
+          photo_url: string
+          redes?: string
+          social_href?: string | null
+          social_label?: string | null
+          sort_order?: number
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          id?: string
+          name?: string
+          photo_url?: string
+          redes?: string
+          social_href?: string | null
+          social_label?: string | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

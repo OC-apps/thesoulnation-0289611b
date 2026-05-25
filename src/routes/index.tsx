@@ -28,6 +28,7 @@ import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
 import { useRoster } from "@/hooks/use-roster";
+import { useWavesMembers } from "@/hooks/use-waves-members";
 
 
 import { Hero3D } from "@/components/hero-3d";
@@ -188,7 +189,16 @@ function renderWaveCard(
 
 function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
-  const active = openIdx !== null ? WAVES[openIdx] : null;
+  const dynamicWaves = useWavesMembers();
+  const extraWaves = dynamicWaves.map((w) => ({
+    name: w.name,
+    redes: w.redes,
+    photo: w.photo_url,
+    bio: w.bio,
+    socials: w.social_label && w.social_href ? [{ label: w.social_label, href: w.social_href }] : undefined,
+  }));
+  const WAVES_ALL = [...WAVES, ...extraWaves];
+  const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
   const liveSet = useLiveStatus();
   const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
 
@@ -196,10 +206,10 @@ function WavesHUD() {
     <>
       <div className="mb-20 space-y-4">
         {(() => {
-          const leaderIdx = WAVES.findIndex((c) => c.name === "SOUL MAVERICK Z");
+          const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
-            ...(leaderIdx >= 0 ? [{ c: WAVES[leaderIdx], i: leaderIdx, leader: true }] : []),
-            ...WAVES.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
+            ...(leaderIdx >= 0 ? [{ c: WAVES_ALL[leaderIdx], i: leaderIdx, leader: true }] : []),
+            ...WAVES_ALL.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
           ];
           return (
             <>
@@ -233,7 +243,7 @@ function WavesHUD() {
                   <span>SOUL · INTEL · PROFILE</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES.length}</span>
+                  <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES_ALL.length}</span>
                   <button onClick={() => setOpenIdx(null)} className="hover:text-foreground transition" aria-label="Cerrar">
                     <X className="w-4 h-4" />
                   </button>
@@ -326,14 +336,14 @@ function WavesHUD() {
 
                   <div className="flex justify-between items-center pt-2 border-t border-flame/20 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
                     <button
-                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! - 1 + WAVES.length) % WAVES.length); }}
+                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! - 1 + WAVES_ALL.length) % WAVES_ALL.length); }}
                       className="hover:text-flame transition"
                     >
                       ◄ prev
                     </button>
                     <span>Toca afuera para cerrar</span>
                     <button
-                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! + 1) % WAVES.length); }}
+                      onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! + 1) % WAVES_ALL.length); }}
                       className="hover:text-flame transition"
                     >
                       next ►
