@@ -54,13 +54,16 @@ export const updateWavesMemberContent = createServerFn({ method: "POST" })
       throw new Error("Contraseña incorrecta");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = {};
-    if (data.bio !== undefined) patch.bio = data.bio.trim();
-    if (data.redes !== undefined) patch.redes = data.redes.trim();
-    if (data.socialLabel !== undefined) patch.social_label = data.socialLabel.trim() || null;
-    if (data.socialHref !== undefined) patch.social_href = data.socialHref?.trim() || null;
-    if (Object.keys(patch).length === 0) return { ok: true };
-    const { error } = await supabaseAdmin.from("waves_members").update(patch).eq("id", data.id);
+    const { error } = await supabaseAdmin
+      .from("waves_members")
+      .update({
+        bio: data.bio !== undefined ? data.bio.trim() : undefined,
+        redes: data.redes !== undefined ? data.redes.trim() : undefined,
+        social_label: data.socialLabel !== undefined ? (data.socialLabel.trim() || null) : undefined,
+        social_href: data.socialHref !== undefined ? (data.socialHref?.trim() || null) : undefined,
+      })
+      .eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
