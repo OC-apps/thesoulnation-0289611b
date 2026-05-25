@@ -719,7 +719,7 @@ function AdminLivePage() {
                                     )}
                                     {c.dyn && (
                                       <button
-                                        onClick={() => removeWave(c.dyn!.id)}
+                                        onClick={() => setConfirm({ title: "Eliminar wave", description: `¿Seguro que quieres eliminar a "${c.name}" de Waves? Se borrará su foto y datos. Esta acción no se puede deshacer.`, onConfirm: () => removeWave(c.dyn!.id) })}
                                         disabled={rmBusy}
                                         className="inline-flex items-center gap-1.5 border border-red-500/50 text-red-300 hover:bg-red-950/40 font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded disabled:opacity-40"
                                       >
