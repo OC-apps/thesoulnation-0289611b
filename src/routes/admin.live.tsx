@@ -290,7 +290,7 @@ function AdminLivePage() {
   const filteredSocialNames = allWaveNames.filter((n) =>
     n.toLowerCase().includes(socialQuery.trim().toLowerCase())
   );
-  const visibleHardcoded = MEMBERS.filter((m) => !hiddenSet.has(m.name.toUpperCase())).length;
+  
 
   if (!authed) {
     return (
