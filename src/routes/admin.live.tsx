@@ -446,8 +446,8 @@ function AdminLivePage() {
           </TabsContent>
 
           <TabsContent value="roster" className="mt-0">
-            <SectionShell icon={Users} title="Roster" subtitle="Crew · Legends · Killers">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <SectionShell icon={Users} title="Roster" subtitle="Crew · Legends · Killers · Waves">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                 {CATEGORIES.map(({ key, label }) => {
                   const list = roster.filter((r) => r.category === key);
                   const addBusy = rosterBusy === `add:${key}`;
@@ -501,9 +501,58 @@ function AdminLivePage() {
                     </div>
                   );
                 })}
+
+                {/* Soul Waves (gestionados desde la pestaña Waves) */}
+                <div className="border border-flame/30 rounded-lg p-4 bg-flame/5 flex flex-col">
+                  <div className="flex items-center justify-between mb-3 pb-2 border-b border-flame/15">
+                    <h3 className="font-display text-sm text-flame flex items-center gap-1.5">
+                      <WavesIcon className="w-3.5 h-3.5" />
+                      Soul Waves
+                    </h3>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
+                      {MEMBERS.length + waves.length}
+                    </span>
+                  </div>
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
+                    Se gestionan desde la pestaña Waves
+                  </p>
+                  <ul className="flex flex-wrap gap-1.5">
+                    {MEMBERS.map((m) => {
+                      const isHidden = hiddenSet.has(m.name.toUpperCase());
+                      return (
+                        <li
+                          key={m.id}
+                          className={`inline-flex items-center gap-1 border rounded px-2 py-1 ${
+                            isHidden
+                              ? "border-red-500/40 bg-red-950/20 text-red-300/70 line-through"
+                              : "border-flame/40 bg-background/60 text-foreground"
+                          }`}
+                        >
+                          <span className="font-mono text-[11px]">{m.name}</span>
+                        </li>
+                      );
+                    })}
+                    {waves.map((w) => {
+                      const isHidden = hiddenSet.has(w.name.toUpperCase());
+                      return (
+                        <li
+                          key={w.id}
+                          className={`inline-flex items-center gap-1 border rounded px-2 py-1 ${
+                            isHidden
+                              ? "border-red-500/40 bg-red-950/20 text-red-300/70 line-through"
+                              : "border-flame/30 bg-background/60 text-foreground"
+                          }`}
+                        >
+                          <span className="font-mono text-[11px]">{w.name}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               </div>
             </SectionShell>
           </TabsContent>
+
 
           <TabsContent value="waves" className="mt-0">
             <SectionShell
