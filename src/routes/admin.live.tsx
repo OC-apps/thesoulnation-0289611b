@@ -4,7 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { setLiveStatus } from "@/lib/live-status.functions";
 import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
+import { upsertWavesSocials } from "@/lib/waves-socials.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
+import { useWavesSocials } from "@/hooks/use-waves-socials";
 
 export const Route = createFileRoute("/admin/live")({
   head: () => ({
