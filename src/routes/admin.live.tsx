@@ -56,10 +56,11 @@ function AdminLivePage() {
   const [waveBusy, setWaveBusy] = useState<string | null>(null);
 
   const socialsMap = useWavesSocials();
-  const [socialEdits, setSocialEdits] = useState<Record<string, { tiktok: string; twitch: string; youtube: string }>>({});
+  type SocialFields = { tiktok: string; twitch: string; youtube: string; x: string; facebook: string };
+  const [socialEdits, setSocialEdits] = useState<Record<string, SocialFields>>({});
   const [socialBusy, setSocialBusy] = useState<string | null>(null);
 
-  const getSocial = (name: string) => {
+  const getSocial = (name: string): SocialFields => {
     const key = name.toUpperCase();
     if (socialEdits[key]) return socialEdits[key];
     const row = socialsMap.get(key);
@@ -67,9 +68,11 @@ function AdminLivePage() {
       tiktok: row?.tiktok_url ?? "",
       twitch: row?.twitch_url ?? "",
       youtube: row?.youtube_url ?? "",
+      x: row?.x_url ?? "",
+      facebook: row?.facebook_url ?? "",
     };
   };
-  const setSocialField = (name: string, field: "tiktok" | "twitch" | "youtube", value: string) => {
+  const setSocialField = (name: string, field: keyof SocialFields, value: string) => {
     const key = name.toUpperCase();
     const current = getSocial(key);
     setSocialEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
@@ -80,7 +83,7 @@ function AdminLivePage() {
     setSocialBusy(key);
     setMsg("");
     try {
-      await upsertWavesSocials({ data: { password, name: key, tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube } });
+      await upsertWavesSocials({ data: { password, name: key, tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube, x: v.x, facebook: v.facebook } });
       setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
