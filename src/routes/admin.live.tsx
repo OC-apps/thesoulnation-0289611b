@@ -371,12 +371,6 @@ function AdminLivePage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-red-500/40 bg-red-950/30">
-              <span className={`w-1.5 h-1.5 rounded-full ${liveCount > 0 ? "bg-red-500 animate-pulse" : "bg-muted-foreground/40"}`} />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-foreground">
-                {liveCount} live
-              </span>
-            </div>
             <button
               onClick={() => { sessionStorage.removeItem("admin-live-pw"); setAuthed(false); setPassword(""); }}
               className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-flame border border-flame/30 hover:border-flame px-2.5 py-1 rounded-full transition"
@@ -384,6 +378,7 @@ function AdminLivePage() {
               <LogOut className="w-3 h-3" /> Salir
             </button>
           </div>
+
         </div>
       </header>
 
