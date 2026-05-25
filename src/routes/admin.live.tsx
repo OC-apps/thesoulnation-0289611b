@@ -509,7 +509,7 @@ function AdminLivePage() {
             <SectionShell
               icon={WavesIcon}
               title="Soul Waves"
-              subtitle={`${visibleHardcoded + waves.filter((w) => !hiddenSet.has(w.name.toUpperCase())).length} visibles · ${waves.length} dinámicos`}
+              subtitle={`${MEMBERS.filter((m) => !hiddenSet.has(m.name.toUpperCase())).length + waves.filter((w) => !hiddenSet.has(w.name.toUpperCase())).length} visibles · ${waves.length} dinámicos`}
             >
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <div className="lg:col-span-2">
