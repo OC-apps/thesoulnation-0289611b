@@ -30,6 +30,7 @@ import { HoloSquadCard } from "@/components/holo-squad-card";
 import { useRoster } from "@/hooks/use-roster";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
+import { useWavesHidden } from "@/hooks/use-waves-hidden";
 
 
 import { Hero3D } from "@/components/hero-3d";
