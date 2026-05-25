@@ -815,6 +815,26 @@ function AdminLivePage() {
 
         </Tabs>
       </div>
+
+      <AlertDialog open={!!confirm} onOpenChange={(o) => { if (!o) setConfirm(null); }}>
+        <AlertDialogContent className="bg-blue-deep border-flame/40">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-display text-flame">{confirm?.title}</AlertDialogTitle>
+            <AlertDialogDescription className="font-mono text-xs text-muted-foreground">
+              {confirm?.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="font-mono uppercase tracking-widest text-[10px]">Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => { confirm?.onConfirm(); setConfirm(null); }}
+              className="bg-red-600 hover:bg-red-700 text-white font-mono uppercase tracking-widest text-[10px]"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
