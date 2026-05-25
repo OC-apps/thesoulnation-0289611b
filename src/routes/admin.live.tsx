@@ -12,6 +12,15 @@ import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
 import { useWavesHidden } from "@/hooks/use-waves-hidden";
+import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
+import waveMaverick from "@/assets/wave-maverick.png";
+import waveAleman from "@/assets/wave-aleman.png";
+import wavePxlmaa from "@/assets/wave-pxlmaa.png";
+import waveGizzmo from "@/assets/wave-gizzmo.png";
+import waveTempla from "@/assets/wave-templa.png";
+import waveSystem from "@/assets/wave-system.png";
+import waveEmix from "@/assets/wave-emix.png";
+import waveEnri from "@/assets/wave-enri.png";
 
 export const Route = createFileRoute("/admin/live")({
   head: () => ({
@@ -24,18 +33,18 @@ export const Route = createFileRoute("/admin/live")({
 });
 
 const FIXED_MEMBERS = [
-  { id: "soul-maverick-z", name: "SOUL MAVERICK Z" },
+  { id: "soul-maverick-z", name: "SOUL MAVERICK Z", photo: waveMaverick },
 ];
 
 const OTHER_MEMBERS = [
-  { id: "soul-aleman", name: "SOUL ALEMAN" },
-  { id: "soul-gizzmo", name: "SOUL GIZZMO" },
-  { id: "soul-pxlmaa", name: "SOUL PXLMAA" },
-  { id: "soul-systeem", name: "SOUL SYSTEEM" },
-  { id: "soul-templa", name: "SOUL TEMPLA" },
-  { id: "soul-enri", name: "SOUL ENRI" },
-  { id: "soul-emi-x", name: "SOUL EMI X" },
-  { id: "soul-bellatriix", name: "SOUL BELLATRIIX" },
+  { id: "soul-aleman", name: "SOUL ALEMAN", photo: waveAleman },
+  { id: "soul-gizzmo", name: "SOUL GIZZMO", photo: waveGizzmo },
+  { id: "soul-pxlmaa", name: "SOUL PXLMAA", photo: wavePxlmaa },
+  { id: "soul-systeem", name: "SOUL SYSTEEM", photo: waveSystem },
+  { id: "soul-templa", name: "SOUL TEMPLA", photo: waveTempla },
+  { id: "soul-enri", name: "SOUL ENRI", photo: waveEnri },
+  { id: "soul-emi-x", name: "SOUL EMI X", photo: waveEmix },
+  { id: "soul-bellatriix", name: "SOUL BELLATRIIX", photo: soulBellatriix },
 ];
 
 const MEMBERS = [...FIXED_MEMBERS, ...OTHER_MEMBERS];
