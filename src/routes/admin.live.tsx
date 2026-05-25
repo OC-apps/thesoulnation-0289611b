@@ -23,8 +23,11 @@ export const Route = createFileRoute("/admin/live")({
   component: AdminLivePage,
 });
 
-const MEMBERS = [
+const FIXED_MEMBERS = [
   { id: "soul-maverick-z", name: "SOUL MAVERICK Z" },
+];
+
+const OTHER_MEMBERS = [
   { id: "soul-aleman", name: "SOUL ALEMAN" },
   { id: "soul-gizzmo", name: "SOUL GIZZMO" },
   { id: "soul-pxlmaa", name: "SOUL PXLMAA" },
@@ -34,6 +37,8 @@ const MEMBERS = [
   { id: "soul-emi-x", name: "SOUL EMI X" },
   { id: "soul-bellatriix", name: "SOUL BELLATRIIX" },
 ];
+
+const MEMBERS = [...FIXED_MEMBERS, ...OTHER_MEMBERS];
 
 type RosterCategory = "crew" | "legends" | "killers";
 type RosterRow = { id: string; nickname: string; category: RosterCategory; sort_order: number };
