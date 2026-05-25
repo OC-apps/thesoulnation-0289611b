@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { updateWavePhoto } from "@/lib/wave-photo.functions";
 import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
-import { upsertWavesSocials } from "@/lib/waves-socials.functions";
+import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
