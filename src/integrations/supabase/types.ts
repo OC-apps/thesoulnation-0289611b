@@ -101,6 +101,21 @@ export type Database = {
         }
         Relationships: []
       }
+      waves_hidden: {
+        Row: {
+          hidden_at: string
+          name: string
+        }
+        Insert: {
+          hidden_at?: string
+          name: string
+        }
+        Update: {
+          hidden_at?: string
+          name?: string
+        }
+        Relationships: []
+      }
       waves_members: {
         Row: {
           bio: string
