@@ -474,7 +474,7 @@ function AdminLivePage() {
                             <li key={m.id} className="group inline-flex items-center gap-1.5 border border-flame/30 hover:border-flame rounded px-2 py-1 bg-background/60 transition">
                               <span className="font-mono text-[11px] text-foreground">{m.nickname}</span>
                               <button
-                                onClick={() => removeMember(m.id)}
+                                onClick={() => setConfirm({ title: "Eliminar miembro", description: `¿Seguro que quieres eliminar a "${m.nickname}" del roster? Esta acción no se puede deshacer.`, onConfirm: () => removeMember(m.id) })}
                                 disabled={rmBusy}
                                 className="text-muted-foreground hover:text-red-400 transition disabled:opacity-40"
                                 aria-label={`Eliminar ${m.nickname}`}
