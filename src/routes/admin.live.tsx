@@ -670,9 +670,11 @@ function AdminLivePage() {
                       })}
                     </ul>
                   )}
+                  </div>
                 </div>
               </div>
             </SectionShell>
+
           </TabsContent>
 
           <TabsContent value="redes" className="mt-0">
