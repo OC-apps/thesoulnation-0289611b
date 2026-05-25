@@ -597,20 +597,45 @@ function AdminLivePage() {
                 <div className="lg:col-span-3 space-y-6">
                   <div>
                     <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
-                      Waves fijos
+                      Wave fijo
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                        {visibleHardcoded}/{MEMBERS.length}
+                        {FIXED_MEMBERS.length}
                       </span>
                     </h3>
                     <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {MEMBERS.map((m) => {
+                      {FIXED_MEMBERS.map((m) => (
+                        <li
+                          key={m.id}
+                          className="relative border rounded-lg p-3 flex flex-col gap-2 border-flame/40 bg-flame/5"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="w-1.5 h-6 rounded-full bg-flame" />
+                            <p className="font-mono text-[11px] text-flame truncate flex-1">{m.name}</p>
+                          </div>
+                          <span className="text-[9px] font-mono text-flame/80 px-1.5 py-0.5 rounded bg-flame/10 border border-flame/30 self-start">
+                            SIEMPRE VISIBLE
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
+                      Otros waves
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
+                        {OTHER_MEMBERS.length + waves.length}
+                      </span>
+                    </h3>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {OTHER_MEMBERS.map((m) => {
                         const key = m.name.toUpperCase();
                         const isHidden = hiddenSet.has(key);
                         const hBusy = hideBusy === key;
                         return (
                           <li
                             key={m.id}
-                            className={`relative group border rounded-lg p-3 transition flex flex-col gap-2 ${
+                            className={`relative border rounded-lg p-3 flex flex-col gap-2 transition ${
                               isHidden
                                 ? "border-red-500/40 bg-red-950/20 opacity-70"
                                 : "border-flame/30 bg-background/60 hover:border-flame"
@@ -640,66 +665,49 @@ function AdminLivePage() {
                           </li>
                         );
                       })}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
-                      Waves dinámicos
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                        {waves.length}
-                      </span>
-                    </h3>
-                    {waves.length === 0 ? (
-                      <div className="border border-dashed border-flame/30 rounded-lg p-8 text-center text-xs font-mono text-muted-foreground bg-blue-deep/20">
-                        Aún no has agregado waves dinámicos.
-                      </div>
-                    ) : (
-                      <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {waves.map((w) => {
-                          const busy = waveBusy === `rm:${w.id}`;
-                          const key = w.name.toUpperCase();
-                          const isHidden = hiddenSet.has(key);
-                          const hBusy = hideBusy === key;
-                          return (
-                            <li key={w.id} className={`relative group border rounded-lg overflow-hidden transition ${isHidden ? "border-red-500/40 bg-red-950/20 opacity-70" : "border-flame/30 bg-background/60 hover:border-flame"}`}>
-                              <img src={w.photo_url} alt={w.name} className="w-full aspect-square object-cover" />
-                              <div className="p-2 border-t border-flame/20 space-y-2">
-                                <div>
-                                  <p className="font-mono text-[11px] text-flame truncate">{w.name}</p>
-                                  {w.redes && <p className="text-[9px] text-muted-foreground truncate">{w.redes}</p>}
-                                </div>
-                                <button
-                                  onClick={() => toggleHidden(w.name)}
-                                  disabled={hBusy}
-                                  className={`w-full inline-flex items-center justify-center gap-1 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded disabled:opacity-40 ${
-                                    isHidden
-                                      ? "bg-emerald-600 text-white hover:opacity-90"
-                                      : "bg-red-600/70 text-white hover:bg-red-600"
-                                  }`}
-                                >
-                                  {isHidden ? <Eye className="w-2.5 h-2.5" /> : <EyeOff className="w-2.5 h-2.5" />}
-                                  {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
-                                </button>
+                      {waves.map((w) => {
+                        const busy = waveBusy === `rm:${w.id}`;
+                        const key = w.name.toUpperCase();
+                        const isHidden = hiddenSet.has(key);
+                        const hBusy = hideBusy === key;
+                        return (
+                          <li key={w.id} className={`relative group border rounded-lg overflow-hidden transition ${isHidden ? "border-red-500/40 bg-red-950/20 opacity-70" : "border-flame/30 bg-background/60 hover:border-flame"}`}>
+                            <img src={w.photo_url} alt={w.name} className="w-full aspect-square object-cover" />
+                            <div className="p-2 border-t border-flame/20 space-y-2">
+                              <div>
+                                <p className="font-mono text-[11px] text-flame truncate">{w.name}</p>
+                                {w.redes && <p className="text-[9px] text-muted-foreground truncate">{w.redes}</p>}
                               </div>
                               <button
-                                onClick={() => removeWave(w.id)}
-                                disabled={busy}
-                                className="absolute top-1.5 right-1.5 bg-red-600/90 hover:bg-red-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center disabled:opacity-40 opacity-0 group-hover:opacity-100 transition-opacity"
-                                aria-label={`Eliminar ${w.name}`}
+                                onClick={() => toggleHidden(w.name)}
+                                disabled={hBusy}
+                                className={`w-full inline-flex items-center justify-center gap-1 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded disabled:opacity-40 ${
+                                  isHidden
+                                    ? "bg-emerald-600 text-white hover:opacity-90"
+                                    : "bg-red-600/70 text-white hover:bg-red-600"
+                                }`}
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                {isHidden ? <Eye className="w-2.5 h-2.5" /> : <EyeOff className="w-2.5 h-2.5" />}
+                                {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
                               </button>
-
+                            </div>
+                            <button
+                              onClick={() => removeWave(w.id)}
+                              disabled={busy}
+                              className="absolute top-1.5 right-1.5 bg-red-600/90 hover:bg-red-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center disabled:opacity-40 opacity-0 group-hover:opacity-100 transition-opacity"
+                              aria-label={`Eliminar ${w.name}`}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
                           </li>
                         );
                       })}
                     </ul>
-                  )}
                   </div>
                 </div>
               </div>
             </SectionShell>
+
 
           </TabsContent>
 
