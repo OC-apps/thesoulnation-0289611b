@@ -328,6 +328,105 @@ function AdminLivePage() {
           })}
         </div>
       </section>
+
+      <section className="mt-10">
+        <h2 className="font-display text-xl text-foreground mb-2">Soul Waves · Nuevo miembro</h2>
+        <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
+          Agrega un nuevo wave con foto, red social y biografía.
+        </p>
+        <div className="border border-flame/20 rounded-lg p-4 bg-blue-deep/40 space-y-3">
+          <input
+            type="text"
+            value={waveForm.name}
+            onChange={(e) => setWaveForm((p) => ({ ...p, name: e.target.value.toUpperCase() }))}
+            placeholder="SOUL NICKNAME"
+            maxLength={80}
+            className="w-full px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-sm focus:border-flame outline-none font-mono uppercase"
+          />
+          <input
+            type="text"
+            value={waveForm.redes}
+            onChange={(e) => setWaveForm((p) => ({ ...p, redes: e.target.value }))}
+            placeholder="Redes (ej: TikTok · YouTube · X)"
+            maxLength={200}
+            className="w-full px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-sm focus:border-flame outline-none"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input
+              type="text"
+              value={waveForm.socialLabel}
+              onChange={(e) => setWaveForm((p) => ({ ...p, socialLabel: e.target.value }))}
+              placeholder="Etiqueta red social (ej: TikTok)"
+              maxLength={40}
+              className="px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-sm focus:border-flame outline-none"
+            />
+            <input
+              type="url"
+              value={waveForm.socialHref}
+              onChange={(e) => setWaveForm((p) => ({ ...p, socialHref: e.target.value }))}
+              placeholder="https://link-de-la-red.com"
+              maxLength={500}
+              className="px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-sm focus:border-flame outline-none"
+            />
+          </div>
+          <textarea
+            value={waveForm.bio}
+            onChange={(e) => setWaveForm((p) => ({ ...p, bio: e.target.value }))}
+            placeholder="Biografía…"
+            maxLength={4000}
+            rows={5}
+            className="w-full px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-sm focus:border-flame outline-none resize-y"
+          />
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              onChange={(e) => onPickPhoto(e.target.files?.[0] ?? null)}
+              className="text-xs text-foreground file:mr-3 file:py-2 file:px-3 file:rounded file:border-0 file:bg-flame file:text-background file:font-mono file:uppercase file:tracking-widest file:text-xs hover:file:opacity-90"
+            />
+            {wavePhoto && (
+              <img src={wavePhoto.base64} alt="preview" className="w-14 h-14 object-cover rounded border border-flame/40" />
+            )}
+          </div>
+          <button
+            onClick={submitWave}
+            disabled={waveBusy === "add"}
+            className="w-full bg-flame text-background font-mono uppercase tracking-widest text-sm py-2 rounded hover:opacity-90 disabled:opacity-40"
+          >
+            {waveBusy === "add" ? "Subiendo…" : "Agregar Wave"}
+          </button>
+        </div>
+
+        <div className="mt-6">
+          <h3 className="font-display text-foreground mb-3">Waves agregados <span className="text-xs font-mono text-muted-foreground">({waves.length})</span></h3>
+          {waves.length === 0 ? (
+            <p className="text-xs font-mono text-muted-foreground">Aún no has agregado waves dinámicos.</p>
+          ) : (
+            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {waves.map((w) => {
+                const busy = waveBusy === `rm:${w.id}`;
+                return (
+                  <li key={w.id} className="relative border border-flame/30 rounded-lg overflow-hidden bg-background/60">
+                    <img src={w.photo_url} alt={w.name} className="w-full aspect-square object-cover" />
+                    <div className="p-2">
+                      <p className="font-mono text-xs text-flame truncate">{w.name}</p>
+                      {w.redes && <p className="text-[10px] text-muted-foreground truncate">{w.redes}</p>}
+                    </div>
+                    <button
+                      onClick={() => removeWave(w.id)}
+                      disabled={busy}
+                      className="absolute top-1 right-1 bg-red-600/90 hover:bg-red-600 text-white text-xs w-6 h-6 rounded-full leading-none disabled:opacity-40"
+                      aria-label={`Eliminar ${w.name}`}
+                    >
+                      ×
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
