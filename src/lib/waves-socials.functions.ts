@@ -22,21 +22,21 @@ export const upsertWavesSocials = createServerFn({ method: "POST" })
       throw new Error("Contraseña incorrecta");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const payload: Record<string, unknown> = {
+    const { error } = await supabaseAdmin.from("waves_socials").upsert({
       name: data.name.trim().toUpperCase(),
       tiktok_url: data.tiktok?.trim() || null,
       twitch_url: data.twitch?.trim() || null,
       youtube_url: data.youtube?.trim() || null,
       x_url: data.x?.trim() || null,
       facebook_url: data.facebook?.trim() || null,
+      bio: data.bio !== undefined ? (data.bio.trim() || null) : undefined,
+      redes: data.redes !== undefined ? (data.redes.trim() || null) : undefined,
       updated_at: new Date().toISOString(),
-    };
-    if (data.bio !== undefined) payload.bio = data.bio.trim() || null;
-    if (data.redes !== undefined) payload.redes = data.redes.trim() || null;
-    const { error } = await supabaseAdmin.from("waves_socials").upsert(payload, { onConflict: "name" });
+    }, { onConflict: "name" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
 
 const DynInput = z.object({
   password: z.string().min(1).max(200),
