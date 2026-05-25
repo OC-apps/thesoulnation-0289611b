@@ -296,7 +296,7 @@ function AdminLivePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <form
-          onSubmit={(e) => { e.preventDefault(); setAuthed(true); }}
+          onSubmit={(e) => e.preventDefault()}
           className="w-full max-w-sm border border-flame/40 rounded-xl p-6 bg-blue-deep/60 backdrop-blur space-y-4"
         >
           <h1 className="font-display text-2xl text-flame">Admin · Live</h1>
@@ -307,11 +307,12 @@ function AdminLivePage() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3 py-2 bg-background border border-flame/30 rounded text-foreground focus:border-flame outline-none"
             autoFocus
+            placeholder="Se valida automáticamente…"
           />
           {msg && <p className="text-xs text-red-400">{msg}</p>}
-          <button type="submit" className="w-full bg-flame text-background font-mono uppercase tracking-widest text-sm py-2 rounded hover:opacity-90">
-            Entrar
-          </button>
+          <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground/70 text-center">
+            Entrarás automáticamente al escribir el password correcto
+          </p>
         </form>
       </div>
     );
