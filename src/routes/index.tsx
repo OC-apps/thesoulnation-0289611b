@@ -243,7 +243,7 @@ function WavesHUD() {
                   <span>SOUL · INTEL · PROFILE</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES.length}</span>
+                  <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES_ALL.length}</span>
                   <button onClick={() => setOpenIdx(null)} className="hover:text-foreground transition" aria-label="Cerrar">
                     <X className="w-4 h-4" />
                   </button>
