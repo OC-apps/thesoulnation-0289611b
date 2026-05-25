@@ -290,7 +290,7 @@ function AdminLivePage() {
     }
   };
 
-  const liveCount = Object.values(live).filter(Boolean).length;
+  
   const [socialQuery, setSocialQuery] = useState("");
   const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
 
