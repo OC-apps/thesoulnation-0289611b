@@ -206,10 +206,10 @@ function WavesHUD() {
     <>
       <div className="mb-20 space-y-4">
         {(() => {
-          const leaderIdx = WAVES.findIndex((c) => c.name === "SOUL MAVERICK Z");
+          const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
-            ...(leaderIdx >= 0 ? [{ c: WAVES[leaderIdx], i: leaderIdx, leader: true }] : []),
-            ...WAVES.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
+            ...(leaderIdx >= 0 ? [{ c: WAVES_ALL[leaderIdx], i: leaderIdx, leader: true }] : []),
+            ...WAVES_ALL.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
           ];
           return (
             <>
