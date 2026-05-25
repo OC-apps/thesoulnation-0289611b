@@ -155,25 +155,8 @@ function AdminLivePage() {
     return () => clearTimeout(t);
   }, [password, authed]);
 
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await supabase.from("live_status").select("member_id, is_live");
-      const map: Record<string, boolean> = {};
-      data?.forEach((r) => { map[r.member_id] = r.is_live; });
-      setLive(map);
-    };
-    load();
 
-    const ch = supabase
-      .channel("admin_live")
-      .on("postgres_changes", { event: "*", schema: "public", table: "live_status" }, (payload) => {
-        const row = (payload.new ?? payload.old) as { member_id: string; is_live?: boolean };
-        if (!row?.member_id) return;
-        setLive((p) => ({ ...p, [row.member_id]: !!row.is_live }));
-      })
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
-  }, []);
+
 
   useEffect(() => {
     const load = async () => {
