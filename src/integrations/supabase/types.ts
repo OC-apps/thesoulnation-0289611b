@@ -139,24 +139,30 @@ export type Database = {
       }
       waves_socials: {
         Row: {
+          facebook_url: string | null
           name: string
           tiktok_url: string | null
           twitch_url: string | null
           updated_at: string
+          x_url: string | null
           youtube_url: string | null
         }
         Insert: {
+          facebook_url?: string | null
           name: string
           tiktok_url?: string | null
           twitch_url?: string | null
           updated_at?: string
+          x_url?: string | null
           youtube_url?: string | null
         }
         Update: {
+          facebook_url?: string | null
           name?: string
           tiktok_url?: string | null
           twitch_url?: string | null
           updated_at?: string
+          x_url?: string | null
           youtube_url?: string | null
         }
         Relationships: []
