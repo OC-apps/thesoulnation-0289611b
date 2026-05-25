@@ -258,7 +258,7 @@ function AdminLivePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 max-w-3xl mx-auto">
+    <div className="min-h-screen bg-background p-6 pb-40 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display text-3xl text-flame">Admin · Soul Nation</h1>
         <button
