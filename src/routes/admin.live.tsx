@@ -290,15 +290,10 @@ function AdminLivePage() {
   };
 
   const liveCount = Object.values(live).filter(Boolean).length;
-  const allWaveNames = useMemo(
-    () => [...MEMBERS.map((m) => m.name), ...waves.map((w) => w.name)],
-    [waves]
-  );
   const [socialQuery, setSocialQuery] = useState("");
   const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
-  const filteredSocialNames = allWaveNames.filter((n) =>
-    n.toLowerCase().includes(socialQuery.trim().toLowerCase())
-  );
+
+
   
 
   if (!authed) {
