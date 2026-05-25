@@ -389,12 +389,8 @@ function AdminLivePage() {
           </div>
         )}
 
-        <Tabs defaultValue="live" className="w-full">
-          <TabsList className="grid grid-cols-3 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
-            <TabsTrigger value="live" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
-              <Radio className="w-3.5 h-3.5" />
-              <span>Live</span>
-            </TabsTrigger>
+        <Tabs defaultValue="roster" className="w-full">
+          <TabsList className="grid grid-cols-2 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -406,41 +402,6 @@ function AdminLivePage() {
           </TabsList>
 
 
-          <TabsContent value="live" className="mt-0">
-            <SectionShell icon={Radio} title="Live Status" subtitle={`${liveCount} en vivo de ${MEMBERS.length} miembros`}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {MEMBERS.map((m) => {
-                  const on = !!live[m.id];
-                  const busy = saving === m.id;
-                  return (
-                    <button
-                      key={m.id}
-                      onClick={() => toggle(m.id)}
-                      disabled={busy}
-                      className={`group text-left flex items-center justify-between border rounded-lg px-4 py-3 transition-all ${
-                        on
-                          ? "border-red-500/60 bg-red-950/30 shadow-[0_0_24px_-8px_rgba(220,38,38,0.6)]"
-                          : "border-flame/20 bg-blue-deep/40 hover:border-flame/60"
-                      } ${busy ? "opacity-50" : ""}`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className={`w-2.5 h-2.5 rounded-full ${on ? "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.9)]" : "bg-muted-foreground/40"}`} />
-                        <div className="min-w-0">
-                          <div className="font-display text-sm text-foreground truncate">{m.name}</div>
-                          <div className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
-                            {on ? "TikTok live" : "Offline"}
-                          </div>
-                        </div>
-                      </div>
-                      <div className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${on ? "bg-red-600" : "bg-muted-foreground/30"}`}>
-                        <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${on ? "translate-x-5" : "translate-x-0.5"}`} />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </SectionShell>
-          </TabsContent>
 
           <TabsContent value="roster" className="mt-0">
             <SectionShell icon={Users} title="Roster" subtitle="Crew · Legends · Killers · Waves">
