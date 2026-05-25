@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { setLiveStatus } from "@/lib/live-status.functions";
 import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
+import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
+import { useWavesMembers } from "@/hooks/use-waves-members";
 
 export const Route = createFileRoute("/admin/live")({
   head: () => ({
