@@ -29,6 +29,7 @@ import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
 import { useRoster } from "@/hooks/use-roster";
 import { useWavesMembers } from "@/hooks/use-waves-members";
+import { useWavesSocials } from "@/hooks/use-waves-socials";
 
 
 import { Hero3D } from "@/components/hero-3d";
@@ -190,6 +191,7 @@ function renderWaveCard(
 function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const dynamicWaves = useWavesMembers();
+  const socialsMap = useWavesSocials();
   const extraWaves = dynamicWaves.map((w) => ({
     name: w.name,
     redes: w.redes,
@@ -197,7 +199,18 @@ function WavesHUD() {
     bio: w.bio,
     socials: w.social_label && w.social_href ? [{ label: w.social_label, href: w.social_href }] : undefined,
   }));
-  const WAVES_ALL = [...WAVES, ...extraWaves];
+  const mergeSocials = (entry: { name: string; socials?: Social[] }): Social[] => {
+    const base = entry.socials ? [...entry.socials] : [];
+    const extra = socialsMap.get(entry.name.toUpperCase());
+    if (extra) {
+      const has = (l: string) => base.some((s) => s.label.toLowerCase() === l.toLowerCase());
+      if (extra.tiktok_url && !has("TikTok")) base.push({ label: "TikTok", href: extra.tiktok_url });
+      if (extra.twitch_url && !has("Twitch")) base.push({ label: "Twitch", href: extra.twitch_url });
+      if (extra.youtube_url && !has("YouTube")) base.push({ label: "YouTube", href: extra.youtube_url });
+    }
+    return base;
+  };
+  const WAVES_ALL = [...WAVES, ...extraWaves].map((w) => ({ ...w, socials: mergeSocials(w) }));
   const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
   const liveSet = useLiveStatus();
   const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
