@@ -324,6 +324,7 @@ function AdminLivePage() {
   
   const [socialQuery, setSocialQuery] = useState("");
   const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState<{ title: string; description: string; onConfirm: () => void } | null>(null);
 
 
   
