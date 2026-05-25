@@ -463,6 +463,56 @@ function AdminLivePage() {
           )}
         </div>
       </section>
+
+      <section className="mt-10">
+        <h2 className="font-display text-xl text-foreground mb-2">Soul Waves · Redes Sociales</h2>
+        <p className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">
+          Activa TikTok, Twitch o YouTube por wave. Deja vacío el que no aplique.
+        </p>
+        <ul className="space-y-3">
+          {[...MEMBERS.map((m) => m.name), ...waves.map((w) => w.name)].map((name) => {
+            const v = getSocial(name);
+            const busy = socialBusy === name.toUpperCase();
+            return (
+              <li key={name} className="border border-flame/20 rounded-lg p-3 bg-blue-deep/40">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-display text-sm text-flame">{name}</span>
+                  <button
+                    onClick={() => saveSocial(name)}
+                    disabled={busy}
+                    className="bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-3 py-1 rounded hover:opacity-90 disabled:opacity-40"
+                  >
+                    {busy ? "..." : "Guardar"}
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <input
+                    type="url"
+                    value={v.tiktok}
+                    onChange={(e) => setSocialField(name, "tiktok", e.target.value)}
+                    placeholder="TikTok URL"
+                    className="px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                  />
+                  <input
+                    type="url"
+                    value={v.twitch}
+                    onChange={(e) => setSocialField(name, "twitch", e.target.value)}
+                    placeholder="Twitch URL"
+                    className="px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                  />
+                  <input
+                    type="url"
+                    value={v.youtube}
+                    onChange={(e) => setSocialField(name, "youtube", e.target.value)}
+                    placeholder="YouTube URL"
+                    className="px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                  />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
     </div>
   );
 }
