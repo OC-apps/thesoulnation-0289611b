@@ -97,20 +97,50 @@ function AdminLivePage() {
     const current = getSocial(key);
     setSocialEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
   };
-  const saveSocial = async (name: string) => {
+  // Bio / redes edits (works for both fixed-override and dynamic-direct)
+  type ContentFields = { bio: string; redes: string };
+  const [contentEdits, setContentEdits] = useState<Record<string, ContentFields>>({});
+  const getContent = (name: string, fallback: ContentFields): ContentFields => {
+    const key = name.toUpperCase();
+    return contentEdits[key] ?? fallback;
+  };
+  const setContentField = (name: string, field: keyof ContentFields, value: string, fallback: ContentFields) => {
+    const key = name.toUpperCase();
+    const current = getContent(key, fallback);
+    setContentEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
+  };
+
+  const saveAll = async (
+    name: string,
+    opts: { isFixed: boolean; dynId?: string; fallbackContent: ContentFields },
+  ) => {
     const key = name.toUpperCase();
     const v = getSocial(key);
+    const c = getContent(key, opts.fallbackContent);
     setSocialBusy(key);
     setMsg("");
     try {
-      await upsertWavesSocials({ data: { password, name: key, tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube, x: v.x, facebook: v.facebook } });
+      await upsertWavesSocials({
+        data: {
+          password, name: key,
+          tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube, x: v.x, facebook: v.facebook,
+          ...(opts.isFixed ? { bio: c.bio, redes: c.redes } : {}),
+        },
+      });
+      if (!opts.isFixed && opts.dynId) {
+        await updateWavesMemberContent({
+          data: { password, id: opts.dynId, bio: c.bio, redes: c.redes },
+        });
+      }
       setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
+      setContentEdits((p) => { const n = { ...p }; delete n[key]; return n; });
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
     } finally {
       setSocialBusy(null);
     }
   };
+
 
   const hiddenSet = useWavesHidden();
   const [hideBusy, setHideBusy] = useState<string | null>(null);
