@@ -5,8 +5,10 @@ import { setLiveStatus } from "@/lib/live-status.functions";
 import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials } from "@/lib/waves-socials.functions";
+import { setWaveHidden } from "@/lib/waves-hidden.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
+import { useWavesHidden } from "@/hooks/use-waves-hidden";
 
 export const Route = createFileRoute("/admin/live")({
   head: () => ({
@@ -91,6 +93,22 @@ function AdminLivePage() {
       setSocialBusy(null);
     }
   };
+
+  const hiddenSet = useWavesHidden();
+  const [hideBusy, setHideBusy] = useState<string | null>(null);
+  const toggleHidden = async (name: string) => {
+    const key = name.toUpperCase();
+    setHideBusy(key);
+    setMsg("");
+    try {
+      await setWaveHidden({ data: { password, name: key, hidden: !hiddenSet.has(key) } });
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Error");
+    } finally {
+      setHideBusy(null);
+    }
+  };
+
 
   useEffect(() => {
     const saved = sessionStorage.getItem("admin-live-pw");
@@ -476,17 +494,31 @@ function AdminLivePage() {
           {[...MEMBERS.map((m) => m.name), ...waves.map((w) => w.name)].map((name) => {
             const v = getSocial(name);
             const busy = socialBusy === name.toUpperCase();
+            const key = name.toUpperCase();
+            const isHidden = hiddenSet.has(key);
+            const hBusy = hideBusy === key;
             return (
-              <li key={name} className="border border-flame/20 rounded-lg p-3 bg-blue-deep/40">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-display text-sm text-flame">{name}</span>
-                  <button
-                    onClick={() => saveSocial(name)}
-                    disabled={busy}
-                    className="bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-3 py-1 rounded hover:opacity-90 disabled:opacity-40"
-                  >
-                    {busy ? "..." : "Guardar"}
-                  </button>
+              <li key={name} className={`border rounded-lg p-3 ${isHidden ? "border-red-500/40 bg-red-950/20 opacity-70" : "border-flame/20 bg-blue-deep/40"}`}>
+                <div className="flex items-center justify-between mb-2 gap-2">
+                  <span className="font-display text-sm text-flame truncate">
+                    {name} {isHidden && <span className="text-[10px] font-mono text-red-400 ml-1">· OCULTO</span>}
+                  </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => toggleHidden(name)}
+                      disabled={hBusy}
+                      className={`font-mono uppercase tracking-widest text-[10px] px-3 py-1 rounded disabled:opacity-40 ${isHidden ? "bg-emerald-600 text-white hover:opacity-90" : "bg-red-600 text-white hover:opacity-90"}`}
+                    >
+                      {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
+                    </button>
+                    <button
+                      onClick={() => saveSocial(name)}
+                      disabled={busy}
+                      className="bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-3 py-1 rounded hover:opacity-90 disabled:opacity-40"
+                    >
+                      {busy ? "..." : "Guardar"}
+                    </button>
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <input
