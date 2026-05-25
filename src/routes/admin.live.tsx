@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Radio, Users, Waves as WavesIcon, Link2, Search, Plus, Trash2, EyeOff, Eye, Save, LogOut, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,15 @@ import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
 import { useWavesHidden } from "@/hooks/use-waves-hidden";
+import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
+import waveMaverick from "@/assets/wave-maverick.png";
+import waveAleman from "@/assets/wave-aleman.png";
+import wavePxlmaa from "@/assets/wave-pxlmaa.png";
+import waveGizzmo from "@/assets/wave-gizzmo.png";
+import waveTempla from "@/assets/wave-templa.png";
+import waveSystem from "@/assets/wave-system.png";
+import waveEmix from "@/assets/wave-emix.png";
+import waveEnri from "@/assets/wave-enri.png";
 
 export const Route = createFileRoute("/admin/live")({
   head: () => ({
@@ -24,18 +33,18 @@ export const Route = createFileRoute("/admin/live")({
 });
 
 const FIXED_MEMBERS = [
-  { id: "soul-maverick-z", name: "SOUL MAVERICK Z" },
+  { id: "soul-maverick-z", name: "SOUL MAVERICK Z", photo: waveMaverick },
 ];
 
 const OTHER_MEMBERS = [
-  { id: "soul-aleman", name: "SOUL ALEMAN" },
-  { id: "soul-gizzmo", name: "SOUL GIZZMO" },
-  { id: "soul-pxlmaa", name: "SOUL PXLMAA" },
-  { id: "soul-systeem", name: "SOUL SYSTEEM" },
-  { id: "soul-templa", name: "SOUL TEMPLA" },
-  { id: "soul-enri", name: "SOUL ENRI" },
-  { id: "soul-emi-x", name: "SOUL EMI X" },
-  { id: "soul-bellatriix", name: "SOUL BELLATRIIX" },
+  { id: "soul-aleman", name: "SOUL ALEMAN", photo: waveAleman },
+  { id: "soul-gizzmo", name: "SOUL GIZZMO", photo: waveGizzmo },
+  { id: "soul-pxlmaa", name: "SOUL PXLMAA", photo: wavePxlmaa },
+  { id: "soul-systeem", name: "SOUL SYSTEEM", photo: waveSystem },
+  { id: "soul-templa", name: "SOUL TEMPLA", photo: waveTempla },
+  { id: "soul-enri", name: "SOUL ENRI", photo: waveEnri },
+  { id: "soul-emi-x", name: "SOUL EMI X", photo: waveEmix },
+  { id: "soul-bellatriix", name: "SOUL BELLATRIIX", photo: soulBellatriix },
 ];
 
 const MEMBERS = [...FIXED_MEMBERS, ...OTHER_MEMBERS];
@@ -281,15 +290,10 @@ function AdminLivePage() {
   };
 
   const liveCount = Object.values(live).filter(Boolean).length;
-  const allWaveNames = useMemo(
-    () => [...MEMBERS.map((m) => m.name), ...waves.map((w) => w.name)],
-    [waves]
-  );
   const [socialQuery, setSocialQuery] = useState("");
   const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
-  const filteredSocialNames = allWaveNames.filter((n) =>
-    n.toLowerCase().includes(socialQuery.trim().toLowerCase())
-  );
+
+
   
 
   if (!authed) {
@@ -390,7 +394,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="live" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="live" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Radio className="w-3.5 h-3.5" />
               <span>Live</span>
@@ -401,13 +405,10 @@ function AdminLivePage() {
             </TabsTrigger>
             <TabsTrigger value="waves" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <WavesIcon className="w-3.5 h-3.5" />
-              <span>Waves</span>
-            </TabsTrigger>
-            <TabsTrigger value="redes" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
-              <Link2 className="w-3.5 h-3.5" />
-              <span>Redes</span>
+              <span>Waves · Redes</span>
             </TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="live" className="mt-0">
             <SectionShell icon={Radio} title="Live Status" subtitle={`${liveCount} en vivo de ${MEMBERS.length} miembros`}>
@@ -643,235 +644,169 @@ function AdminLivePage() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-3 space-y-6">
-                  <div>
-                    <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
-                      Wave fijo
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                        {FIXED_MEMBERS.length}
-                      </span>
-                    </h3>
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {FIXED_MEMBERS.map((m) => (
-                        <li
-                          key={m.id}
-                          className="relative border rounded-lg p-3 flex flex-col gap-2 border-flame/40 bg-flame/5"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-6 rounded-full bg-flame" />
-                            <p className="font-mono text-[11px] text-flame truncate flex-1">{m.name}</p>
-                          </div>
-                          <span className="text-[9px] font-mono text-flame/80 px-1.5 py-0.5 rounded bg-flame/10 border border-flame/30 self-start">
-                            SIEMPRE VISIBLE
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                <div className="lg:col-span-3 space-y-5">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={socialQuery}
+                      onChange={(e) => setSocialQuery(e.target.value)}
+                      placeholder="Buscar wave…"
+                      className="w-full pl-9 pr-3 py-2 bg-blue-deep/40 border border-flame/20 rounded-lg text-foreground text-sm focus:border-flame outline-none"
+                    />
                   </div>
 
-                  <div>
-                    <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
-                      Otros waves
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                        {OTHER_MEMBERS.length + waves.length}
-                      </span>
-                    </h3>
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {OTHER_MEMBERS.map((m) => {
-                        const key = m.name.toUpperCase();
-                        const isHidden = hiddenSet.has(key);
-                        const hBusy = hideBusy === key;
-                        return (
-                          <li
-                            key={m.id}
-                            className={`relative border rounded-lg p-3 flex flex-col gap-2 transition ${
-                              isHidden
-                                ? "border-red-500/40 bg-red-950/20 opacity-70"
-                                : "border-flame/30 bg-background/60 hover:border-flame"
-                            }`}
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className={`w-1.5 h-6 rounded-full ${isHidden ? "bg-red-500/60" : "bg-flame"}`} />
-                              <p className="font-mono text-[11px] text-flame truncate flex-1">{m.name}</p>
-                            </div>
-                            {isHidden && (
-                              <span className="text-[9px] font-mono text-red-400 px-1.5 py-0.5 rounded bg-red-950/50 border border-red-500/40 self-start">
-                                OCULTO
-                              </span>
-                            )}
-                            <button
-                              onClick={() => toggleHidden(m.name)}
-                              disabled={hBusy}
-                              className={`inline-flex items-center justify-center gap-1.5 font-mono uppercase tracking-widest text-[10px] px-2 py-1.5 rounded disabled:opacity-40 ${
-                                isHidden
-                                  ? "bg-emerald-600 text-white hover:opacity-90"
-                                  : "bg-red-600/80 text-white hover:bg-red-600"
+                  {(() => {
+                    const q = socialQuery.trim().toLowerCase();
+                    type Card = { id: string; name: string; photo: string; fixed: boolean; dyn?: typeof waves[number] };
+                    const cards: Card[] = [
+                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: m.photo, fixed: true })),
+                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: m.photo, fixed: false })),
+                      ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, fixed: false, dyn: w })),
+                    ].filter((c) => c.name.toLowerCase().includes(q));
+
+                    if (cards.length === 0) {
+                      return (
+                        <div className="text-xs font-mono text-muted-foreground text-center py-8">
+                          Sin resultados para "{socialQuery}"
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <ul className="space-y-3">
+                        {cards.map((c) => {
+                          const key = c.name.toUpperCase();
+                          const v = getSocial(c.name);
+                          const filledCount = [v.tiktok, v.twitch, v.youtube, v.x, v.facebook].filter(Boolean).length;
+                          const isHidden = hiddenSet.has(key);
+                          const hBusy = hideBusy === key;
+                          const sBusy = socialBusy === key;
+                          const expanded = expandedSocial === key;
+                          const rmBusy = c.dyn ? waveBusy === `rm:${c.dyn.id}` : false;
+                          return (
+                            <li
+                              key={c.id}
+                              className={`border rounded-lg overflow-hidden transition ${
+                                c.fixed
+                                  ? "border-flame/50 bg-flame/5"
+                                  : isHidden
+                                    ? "border-red-500/40 bg-red-950/20"
+                                    : "border-flame/25 bg-blue-deep/40 hover:border-flame/50"
                               }`}
                             >
-                              {isHidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                              {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
-                            </button>
-                          </li>
-                        );
-                      })}
-                      {waves.map((w) => {
-                        const busy = waveBusy === `rm:${w.id}`;
-                        const key = w.name.toUpperCase();
-                        const isHidden = hiddenSet.has(key);
-                        const hBusy = hideBusy === key;
-                        return (
-                          <li key={w.id} className={`relative group border rounded-lg overflow-hidden transition ${isHidden ? "border-red-500/40 bg-red-950/20 opacity-70" : "border-flame/30 bg-background/60 hover:border-flame"}`}>
-                            <img src={w.photo_url} alt={w.name} className="w-full aspect-square object-cover" />
-                            <div className="p-2 border-t border-flame/20 space-y-2">
-                              <div>
-                                <p className="font-mono text-[11px] text-flame truncate">{w.name}</p>
-                                {w.redes && <p className="text-[9px] text-muted-foreground truncate">{w.redes}</p>}
-                              </div>
-                              <button
-                                onClick={() => toggleHidden(w.name)}
-                                disabled={hBusy}
-                                className={`w-full inline-flex items-center justify-center gap-1 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded disabled:opacity-40 ${
-                                  isHidden
-                                    ? "bg-emerald-600 text-white hover:opacity-90"
-                                    : "bg-red-600/70 text-white hover:bg-red-600"
-                                }`}
-                              >
-                                {isHidden ? <Eye className="w-2.5 h-2.5" /> : <EyeOff className="w-2.5 h-2.5" />}
-                                {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
-                              </button>
-                            </div>
-                            <button
-                              onClick={() => removeWave(w.id)}
-                              disabled={busy}
-                              className="absolute top-1.5 right-1.5 bg-red-600/90 hover:bg-red-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center disabled:opacity-40 opacity-0 group-hover:opacity-100 transition-opacity"
-                              aria-label={`Eliminar ${w.name}`}
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </SectionShell>
-
-
-          </TabsContent>
-
-          <TabsContent value="redes" className="mt-0">
-            <SectionShell icon={Link2} title="Redes Sociales" subtitle="Activa TikTok · Twitch · YouTube · X · Facebook">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={socialQuery}
-                  onChange={(e) => setSocialQuery(e.target.value)}
-                  placeholder="Buscar wave…"
-                  className="w-full pl-9 pr-3 py-2 bg-blue-deep/40 border border-flame/20 rounded-lg text-foreground text-sm focus:border-flame outline-none"
-                />
-              </div>
-              <ul className="space-y-2">
-                {filteredSocialNames.map((name) => {
-                  const v = getSocial(name);
-                  const busy = socialBusy === name.toUpperCase();
-                  const key = name.toUpperCase();
-                  const isHidden = hiddenSet.has(key);
-                  const hBusy = hideBusy === key;
-                  const expanded = expandedSocial === key;
-                  const filledCount = [v.tiktok, v.twitch, v.youtube, v.x, v.facebook].filter(Boolean).length;
-                  return (
-                    <li
-                      key={name}
-                      className={`border rounded-lg transition ${
-                        isHidden
-                          ? "border-red-500/40 bg-red-950/20"
-                          : "border-flame/20 bg-blue-deep/40 hover:border-flame/40"
-                      }`}
-                    >
-                      <button
-                        onClick={() => setExpandedSocial(expanded ? null : key)}
-                        className="w-full flex items-center justify-between gap-2 p-3 text-left"
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span className={`w-1.5 h-8 rounded-full ${isHidden ? "bg-red-500/60" : filledCount > 0 ? "bg-flame" : "bg-muted-foreground/30"}`} />
-                          <div className="min-w-0">
-                            <div className="font-display text-sm text-flame truncate flex items-center gap-2">
-                              {name}
-                              {isHidden && (
-                                <span className="text-[9px] font-mono text-red-400 px-1.5 py-0.5 rounded bg-red-950/50 border border-red-500/40">
-                                  OCULTO
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-[10px] font-mono text-muted-foreground">
-                              {filledCount} red{filledCount === 1 ? "" : "es"} configurada{filledCount === 1 ? "" : "s"}
-                            </div>
-                          </div>
-                        </div>
-                        <span className={`text-flame transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}>▾</span>
-                      </button>
-
-                      {expanded && (
-                        <div className="px-3 pb-3 space-y-2 border-t border-flame/10 pt-3">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                            {([
-                              ["tiktok", "TikTok"],
-                              ["twitch", "Twitch"],
-                              ["youtube", "YouTube"],
-                              ["x", "X (Twitter)"],
-                              ["facebook", "Facebook"],
-                            ] as const).map(([field, label]) => (
-                              <label key={field} className="space-y-1 block">
-                                <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
-                                  {label}
-                                </span>
-                                <input
-                                  type="url"
-                                  value={v[field]}
-                                  onChange={(e) => setSocialField(name, field, e.target.value)}
-                                  placeholder="https://…"
-                                  className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                              <div className="flex items-stretch gap-3 p-3">
+                                <img
+                                  src={c.photo}
+                                  alt={c.name}
+                                  className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md border shrink-0 ${
+                                    isHidden ? "opacity-50 border-red-500/30" : "border-flame/30"
+                                  }`}
                                 />
-                              </label>
-                            ))}
-                          </div>
-                          <div className="flex flex-wrap items-center gap-2 pt-2">
-                            <button
-                              onClick={() => saveSocial(name)}
-                              disabled={busy}
-                              className="inline-flex items-center gap-1.5 bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-3 py-1.5 rounded hover:opacity-90 disabled:opacity-40"
-                            >
-                              <Save className="w-3 h-3" />
-                              {busy ? "Guardando…" : "Guardar"}
-                            </button>
-                            <button
-                              onClick={() => toggleHidden(name)}
-                              disabled={hBusy}
-                              className={`inline-flex items-center gap-1.5 font-mono uppercase tracking-widest text-[10px] px-3 py-1.5 rounded disabled:opacity-40 ${
-                                isHidden
-                                  ? "bg-emerald-600 text-white hover:opacity-90"
-                                  : "bg-red-600/80 text-white hover:bg-red-600"
-                              }`}
-                            >
-                              {isHidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                              {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-                {filteredSocialNames.length === 0 && (
-                  <li className="text-xs font-mono text-muted-foreground text-center py-8">
-                    Sin resultados para "{socialQuery}"
-                  </li>
-                )}
-              </ul>
+                                <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
+                                  <div className="min-w-0">
+                                    <div className="font-display text-sm text-flame truncate flex items-center gap-2 flex-wrap">
+                                      {c.name}
+                                      {c.fixed && (
+                                        <span className="text-[9px] font-mono text-flame/80 px-1.5 py-0.5 rounded bg-flame/10 border border-flame/30">
+                                          FIJO
+                                        </span>
+                                      )}
+                                      {isHidden && (
+                                        <span className="text-[9px] font-mono text-red-400 px-1.5 py-0.5 rounded bg-red-950/50 border border-red-500/40">
+                                          OCULTO
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="text-[10px] font-mono text-muted-foreground mt-0.5">
+                                      {filledCount} red{filledCount === 1 ? "" : "es"} configurada{filledCount === 1 ? "" : "s"}
+                                      {c.dyn?.redes && <> · {c.dyn.redes}</>}
+                                    </div>
+                                  </div>
+                                  <div className="flex flex-wrap items-center gap-1.5">
+                                    <button
+                                      onClick={() => setExpandedSocial(expanded ? null : key)}
+                                      className="inline-flex items-center gap-1.5 border border-flame/40 text-flame hover:bg-flame/10 font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded"
+                                    >
+                                      <Link2 className="w-3 h-3" />
+                                      {expanded ? "Cerrar redes" : "Redes"}
+                                    </button>
+                                    {!c.fixed && (
+                                      <button
+                                        onClick={() => toggleHidden(c.name)}
+                                        disabled={hBusy}
+                                        className={`inline-flex items-center gap-1.5 font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded disabled:opacity-40 ${
+                                          isHidden
+                                            ? "bg-emerald-600 text-white hover:opacity-90"
+                                            : "bg-red-600/80 text-white hover:bg-red-600"
+                                        }`}
+                                      >
+                                        {isHidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                                        {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
+                                      </button>
+                                    )}
+                                    {c.dyn && (
+                                      <button
+                                        onClick={() => removeWave(c.dyn!.id)}
+                                        disabled={rmBusy}
+                                        className="inline-flex items-center gap-1.5 border border-red-500/50 text-red-300 hover:bg-red-950/40 font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded disabled:opacity-40"
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                        {rmBusy ? "..." : "Eliminar"}
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {expanded && (
+                                <div className="px-3 pb-3 pt-3 border-t border-flame/15 bg-background/30 space-y-2">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                    {([
+                                      ["tiktok", "TikTok"],
+                                      ["twitch", "Twitch"],
+                                      ["youtube", "YouTube"],
+                                      ["x", "X (Twitter)"],
+                                      ["facebook", "Facebook"],
+                                    ] as const).map(([field, label]) => (
+                                      <label key={field} className="space-y-1 block">
+                                        <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+                                          {label}
+                                        </span>
+                                        <input
+                                          type="url"
+                                          value={v[field]}
+                                          onChange={(e) => setSocialField(c.name, field, e.target.value)}
+                                          placeholder="https://…"
+                                          className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                                        />
+                                      </label>
+                                    ))}
+                                  </div>
+                                  <button
+                                    onClick={() => saveSocial(c.name)}
+                                    disabled={sBusy}
+                                    className="inline-flex items-center gap-1.5 bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-3 py-1.5 rounded hover:opacity-90 disabled:opacity-40"
+                                  >
+                                    <Save className="w-3 h-3" />
+                                    {sBusy ? "Guardando…" : "Guardar redes"}
+                                  </button>
+                                </div>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    );
+                  })()}
+                </div>
+
+              </div>
             </SectionShell>
+
+
           </TabsContent>
+
         </Tabs>
       </div>
     </div>
