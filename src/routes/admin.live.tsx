@@ -8,6 +8,7 @@ import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
+import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
 import { useWavesHidden } from "@/hooks/use-waves-hidden";
