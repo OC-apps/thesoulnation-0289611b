@@ -48,6 +48,11 @@ function AdminLivePage() {
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "", killers: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
 
+  const waves = useWavesMembers();
+  const [waveForm, setWaveForm] = useState({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
+  const [wavePhoto, setWavePhoto] = useState<{ base64: string; mime: string; name: string } | null>(null);
+  const [waveBusy, setWaveBusy] = useState<string | null>(null);
+
   useEffect(() => {
     const saved = sessionStorage.getItem("admin-live-pw");
     if (saved) {
