@@ -147,6 +147,55 @@ function AdminLivePage() {
     }
   };
 
+  const onPickPhoto = (file: File | null) => {
+    if (!file) { setWavePhoto(null); return; }
+    if (file.size > 5 * 1024 * 1024) { setMsg("La foto debe pesar menos de 5MB"); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setWavePhoto({ base64: reader.result as string, mime: file.type, name: file.name });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const submitWave = async () => {
+    if (!waveForm.name.trim()) { setMsg("Nickname requerido"); return; }
+    if (!wavePhoto) { setMsg("Foto requerida"); return; }
+    setWaveBusy("add");
+    setMsg("");
+    try {
+      await addWavesMember({
+        data: {
+          password,
+          name: waveForm.name,
+          redes: waveForm.redes,
+          bio: waveForm.bio,
+          socialLabel: waveForm.socialLabel,
+          socialHref: waveForm.socialHref || "",
+          photoBase64: wavePhoto.base64,
+          photoMime: wavePhoto.mime,
+        },
+      });
+      setWaveForm({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
+      setWavePhoto(null);
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Error");
+    } finally {
+      setWaveBusy(null);
+    }
+  };
+
+  const removeWave = async (id: string) => {
+    setWaveBusy(`rm:${id}`);
+    setMsg("");
+    try {
+      await removeWavesMember({ data: { password, id } });
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Error");
+    } finally {
+      setWaveBusy(null);
+    }
+  };
+
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
