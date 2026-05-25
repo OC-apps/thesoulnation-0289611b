@@ -154,9 +154,11 @@ export type Database = {
       }
       waves_socials: {
         Row: {
+          bio: string | null
           facebook_url: string | null
           name: string
           photo_url: string | null
+          redes: string | null
           tiktok_url: string | null
           twitch_url: string | null
           updated_at: string
@@ -164,9 +166,11 @@ export type Database = {
           youtube_url: string | null
         }
         Insert: {
+          bio?: string | null
           facebook_url?: string | null
           name: string
           photo_url?: string | null
+          redes?: string | null
           tiktok_url?: string | null
           twitch_url?: string | null
           updated_at?: string
@@ -174,9 +178,11 @@ export type Database = {
           youtube_url?: string | null
         }
         Update: {
+          bio?: string | null
           facebook_url?: string | null
           name?: string
           photo_url?: string | null
+          redes?: string | null
           tiktok_url?: string | null
           twitch_url?: string | null
           updated_at?: string

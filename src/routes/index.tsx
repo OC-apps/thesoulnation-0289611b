@@ -218,8 +218,15 @@ function WavesHUD() {
     .filter((w) => !hiddenSet.has(w.name.toUpperCase()))
     .map((w) => {
       const extra = socialsMap.get(w.name.toUpperCase());
-      return { ...w, socials: mergeSocials(w), photo: extra?.photo_url || w.photo };
+      return {
+        ...w,
+        socials: mergeSocials(w),
+        photo: extra?.photo_url || w.photo,
+        bio: extra?.bio || w.bio,
+        redes: extra?.redes || w.redes,
+      };
     });
+
 
   const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
   const liveSet = useLiveStatus();

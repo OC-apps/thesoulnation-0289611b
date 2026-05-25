@@ -9,6 +9,8 @@ export type WavesSocialsRow = {
   x_url: string | null;
   facebook_url: string | null;
   photo_url: string | null;
+  bio: string | null;
+  redes: string | null;
 };
 
 export function useWavesSocials() {
@@ -19,10 +21,11 @@ export function useWavesSocials() {
     const load = async () => {
       const { data } = await supabase
         .from("waves_socials")
-        .select("name, tiktok_url, twitch_url, youtube_url, x_url, facebook_url, photo_url");
+        .select("name, tiktok_url, twitch_url, youtube_url, x_url, facebook_url, photo_url, bio, redes");
       if (mounted && data) setRows(data as WavesSocialsRow[]);
     };
     load();
+
 
 
     const ch = supabase

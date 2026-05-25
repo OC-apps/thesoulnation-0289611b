@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { updateWavePhoto } from "@/lib/wave-photo.functions";
 import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
-import { upsertWavesSocials } from "@/lib/waves-socials.functions";
+import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
@@ -97,20 +97,50 @@ function AdminLivePage() {
     const current = getSocial(key);
     setSocialEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
   };
-  const saveSocial = async (name: string) => {
+  // Bio / redes edits (works for both fixed-override and dynamic-direct)
+  type ContentFields = { bio: string; redes: string };
+  const [contentEdits, setContentEdits] = useState<Record<string, ContentFields>>({});
+  const getContent = (name: string, fallback: ContentFields): ContentFields => {
+    const key = name.toUpperCase();
+    return contentEdits[key] ?? fallback;
+  };
+  const setContentField = (name: string, field: keyof ContentFields, value: string, fallback: ContentFields) => {
+    const key = name.toUpperCase();
+    const current = getContent(key, fallback);
+    setContentEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
+  };
+
+  const saveAll = async (
+    name: string,
+    opts: { isFixed: boolean; dynId?: string; fallbackContent: ContentFields },
+  ) => {
     const key = name.toUpperCase();
     const v = getSocial(key);
+    const c = getContent(key, opts.fallbackContent);
     setSocialBusy(key);
     setMsg("");
     try {
-      await upsertWavesSocials({ data: { password, name: key, tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube, x: v.x, facebook: v.facebook } });
+      await upsertWavesSocials({
+        data: {
+          password, name: key,
+          tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube, x: v.x, facebook: v.facebook,
+          ...(opts.isFixed ? { bio: c.bio, redes: c.redes } : {}),
+        },
+      });
+      if (!opts.isFixed && opts.dynId) {
+        await updateWavesMemberContent({
+          data: { password, id: opts.dynId, bio: c.bio, redes: c.redes },
+        });
+      }
       setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
+      setContentEdits((p) => { const n = { ...p }; delete n[key]; return n; });
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
     } finally {
       setSocialBusy(null);
     }
   };
+
 
   const hiddenSet = useWavesHidden();
   const [hideBusy, setHideBusy] = useState<string | null>(null);
@@ -462,72 +492,10 @@ function AdminLivePage() {
 
               </div>
 
-              {/* Soul Waves — gestión de fotos del roster */}
-              <div className="mt-6 border border-flame/30 rounded-lg p-4 bg-flame/5">
-                <div className="flex items-center justify-between mb-4 pb-2 border-b border-flame/15">
-                  <h3 className="font-display text-sm text-flame flex items-center gap-1.5">
-                    <WavesIcon className="w-3.5 h-3.5" />
-                    Soul Waves · Fotos del Roster
-                  </h3>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                    {MEMBERS.length + waves.length}
-                  </span>
-                </div>
-                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-4">
-                  Cambia la imagen que aparece en el roster público
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                  {[
-                    ...MEMBERS.map((m) => {
-                      const override = socialsMap.get(m.name.toUpperCase())?.photo_url;
-                      return { id: m.id, name: m.name, photo: override || m.photo, kind: "fixed" as const, keyOrId: m.name.toUpperCase(), dynId: null as string | null };
-                    }),
-                    ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, kind: "dynamic" as const, keyOrId: w.id, dynId: w.id })),
-                  ].map((c) => {
-                    const isHidden = hiddenSet.has(c.name.toUpperCase());
-                    const busyKey = `${c.kind}:${c.keyOrId}`;
-                    const busy = photoBusy === busyKey;
-                    return (
-                      <div
-                        key={c.id}
-                        className={`border rounded-lg overflow-hidden bg-background/60 ${
-                          isHidden ? "border-red-500/40 opacity-60" : "border-flame/30"
-                        }`}
-                      >
-                        <div className="relative aspect-square">
-                          <img src={c.photo} alt={c.name} className="absolute inset-0 w-full h-full object-cover object-[center_25%]" />
-                          {busy && (
-                            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-                              <span className="text-[10px] font-mono text-flame animate-pulse">Subiendo…</span>
-                            </div>
-                          )}
-                        </div>
-                        <div className="p-2 space-y-1.5">
-                          <div className="font-mono text-[10px] text-foreground truncate" title={c.name}>{c.name}</div>
-                          <label className="block">
-                            <span className="sr-only">Cambiar foto de {c.name}</span>
-                            <input
-                              type="file"
-                              accept="image/png,image/jpeg,image/webp,image/gif"
-                              disabled={busy}
-                              onChange={(e) => {
-                                const f = e.target.files?.[0] ?? null;
-                                onChangePhoto(c.kind, c.keyOrId, f);
-                                e.target.value = "";
-                              }}
-                              className="hidden"
-                            />
-                            <span className={`inline-flex w-full items-center justify-center gap-1 border border-flame/40 text-flame hover:bg-flame/10 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded cursor-pointer ${busy ? "opacity-40 cursor-not-allowed" : ""}`}>
-                              <ImageIcon className="w-3 h-3" />
-                              Cambiar foto
-                            </span>
-                          </label>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mt-4">
+                Los waves se editan completos (foto · bio · redes) desde la pestaña <span className="text-flame">Waves · Redes</span>
+              </p>
+
             </SectionShell>
           </TabsContent>
 
@@ -643,7 +611,6 @@ function AdminLivePage() {
                       ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, fixed: false, dyn: w })),
                     ].filter((c) => c.name.toLowerCase().includes(q));
 
-
                     if (cards.length === 0) {
                       return (
                         <div className="text-xs font-mono text-muted-foreground text-center py-8">
@@ -663,6 +630,15 @@ function AdminLivePage() {
                           const sBusy = socialBusy === key;
                           const expanded = expandedSocial === key;
                           const rmBusy = c.dyn ? waveBusy === `rm:${c.dyn.id}` : false;
+                          const photoKind: "fixed" | "dynamic" = c.dyn ? "dynamic" : "fixed";
+                          const photoKey = c.dyn ? c.dyn.id : key;
+                          const pBusy = photoBusy === `${photoKind}:${photoKey}`;
+                          const socialsRow = socialsMap.get(key);
+                          const fallbackContent: ContentFields = {
+                            bio: c.dyn?.bio ?? socialsRow?.bio ?? "",
+                            redes: c.dyn?.redes ?? socialsRow?.redes ?? "",
+                          };
+                          const content = getContent(c.name, fallbackContent);
                           return (
                             <li
                               key={c.id}
@@ -675,13 +651,29 @@ function AdminLivePage() {
                               }`}
                             >
                               <div className="flex items-stretch gap-3 p-3">
-                                <img
-                                  src={c.photo}
-                                  alt={c.name}
-                                  className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md border shrink-0 ${
-                                    isHidden ? "opacity-50 border-red-500/30" : "border-flame/30"
-                                  }`}
-                                />
+                                <div className="relative shrink-0">
+                                  <img
+                                    src={c.photo}
+                                    alt={c.name}
+                                    className={`w-20 h-20 sm:w-24 sm:h-24 object-cover object-[center_25%] rounded-md border ${
+                                      isHidden ? "opacity-50 border-red-500/30" : "border-flame/30"
+                                    }`}
+                                  />
+                                  <label className={`absolute inset-x-0 bottom-0 text-center bg-background/80 backdrop-blur-sm border-t border-flame/30 text-[9px] font-mono uppercase tracking-widest text-flame py-1 cursor-pointer hover:bg-flame/20 transition ${pBusy ? "opacity-60 cursor-not-allowed" : ""}`}>
+                                    {pBusy ? "Subiendo…" : "Cambiar"}
+                                    <input
+                                      type="file"
+                                      accept="image/png,image/jpeg,image/webp,image/gif"
+                                      disabled={pBusy}
+                                      onChange={(e) => {
+                                        const f = e.target.files?.[0] ?? null;
+                                        onChangePhoto(photoKind, photoKey, f);
+                                        e.target.value = "";
+                                      }}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                </div>
                                 <div className="flex-1 min-w-0 flex flex-col justify-between gap-2">
                                   <div className="min-w-0">
                                     <div className="font-display text-sm text-flame truncate flex items-center gap-2 flex-wrap">
@@ -697,18 +689,17 @@ function AdminLivePage() {
                                         </span>
                                       )}
                                     </div>
-                                    <div className="text-[10px] font-mono text-muted-foreground mt-0.5">
-                                      {filledCount} red{filledCount === 1 ? "" : "es"} configurada{filledCount === 1 ? "" : "s"}
-                                      {c.dyn?.redes && <> · {c.dyn.redes}</>}
+                                    <div className="text-[10px] font-mono text-muted-foreground mt-0.5 line-clamp-2">
+                                      {filledCount} red{filledCount === 1 ? "" : "es"} · {content.bio ? `${content.bio.slice(0, 80)}${content.bio.length > 80 ? "…" : ""}` : "sin bio personalizada"}
                                     </div>
                                   </div>
                                   <div className="flex flex-wrap items-center gap-1.5">
                                     <button
                                       onClick={() => setExpandedSocial(expanded ? null : key)}
-                                      className="inline-flex items-center gap-1.5 border border-flame/40 text-flame hover:bg-flame/10 font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded"
+                                      className="inline-flex items-center gap-1.5 bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-2.5 py-1 rounded hover:opacity-90"
                                     >
                                       <Link2 className="w-3 h-3" />
-                                      {expanded ? "Cerrar redes" : "Redes"}
+                                      {expanded ? "Cerrar editor" : "Editar todo"}
                                     </button>
                                     {!c.fixed && (
                                       <button
@@ -739,36 +730,69 @@ function AdminLivePage() {
                               </div>
 
                               {expanded && (
-                                <div className="px-3 pb-3 pt-3 border-t border-flame/15 bg-background/30 space-y-2">
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                    {([
-                                      ["tiktok", "TikTok"],
-                                      ["twitch", "Twitch"],
-                                      ["youtube", "YouTube"],
-                                      ["x", "X (Twitter)"],
-                                      ["facebook", "Facebook"],
-                                    ] as const).map(([field, label]) => (
-                                      <label key={field} className="space-y-1 block">
-                                        <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
-                                          {label}
-                                        </span>
-                                        <input
-                                          type="url"
-                                          value={v[field]}
-                                          onChange={(e) => setSocialField(c.name, field, e.target.value)}
-                                          placeholder="https://…"
-                                          className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
-                                        />
-                                      </label>
-                                    ))}
+                                <div className="px-3 pb-3 pt-3 border-t border-flame/15 bg-background/30 space-y-3">
+                                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                    <label className="sm:col-span-1 space-y-1 block">
+                                      <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+                                        Redes (texto del header)
+                                      </span>
+                                      <input
+                                        type="text"
+                                        value={content.redes}
+                                        onChange={(e) => setContentField(c.name, "redes", e.target.value, fallbackContent)}
+                                        placeholder="TikTok · YouTube · X"
+                                        maxLength={200}
+                                        className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                                      />
+                                    </label>
+                                    <label className="sm:col-span-2 space-y-1 block">
+                                      <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+                                        Biografía
+                                      </span>
+                                      <textarea
+                                        value={content.bio}
+                                        onChange={(e) => setContentField(c.name, "bio", e.target.value, fallbackContent)}
+                                        placeholder={c.fixed ? "Deja vacío para usar la bio por defecto" : "Biografía…"}
+                                        maxLength={4000}
+                                        rows={5}
+                                        className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none resize-y"
+                                      />
+                                    </label>
+                                  </div>
+                                  <div>
+                                    <p className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
+                                      Redes sociales (URLs)
+                                    </p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                      {([
+                                        ["tiktok", "TikTok"],
+                                        ["twitch", "Twitch"],
+                                        ["youtube", "YouTube"],
+                                        ["x", "X (Twitter)"],
+                                        ["facebook", "Facebook"],
+                                      ] as const).map(([field, label]) => (
+                                        <label key={field} className="space-y-1 block">
+                                          <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
+                                            {label}
+                                          </span>
+                                          <input
+                                            type="url"
+                                            value={v[field]}
+                                            onChange={(e) => setSocialField(c.name, field, e.target.value)}
+                                            placeholder="https://…"
+                                            className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                                          />
+                                        </label>
+                                      ))}
+                                    </div>
                                   </div>
                                   <button
-                                    onClick={() => saveSocial(c.name)}
+                                    onClick={() => saveAll(c.name, { isFixed: c.fixed, dynId: c.dyn?.id, fallbackContent })}
                                     disabled={sBusy}
-                                    className="inline-flex items-center gap-1.5 bg-flame text-background font-mono uppercase tracking-widest text-[10px] px-3 py-1.5 rounded hover:opacity-90 disabled:opacity-40"
+                                    className="w-full inline-flex items-center justify-center gap-1.5 bg-flame text-background font-mono uppercase tracking-widest text-xs px-3 py-2 rounded hover:opacity-90 disabled:opacity-40 shadow-[0_0_18px_var(--flame-glow)]"
                                   >
-                                    <Save className="w-3 h-3" />
-                                    {sBusy ? "Guardando…" : "Guardar redes"}
+                                    <Save className="w-3.5 h-3.5" />
+                                    {sBusy ? "Guardando…" : "Guardar todo"}
                                   </button>
                                 </div>
                               )}
@@ -778,6 +802,7 @@ function AdminLivePage() {
                       </ul>
                     );
                   })()}
+
                 </div>
 
               </div>
