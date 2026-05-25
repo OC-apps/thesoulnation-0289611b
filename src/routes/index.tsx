@@ -28,6 +28,7 @@ import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
 import { useRoster } from "@/hooks/use-roster";
+import { useWavesMembers } from "@/hooks/use-waves-members";
 
 
 import { Hero3D } from "@/components/hero-3d";
