@@ -255,6 +255,18 @@ function AdminLivePage() {
     }
   };
 
+  const liveCount = Object.values(live).filter(Boolean).length;
+  const allWaveNames = useMemo(
+    () => [...MEMBERS.map((m) => m.name), ...waves.map((w) => w.name)],
+    [waves]
+  );
+  const [socialQuery, setSocialQuery] = useState("");
+  const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
+  const filteredSocialNames = allWaveNames.filter((n) =>
+    n.toLowerCase().includes(socialQuery.trim().toLowerCase())
+  );
+  const visibleHardcoded = MEMBERS.filter((m) => !hiddenSet.has(m.name.toUpperCase())).length;
+
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
@@ -280,17 +292,6 @@ function AdminLivePage() {
     );
   }
 
-  const liveCount = Object.values(live).filter(Boolean).length;
-  const allWaveNames = useMemo(
-    () => [...MEMBERS.map((m) => m.name), ...waves.map((w) => w.name)],
-    [waves]
-  );
-  const [socialQuery, setSocialQuery] = useState("");
-  const filteredSocialNames = allWaveNames.filter((n) =>
-    n.toLowerCase().includes(socialQuery.trim().toLowerCase())
-  );
-  const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
-  const visibleHardcoded = MEMBERS.filter((m) => !hiddenSet.has(m.name.toUpperCase())).length;
 
   const SectionShell = ({
     icon: Icon,
