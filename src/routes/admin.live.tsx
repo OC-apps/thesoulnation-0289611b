@@ -638,10 +638,11 @@ function AdminLivePage() {
                     const q = socialQuery.trim().toLowerCase();
                     type Card = { id: string; name: string; photo: string; fixed: boolean; dyn?: typeof waves[number] };
                     const cards: Card[] = [
-                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: m.photo, fixed: true })),
-                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: m.photo, fixed: false })),
+                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: true })),
+                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: false })),
                       ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, fixed: false, dyn: w })),
                     ].filter((c) => c.name.toLowerCase().includes(q));
+
 
                     if (cards.length === 0) {
                       return (
