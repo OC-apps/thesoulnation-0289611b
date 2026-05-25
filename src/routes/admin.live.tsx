@@ -399,7 +399,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="live" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="live" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Radio className="w-3.5 h-3.5" />
               <span>Live</span>
@@ -410,13 +410,10 @@ function AdminLivePage() {
             </TabsTrigger>
             <TabsTrigger value="waves" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <WavesIcon className="w-3.5 h-3.5" />
-              <span>Waves</span>
-            </TabsTrigger>
-            <TabsTrigger value="redes" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
-              <Link2 className="w-3.5 h-3.5" />
-              <span>Redes</span>
+              <span>Waves · Redes</span>
             </TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="live" className="mt-0">
             <SectionShell icon={Radio} title="Live Status" subtitle={`${liveCount} en vivo de ${MEMBERS.length} miembros`}>
