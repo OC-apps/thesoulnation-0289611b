@@ -9,6 +9,8 @@ const Input = z.object({
   tiktok: urlOrEmpty,
   twitch: urlOrEmpty,
   youtube: urlOrEmpty,
+  x: urlOrEmpty,
+  facebook: urlOrEmpty,
 });
 
 export const upsertWavesSocials = createServerFn({ method: "POST" })
@@ -23,6 +25,8 @@ export const upsertWavesSocials = createServerFn({ method: "POST" })
       tiktok_url: data.tiktok?.trim() || null,
       twitch_url: data.twitch?.trim() || null,
       youtube_url: data.youtube?.trim() || null,
+      x_url: data.x?.trim() || null,
+      facebook_url: data.facebook?.trim() || null,
       updated_at: new Date().toISOString(),
     });
     if (error) throw new Error(error.message);
