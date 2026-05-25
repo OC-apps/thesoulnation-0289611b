@@ -126,6 +126,25 @@ function AdminLivePage() {
     }
   }, []);
 
+  // Auto-login: verifica el password en cada cambio y entra cuando es correcto
+  useEffect(() => {
+    if (authed) return;
+    if (!password || password.length < 3) return;
+    const t = setTimeout(async () => {
+      try {
+        const res = await verifyAdminPassword({ data: { password } });
+        if (res.ok) {
+          sessionStorage.setItem("admin-live-pw", password);
+          setAuthed(true);
+          setMsg("");
+        }
+      } catch {
+        /* ignore */
+      }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [password, authed]);
+
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase.from("live_status").select("member_id, is_live");
