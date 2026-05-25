@@ -192,6 +192,7 @@ function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const dynamicWaves = useWavesMembers();
   const socialsMap = useWavesSocials();
+  const hiddenSet = useWavesHidden();
   const extraWaves = dynamicWaves.map((w) => ({
     name: w.name,
     redes: w.redes,
@@ -212,7 +213,9 @@ function WavesHUD() {
     }
     return base;
   };
-  const WAVES_ALL = [...WAVES, ...extraWaves].map((w) => ({ ...w, socials: mergeSocials(w) }));
+  const WAVES_ALL = [...WAVES, ...extraWaves]
+    .filter((w) => !hiddenSet.has(w.name.toUpperCase()))
+    .map((w) => ({ ...w, socials: mergeSocials(w) }));
   const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
   const liveSet = useLiveStatus();
   const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
