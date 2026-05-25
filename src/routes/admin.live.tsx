@@ -8,6 +8,7 @@ import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
+import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
 import { useWavesHidden } from "@/hooks/use-waves-hidden";
@@ -22,8 +23,11 @@ export const Route = createFileRoute("/admin/live")({
   component: AdminLivePage,
 });
 
-const MEMBERS = [
+const FIXED_MEMBERS = [
   { id: "soul-maverick-z", name: "SOUL MAVERICK Z" },
+];
+
+const OTHER_MEMBERS = [
   { id: "soul-aleman", name: "SOUL ALEMAN" },
   { id: "soul-gizzmo", name: "SOUL GIZZMO" },
   { id: "soul-pxlmaa", name: "SOUL PXLMAA" },
@@ -33,6 +37,8 @@ const MEMBERS = [
   { id: "soul-emi-x", name: "SOUL EMI X" },
   { id: "soul-bellatriix", name: "SOUL BELLATRIIX" },
 ];
+
+const MEMBERS = [...FIXED_MEMBERS, ...OTHER_MEMBERS];
 
 type RosterCategory = "crew" | "legends" | "killers";
 type RosterRow = { id: string; nickname: string; category: RosterCategory; sort_order: number };
@@ -119,6 +125,25 @@ function AdminLivePage() {
       setAuthed(true);
     }
   }, []);
+
+  // Auto-login: verifica el password en cada cambio y entra cuando es correcto
+  useEffect(() => {
+    if (authed) return;
+    if (!password || password.length < 3) return;
+    const t = setTimeout(async () => {
+      try {
+        const res = await verifyAdminPassword({ data: { password } });
+        if (res.ok) {
+          sessionStorage.setItem("admin-live-pw", password);
+          setAuthed(true);
+          setMsg("");
+        }
+      } catch {
+        /* ignore */
+      }
+    }, 250);
+    return () => clearTimeout(t);
+  }, [password, authed]);
 
   useEffect(() => {
     const load = async () => {
@@ -265,13 +290,13 @@ function AdminLivePage() {
   const filteredSocialNames = allWaveNames.filter((n) =>
     n.toLowerCase().includes(socialQuery.trim().toLowerCase())
   );
-  const visibleHardcoded = MEMBERS.filter((m) => !hiddenSet.has(m.name.toUpperCase())).length;
+  
 
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <form
-          onSubmit={(e) => { e.preventDefault(); setAuthed(true); }}
+          onSubmit={(e) => e.preventDefault()}
           className="w-full max-w-sm border border-flame/40 rounded-xl p-6 bg-blue-deep/60 backdrop-blur space-y-4"
         >
           <h1 className="font-display text-2xl text-flame">Admin · Live</h1>
@@ -282,11 +307,12 @@ function AdminLivePage() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3 py-2 bg-background border border-flame/30 rounded text-foreground focus:border-flame outline-none"
             autoFocus
+            placeholder="Se valida automáticamente…"
           />
           {msg && <p className="text-xs text-red-400">{msg}</p>}
-          <button type="submit" className="w-full bg-flame text-background font-mono uppercase tracking-widest text-sm py-2 rounded hover:opacity-90">
-            Entrar
-          </button>
+          <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground/70 text-center">
+            Entrarás automáticamente al escribir el password correcto
+          </p>
         </form>
       </div>
     );
@@ -483,7 +509,7 @@ function AdminLivePage() {
             <SectionShell
               icon={WavesIcon}
               title="Soul Waves"
-              subtitle={`${visibleHardcoded + waves.filter((w) => !hiddenSet.has(w.name.toUpperCase())).length} visibles · ${waves.length} dinámicos`}
+              subtitle={`${MEMBERS.filter((m) => !hiddenSet.has(m.name.toUpperCase())).length + waves.filter((w) => !hiddenSet.has(w.name.toUpperCase())).length} visibles · ${waves.length} dinámicos`}
             >
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <div className="lg:col-span-2">
@@ -571,20 +597,45 @@ function AdminLivePage() {
                 <div className="lg:col-span-3 space-y-6">
                   <div>
                     <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
-                      Waves fijos
+                      Wave fijo
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                        {visibleHardcoded}/{MEMBERS.length}
+                        {FIXED_MEMBERS.length}
                       </span>
                     </h3>
                     <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {MEMBERS.map((m) => {
+                      {FIXED_MEMBERS.map((m) => (
+                        <li
+                          key={m.id}
+                          className="relative border rounded-lg p-3 flex flex-col gap-2 border-flame/40 bg-flame/5"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="w-1.5 h-6 rounded-full bg-flame" />
+                            <p className="font-mono text-[11px] text-flame truncate flex-1">{m.name}</p>
+                          </div>
+                          <span className="text-[9px] font-mono text-flame/80 px-1.5 py-0.5 rounded bg-flame/10 border border-flame/30 self-start">
+                            SIEMPRE VISIBLE
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
+                      Otros waves
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
+                        {OTHER_MEMBERS.length + waves.length}
+                      </span>
+                    </h3>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {OTHER_MEMBERS.map((m) => {
                         const key = m.name.toUpperCase();
                         const isHidden = hiddenSet.has(key);
                         const hBusy = hideBusy === key;
                         return (
                           <li
                             key={m.id}
-                            className={`relative group border rounded-lg p-3 transition flex flex-col gap-2 ${
+                            className={`relative border rounded-lg p-3 flex flex-col gap-2 transition ${
                               isHidden
                                 ? "border-red-500/40 bg-red-950/20 opacity-70"
                                 : "border-flame/30 bg-background/60 hover:border-flame"
@@ -614,66 +665,49 @@ function AdminLivePage() {
                           </li>
                         );
                       })}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h3 className="font-display text-sm text-foreground mb-3 flex items-center gap-2">
-                      Waves dinámicos
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                        {waves.length}
-                      </span>
-                    </h3>
-                    {waves.length === 0 ? (
-                      <div className="border border-dashed border-flame/30 rounded-lg p-8 text-center text-xs font-mono text-muted-foreground bg-blue-deep/20">
-                        Aún no has agregado waves dinámicos.
-                      </div>
-                    ) : (
-                      <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        {waves.map((w) => {
-                          const busy = waveBusy === `rm:${w.id}`;
-                          const key = w.name.toUpperCase();
-                          const isHidden = hiddenSet.has(key);
-                          const hBusy = hideBusy === key;
-                          return (
-                            <li key={w.id} className={`relative group border rounded-lg overflow-hidden transition ${isHidden ? "border-red-500/40 bg-red-950/20 opacity-70" : "border-flame/30 bg-background/60 hover:border-flame"}`}>
-                              <img src={w.photo_url} alt={w.name} className="w-full aspect-square object-cover" />
-                              <div className="p-2 border-t border-flame/20 space-y-2">
-                                <div>
-                                  <p className="font-mono text-[11px] text-flame truncate">{w.name}</p>
-                                  {w.redes && <p className="text-[9px] text-muted-foreground truncate">{w.redes}</p>}
-                                </div>
-                                <button
-                                  onClick={() => toggleHidden(w.name)}
-                                  disabled={hBusy}
-                                  className={`w-full inline-flex items-center justify-center gap-1 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded disabled:opacity-40 ${
-                                    isHidden
-                                      ? "bg-emerald-600 text-white hover:opacity-90"
-                                      : "bg-red-600/70 text-white hover:bg-red-600"
-                                  }`}
-                                >
-                                  {isHidden ? <Eye className="w-2.5 h-2.5" /> : <EyeOff className="w-2.5 h-2.5" />}
-                                  {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
-                                </button>
+                      {waves.map((w) => {
+                        const busy = waveBusy === `rm:${w.id}`;
+                        const key = w.name.toUpperCase();
+                        const isHidden = hiddenSet.has(key);
+                        const hBusy = hideBusy === key;
+                        return (
+                          <li key={w.id} className={`relative group border rounded-lg overflow-hidden transition ${isHidden ? "border-red-500/40 bg-red-950/20 opacity-70" : "border-flame/30 bg-background/60 hover:border-flame"}`}>
+                            <img src={w.photo_url} alt={w.name} className="w-full aspect-square object-cover" />
+                            <div className="p-2 border-t border-flame/20 space-y-2">
+                              <div>
+                                <p className="font-mono text-[11px] text-flame truncate">{w.name}</p>
+                                {w.redes && <p className="text-[9px] text-muted-foreground truncate">{w.redes}</p>}
                               </div>
                               <button
-                                onClick={() => removeWave(w.id)}
-                                disabled={busy}
-                                className="absolute top-1.5 right-1.5 bg-red-600/90 hover:bg-red-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center disabled:opacity-40 opacity-0 group-hover:opacity-100 transition-opacity"
-                                aria-label={`Eliminar ${w.name}`}
+                                onClick={() => toggleHidden(w.name)}
+                                disabled={hBusy}
+                                className={`w-full inline-flex items-center justify-center gap-1 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded disabled:opacity-40 ${
+                                  isHidden
+                                    ? "bg-emerald-600 text-white hover:opacity-90"
+                                    : "bg-red-600/70 text-white hover:bg-red-600"
+                                }`}
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                {isHidden ? <Eye className="w-2.5 h-2.5" /> : <EyeOff className="w-2.5 h-2.5" />}
+                                {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
                               </button>
-
+                            </div>
+                            <button
+                              onClick={() => removeWave(w.id)}
+                              disabled={busy}
+                              className="absolute top-1.5 right-1.5 bg-red-600/90 hover:bg-red-600 text-white w-7 h-7 rounded-full inline-flex items-center justify-center disabled:opacity-40 opacity-0 group-hover:opacity-100 transition-opacity"
+                              aria-label={`Eliminar ${w.name}`}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
                           </li>
                         );
                       })}
                     </ul>
-                  )}
                   </div>
                 </div>
               </div>
             </SectionShell>
+
 
           </TabsContent>
 
