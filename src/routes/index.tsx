@@ -207,6 +207,8 @@ function WavesHUD() {
       if (extra.tiktok_url && !has("TikTok")) base.push({ label: "TikTok", href: extra.tiktok_url });
       if (extra.twitch_url && !has("Twitch")) base.push({ label: "Twitch", href: extra.twitch_url });
       if (extra.youtube_url && !has("YouTube")) base.push({ label: "YouTube", href: extra.youtube_url });
+      if (extra.x_url && !has("X")) base.push({ label: "X", href: extra.x_url });
+      if (extra.facebook_url && !has("Facebook")) base.push({ label: "Facebook", href: extra.facebook_url });
     }
     return base;
   };
