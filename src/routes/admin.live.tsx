@@ -61,13 +61,14 @@ const CATEGORIES: { key: RosterCategory; label: string }[] = [
 function AdminLivePage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [live, setLive] = useState<Record<string, boolean>>({});
-  const [saving, setSaving] = useState<string | null>(null);
   const [msg, setMsg] = useState<string>("");
 
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "", killers: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
+
+  const [photoBusy, setPhotoBusy] = useState<string | null>(null);
+
 
   const waves = useWavesMembers();
   const [waveForm, setWaveForm] = useState({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
