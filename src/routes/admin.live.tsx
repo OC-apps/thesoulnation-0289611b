@@ -510,6 +510,20 @@ function AdminLivePage() {
                     placeholder="YouTube URL"
                     className="px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
                   />
+                  <input
+                    type="url"
+                    value={v.x}
+                    onChange={(e) => setSocialField(name, "x", e.target.value)}
+                    placeholder="X (Twitter) URL"
+                    className="px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                  />
+                  <input
+                    type="url"
+                    value={v.facebook}
+                    onChange={(e) => setSocialField(name, "facebook", e.target.value)}
+                    placeholder="Facebook URL"
+                    className="px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
+                  />
                 </div>
               </li>
             );
