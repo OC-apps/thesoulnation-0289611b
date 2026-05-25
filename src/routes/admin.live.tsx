@@ -55,6 +55,40 @@ function AdminLivePage() {
   const [wavePhoto, setWavePhoto] = useState<{ base64: string; mime: string; name: string } | null>(null);
   const [waveBusy, setWaveBusy] = useState<string | null>(null);
 
+  const socialsMap = useWavesSocials();
+  const [socialEdits, setSocialEdits] = useState<Record<string, { tiktok: string; twitch: string; youtube: string }>>({});
+  const [socialBusy, setSocialBusy] = useState<string | null>(null);
+
+  const getSocial = (name: string) => {
+    const key = name.toUpperCase();
+    if (socialEdits[key]) return socialEdits[key];
+    const row = socialsMap.get(key);
+    return {
+      tiktok: row?.tiktok_url ?? "",
+      twitch: row?.twitch_url ?? "",
+      youtube: row?.youtube_url ?? "",
+    };
+  };
+  const setSocialField = (name: string, field: "tiktok" | "twitch" | "youtube", value: string) => {
+    const key = name.toUpperCase();
+    const current = getSocial(key);
+    setSocialEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
+  };
+  const saveSocial = async (name: string) => {
+    const key = name.toUpperCase();
+    const v = getSocial(key);
+    setSocialBusy(key);
+    setMsg("");
+    try {
+      await upsertWavesSocials({ data: { password, name: key, tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube } });
+      setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Error");
+    } finally {
+      setSocialBusy(null);
+    }
+  };
+
   useEffect(() => {
     const saved = sessionStorage.getItem("admin-live-pw");
     if (saved) {
