@@ -189,7 +189,16 @@ function renderWaveCard(
 
 function WavesHUD() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
-  const active = openIdx !== null ? WAVES[openIdx] : null;
+  const dynamicWaves = useWavesMembers();
+  const extraWaves = dynamicWaves.map((w) => ({
+    name: w.name,
+    redes: w.redes,
+    photo: w.photo_url,
+    bio: w.bio,
+    socials: w.social_label && w.social_href ? [{ label: w.social_label, href: w.social_href }] : undefined,
+  }));
+  const WAVES_ALL = [...WAVES, ...extraWaves];
+  const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
   const liveSet = useLiveStatus();
   const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
 
