@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Radio, Users, Waves as WavesIcon, Link2, Search, Plus, Trash2, EyeOff, Eye, Save, LogOut, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { setLiveStatus } from "@/lib/live-status.functions";
+import { updateWavePhoto } from "@/lib/wave-photo.functions";
 import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials } from "@/lib/waves-socials.functions";
@@ -61,13 +61,14 @@ const CATEGORIES: { key: RosterCategory; label: string }[] = [
 function AdminLivePage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [live, setLive] = useState<Record<string, boolean>>({});
-  const [saving, setSaving] = useState<string | null>(null);
   const [msg, setMsg] = useState<string>("");
 
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "", killers: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
+
+  const [photoBusy, setPhotoBusy] = useState<string | null>(null);
+
 
   const waves = useWavesMembers();
   const [waveForm, setWaveForm] = useState({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
@@ -154,25 +155,8 @@ function AdminLivePage() {
     return () => clearTimeout(t);
   }, [password, authed]);
 
-  useEffect(() => {
-    const load = async () => {
-      const { data } = await supabase.from("live_status").select("member_id, is_live");
-      const map: Record<string, boolean> = {};
-      data?.forEach((r) => { map[r.member_id] = r.is_live; });
-      setLive(map);
-    };
-    load();
 
-    const ch = supabase
-      .channel("admin_live")
-      .on("postgres_changes", { event: "*", schema: "public", table: "live_status" }, (payload) => {
-        const row = (payload.new ?? payload.old) as { member_id: string; is_live?: boolean };
-        if (!row?.member_id) return;
-        setLive((p) => ({ ...p, [row.member_id]: !!row.is_live }));
-      })
-      .subscribe();
-    return () => { supabase.removeChannel(ch); };
-  }, []);
+
 
   useEffect(() => {
     const load = async () => {
@@ -192,22 +176,39 @@ function AdminLivePage() {
     return () => { supabase.removeChannel(ch); };
   }, []);
 
-  const toggle = async (memberId: string) => {
-    setSaving(memberId);
+  const onChangePhoto = async (
+    kind: "fixed" | "dynamic",
+    keyOrId: string,
+    file: File | null,
+  ) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { setMsg("La foto debe pesar menos de 5MB"); return; }
+    const busyKey = `${kind}:${keyOrId}`;
+    setPhotoBusy(busyKey);
     setMsg("");
     try {
-      const next = !live[memberId];
-      await setLiveStatus({ data: { password, memberId, isLive: next } });
-      setLive((p) => ({ ...p, [memberId]: next }));
-      sessionStorage.setItem("admin-live-pw", password);
+      const b64 = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result as string);
+        r.onerror = () => reject(new Error("No se pudo leer la foto"));
+        r.readAsDataURL(file);
+      });
+      await updateWavePhoto({
+        data: {
+          password,
+          kind,
+          ...(kind === "dynamic" ? { id: keyOrId } : { name: keyOrId }),
+          photoBase64: b64,
+          photoMime: file.type,
+        },
+      });
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
-      setAuthed(false);
-      sessionStorage.removeItem("admin-live-pw");
     } finally {
-      setSaving(null);
+      setPhotoBusy(null);
     }
   };
+
 
   const addMember = async (category: RosterCategory) => {
     const nickname = newNick[category].trim().toUpperCase();
@@ -289,7 +290,7 @@ function AdminLivePage() {
     }
   };
 
-  const liveCount = Object.values(live).filter(Boolean).length;
+  
   const [socialQuery, setSocialQuery] = useState("");
   const [expandedSocial, setExpandedSocial] = useState<string | null>(null);
 
@@ -370,12 +371,6 @@ function AdminLivePage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-red-500/40 bg-red-950/30">
-              <span className={`w-1.5 h-1.5 rounded-full ${liveCount > 0 ? "bg-red-500 animate-pulse" : "bg-muted-foreground/40"}`} />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-foreground">
-                {liveCount} live
-              </span>
-            </div>
             <button
               onClick={() => { sessionStorage.removeItem("admin-live-pw"); setAuthed(false); setPassword(""); }}
               className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground hover:text-flame border border-flame/30 hover:border-flame px-2.5 py-1 rounded-full transition"
@@ -383,6 +378,7 @@ function AdminLivePage() {
               <LogOut className="w-3 h-3" /> Salir
             </button>
           </div>
+
         </div>
       </header>
 
@@ -393,12 +389,8 @@ function AdminLivePage() {
           </div>
         )}
 
-        <Tabs defaultValue="live" className="w-full">
-          <TabsList className="grid grid-cols-3 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
-            <TabsTrigger value="live" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
-              <Radio className="w-3.5 h-3.5" />
-              <span>Live</span>
-            </TabsTrigger>
+        <Tabs defaultValue="roster" className="w-full">
+          <TabsList className="grid grid-cols-2 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -410,41 +402,6 @@ function AdminLivePage() {
           </TabsList>
 
 
-          <TabsContent value="live" className="mt-0">
-            <SectionShell icon={Radio} title="Live Status" subtitle={`${liveCount} en vivo de ${MEMBERS.length} miembros`}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {MEMBERS.map((m) => {
-                  const on = !!live[m.id];
-                  const busy = saving === m.id;
-                  return (
-                    <button
-                      key={m.id}
-                      onClick={() => toggle(m.id)}
-                      disabled={busy}
-                      className={`group text-left flex items-center justify-between border rounded-lg px-4 py-3 transition-all ${
-                        on
-                          ? "border-red-500/60 bg-red-950/30 shadow-[0_0_24px_-8px_rgba(220,38,38,0.6)]"
-                          : "border-flame/20 bg-blue-deep/40 hover:border-flame/60"
-                      } ${busy ? "opacity-50" : ""}`}
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className={`w-2.5 h-2.5 rounded-full ${on ? "bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.9)]" : "bg-muted-foreground/40"}`} />
-                        <div className="min-w-0">
-                          <div className="font-display text-sm text-foreground truncate">{m.name}</div>
-                          <div className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
-                            {on ? "TikTok live" : "Offline"}
-                          </div>
-                        </div>
-                      </div>
-                      <div className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${on ? "bg-red-600" : "bg-muted-foreground/30"}`}>
-                        <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${on ? "translate-x-5" : "translate-x-0.5"}`} />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </SectionShell>
-          </TabsContent>
 
           <TabsContent value="roster" className="mt-0">
             <SectionShell icon={Users} title="Roster" subtitle="Crew · Legends · Killers · Waves">
@@ -503,56 +460,77 @@ function AdminLivePage() {
                   );
                 })}
 
-                {/* Soul Waves (gestionados desde la pestaña Waves) */}
-                <div className="border border-flame/30 rounded-lg p-4 bg-flame/5 flex flex-col">
-                  <div className="flex items-center justify-between mb-3 pb-2 border-b border-flame/15">
-                    <h3 className="font-display text-sm text-flame flex items-center gap-1.5">
-                      <WavesIcon className="w-3.5 h-3.5" />
-                      Soul Waves
-                    </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                      {MEMBERS.length + waves.length}
-                    </span>
-                  </div>
-                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
-                    Se gestionan desde la pestaña Waves
-                  </p>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {MEMBERS.map((m) => {
-                      const isHidden = hiddenSet.has(m.name.toUpperCase());
-                      return (
-                        <li
-                          key={m.id}
-                          className={`inline-flex items-center gap-1 border rounded px-2 py-1 ${
-                            isHidden
-                              ? "border-red-500/40 bg-red-950/20 text-red-300/70 line-through"
-                              : "border-flame/40 bg-background/60 text-foreground"
-                          }`}
-                        >
-                          <span className="font-mono text-[11px]">{m.name}</span>
-                        </li>
-                      );
-                    })}
-                    {waves.map((w) => {
-                      const isHidden = hiddenSet.has(w.name.toUpperCase());
-                      return (
-                        <li
-                          key={w.id}
-                          className={`inline-flex items-center gap-1 border rounded px-2 py-1 ${
-                            isHidden
-                              ? "border-red-500/40 bg-red-950/20 text-red-300/70 line-through"
-                              : "border-flame/30 bg-background/60 text-foreground"
-                          }`}
-                        >
-                          <span className="font-mono text-[11px]">{w.name}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
+              </div>
+
+              {/* Soul Waves — gestión de fotos del roster */}
+              <div className="mt-6 border border-flame/30 rounded-lg p-4 bg-flame/5">
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-flame/15">
+                  <h3 className="font-display text-sm text-flame flex items-center gap-1.5">
+                    <WavesIcon className="w-3.5 h-3.5" />
+                    Soul Waves · Fotos del Roster
+                  </h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
+                    {MEMBERS.length + waves.length}
+                  </span>
+                </div>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-4">
+                  Cambia la imagen que aparece en el roster público
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {[
+                    ...MEMBERS.map((m) => {
+                      const override = socialsMap.get(m.name.toUpperCase())?.photo_url;
+                      return { id: m.id, name: m.name, photo: override || m.photo, kind: "fixed" as const, keyOrId: m.name.toUpperCase(), dynId: null as string | null };
+                    }),
+                    ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, kind: "dynamic" as const, keyOrId: w.id, dynId: w.id })),
+                  ].map((c) => {
+                    const isHidden = hiddenSet.has(c.name.toUpperCase());
+                    const busyKey = `${c.kind}:${c.keyOrId}`;
+                    const busy = photoBusy === busyKey;
+                    return (
+                      <div
+                        key={c.id}
+                        className={`border rounded-lg overflow-hidden bg-background/60 ${
+                          isHidden ? "border-red-500/40 opacity-60" : "border-flame/30"
+                        }`}
+                      >
+                        <div className="relative aspect-square">
+                          <img src={c.photo} alt={c.name} className="absolute inset-0 w-full h-full object-cover object-[center_25%]" />
+                          {busy && (
+                            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                              <span className="text-[10px] font-mono text-flame animate-pulse">Subiendo…</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-2 space-y-1.5">
+                          <div className="font-mono text-[10px] text-foreground truncate" title={c.name}>{c.name}</div>
+                          <label className="block">
+                            <span className="sr-only">Cambiar foto de {c.name}</span>
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif"
+                              disabled={busy}
+                              onChange={(e) => {
+                                const f = e.target.files?.[0] ?? null;
+                                onChangePhoto(c.kind, c.keyOrId, f);
+                                e.target.value = "";
+                              }}
+                              className="hidden"
+                            />
+                            <span className={`inline-flex w-full items-center justify-center gap-1 border border-flame/40 text-flame hover:bg-flame/10 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded cursor-pointer ${busy ? "opacity-40 cursor-not-allowed" : ""}`}>
+                              <ImageIcon className="w-3 h-3" />
+                              Cambiar foto
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </SectionShell>
           </TabsContent>
+
 
 
           <TabsContent value="waves" className="mt-0">
@@ -660,10 +638,11 @@ function AdminLivePage() {
                     const q = socialQuery.trim().toLowerCase();
                     type Card = { id: string; name: string; photo: string; fixed: boolean; dyn?: typeof waves[number] };
                     const cards: Card[] = [
-                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: m.photo, fixed: true })),
-                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: m.photo, fixed: false })),
+                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: true })),
+                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: false })),
                       ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, fixed: false, dyn: w })),
                     ].filter((c) => c.name.toLowerCase().includes(q));
+
 
                     if (cards.length === 0) {
                       return (

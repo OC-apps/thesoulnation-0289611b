@@ -216,7 +216,11 @@ function WavesHUD() {
   };
   const WAVES_ALL = [...WAVES, ...extraWaves]
     .filter((w) => !hiddenSet.has(w.name.toUpperCase()))
-    .map((w) => ({ ...w, socials: mergeSocials(w) }));
+    .map((w) => {
+      const extra = socialsMap.get(w.name.toUpperCase());
+      return { ...w, socials: mergeSocials(w), photo: extra?.photo_url || w.photo };
+    });
+
   const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
   const liveSet = useLiveStatus();
   const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));

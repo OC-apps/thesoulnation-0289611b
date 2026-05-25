@@ -156,6 +156,7 @@ export type Database = {
         Row: {
           facebook_url: string | null
           name: string
+          photo_url: string | null
           tiktok_url: string | null
           twitch_url: string | null
           updated_at: string
@@ -165,6 +166,7 @@ export type Database = {
         Insert: {
           facebook_url?: string | null
           name: string
+          photo_url?: string | null
           tiktok_url?: string | null
           twitch_url?: string | null
           updated_at?: string
@@ -174,6 +176,7 @@ export type Database = {
         Update: {
           facebook_url?: string | null
           name?: string
+          photo_url?: string | null
           tiktok_url?: string | null
           twitch_url?: string | null
           updated_at?: string
