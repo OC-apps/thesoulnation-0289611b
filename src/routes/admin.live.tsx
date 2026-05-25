@@ -460,56 +460,77 @@ function AdminLivePage() {
                   );
                 })}
 
-                {/* Soul Waves (gestionados desde la pestaña Waves) */}
-                <div className="border border-flame/30 rounded-lg p-4 bg-flame/5 flex flex-col">
-                  <div className="flex items-center justify-between mb-3 pb-2 border-b border-flame/15">
-                    <h3 className="font-display text-sm text-flame flex items-center gap-1.5">
-                      <WavesIcon className="w-3.5 h-3.5" />
-                      Soul Waves
-                    </h3>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
-                      {MEMBERS.length + waves.length}
-                    </span>
-                  </div>
-                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-3">
-                    Se gestionan desde la pestaña Waves
-                  </p>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {MEMBERS.map((m) => {
-                      const isHidden = hiddenSet.has(m.name.toUpperCase());
-                      return (
-                        <li
-                          key={m.id}
-                          className={`inline-flex items-center gap-1 border rounded px-2 py-1 ${
-                            isHidden
-                              ? "border-red-500/40 bg-red-950/20 text-red-300/70 line-through"
-                              : "border-flame/40 bg-background/60 text-foreground"
-                          }`}
-                        >
-                          <span className="font-mono text-[11px]">{m.name}</span>
-                        </li>
-                      );
-                    })}
-                    {waves.map((w) => {
-                      const isHidden = hiddenSet.has(w.name.toUpperCase());
-                      return (
-                        <li
-                          key={w.id}
-                          className={`inline-flex items-center gap-1 border rounded px-2 py-1 ${
-                            isHidden
-                              ? "border-red-500/40 bg-red-950/20 text-red-300/70 line-through"
-                              : "border-flame/30 bg-background/60 text-foreground"
-                          }`}
-                        >
-                          <span className="font-mono text-[11px]">{w.name}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
+              </div>
+
+              {/* Soul Waves — gestión de fotos del roster */}
+              <div className="mt-6 border border-flame/30 rounded-lg p-4 bg-flame/5">
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-flame/15">
+                  <h3 className="font-display text-sm text-flame flex items-center gap-1.5">
+                    <WavesIcon className="w-3.5 h-3.5" />
+                    Soul Waves · Fotos del Roster
+                  </h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-flame/15 text-flame border border-flame/30">
+                    {MEMBERS.length + waves.length}
+                  </span>
+                </div>
+                <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-4">
+                  Cambia la imagen que aparece en el roster público
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {[
+                    ...MEMBERS.map((m) => {
+                      const override = socialsMap.get(m.name.toUpperCase())?.photo_url;
+                      return { id: m.id, name: m.name, photo: override || m.photo, kind: "fixed" as const, keyOrId: m.name.toUpperCase(), dynId: null as string | null };
+                    }),
+                    ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, kind: "dynamic" as const, keyOrId: w.id, dynId: w.id })),
+                  ].map((c) => {
+                    const isHidden = hiddenSet.has(c.name.toUpperCase());
+                    const busyKey = `${c.kind}:${c.keyOrId}`;
+                    const busy = photoBusy === busyKey;
+                    return (
+                      <div
+                        key={c.id}
+                        className={`border rounded-lg overflow-hidden bg-background/60 ${
+                          isHidden ? "border-red-500/40 opacity-60" : "border-flame/30"
+                        }`}
+                      >
+                        <div className="relative aspect-square">
+                          <img src={c.photo} alt={c.name} className="absolute inset-0 w-full h-full object-cover object-[center_25%]" />
+                          {busy && (
+                            <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+                              <span className="text-[10px] font-mono text-flame animate-pulse">Subiendo…</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-2 space-y-1.5">
+                          <div className="font-mono text-[10px] text-foreground truncate" title={c.name}>{c.name}</div>
+                          <label className="block">
+                            <span className="sr-only">Cambiar foto de {c.name}</span>
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif"
+                              disabled={busy}
+                              onChange={(e) => {
+                                const f = e.target.files?.[0] ?? null;
+                                onChangePhoto(c.kind, c.keyOrId, f);
+                                e.target.value = "";
+                              }}
+                              className="hidden"
+                            />
+                            <span className={`inline-flex w-full items-center justify-center gap-1 border border-flame/40 text-flame hover:bg-flame/10 font-mono uppercase tracking-widest text-[9px] px-2 py-1 rounded cursor-pointer ${busy ? "opacity-40 cursor-not-allowed" : ""}`}>
+                              <ImageIcon className="w-3 h-3" />
+                              Cambiar foto
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </SectionShell>
           </TabsContent>
+
 
 
           <TabsContent value="waves" className="mt-0">
