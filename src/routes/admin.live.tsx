@@ -176,22 +176,39 @@ function AdminLivePage() {
     return () => { supabase.removeChannel(ch); };
   }, []);
 
-  const toggle = async (memberId: string) => {
-    setSaving(memberId);
+  const onChangePhoto = async (
+    kind: "fixed" | "dynamic",
+    keyOrId: string,
+    file: File | null,
+  ) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { setMsg("La foto debe pesar menos de 5MB"); return; }
+    const busyKey = `${kind}:${keyOrId}`;
+    setPhotoBusy(busyKey);
     setMsg("");
     try {
-      const next = !live[memberId];
-      await setLiveStatus({ data: { password, memberId, isLive: next } });
-      setLive((p) => ({ ...p, [memberId]: next }));
-      sessionStorage.setItem("admin-live-pw", password);
+      const b64 = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result as string);
+        r.onerror = () => reject(new Error("No se pudo leer la foto"));
+        r.readAsDataURL(file);
+      });
+      await updateWavePhoto({
+        data: {
+          password,
+          kind,
+          ...(kind === "dynamic" ? { id: keyOrId } : { name: keyOrId }),
+          photoBase64: b64,
+          photoMime: file.type,
+        },
+      });
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
-      setAuthed(false);
-      sessionStorage.removeItem("admin-live-pw");
     } finally {
-      setSaving(null);
+      setPhotoBusy(null);
     }
   };
+
 
   const addMember = async (category: RosterCategory) => {
     const nickname = newNick[category].trim().toUpperCase();
