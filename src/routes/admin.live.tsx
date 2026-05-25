@@ -94,6 +94,22 @@ function AdminLivePage() {
     }
   };
 
+  const hiddenSet = useWavesHidden();
+  const [hideBusy, setHideBusy] = useState<string | null>(null);
+  const toggleHidden = async (name: string) => {
+    const key = name.toUpperCase();
+    setHideBusy(key);
+    setMsg("");
+    try {
+      await setWaveHidden({ data: { password, name: key, hidden: !hiddenSet.has(key) } });
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Error");
+    } finally {
+      setHideBusy(null);
+    }
+  };
+
+
   useEffect(() => {
     const saved = sessionStorage.getItem("admin-live-pw");
     if (saved) {
