@@ -377,9 +377,9 @@ function IndexContent() {
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
-          <a href="#top" className="flex items-center gap-2 font-display font-bold tracking-tight shrink-0">
-            <img src={soulLogo} alt="The Soul Nation" width={28} height={28} className="drop-shadow-[0_0_12px_var(--flame-glow)]" />
-            <span className="hidden sm:inline">THE SOUL <span className="text-flame">NATION</span></span>
+          <a href="#top" aria-label="The Soul Nation — inicio" className="flex shrink-0 items-center gap-3">
+            <img src={soulLogo} alt="" width={38} height={38} className="h-9 w-auto object-contain" />
+            <img src={soulTextLogo} alt="The Soul Nation" className="hidden h-6 w-auto max-w-[170px] object-contain sm:block" />
           </a>
           <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
             <a href="#about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
