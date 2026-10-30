@@ -565,7 +565,7 @@ function IndexContent() {
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
             {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || "/roster-team-card-2026.jpg"},
-            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || soulNationTeam},
+            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || "/quick-videos-2026.jpg"},
             {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
             {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
           ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
