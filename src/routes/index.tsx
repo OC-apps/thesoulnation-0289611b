@@ -439,7 +439,7 @@ function IndexContent() {
                 onError={(event) => { if (!event.currentTarget.src.includes("about-team-2026.jpg")) return; event.currentTarget.onerror = null; event.currentTarget.src = soulNationTeam; }}
                 alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 scale-[1.18] group-hover:scale-[1.24]"
               />
 
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background via-background/30 to-transparent" />
