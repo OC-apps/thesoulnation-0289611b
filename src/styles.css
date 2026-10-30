@@ -627,3 +627,57 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-purpose-copy { grid-template-columns: minmax(0, .6fr) minmax(0, 2fr); gap: 2rem; }
   .soul-purpose-links { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* Compact section hub. Hash links retain direct entry and browser back/forward. */
+.soul-hub { padding-top: 124px; padding-bottom: 84px; max-width: 100%; }
+.soul-hub > section { display: none; }
+.soul-hub[data-view="top"] > #top,
+.soul-hub[data-view="about"] > #about,
+.soul-hub[data-view="roster"] > #roster,
+.soul-hub[data-view="videos"] > #videos,
+.soul-hub[data-view="wallpapers"] > #wallpapers,
+.soul-hub[data-view="jersey"] > #jersey,
+.soul-hub[data-view="music"] > #music,
+.soul-hub[data-view="reclutamiento"] > #reclutamiento,
+.soul-hub[data-view="redes"] > #redes,
+.soul-hub[data-view="xplicit-cup"] > #xplicit-cup { display: block; }
+.soul-hub > section:not(#top) { padding-block: 2rem; border-top: 0; }
+.soul-hub > section > .max-w-7xl { max-width: 1100px; }
+.soul-hub section h2 { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.12; }
+.soul-hub section .mb-20 { margin-bottom: 2rem; }
+.soul-hub section .mb-12 { margin-bottom: 1.5rem; }
+.soul-hub footer { padding-block: 1.5rem; margin-top: 2rem; }
+.soul-hub footer .font-display { font-size: 1rem; }
+.soul-header-link { padding: .6rem .5rem; border-radius: 8px; color: #b7b9cb; }
+.soul-header-link[aria-current="page"] { color: #fff; background: #01039E; }
+.soul-section-menu { position: sticky; top: 64px; z-index: 40; display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem; padding: .75rem 1rem; margin-top: -60px; background: #070819f5; border-bottom: 1px solid var(--border); }
+.soul-section-menu a { padding: .55rem .85rem; border-radius: 999px; font-size: .75rem; font-weight: 500; color: #b7b9cb; }
+.soul-section-menu a:hover, .soul-section-menu a[aria-current="page"] { background: #01039E; color: #fff; }
+.soul-roster-tabs { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .5rem; max-width: 640px; margin: 0 auto 1.75rem; padding: .4rem; border-radius: 18px; background: #fff; }
+.soul-roster-tabs a { min-width: 0; padding: .85rem .25rem; border-radius: 13px; color: #01039E; font-size: .8rem; font-weight: 600; text-align: center; }
+.soul-roster-tabs a[aria-current="page"] { background: #01039E; color: #fff; }
+.soul-hub:not([data-roster="waves"]) #waves,
+.soul-hub:not([data-roster="waves"]) .soul-waves-collection,
+.soul-hub:not([data-roster="killers"]) #killers,
+.soul-hub:not([data-roster="legends"]) #legends,
+.soul-hub:not([data-roster="crew"]) #crew { display: none; }
+.soul-hub #roster > div > .mb-8 { margin-bottom: 0; }
+.soul-hub .soul-waves-heading { padding-top: 1.5rem; }
+.soul-hub #top > div:first-child { min-height: 0; border-radius: 0 0 32px 32px; }
+.soul-hub #top > div:first-child > div:first-child { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.soul-hub #top > div:first-child img { height: min(35vh, 260px); }
+.soul-hub #top .mt-12 { margin-top: 1.75rem; }
+.soul-hub #top .mb-10 { margin-bottom: 1.5rem; }
+.soul-hub #about h2 { font-size: clamp(2rem, 4.5vw, 4rem); }
+.soul-hub .soul-purpose { margin-top: 1.5rem; }
+@media (min-width: 1280px) {
+  .soul-hub { padding-top: 84px; }
+  .soul-section-menu { display: none; }
+}
+@media (max-width: 1279px) {
+  .soul-hub { padding-top: 64px; }
+  .soul-section-menu { margin-top: 0; }
+  .soul-hub > section:not(#top) { padding-block: 1.5rem; }
+}
+
+.soul-hub > header { position: fixed; top: 0; inset-inline: 0; }

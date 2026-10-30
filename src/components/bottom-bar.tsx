@@ -12,7 +12,7 @@ export function BottomBar() {
   const {playing,toggle} = useAudio();
   const [open,setOpen] = useState(false);
   const [social,setSocial] = useState(false);
-  const navigate = (id:string) => { document.getElementById(id)?.scrollIntoView({behavior:"smooth"});setOpen(false); };
+  const navigate = (id:string) => { if (window.location.pathname === "/") { window.location.hash = id; } else { window.location.href = `/#${id}`; } setOpen(false); };
   return <div className="fixed bottom-4 left-1/2 z-[90] w-[min(420px,calc(100vw-24px))] -translate-x-1/2">
     {(open || social) && <div className="mb-3 rounded-2xl border border-white/15 bg-[#080943]/95 p-4 shadow-xl backdrop-blur-xl">
       {open ? <nav className="grid grid-cols-3 gap-2">{sections.map(s=><button key={s.id} onClick={()=>navigate(s.id)} className="rounded-xl px-2 py-3 text-xs font-medium text-white hover:bg-white/10">{s.label}</button>)}</nav> :

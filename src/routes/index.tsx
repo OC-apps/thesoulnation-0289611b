@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EasterEgg } from "@/components/easter-egg";
-import { useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
@@ -361,7 +361,38 @@ function Index() {
   return <IndexContent />;
 }
 
+const HUB_SECTIONS = [
+  { id: "top", label: "Inicio" }, { id: "about", label: "¿Quiénes Somos?" },
+  { id: "roster", label: "Roster" }, { id: "videos", label: "Videos" },
+  { id: "wallpapers", label: "Wallpapers" }, { id: "jersey", label: "Jersey" },
+  { id: "music", label: "Music" }, { id: "reclutamiento", label: "Reclutamiento" },
+  { id: "redes", label: "Redes" },
+];
+
 function IndexContent() {
+  const [destination, setDestination] = useState("top");
+  const rosterIds = ["waves", "killers", "legends", "crew"];
+  const view = rosterIds.includes(destination) ? "roster" :
+    ["vision", "objetivo"].includes(destination) ? "about" :
+    HUB_SECTIONS.some((s) => s.id === destination) || destination === "xplicit-cup" ? destination : "top";
+  const rosterView = rosterIds.includes(destination) ? destination : "waves";
+  useEffect(() => {
+    const update = () => setDestination(window.location.hash.slice(1) || "top");
+    update();
+    window.addEventListener("hashchange", update);
+    return () => window.removeEventListener("hashchange", update);
+  }, []);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (["vision", "objetivo"].includes(destination)) {
+        setAboutTab(destination as "vision" | "objetivo");
+        document.getElementById("vision")?.scrollIntoView({ block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [destination]);
   const { playing, toggle: toggleAudio, stop: stopAudio, skip: skipAudio, currentTime, duration, seek } = useAudio();
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
@@ -374,27 +405,25 @@ function IndexContent() {
 
 
   return (
-    <div className="min-h-screen text-foreground relative">
+    <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
           <a href="#top" aria-label="The Soul Nation — inicio" className="flex shrink-0 items-center gap-3">
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
           </a>
-          <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
-            <a href="#about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
-            <a href="#roster" className="hover:text-foreground transition whitespace-nowrap">Roster</a>
-            <a href="#videos" className="hover:text-foreground transition whitespace-nowrap">Videos</a>
-            <a href="#wallpapers" className="hover:text-foreground transition whitespace-nowrap">Wallpapers</a>
-            <a href="#jersey" className="hover:text-foreground transition whitespace-nowrap">Jersey</a>
-            <Link to="/xplicit-cup" data-explore="nav:xplicit-cup" className="hover:text-foreground transition whitespace-nowrap">Xplicit Cup</Link>
-            <a href="#music" className="hover:text-foreground transition whitespace-nowrap">Music</a>
-            <a href="#reclutamiento" className="hover:text-foreground transition whitespace-nowrap">Reclutamiento</a>
-            <a href="#redes" className="hover:text-foreground transition whitespace-nowrap">Redes</a>
+          <nav className="hidden xl:flex gap-1 text-xs" aria-label="Navegación principal">
+            {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={view === section.id ? "page" : undefined} className="soul-header-link">{section.label}</a>)}
+            <Link to="/xplicit-cup" data-explore="nav:xplicit-cup" className="soul-header-link">Xplicit Cup</Link>
           </nav>
 
         </div>
       </header>
+
+      <nav className="soul-section-menu" aria-label="Secciones">
+        {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={view === section.id ? "page" : undefined}>{section.label}</a>)}
+        <Link to="/xplicit-cup">Xplicit Cup</Link>
+      </nav>
 
       {/* Floating controls moved into the unified BottomBar */}
 
@@ -561,6 +590,10 @@ function IndexContent() {
               Cuatro divisiones, una sola familia. Conoce a quienes representan a Soul dentro y fuera del juego.
             </p>
           </div>
+
+          <nav className="soul-roster-tabs" aria-label="Divisiones del roster">
+            {["waves", "killers", "legends", "crew"].map((id) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}>{id.charAt(0).toUpperCase() + id.slice(1)}</a>)}
+          </nav>
 
           {/* WAVES — creators */}
           <div id="waves" className="soul-waves-heading mb-12 flex flex-col items-start scroll-mt-24">
