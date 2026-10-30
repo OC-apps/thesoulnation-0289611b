@@ -1782,3 +1782,112 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media(prefers-reduced-motion:reduce){
   .soul-hub #roster .soul-roster-option {transition:none;}
 }
+
+
+/* Home quick access: five equal square image-led tiles, with responsive columns. */
+.soul-hub[data-view="top"] #about .soul-home-grid {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:clamp(8px,1.3vw,16px);
+  max-width:1100px;
+  padding:0;
+  margin:clamp(24px,3vw,40px) auto 0;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  gap:0;
+  aspect-ratio:1/1;
+  width:100%;
+  min-width:0;
+  min-height:0;
+  height:auto;
+  padding:0;
+  overflow:hidden;
+  border-radius:19px;
+  border:1px solid rgba(255,255,255,.16);
+  background:#111329;
+  text-decoration:none;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile img {
+  display:block;
+  flex:1 1 auto;
+  width:100%;
+  min-width:0;
+  min-height:0;
+  height:calc(100% - 65px);
+  object-fit:cover;
+  object-position:center;
+  border-radius:0;
+  margin:0;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile > span:not(.soul-tile-arrow) {
+  display:flex;
+  flex:0 0 65px;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+  width:100%;
+  padding:9px 11px;
+  background:#111329;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile strong {
+  display:block;
+  color:#fff;
+  font-size:clamp(11px,1.05vw,15px);
+  font-weight:700;
+  line-height:1.2;
+  white-space:normal;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile small {
+  display:block;
+  margin-top:3px;
+  color:#aeb5d0;
+  font-size:clamp(9px,.8vw,11px);
+  line-height:1.15;
+  overflow-wrap:anywhere;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile .soul-tile-arrow {
+  position:absolute;
+  top:8px;
+  right:8px;
+  z-index:1;
+  display:grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  margin:0;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:50%;
+  background:rgba(7,8,27,.76);
+  color:#F05E07;
+  font-size:15px;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile:hover {
+  transform:translateY(-4px);
+  border-color:#F05E07;
+}
+@media(max-width:860px){
+  .soul-hub[data-view="top"] #about .soul-home-grid {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+@media(max-width:540px){
+  .soul-hub[data-view="top"] #about .soul-home-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    padding:0 3px;
+  }
+  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile {
+    border-radius:15px;
+  }
+  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile > span:not(.soul-tile-arrow) {
+    flex-basis:60px;
+    padding:7px 9px;
+  }
+  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile strong { font-size:12px; }
+  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile small { font-size:10px; }
+}
