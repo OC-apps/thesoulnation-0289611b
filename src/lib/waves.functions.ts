@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+const LinkInput = z.object({ label: z.string().min(1).max(40), href: z.string().url().max(500) });
+
 const AddInput = z.object({
+  links: z.array(LinkInput).max(12).optional().default([]),
   password: z.string().min(1).max(200),
   name: z.string().min(1).max(80),
   redes: z.string().max(200).optional().default(""),
@@ -59,6 +62,13 @@ export const addWavesMember = createServerFn({ method: "POST" })
       sort_order: nextOrder,
     });
     if (error) throw new Error(error.message);
+    if (data.links.length) {
+      const { error: linksError } = await supabaseAdmin.from("waves_socials").upsert({
+        name: data.name.trim().toUpperCase(),
+        extra_links: data.links,
+      } as any, { onConflict: "name" });
+      if (linksError) throw new Error(linksError.message);
+    }
     return { ok: true };
   });
 
