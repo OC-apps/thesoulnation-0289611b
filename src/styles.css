@@ -1125,3 +1125,41 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 #roster .soul-crew-nickname {
   color: #FFFFFF;
 }
+
+
+/* Compact Soul Crew cards: editorial name tiles rather than tall portrait panels. */
+#roster .soul-crew-lineup {
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(10px,1.25vw,16px);
+  align-items:stretch;
+}
+#roster .soul-crew-slot {
+  min-height:0;
+  height:96px;
+  padding:15px 14% 15px;
+  align-items:center;
+  justify-content:flex-start;
+}
+#roster .soul-crew-accent { height:3px; }
+#roster .soul-crew-name {
+  justify-content:center;
+  line-height:1;
+}
+#roster .soul-crew-prefix {
+  margin-bottom:6px;
+}
+#roster .soul-crew-nickname {
+  font-size:clamp(12px,7.2cqw,22px);
+}
+@media(max-width:950px) {
+ #roster .soul-crew-lineup { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media(max-width:700px) {
+ #roster .soul-crew-lineup { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #roster .soul-crew-slot { height:88px; }
+}
+@media(max-width:430px) {
+ #roster .soul-crew-lineup { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+ #roster .soul-crew-slot { height:82px; padding:12px 13%; }
+ #roster .soul-crew-nickname { font-size:clamp(11px,7cqw,20px); }
+}
