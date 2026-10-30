@@ -155,6 +155,9 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
       setLink("YouTube", extra.youtube_url);
       setLink("X", extra.x_url);
       setLink("Facebook", extra.facebook_url);
+      for (const link of extra.extra_links ?? []) {
+        if (link.label && link.href) setLink(link.label, link.href);
+      }
     }
     return base;
   };
