@@ -145,7 +145,7 @@ function renderWaveCard(
       </div>
       <div className="soul-portrait-info">
         <span aria-hidden="true" className="soul-portrait-index">{String(i + 1).padStart(2, "0")}</span>
-        <h4 className="font-display">{c.name.startsWith("SOUL ") ? <><span className="soul-lineup-prefix">SOUL </span><span>{c.name.slice(5)}</span></> : c.name}</h4>
+        <h4 className="font-display">{c.name.startsWith("SOUL ") ? <><span className="soul-lineup-prefix">SOUL</span><span className="soul-lineup-nickname">{c.name.slice(5)}</span></> : <span className="soul-lineup-nickname">{c.name}</span>}</h4>
         <div className="soul-portrait-status">
           <span className={isLive ? "bg-red-500" : "bg-[#F05E07]"} />
           {isLive ? "en vivo · tiktok" : "Soul Waves"}
