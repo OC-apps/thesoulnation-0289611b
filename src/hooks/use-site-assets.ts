@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type SiteAssetKey = "home_banner"|"home_roster"|"home_videos"|"home_wallpapers"|"home_jersey";
+export type SiteAssetKey = "home_banner"|"home_roster"|"home_videos"|"home_wallpapers"|"home_jersey"|"about_team";
 export const HOME_ASSET_KEYS: {key:SiteAssetKey;label:string;hint:string}[] = [
  {key:"home_banner",label:"Banner principal",hint:"Imagen horizontal recomendada: 1920 × 600"},
  {key:"home_roster",label:"Tarjeta Roster",hint:"Imagen cuadrada recomendada"},
  {key:"home_videos",label:"Tarjeta Nuestros Videos",hint:"Imagen cuadrada recomendada"},
  {key:"home_wallpapers",label:"Tarjeta Wallpapers",hint:"Imagen cuadrada recomendada"},
  {key:"home_jersey",label:"Tarjeta Jersey Oficial",hint:"Imagen cuadrada recomendada"},
+ {key:"about_team",label:"Foto de ¿Quiénes somos?",hint:"Fotografía horizontal o de grupo"},
 ];
 export function useSiteAssets(){
  const [assets,setAssets]=useState<Partial<Record<SiteAssetKey,string>>>({});
