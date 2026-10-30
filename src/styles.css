@@ -1404,3 +1404,115 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   #roster .soul-crew-slot { height:58px; }
   #roster .soul-crew-nickname { font-size:15px; }
 }
+
+
+/* Soul Crew cinematic/editorial introduction; typography and copy preserved. */
+#roster .soul-crew-hero {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  color:#fff;
+  background:linear-gradient(113deg,#01039E 0%,#090e71 52%,#060938 100%);
+  border-left:5px solid #F05E07;
+}
+#roster .soul-crew-hero::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:radial-gradient(ellipse at 75% 20%,rgba(70,81,255,.24),transparent 52%);
+  pointer-events:none;
+}
+#roster .soul-crew-hero-orbit {
+  position:absolute;
+  z-index:-1;
+  width:min(54vw,580px);
+  aspect-ratio:1;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:50%;
+  right:-12%;
+  top:-175%;
+  box-shadow:0 0 0 62px rgba(255,255,255,.018),0 0 0 132px rgba(255,255,255,.012);
+  pointer-events:none;
+}
+#roster .soul-crew-hero-inner {
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  gap:clamp(24px,5vw,70px);
+  align-items:center;
+  padding:clamp(30px,4.8vw,62px);
+  min-height:280px;
+}
+#roster .soul-crew-hero-heading { min-width:0; }
+#roster .soul-crew-hero-eyebrow {
+  display:flex; align-items:center; gap:10px;
+  font-size:10px; line-height:1.4;
+  font-weight:700; letter-spacing:.19em;
+  color:rgba(255,255,255,.75);
+}
+#roster .soul-crew-hero-dot {
+  width:6px; height:6px; border-radius:50%; flex:none;
+  background:#F05E07; box-shadow:0 0 12px rgba(240,94,7,.65);
+}
+#roster .soul-crew-hero-line { flex:0 1 30px; height:1px; background:rgba(255,255,255,.35); }
+#roster .soul-crew-hero-title {
+  margin:20px 0 19px;
+  font-size:clamp(2.4rem,5vw,4.9rem);
+  line-height:1.02;
+  letter-spacing:-.035em;
+  color:#fff;
+  white-space:normal;
+}
+#roster .soul-crew-hero-underline { width:74px;height:4px;background:rgba(255,255,255,.25); }
+#roster .soul-crew-hero-underline span { display:block;width:39px;height:100%;background:#F05E07; }
+#roster .soul-crew-hero-description {
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  padding:20px 0 7px clamp(20px,2.2vw,32px);
+  border-left:1px solid rgba(255,255,255,.22);
+}
+#roster .soul-crew-hero-quote {
+  position:absolute;
+  top:-27px;left:clamp(20px,2.2vw,32px);
+  font:italic 72px/1 Georgia,serif;
+  color:#F05E07;
+  opacity:.9;
+  pointer-events:none;
+}
+#roster .soul-crew-hero-description p {
+  margin:15px 0 23px;
+  max-width:42ch;
+  font-size:clamp(15px,1.35vw,19px);
+  line-height:1.7;
+  font-weight:450;
+  color:#fff;
+}
+#roster .soul-crew-hero-meta {
+  display:flex; flex-wrap:wrap;
+  align-items:center; gap:13px;
+  width:100%;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.2);
+}
+#roster .soul-crew-hero-meta-label {
+  font-size:10px;font-weight:700;letter-spacing:.12em;color:rgba(255,255,255,.67);
+}
+#roster .soul-crew-hero-meta-rule { width:5px;height:5px;border-radius:50%;background:#F05E07; }
+#roster .soul-crew-hero-member-count {
+  display:inline-flex;align-items:baseline;gap:7px;
+  font-size:10px;font-weight:700;letter-spacing:.09em;color:rgba(255,255,255,.8);
+}
+#roster .soul-crew-hero-member-count strong {
+  font-size:25px;font-weight:800;letter-spacing:-.04em;color:#fff;
+}
+@media(max-width:760px) {
+ #roster .soul-crew-hero-inner { grid-template-columns:1fr;min-height:0;gap:35px;padding:32px 25px 35px; }
+ #roster .soul-crew-hero-title { margin:14px 0 18px;font-size:clamp(2.3rem,8.8vw,4rem); }
+ #roster .soul-crew-hero-description { padding-left:20px; }
+ #roster .soul-crew-hero-quote { left:20px; }
+ #roster .soul-crew-hero-description p { font-size:15px;margin-bottom:18px; }
+ #roster .soul-crew-hero-orbit { right:-45%;top:-45%;width:105vw; }
+}
