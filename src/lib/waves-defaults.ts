@@ -7,7 +7,7 @@ import waveSystem from "@/assets/wave-system.png";
 import waveEmix from "@/assets/wave-emix.png";
 import waveEnri from "@/assets/wave-enri.png";
 
-type Social = { label: string; href: string };
+export type Social = { label: string; href: string };
 export const WAVES: { name: string; redes: string; bio: string; photo: string; socials?: Social[] }[] = [
   {
     name: "SOUL MAVERICK Z",
