@@ -10,9 +10,10 @@ interface Props {
 }
 
 /** Editorial division roster; the original copy and live member data are preserved. */
-export function HoloSquadCard({ id, title, subtitle, desc, members }: Props) {
+export function HoloSquadCard({ id, logo, title, subtitle, desc, members }: Props) {
   const visibleMembers = members.filter((member) => typeof member === "string" && member.trim().length > 0);
   const isCrew = id === "crew";
+  const isLegends = id === "legends";
   const sortedMembers = [...visibleMembers].sort((a,b) => a.localeCompare(b, "es"));
   return (
     <article id={id} className="soul-division scroll-mt-28 overflow-hidden rounded-[28px] border border-white/15 bg-[#111329] sm:rounded-[36px]">
@@ -31,11 +32,11 @@ export function HoloSquadCard({ id, title, subtitle, desc, members }: Props) {
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-white/70">Roster · {visibleMembers.length.toString().padStart(2, "0")}</span>
           <span className="flex items-center gap-2 text-[10px] font-medium tracking-[0.06em] text-white/55"><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#F05E07]" />STATUS · ACTIVE</span>
         </div>
-        <ul className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-3">
+        <ul className={isLegends ? "soul-legends-lineup" : "grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-3"}>
           {sortedMembers.map((member, index) => (
-            <li key={member + index} className="group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30">
-              <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />
-              <span className="min-w-0 break-words text-sm font-medium leading-relaxed text-white">{member}</span>
+            <li key={member + index} className={isLegends ? "soul-legends-slot" : "group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30"}>
+              {isLegends ? <img src={logo} alt="" aria-hidden="true" className="soul-legends-emblem" /> : <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />}
+              <span className={isLegends ? "soul-legends-name font-display" : "min-w-0 break-words text-sm font-medium leading-relaxed text-white"}>{member}</span>
             </li>
           ))}
         </ul>
