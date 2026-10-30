@@ -1,3 +1,4 @@
+import { useSiteAssets } from "@/hooks/use-site-assets";
 import { useLegendsPhotos } from "@/hooks/use-legends-photos";
 import { CURRENT_CREW, CURRENT_LEGENDS } from "@/lib/roster-current";
 import { WAVES, type Social } from "@/lib/waves-defaults";
@@ -372,6 +373,7 @@ function IndexContent() {
   const [socialsOpen, setSocialsOpen] = useState(false);
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
+  const siteAssets = useSiteAssets();
   const roster = useRoster();
   const legendsPhotos = useLegendsPhotos();
   const dynamicWaves = useWavesMembers();
@@ -416,13 +418,13 @@ function IndexContent() {
 
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
-        <Hero3D />
+        <Hero3D bannerUrl={siteAssets.home_banner} />
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
-            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:waveMaverick},
-            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:soulNationTeam},
-            {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:wpOlimpo},
-            {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:jerseyFront},
+            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || waveMaverick},
+            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || soulNationTeam},
+            {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
+            {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
           ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
         </div>
 
