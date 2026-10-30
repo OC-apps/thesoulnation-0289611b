@@ -1,3 +1,6 @@
+import { CURRENT_LEGENDS } from "@/lib/roster-current";
+import { useLegendsPhotos } from "@/hooks/use-legends-photos";
+import { uploadLegendPhoto } from "@/lib/legends-photo.functions";
 import { ROSTER_SYNC_MARKER } from "@/lib/roster-current";
 import { WAVES } from "@/lib/waves-defaults";
 import { createFileRoute } from "@tanstack/react-router";
@@ -90,6 +93,8 @@ function AdminLivePage() {
   const [photoOverrides, setPhotoOverrides] = useState<Record<string, string>>({});
 
 
+  const legendsPhotos = useLegendsPhotos();
+  const [legendPhotoOverrides, setLegendPhotoOverrides] = useState<Record<string,string>>({});
   const waves = useWavesMembers();
   const [waveForm, setWaveForm] = useState({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
   const [wavePhoto, setWavePhoto] = useState<{ base64: string; mime: string; name: string } | null>(null);
@@ -252,6 +257,33 @@ function AdminLivePage() {
       setMsg(error instanceof Error ? error.message : "No fue posible sincronizar el roster");
     } finally {
       setRosterBusy(null);
+    }
+  };
+
+  const onLegendPhoto = async (nickname: string, file: File | null) => {
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      setMsg("Elige una imagen PNG, JPG o WebP de máximo 5 MB");
+      return;
+    }
+    setPhotoBusy("legend:" + nickname);
+    setMsg("");
+    try {
+      const b64 = await new Promise<string>((resolve,reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("No se pudo leer la imagen"));
+        reader.readAsDataURL(file);
+      });
+      const result = await uploadLegendPhoto({data:{password,nickname,photoBase64:b64,photoMime:file.type as "image/jpeg"|"image/png"|"image/webp"}});
+      if (!result.ok) throw new Error("No se pudo guardar");
+      setLegendPhotoOverrides(prev=>({...prev,[nickname.toUpperCase()]:result.url}));
+      window.dispatchEvent(new Event("soul:roster-updated"));
+      setMsg("Foto de " + nickname + " guardada correctamente.");
+    } catch (error) {
+      setMsg(error instanceof Error ? error.message : "Error al subir la fotografía");
+    } finally {
+      setPhotoBusy(null);
     }
   };
 
@@ -480,6 +512,29 @@ function AdminLivePage() {
                 </div>
               )}
 
+              <div className="mb-5 rounded-xl border border-flame/25 bg-blue-deep/20 p-4">
+                <h3 className="font-display text-flame mb-2">Fotografías · Soul Legends</h3>
+                <p className="text-xs text-white/60 mb-4">Sube una foto para cada Legend. Si no hay fotografía se mostrará el emblema oficial. Formatos JPG, PNG o WebP, máximo 5 MB.</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {(rosterSynced ? roster.filter((m)=>m.category==="legends").map((m)=>m.nickname) : [...CURRENT_LEGENDS]).map(nickname=>{
+                    const photo = legendPhotoOverrides[nickname] || legendsPhotos[nickname];
+                    const busy = photoBusy === "legend:" + nickname;
+                    return (
+                      <div key={nickname} className="min-w-0 rounded-lg overflow-hidden border border-flame/20 bg-background/60 p-2">
+                        <div className="aspect-[3/4] rounded-md bg-[#010339]/30 overflow-hidden flex items-center justify-center">
+                          {photo ? <img src={photo} alt={nickname} className="w-full h-full object-cover" /> : <ImageIcon className="w-8 h-8 text-white/30" />}
+                        </div>
+                        <p className="mt-2 text-[11px] font-display text-white truncate" title={nickname}>{nickname}</p>
+                        <label className={`mt-2 block rounded bg-flame text-center px-2 py-2 text-[10px] font-semibold text-background cursor-pointer ${busy ? "opacity-50 pointer-events-none" : ""}`}>
+                          {busy ? "Subiendo…" : photo ? "Cambiar foto" : "Subir foto"}
+                          <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" disabled={busy}
+                            onChange={(e)=>{ void onLegendPhoto(nickname,e.target.files?.[0] ?? null);e.target.value=""; }} />
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {CATEGORIES.map(({ key, label }) => {
                   const list = roster.filter((r) => r.category === key);
