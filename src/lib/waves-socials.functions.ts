@@ -4,6 +4,7 @@ import { z } from "zod";
 const urlOrEmpty = z.union([z.string().url().max(500), z.literal("")]).optional().default("");
 
 const Input = z.object({
+  extraLinks: z.array(z.object({ label: z.string().min(1).max(40), href: z.string().url().max(500) })).max(12).optional(),
   password: z.string().min(1).max(200),
   name: z.string().min(1).max(120),
   tiktok: urlOrEmpty,
@@ -24,6 +25,7 @@ export const upsertWavesSocials = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("waves_socials").upsert({
       name: data.name.trim().toUpperCase(),
+      extra_links: data.extraLinks ?? undefined,
       tiktok_url: data.tiktok?.trim() || null,
       twitch_url: data.twitch?.trim() || null,
       youtube_url: data.youtube?.trim() || null,
@@ -32,7 +34,7 @@ export const upsertWavesSocials = createServerFn({ method: "POST" })
       bio: data.bio !== undefined ? (data.bio.trim() || null) : undefined,
       redes: data.redes !== undefined ? (data.redes.trim() || null) : undefined,
       updated_at: new Date().toISOString(),
-    }, { onConflict: "name" });
+    } as any, { onConflict: "name" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
