@@ -598,9 +598,10 @@ function IndexContent() {
           </nav>
 
           {/* WAVES — creators */}
-          <div id="waves" className="soul-waves-heading mb-12 flex flex-col items-start scroll-mt-24">
-            <h3 className="font-display text-3xl sm:text-4xl">SOUL WAVES</h3>
-            <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
+          <div id="waves" className="soul-waves-heading mb-12 flex w-full flex-col items-start scroll-mt-24">
+            <h3 className="sr-only">SOUL WAVES</h3>
+            <img src="/soul-waves-banner-2026.jpg" alt="Soul Waves — streamers y creadores de contenido de The Soul Nation" width={1600} height={533}
+              className="block w-full h-auto rounded-2xl object-contain border border-white/10" loading="lazy" />
             <p className="mt-6 text-muted-foreground max-w-2xl leading-7">
               Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
             </p>
