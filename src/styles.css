@@ -1586,3 +1586,62 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-hub #top .soul-hero-fullbleed-actions a { padding:9px 13px; font-size:11px; }
   .soul-hub #about .soul-home-grid { grid-template-columns:minmax(0,1fr); padding:0 4px; }
 }
+
+
+/* Fit the hero container to the real horizontal image instead of cropping it.
+   Override legacy fixed-height/full-bleed rules across desktop and mobile. */
+.soul-hub #top .soul-hero.soul-hero-fullbleed {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  height:auto;
+  min-height:0;
+  max-height:none;
+  aspect-ratio:auto;
+  overflow:hidden;
+  background:#01039E;
+}
+.soul-hub #top .soul-hero.soul-hero-fullbleed .soul-hero-fullbleed-image {
+  position:relative;
+  display:block;
+  flex:0 0 auto;
+  inset:auto;
+  width:100%;
+  height:auto;
+  max-height:none;
+  padding:0;
+  margin:0;
+  line-height:0;
+  overflow:hidden;
+}
+.soul-hub #top .soul-hero.soul-hero-fullbleed .soul-hero-fullbleed-image img {
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:none;
+  aspect-ratio:auto;
+  object-fit:contain;
+  object-position:center center;
+  border-radius:0;
+  margin:0;
+}
+.soul-hub #top .soul-hero.soul-hero-fullbleed::after { content:none; display:none; }
+.soul-hub #top .soul-hero.soul-hero-fullbleed .soul-hero-fullbleed-actions {
+  position:relative;
+  flex:0 0 auto;
+  z-index:2;
+  width:100%;
+  padding:10px 12px 15px;
+  background:#01039E;
+}
+@media(max-width:640px) {
+  .soul-hub #top .soul-hero.soul-hero-fullbleed {
+    height:auto;
+    min-height:0;
+    max-height:none;
+  }
+  .soul-hub #top .soul-hero.soul-hero-fullbleed .soul-hero-fullbleed-actions {
+    padding:9px 10px 12px;
+  }
+}
