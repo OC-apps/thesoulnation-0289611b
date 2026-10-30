@@ -150,12 +150,17 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
     const base = entry.socials ? [...entry.socials] : [];
     const extra = socialsMap.get(entry.name.toUpperCase());
     if (extra) {
-      const has = (l: string) => base.some((s) => s.label.toLowerCase() === l.toLowerCase());
-      if (extra.tiktok_url && !has("TikTok")) base.push({ label: "TikTok", href: extra.tiktok_url });
-      if (extra.twitch_url && !has("Twitch")) base.push({ label: "Twitch", href: extra.twitch_url });
-      if (extra.youtube_url && !has("YouTube")) base.push({ label: "YouTube", href: extra.youtube_url });
-      if (extra.x_url && !has("X")) base.push({ label: "X", href: extra.x_url });
-      if (extra.facebook_url && !has("Facebook")) base.push({ label: "Facebook", href: extra.facebook_url });
+      const setLink = (label: string, href: string | null) => {
+        if (!href) return;
+        const idx = base.findIndex((s) => s.label.toLowerCase() === label.toLowerCase());
+        if (idx >= 0) base[idx] = { label, href };
+        else base.push({ label, href });
+      };
+      setLink("TikTok", extra.tiktok_url);
+      setLink("Twitch", extra.twitch_url);
+      setLink("YouTube", extra.youtube_url);
+      setLink("X", extra.x_url);
+      setLink("Facebook", extra.facebook_url);
     }
     return base;
   };
