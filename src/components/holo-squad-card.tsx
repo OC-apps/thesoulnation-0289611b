@@ -85,20 +85,20 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
 
 
       <div
-        className="relative rounded-[1.75rem] overflow-hidden border-2 transition-transform duration-200 will-change-transform"
+        className="relative rounded-[1.25rem] overflow-hidden border transition-transform duration-200 will-change-transform"
         style={{
           borderColor: "var(--flame)",
           transform: `rotateX(${rx}deg) rotateY(${ry}deg) ${pressed ? "scale(0.985)" : "scale(1)"}`,
           transformStyle: "preserve-3d",
           background:
-            "linear-gradient(135deg, oklch(0.20 0.16 258 / 0.94), oklch(0.07 0.10 258 / 0.94))",
+            "linear-gradient(135deg, #101252, #080943)",
           boxShadow:
             "0 30px 80px -25px var(--flame-glow), inset 0 0 40px oklch(0 0 0 / 0.6)",
         }}
       >
         {/* Holographic grid */}
         <div
-          className="absolute inset-0 opacity-30 pointer-events-none"
+          className="absolute inset-0 opacity-0 pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(oklch(0.70 0.24 45 / 0.22) 1px, transparent 1px), linear-gradient(90deg, oklch(0.70 0.24 45 / 0.22) 1px, transparent 1px)",
@@ -110,7 +110,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
 
         {/* Cursor-following spotlight */}
         <div
-          className="absolute inset-0 pointer-events-none mix-blend-screen"
+          className="absolute inset-0 pointer-events-none mix-blend-screen opacity-0"
           style={{
             background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(0.70 0.28 45 / 0.35), transparent 60%)`,
           }}
@@ -120,7 +120,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
 
         {/* Scanline overlay */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-20"
+          className="absolute inset-0 pointer-events-none opacity-0"
           style={{
             backgroundImage:
               "repeating-linear-gradient(0deg, transparent 0, transparent 2px, oklch(1 0 0 / 0.08) 2px, oklch(1 0 0 / 0.08) 3px)",
@@ -139,7 +139,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
 
         {/* Animated scan bar */}
         <span
-          className="pointer-events-none absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent"
+          className="pointer-events-none absolute inset-x-0 h-px bg-flame/60"
           style={{
             top: `${((Math.sin(idle * 1.5 + accentSeed) + 1) / 2) * 100}%`,
             filter: "drop-shadow(0 0 12px var(--flame-glow))",
@@ -169,7 +169,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
                 src={logo}
                 alt=""
                 aria-hidden
-                className="absolute inset-0 h-28 sm:h-32 md:h-40 w-auto object-contain opacity-30 mix-blend-screen pointer-events-none"
+                className="absolute inset-0 h-28 sm:h-32 md:h-40 w-auto object-contain opacity-0 pointer-events-none"
                 style={{
                   filter: "blur(6px) hue-rotate(40deg)",
                   transform: `translate3d(${(tilt.mx - 50) * -0.25}px, ${(tilt.my - 50) * -0.25}px, 0)`,
@@ -203,11 +203,11 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
               {members.map((m, i) => (
                 <li
                   key={m}
-                  className="group/chip relative overflow-hidden rounded-lg border border-flame/30 bg-background/50 backdrop-blur px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-flame hover:text-flame hover:bg-flame/10 active:scale-95"
+                  className="group/chip relative overflow-hidden rounded-lg border border-white/15 bg-background/50 px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-flame hover:text-flame hover:bg-flame/10 active:scale-95"
 
                 >
                   <span className="relative z-10 block truncate">{m}</span>
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-flame/30 to-transparent transition-transform duration-700 group-hover/chip:translate-x-full" />
+                  <span className="pointer-events-none absolute inset-0 opacity-0" />
                 </li>
               ))}
             </ul>
