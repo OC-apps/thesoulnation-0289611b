@@ -409,9 +409,10 @@ function IndexContent() {
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
       {/* NAV */}
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
-        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
-          <a href="#top" aria-label="The Soul Nation — inicio" className="flex shrink-0 items-center gap-3">
+        <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
+          <a href="#top" aria-label="The Soul Nation — inicio" className="soul-brand flex shrink-0 items-center gap-3">
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
+            <span className="soul-brand-name">THE SOUL NATION</span>
           </a>
           <nav className="hidden xl:flex gap-1 text-xs" aria-label="Navegación principal">
             {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView) || (section.id === "about" && nationView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>)}

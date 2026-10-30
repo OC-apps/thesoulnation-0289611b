@@ -724,3 +724,32 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 
 .soul-section-menu { display:none; }
 .soul-hub { padding-top:80px; }
+
+/* Calm motion and a balanced emblem + wordmark header. */
+:root { --soul-ease: cubic-bezier(.22,1,.36,1); }
+.soul-header-inner { width:100%; max-width:1600px; margin-inline:auto; padding-inline:clamp(16px,2.5vw,40px); }
+.soul-brand { min-width:0; }
+.soul-brand-name { font-family:var(--font-display); font-weight:700; font-style:italic; font-synthesis:none; font-size:clamp(.9rem,1.4vw,1.25rem); line-height:1.15; letter-spacing:-.015em; padding-right:.15em; white-space:nowrap; }
+.soul-brand img { flex-shrink:0; transition:transform .5s var(--soul-ease); }
+.soul-brand:hover img { transform:translateY(-2px); }
+.soul-hub > header { transition:background-color .4s ease, border-color .4s ease; }
+@keyframes soul-section-enter { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes soul-dialog-enter { from { opacity:0; transform:translate(-50%,-48%) scale(.98); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
+.soul-hub > section { animation:soul-section-enter .55s var(--soul-ease) both; }
+.soul-home-tile, .soul-portrait, .soul-hub article, .soul-purpose-link,
+.soul-roster-tabs a, .soul-subnav a, .soul-header-link, .soul-dock-bar button,
+.soul-hub button, .soul-hub a.rounded-full { transition:transform .35s var(--soul-ease),background-color .3s ease,border-color .3s ease,color .3s ease,box-shadow .35s ease; }
+.soul-home-tile img { transition:transform .6s var(--soul-ease); }
+.soul-home-tile:hover img { transform:scale(1.035); }
+.soul-hub button:active, .soul-home-tile:active, .soul-dock-bar button:active { transform:scale(.98); }
+.soul-subnav a:hover, .soul-purpose-link:hover { transform:translateY(-2px); }
+.soul-wave-profile[data-state="open"] { animation:soul-dialog-enter .35s var(--soul-ease); }
+.soul-dock-menu { animation:soul-section-enter .3s var(--soul-ease); transform-origin:bottom center; }
+/* Reveal effects never control content visibility or pointer access. */
+.reveal { opacity:1; transform:none; }
+@media (max-width: 359px) { .soul-brand { gap:.5rem; } .soul-brand-name { font-size:.8rem; } .soul-brand img { height:34px; } }
+@media (prefers-reduced-motion: reduce) {
+ .soul-hub > section, .soul-wave-profile[data-state="open"], .soul-dock-menu { animation:none !important; }
+ .soul-brand:hover img, .soul-home-tile:hover img, .soul-hub button:active,
+ .soul-home-tile:active, .soul-dock-bar button:active, .soul-subnav a:hover, .soul-purpose-link:hover { transform:none !important; }
+}
