@@ -394,7 +394,7 @@ function IndexContent() {
   const hiddenSet = useWavesHidden();
   const waveNames = [...WAVES.map(member => member.name), ...dynamicWaves.map(member => member.name)].filter(name => !hiddenSet.has(name.toUpperCase()) && name.trim().toUpperCase() !== "SOUL PXLMAA");
   const legendsList = roster.legends.length ? roster.legends : LEGENDS;
-  const crewList = roster.loaded ? roster.crew : [...new Set([...CREW, ...FORMER_KILLERS])];
+  const crewList = (roster.loaded ? roster.crew : [...new Set([...CREW, ...FORMER_KILLERS])]).filter((name) => name.trim().toUpperCase() !== "SOUL MORTAAL");
 
 
 
