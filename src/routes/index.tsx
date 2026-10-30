@@ -1,4 +1,4 @@
-import { WAVES } from "@/lib/waves-defaults";
+import { WAVES, type Social } from "@/lib/waves-defaults";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EasterEgg } from "@/components/easter-egg";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
