@@ -1,3 +1,5 @@
+import { HOME_ASSET_KEYS, useSiteAssets, type SiteAssetKey } from "@/hooks/use-site-assets";
+import { updateSiteAsset } from "@/lib/site-assets.functions";
 import { CURRENT_LEGENDS } from "@/lib/roster-current";
 import { useLegendsPhotos } from "@/hooks/use-legends-photos";
 import { uploadLegendPhoto } from "@/lib/legends-photo.functions";
@@ -90,6 +92,34 @@ function AdminLivePage() {
   const [rosterSynced, setRosterSynced] = useState(false);
 
   const [photoBusy, setPhotoBusy] = useState<string | null>(null);
+  const siteAssets = useSiteAssets();
+  const [imageBusy,setImageBusy] = useState<SiteAssetKey|null>(null);
+  const [imageOverrides,setImageOverrides] = useState<Partial<Record<SiteAssetKey,string>>>({});
+  const defaultHomeImages:Partial<Record<SiteAssetKey,string>> = {
+    home_banner:"/the%20soul%20nation%20header.jpg",
+  };
+  const onHomeImage = async (key:SiteAssetKey,file:File|null)=>{
+    if(!file)return;
+    if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>8*1024*1024){
+      setMsg("La imagen debe ser JPG, PNG o WebP de máximo 8 MB");return;
+    }
+    setImageBusy(key);setMsg("");
+    try {
+      const dataUrl=await new Promise<string>((resolve,reject)=>{
+        const reader=new FileReader();
+        reader.onload=()=>resolve(String(reader.result));
+        reader.onerror=()=>reject(new Error("No se pudo leer la imagen"));
+        reader.readAsDataURL(file);
+      });
+      const result=await updateSiteAsset({data:{password,key,photoBase64:dataUrl,photoMime:file.type as "image/jpeg"|"image/png"|"image/webp"}});
+      if(!result.ok)throw new Error("No fue posible guardar la imagen");
+      setImageOverrides(prev=>({...prev,[key]:result.url}));
+      window.dispatchEvent(new Event("soul:site-assets-updated"));
+      setMsg("Imagen actualizada correctamente: "+HOME_ASSET_KEYS.find(item=>item.key===key)?.label);
+    }catch(err){setMsg(err instanceof Error?err.message:"Error al subir la imagen");}
+    finally{setImageBusy(null);}
+  };
+
   const [photoOverrides, setPhotoOverrides] = useState<Record<string, string>>({});
 
 
@@ -481,7 +511,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-2 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -490,9 +520,42 @@ function AdminLivePage() {
               <WavesIcon className="w-3.5 h-3.5" />
               <span>Waves · Redes</span>
             </TabsTrigger>
+            <TabsTrigger value="imagenes" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-[10px] sm:text-xs font-mono uppercase tracking-widest">
+              <ImageIcon className="w-3.5 h-3.5" />
+              <span>Imágenes</span>
+            </TabsTrigger>
           </TabsList>
 
 
+
+          <TabsContent value="imagenes" className="mt-0">
+            <SectionShell icon={ImageIcon} title="Imágenes del sitio" subtitle="Cambiar portada y tarjetas del inicio">
+              <p className="text-sm text-foreground/75">Reemplaza las fotografías de la portada y los accesos del inicio. Guarda cada cambio desde aquí, sin modificar GitHub. JPG, PNG o WebP, máximo 8 MB.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {HOME_ASSET_KEYS.map(item=>{
+                  const url=imageOverrides[item.key]||siteAssets[item.key]||defaultHomeImages[item.key];
+                  const busy=imageBusy===item.key;
+                  return (
+                    <div key={item.key} className="rounded-xl border border-flame/25 bg-blue-deep/30 p-4 min-w-0 space-y-3">
+                      <div>
+                        <h3 className="font-display text-flame text-base">{item.label}</h3>
+                        <p className="text-xs text-foreground/60 mt-1">{item.hint}</p>
+                      </div>
+                      <div className={item.key==="home_banner"?"aspect-[16/5]":"aspect-video"}>
+                        {url?<img src={url} alt={item.label} className="w-full h-full object-contain bg-black/30 rounded-lg border border-white/10" />:
+                          <div className="w-full h-full flex items-center justify-center rounded-lg border border-dashed border-white/20 text-white/40 text-xs">Sin imagen personalizada. Se muestra la original.</div>}
+                      </div>
+                      <label className={`block cursor-pointer text-center rounded-lg bg-flame px-4 py-3 text-sm font-semibold text-background transition hover:brightness-110 ${busy?"pointer-events-none opacity-50":""}`}>
+                        {busy?"Subiendo imagen…": "Cambiar imagen"}
+                        <input type="file" className="hidden" disabled={busy} accept="image/jpeg,image/png,image/webp"
+                          onChange={e=>{void onHomeImage(item.key,e.target.files?.[0]??null);e.target.value="";}} />
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
+            </SectionShell>
+          </TabsContent>
 
           <TabsContent value="roster" className="mt-0">
             <SectionShell icon={Users} title="Roster" subtitle="Waves · Legends · Crew">
