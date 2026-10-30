@@ -351,7 +351,6 @@ function IndexContent() {
     destination === "contenido" ? "videos" : HUB_SECTIONS.some((s) => s.id === destination) ? destination : "top";
   const rosterView = destination === "killers" ? "crew" : rosterIds.includes(destination) ? destination : "waves";
   const contentView = ["videos", "wallpapers", "music"].includes(view);
-  const nationView = view === "xplicit-cup";
   useEffect(() => {
     const update = () => setDestination(window.location.hash.slice(1) === "killers" ? "crew" : window.location.hash.slice(1) || "top");
     update();
@@ -409,11 +408,11 @@ function IndexContent() {
       </header>
 
       <nav className="soul-section-menu" aria-label="Secciones">
-        {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView) || (section.id === "about" && nationView)) ? "page" : undefined}>{section.label}</a>)}
+        {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined}>{section.label}</a>)}
       </nav>
 
-      {(contentView || nationView) && <nav className="soul-subnav" aria-label={contentView ? "Contenido" : "La Nación"}>
-        {(contentView ? [{id:"videos",label:"Videos"},{id:"wallpapers",label:"Wallpapers"},{id:"music",label:"Música"}] : [{id:"about",label:"¿Quiénes Somos?"},{id:"vision",label:"Visión"},{id:"objetivo",label:"Objetivo"},{id:"xplicit-cup",label:"Xplicit Cup"}]).map(item => <a key={item.id} href={`#${item.id}`} aria-current={(view === item.id || destination === item.id) ? "page" : undefined}>{item.label}</a>)}
+      {contentView && <nav className="soul-subnav" aria-label="Contenido">
+        {[{id:"videos",label:"Videos"},{id:"wallpapers",label:"Wallpapers"},{id:"music",label:"Música"}].map(item => <a key={item.id} href={`#${item.id}`} aria-current={(view === item.id || destination === item.id) ? "page" : undefined}>{item.label}</a>)}
       </nav>}
 
       {/* Floating controls moved into the unified BottomBar */}
