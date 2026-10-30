@@ -1,3 +1,7 @@
+import waveMaverickTile from "@/assets/wave-maverick.png";
+import soulNationTeamTile from "@/assets/soul-nation-team.png";
+import wallpaperTile from "@/assets/wallpaper-olimpo.jpg";
+import jerseyTile from "@/assets/jersey-front.png";
 import { HOME_ASSET_KEYS, useSiteAssets, type SiteAssetKey } from "@/hooks/use-site-assets";
 import { updateSiteAsset } from "@/lib/site-assets.functions";
 import { CURRENT_LEGENDS } from "@/lib/roster-current";
@@ -97,6 +101,10 @@ function AdminLivePage() {
   const [imageOverrides,setImageOverrides] = useState<Partial<Record<SiteAssetKey,string>>>({});
   const defaultHomeImages:Partial<Record<SiteAssetKey,string>> = {
     home_banner:"/the%20soul%20nation%20header.jpg",
+    home_roster:waveMaverickTile,
+    home_videos:soulNationTeamTile,
+    home_wallpapers:wallpaperTile,
+    home_jersey:jerseyTile,
   };
   const onHomeImage = async (key:SiteAssetKey,file:File|null)=>{
     if(!file)return;
