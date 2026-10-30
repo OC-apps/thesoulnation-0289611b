@@ -1,3 +1,4 @@
+import { CURRENT_CREW, CURRENT_LEGENDS } from "@/lib/roster-current";
 import { WAVES, type Social } from "@/lib/waves-defaults";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EasterEgg } from "@/components/easter-egg";
@@ -85,14 +86,7 @@ const VIDEOS = [
   { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
 ];
 
-const FORMER_KILLERS = ["SOUL MORTAAL", "SOUL GALLARD", "SOUL RAPID", "SOUL SANTHY", "SOUL SLADE X", "SOUL DIABOLI"];
-const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
-const CREW = [
-  "SOUL VELFI", "SOUL VOLCANO",  "SOUL PEYERZ", 
-  "SOUL BOUNSS",  "SOUL NEXUS Z", "SOUL XCENFE",
-  "SOUL CASTERIZE", "SOUL ADVERSL", "SOUL SLADE X",  "SOUL ARID",
-  "SOUL RAVENANT", 
-];
+
 
 
 export const Route = createFileRoute("/")({
@@ -164,7 +158,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
     }
     return base;
   };
-  const WAVES_ALL = [...WAVES, ...extraWaves]
+  const WAVES_ALL = [...WAVES, ...extraWaves.filter((w) => !WAVES.some((base) => base.name.toUpperCase() === w.name.toUpperCase()))]
     .filter((w) => !hiddenSet.has(w.name.toUpperCase()) && w.name.trim().toUpperCase() !== "SOUL PXLMAA")
     .map((w) => {
       const extra = socialsMap.get(w.name.toUpperCase());
@@ -377,9 +371,14 @@ function IndexContent() {
   const roster = useRoster();
   const dynamicWaves = useWavesMembers();
   const hiddenSet = useWavesHidden();
-  const waveNames = [...WAVES.map(member => member.name), ...dynamicWaves.map(member => member.name)].filter(name => !hiddenSet.has(name.toUpperCase()) && name.trim().toUpperCase() !== "SOUL PXLMAA");
-  const legendsList = roster.legends.length ? roster.legends : LEGENDS;
-  const crewList = (roster.loaded ? roster.crew : [...new Set([...CREW, ...FORMER_KILLERS])]).filter((name) => name.trim().toUpperCase() !== "SOUL MORTAAL");
+  // Until the admin applies the updated roster to Supabase, use the exact published list.
+  // After synchronization, Supabase becomes authoritative for future admin changes.
+  const visibleWaves = roster.synced ? dynamicWaves : [];
+  const activeHiddenSet = roster.synced ? hiddenSet : new Set<string>();
+  const waveNames = [...new Set([...WAVES.map(member => member.name), ...visibleWaves.map(member => member.name)])]
+    .filter(name => !activeHiddenSet.has(name.toUpperCase()));
+  const legendsList = roster.synced ? roster.legends : [...CURRENT_LEGENDS];
+  const crewList = roster.synced ? roster.crew : [...CURRENT_CREW];
   const memberCount = new Set([...waveNames, ...legendsList, ...crewList].map((name) => name.trim().toUpperCase()).filter(Boolean)).size;
 
 
@@ -597,7 +596,7 @@ function IndexContent() {
             </p>
           </div>
 
-          <WavesHUD dynamicWaves={dynamicWaves} hiddenSet={hiddenSet} />
+          <WavesHUD dynamicWaves={visibleWaves} hiddenSet={activeHiddenSet} />
 
 
           {/* KILLERS + LEGENDS — holographic 3D squad cards */}
