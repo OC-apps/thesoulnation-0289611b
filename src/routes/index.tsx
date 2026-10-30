@@ -435,7 +435,7 @@ function IndexContent() {
         <Hero3D />
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
-            {href:"#roster",title:"Nuestro Roster",sub:"Waves · Legends · Crew",image:waveMaverick},
+            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:waveMaverick},
             {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:soulNationTeam},
             {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:wpOlimpo},
             {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:jerseyFront},
