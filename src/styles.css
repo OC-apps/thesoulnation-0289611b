@@ -1177,3 +1177,123 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 }
 #roster .soul-legends-slot .soul-legends-emblem-with-photo { display:none; }
 #roster .soul-legends-slot .soul-legends-name { position:relative; z-index:2; }
+
+
+/* Soul Crew — premium, compact editorial roster tiles (2026 redesign).
+   Override old tall diagonal panels without affecting Waves or Legends. */
+#roster .soul-crew-lineup {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
+  width:100%;
+  margin:0;
+  padding:0;
+}
+#roster .soul-crew-slot {
+  position:relative;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  gap:15px;
+  box-sizing:border-box;
+  width:100%;
+  height:84px;
+  min-height:0;
+  min-width:0;
+  padding:14px 19px;
+  overflow:hidden;
+  clip-path:none;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:12px;
+  background:linear-gradient(115deg,rgba(1,3,158,.24),rgba(12,14,37,.94) 64%);
+  box-shadow:none;
+  transition:background .24s ease,border-color .24s ease,transform .24s ease;
+  container-type:inline-size;
+}
+#roster .soul-crew-slot::before {
+  content:"";
+  position:absolute;
+  left:0; top:15px; bottom:15px;
+  width:3px;
+  border-radius:0 3px 3px 0;
+  background:#F05E07;
+}
+#roster .soul-crew-slot::after {
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  right:0; top:0;
+  width:28px; height:28px;
+  border-top:1px solid rgba(240,94,7,.42);
+  border-right:1px solid rgba(240,94,7,.42);
+  clip-path:polygon(0 0,100% 0,100% 100%);
+}
+#roster .soul-crew-slot:hover {
+  transform:translateY(-2px);
+  border-color:rgba(240,94,7,.55);
+  background:linear-gradient(115deg,rgba(1,3,158,.40),rgba(12,14,37,.96) 72%);
+}
+#roster .soul-crew-slot .soul-crew-accent { display:none; }
+#roster .soul-crew-index {
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex:none;
+  align-items:center;
+  justify-content:center;
+  width:33px; height:33px;
+  border:1px solid rgba(240,94,7,.32);
+  border-radius:8px;
+  background:rgba(240,94,7,.075);
+  color:rgba(240,94,7,.85);
+  font:600 11px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.04em;
+}
+#roster .soul-crew-name {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:3px;
+  min-width:0;
+  flex:1;
+  width:auto;
+  margin:0;
+  font-family:var(--font-display);
+  line-height:1.1;
+  overflow:hidden;
+}
+#roster .soul-crew-prefix {
+  margin:0;
+  font-size:clamp(10px,4.2cqw,12px);
+  line-height:1.1;
+  color:#F05E07;
+  white-space:nowrap;
+}
+#roster .soul-crew-nickname {
+  display:block;
+  width:100%;
+  max-width:100%;
+  font-size:clamp(13px,5.9cqw,19px);
+  line-height:1.12;
+  letter-spacing:-.025em;
+  color:#FFFFFF;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+@media(max-width:930px) {
+ #roster .soul-crew-lineup { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+}
+@media(max-width:540px) {
+ #roster .soul-crew-lineup { grid-template-columns:minmax(0,1fr); gap:9px; }
+ #roster .soul-crew-slot { height:74px; padding:11px 16px; gap:12px; }
+ #roster .soul-crew-index { width:30px;height:30px; }
+ #roster .soul-crew-nickname { font-size:clamp(15px,5.1cqw,19px); }
+}
+@media(prefers-reduced-motion:reduce) {
+ #roster .soul-crew-slot { transition:none; }
+ #roster .soul-crew-slot:hover { transform:none; }
+}
