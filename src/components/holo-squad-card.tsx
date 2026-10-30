@@ -204,13 +204,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, accent
                 <li
                   key={m}
                   className="group/chip relative overflow-hidden rounded-lg border border-flame/30 bg-background/50 backdrop-blur px-3 py-2 text-xs sm:text-sm font-display font-bold tracking-wide text-foreground/90 transition-all duration-300 hover:border-flame hover:text-flame hover:bg-flame/10 active:scale-95"
-                  style={{
-                    transform: revealed
-                      ? `translate3d(0,0,${20 + (i % 3) * 10}px)`
-                      : "translate3d(0, 24px, 0)",
-                    opacity: revealed ? 1 : 0,
-                    transition: `transform 0.7s cubic-bezier(0.22,1,0.36,1) ${i * 60}ms, opacity 0.7s ease ${i * 60}ms, border-color 0.3s, background 0.3s, color 0.3s`,
-                  }}
+
                 >
                   <span className="relative z-10 block truncate">{m}</span>
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-flame/30 to-transparent transition-transform duration-700 group-hover/chip:translate-x-full" />
