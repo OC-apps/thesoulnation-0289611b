@@ -1111,3 +1111,17 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media(prefers-reduced-motion:reduce) {
  #roster .soul-crew-slot:hover { transform:none; }
 }
+
+
+/* Official Soul Nation orange prefix in every roster division.
+   Preserve white nicknames and existing responsive typography. */
+#roster .soul-waves-collection .soul-lineup-prefix,
+#roster .soul-legends-prefix,
+#roster .soul-crew-prefix {
+  color: #F05E07 !important;
+}
+#roster .soul-waves-collection .soul-lineup-nickname,
+#roster .soul-legends-nickname,
+#roster .soul-crew-nickname {
+  color: #FFFFFF;
+}
