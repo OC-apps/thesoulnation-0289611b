@@ -4,7 +4,7 @@ import { useRef, useState, type MouseEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
-import soulLogo from "@/assets/soul-logo.png";
+import soulLogo from "@/assets/soul-logo-official.png";
 import soulNationTeam from "@/assets/soul-nation-team.png";
 import somosCover from "@/assets/somos-soul-nation-cover.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
@@ -138,7 +138,7 @@ function renderWaveCard(
   const exploreId = `member:${c.name.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <button onClick={onClick} data-explore={exploreId}
-      className={`group flex h-full w-full flex-col overflow-hidden rounded-[22px] border border-white/15 bg-[#101252] text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#F05E07]/70 focus:outline-none focus:ring-2 focus:ring-[#F05E07] ${leader ? "sm:grid sm:grid-cols-[1.15fr_0.85fr]" : ""}`}>
+      className={`soul-wave-card group flex h-full w-full flex-col overflow-hidden rounded-[22px] border border-white/15 bg-[#101252] text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#F05E07]/70 focus:outline-none focus:ring-2 focus:ring-[#F05E07] ${leader ? "sm:grid sm:grid-cols-[1.15fr_0.85fr]" : ""}`}>
       <div className={`relative overflow-hidden bg-[#01039E] ${leader ? "aspect-[16/10] sm:aspect-[16/9]" : "aspect-[4/5]"}`}>
         <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-[1.035]" />
         {leader && <Crown className="absolute left-4 top-4 z-10 h-7 w-7 text-[#F05E07]" strokeWidth={2} />}
@@ -378,7 +378,7 @@ function IndexContent() {
       <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
           <a href="#top" aria-label="The Soul Nation — inicio" className="flex shrink-0 items-center gap-3">
-            <img src={soulLogo} alt="" width={38} height={38} className="h-9 w-auto object-contain" />
+            <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
             <img src={soulTextLogo} alt="The Soul Nation" className="hidden h-6 w-auto max-w-[170px] object-contain sm:block" />
           </a>
           <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">

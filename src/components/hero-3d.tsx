@@ -1,4 +1,4 @@
-import soulLogo from "@/assets/soul-logo.png";
+import soulLogo from "@/assets/soul-logo-official.png";
 import soulTextLogo from "@/assets/soul-nation-textlogo.png";
 
 export function Hero3D() {
