@@ -1,25 +1,20 @@
-import soulLogo from "@/assets/soul-logo-official.png";
+import { homeBannerEmbedded } from "@/lib/home-banner-embedded";
 import { useState } from "react";
 
 export function Hero3D({ bannerUrl }: { bannerUrl?: string }) {
  const [failedUrl,setFailedUrl]=useState("");
  // The original file was uploaded with spaces in its name.
- const defaultBanner="/the%20soul%20nation%20header.jpg";
+ const defaultBanner=homeBannerEmbedded;
  const src=bannerUrl || defaultBanner;
  const unavailable=src===failedUrl;
+ const displaySrc=unavailable ? homeBannerEmbedded : src;
  return (
   <div className="soul-hero relative isolate overflow-hidden bg-[#01039E]">
    <h1 className="sr-only">The Soul Nation</h1>
    <div className="mx-auto w-full max-w-7xl px-3 pt-3 sm:px-6 sm:pt-5">
-    {unavailable ? (
-     <div className="flex min-h-40 items-center justify-center">
-      <img src={soulLogo} alt="The Soul Nation" className="h-32 w-auto object-contain" />
-     </div>
-    ) : (
-     <img key={src} src={src} alt="The Soul Nation" width={1920} height={600}
+    <img key={displaySrc} src={displaySrc} alt="The Soul Nation" width={1920} height={600}
        className="block h-auto w-full object-contain rounded-xl"
-       onError={()=>setFailedUrl(src)} />
-    )}
+       onError={()=>{if(displaySrc!==homeBannerEmbedded)setFailedUrl(src)}} />
    </div>
    <div className="relative flex flex-wrap justify-center gap-3 px-4 pb-5 pt-3 sm:pb-7">
      <a href="#roster" className="rounded-full bg-[#F05E07] px-7 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-[#01039E]">► Conoce el Roster</a>
