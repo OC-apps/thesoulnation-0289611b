@@ -105,6 +105,7 @@ function AdminLivePage() {
     home_videos:soulNationTeamTile,
     home_wallpapers:wallpaperTile,
     home_jersey:jerseyTile,
+    about_team:soulNationTeamTile,
   };
   const onHomeImage = async (key:SiteAssetKey,file:File|null)=>{
     if(!file)return;
