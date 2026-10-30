@@ -692,7 +692,7 @@ function AdminLivePage() {
                                       <Link2 className="w-3 h-3" />
                                       {expanded ? "Cerrar editor" : "Editar todo"}
                                     </button>
-                                    {!c.fixed && (
+                                    
                                       <button
                                         onClick={() => toggleHidden(c.name)}
                                         disabled={hBusy}
@@ -705,7 +705,6 @@ function AdminLivePage() {
                                         {isHidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                                         {hBusy ? "..." : isHidden ? "Restaurar" : "Ocultar"}
                                       </button>
-                                    )}
                                     {c.dyn && (
                                       <button
                                         onClick={() => setConfirm({ title: "Eliminar wave", description: `¿Seguro que quieres eliminar a "${c.name}" de Waves? Se borrará su foto y datos. Esta acción no se puede deshacer.`, onConfirm: () => removeWave(c.dyn!.id) })}
