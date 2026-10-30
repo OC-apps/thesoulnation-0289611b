@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo-official.png";
-import soulTextLogo from "@/assets/soul-nation-textlogo.png";
 import soulNationTeam from "@/assets/soul-nation-team.png";
 import somosCover from "@/assets/somos-soul-nation-cover.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
@@ -139,19 +138,20 @@ function renderWaveCard(
   const exploreId = `member:${c.name.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <button onClick={onClick} data-explore={exploreId}
-      className={`soul-wave-card group flex h-full w-full flex-col overflow-hidden rounded-[22px] border border-white/15 bg-[#101252] text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#F05E07]/70 focus:outline-none focus:ring-2 focus:ring-[#F05E07] ${leader ? "sm:grid sm:grid-cols-[1.15fr_0.85fr]" : ""}`}>
-      <div className={`relative overflow-hidden bg-[#01039E] ${leader ? "aspect-[16/10] sm:aspect-[16/9]" : "aspect-[4/5]"}`}>
-        <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-[1.035]" />
-        {leader && <Crown className="absolute left-4 top-4 z-10 h-7 w-7 text-[#F05E07]" strokeWidth={2} />}
-        {isLive && <span className="absolute bottom-3 left-3 z-10 rounded-full bg-red-600 px-3 py-1 text-[10px] font-bold text-white">LIVE</span>}
+      className={`soul-portrait group ${leader ? "soul-portrait-leader" : ""}`}>
+      <div className="soul-portrait-photo">
+        <img src={c.photo} alt={c.name} loading="lazy" />
+        {leader && <span className="soul-founder-mark"><Crown className="h-5 w-5" strokeWidth={1.75} /></span>}
+        {isLive && <span className="soul-live-label">LIVE</span>}
       </div>
-      <div className={`flex flex-1 flex-col justify-center border-t border-white/10 p-4 sm:p-5 ${leader ? "sm:border-l sm:border-t-0 sm:p-9" : ""}`}>
-        <div className="mb-3 h-1 w-8 rounded-full bg-[#F05E07]" />
-        <h4 className={`font-display font-bold leading-tight tracking-tight text-white ${leader ? "text-xl sm:text-3xl" : "text-sm sm:text-lg"}`}>{c.name}</h4>
-        <div className="mt-3 flex items-center gap-2 text-[10px] font-medium uppercase tracking-wider text-white/60">
-          <span className={`h-1.5 w-1.5 rounded-full ${isLive ? "bg-red-500" : "bg-[#F05E07]"}`} />
+      <div className="soul-portrait-info">
+        <span aria-hidden="true" className="soul-portrait-index">{String(i + 1).padStart(2, "0")}</span>
+        <h4 className="font-display">{c.name}</h4>
+        <div className="soul-portrait-status">
+          <span className={isLive ? "bg-red-500" : "bg-[#F05E07]"} />
           {isLive ? "en vivo · tiktok" : "online"}
         </div>
+        <span aria-hidden="true" className="soul-portrait-arrow">↗</span>
       </div>
     </button>
   );
@@ -202,7 +202,7 @@ function WavesHUD() {
 
   return (
     <>
-      <div className="mb-20 space-y-5">
+      <div className="soul-waves-collection mb-20 space-y-5">
         {(() => {
           const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
@@ -218,7 +218,7 @@ function WavesHUD() {
                 </div>
               )}
               {/* Rest 4+4 */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+              <div className="grid grid-cols-1 min-[460px]:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
                 {ordered.slice(1).map(({ c, i }) => (
                   <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i), isLiveFor(c.name))}</div>
                 ))}
@@ -229,7 +229,7 @@ function WavesHUD() {
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
-        <DialogContent onClick={() => setOpenIdx(null)} className="w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-3xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-flame/60 bg-blue-deep/70 backdrop-blur-xl p-0 cursor-pointer [&>button]:hidden shadow-[0_0_40px_var(--flame-glow),0_0_80px_var(--flame-glow),inset_0_0_20px_var(--flame-glow)] rounded-xl">
+        <DialogContent onClick={() => setOpenIdx(null)} className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 cursor-pointer [&>button]:hidden rounded-[28px]">
           {active && (
             <div className="relative">
               {/* scanlines */}
@@ -380,7 +380,6 @@ function IndexContent() {
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
           <a href="#top" aria-label="The Soul Nation — inicio" className="flex shrink-0 items-center gap-3">
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
-            <img src={soulTextLogo} alt="The Soul Nation" className="hidden h-6 w-auto max-w-[170px] object-contain sm:block" />
           </a>
           <nav className="hidden md:flex gap-3 lg:gap-6 text-[11px] lg:text-sm uppercase tracking-widest text-muted-foreground whitespace-nowrap">
             <a href="#about" className="hover:text-foreground transition whitespace-nowrap">¿Quiénes Somos?</a>
@@ -563,14 +562,14 @@ function IndexContent() {
           </div>
 
           {/* WAVES — creators */}
-          <div id="waves" className="text-center mb-12 flex flex-col items-center scroll-mt-24">
+          <div id="waves" className="soul-waves-heading mb-12 flex flex-col items-start scroll-mt-24">
             <img
               src={soulWavesLogo}
               alt="The Soul Waves"
-              className="h-20 md:h-32 lg:h-40 w-auto object-contain"
+              className="h-20 md:h-28 w-auto max-w-full object-contain"
             />
             <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
-            <p className="mt-6 text-muted-foreground max-w-3xl mx-auto">
+            <p className="mt-6 text-muted-foreground max-w-2xl leading-7">
               Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
             </p>
           </div>

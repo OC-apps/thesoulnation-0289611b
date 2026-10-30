@@ -557,3 +557,49 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
     transition-duration: .01ms !important;
   }
 }
+
+/* Waves — portrait-led editorial roster. */
+.soul-waves-heading { border-top: 1px solid var(--border); padding-top: 3rem; }
+.soul-portrait {
+  position: relative; display: flex; flex-direction: column; width: 100%; height: 100%;
+  text-align: left; overflow: hidden; border-radius: 26px;
+  background: #fff; color: #01039E; border: 1px solid transparent;
+  transition: transform .25s ease, border-color .25s ease;
+}
+.soul-portrait:hover { transform: translateY(-4px); border-color: var(--flame); }
+.soul-portrait-photo { position: relative; overflow: hidden; aspect-ratio: 4 / 4.5; background: #01039E; }
+.soul-portrait-photo img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 25%;
+  transition: transform .5s ease;
+}
+.soul-portrait:hover .soul-portrait-photo img { transform: scale(1.025); }
+.soul-portrait-info { position: relative; flex: 1; padding: 1.75rem 3.5rem 1.75rem 1.5rem; }
+.soul-portrait-index { display: block; font: 500 11px var(--font-sans); color: #65667b; margin-bottom: .85rem; letter-spacing: .12em; }
+.soul-portrait h4 { font-size: clamp(1.5rem, 2.2vw, 2rem); line-height: 1.1; overflow-wrap: anywhere; }
+.soul-portrait-status { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; font: 500 11px var(--font-sans); color: #65667b; letter-spacing: .06em; text-transform: uppercase; }
+.soul-portrait-status > span { width: 6px; height: 6px; border-radius: 50%; }
+.soul-portrait-arrow { position: absolute; right: 1.25rem; bottom: 1.5rem; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #01039E25; font: 400 22px var(--font-sans); transition: background .2s, color .2s; }
+.soul-portrait:hover .soul-portrait-arrow { background: #01039E; color: white; }
+.soul-founder-mark, .soul-live-label { position: absolute; top: 1.25rem; display: grid; place-items: center; border-radius: 999px; }
+.soul-founder-mark { left: 1.25rem; width: 42px; height: 42px; background: #fff; color: #F05E07; }
+.soul-live-label { right: 1.25rem; padding: .5rem .8rem; background: #dc2626; color: white; font: 700 10px var(--font-sans); letter-spacing: .08em; }
+.soul-portrait-leader { background: #01039E; color: #fff; margin-bottom: 2rem; }
+.soul-portrait-leader .soul-portrait-index, .soul-portrait-leader .soul-portrait-status { color: #ffffffb3; }
+.soul-portrait-leader .soul-portrait-arrow { border-color: #ffffff50; }
+.soul-portrait-leader:hover .soul-portrait-arrow { background: #fff; color: #01039E; }
+.soul-wave-profile { box-shadow: 0 24px 80px #0006; }
+.soul-wave-profile [style*="repeating-linear-gradient"],
+.soul-wave-profile .animate-\[scan_2\.6s_ease-in-out_infinite\],
+.soul-wave-profile span.absolute[class*="border-"] { display: none; }
+.soul-wave-profile .font-mono { font-family: var(--font-sans); letter-spacing: .06em; }
+.soul-wave-profile .animate-pulse { animation: none; }
+@media (min-width: 640px) {
+  .soul-portrait-leader { display: grid; grid-template-columns: 1fr 1fr; min-height: 360px; }
+  .soul-portrait-leader .soul-portrait-photo { aspect-ratio: 5 / 4; height: 100%; }
+  .soul-portrait-leader .soul-portrait-info { align-self: center; padding: 3rem; }
+  .soul-portrait-leader h4 { font-size: clamp(2rem, 4.3vw, 4.5rem); }
+  .soul-portrait-leader .soul-portrait-arrow { right: 2rem; bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soul-portrait:hover, .soul-portrait:hover .soul-portrait-photo img { transform: none; }
+}
