@@ -799,3 +799,25 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media(prefers-reduced-motion:reduce) {
  .soul-hub #jersey [style*="transition"], .soul-hub #wallpapers [style*="transition"] { transition-duration:.01ms !important; }
 }
+
+/* Reference roster layout: equal portrait panels in one horizontal lineup. */
+.soul-lineup { display:grid; grid-auto-flow:column; grid-auto-columns:210px; gap:12px; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; scroll-padding-inline:8px; padding:8px 8px 20px; scrollbar-color:#F05E07 #111329; scrollbar-width:thin; }
+.soul-lineup-slot { min-width:0; scroll-snap-align:start; }
+.soul-lineup .soul-portrait, .soul-lineup .soul-portrait-leader { display:flex; flex-direction:column; height:440px; min-height:0; margin:0; border-radius:5px; border:1px solid #ffffff24; background:#090b1b; color:white; clip-path:polygon(7% 0,100% 0,93% 100%,0 100%); }
+.soul-lineup .soul-portrait:hover { transform:translateY(-3px); border-color:#F05E07; }
+.soul-lineup .soul-portrait-photo, .soul-lineup .soul-portrait-leader .soul-portrait-photo { width:100%; height:285px; flex:0 0 285px; aspect-ratio:auto; }
+.soul-lineup .soul-portrait-photo img { object-position:center 25%; }
+.soul-lineup .soul-portrait-info, .soul-lineup .soul-portrait-leader .soul-portrait-info { align-self:stretch; padding:18px 25px 28px; min-height:0; border-top:2px solid #F05E07; }
+.soul-lineup .soul-portrait-index { display:none; }
+.soul-lineup .soul-portrait h4, .soul-lineup .soul-portrait-leader h4 { font-family:var(--font-display); font-style:italic; font-weight:700; font-size:1.25rem !important; line-height:1.15; letter-spacing:-.015em; overflow-wrap:break-word; padding-right:0; }
+.soul-lineup .soul-portrait-status { margin-top:12px; color:#ffffffa6; font-size:9px; letter-spacing:.04em; }
+.soul-lineup .soul-portrait-arrow, .soul-lineup .soul-portrait-leader .soul-portrait-arrow { bottom:12px; right:23px; width:23px; height:23px; font-size:16px; border-color:#ffffff30; }
+.soul-lineup .soul-founder-mark { top:12px; left:23px; width:30px; height:30px; }
+.soul-lineup .soul-live-label { top:12px; right:12px; }
+@media(max-width:639px) { .soul-lineup { grid-auto-columns:minmax(200px,72vw); gap:8px; } .soul-lineup .soul-portrait,.soul-lineup .soul-portrait-leader { height:465px; } .soul-lineup .soul-portrait-photo,.soul-lineup .soul-portrait-leader .soul-portrait-photo { height:310px; flex-basis:310px; } }
+@media(prefers-reduced-motion:reduce) { .soul-lineup { scroll-behavior:auto; } .soul-lineup .soul-portrait:hover { transform:none; } }
+
+.soul-lineup .soul-lineup-prefix { display:block; font-size:.7em; margin-bottom:3px; }
+.soul-lineup .soul-portrait h4,.soul-lineup .soul-portrait-leader h4 { font-size:1.1rem !important; }
+.soul-lineup .soul-portrait:focus-visible { outline:0; box-shadow:inset 0 0 0 3px #F05E07; }
+@media(min-width:1024px) { .soul-lineup { grid-auto-columns:calc((100% - 48px)/5); } }

@@ -145,7 +145,7 @@ function renderWaveCard(
       </div>
       <div className="soul-portrait-info">
         <span aria-hidden="true" className="soul-portrait-index">{String(i + 1).padStart(2, "0")}</span>
-        <h4 className="font-display">{c.name}</h4>
+        <h4 className="font-display">{c.name.startsWith("SOUL ") ? <><span className="soul-lineup-prefix">SOUL </span><span>{c.name.slice(5)}</span></> : c.name}</h4>
         <div className="soul-portrait-status">
           <span className={isLive ? "bg-red-500" : "bg-[#F05E07]"} />
           {isLive ? "en vivo · tiktok" : "Soul Waves"}
@@ -209,16 +209,9 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
           return (
             <>
               {ordered.length === 0 && <p role="status" className="text-sm text-muted-foreground">No se encontraron integrantes.</p>}
-              {/* Leader row - full width rectangle */}
-              {ordered[0]?.leader && (
-                <div className="w-full">
-                  {renderWaveCard(ordered[0].c, ordered[0].i, true, () => setOpenIdx(ordered[0].i), isLiveFor(ordered[0].c.name))}
-                </div>
-              )}
-              {/* Rest 4+4 */}
-              <div className="grid grid-cols-1 min-[460px]:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
-                {ordered.filter(entry => !entry.leader).map(({ c, i }) => (
-                  <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i), isLiveFor(c.name))}</div>
+              <div className="soul-lineup" role="group" aria-label="Integrantes de Soul Waves">
+                {ordered.map(({ c, i, leader }) => (
+                  <div key={c.name} className="soul-lineup-slot">{renderWaveCard(c, i, leader, () => setOpenIdx(i), isLiveFor(c.name))}</div>
                 ))}
               </div>
             </>
