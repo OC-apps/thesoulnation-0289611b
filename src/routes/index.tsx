@@ -213,7 +213,7 @@ function WavesHUD() {
     return base;
   };
   const WAVES_ALL = [...WAVES, ...extraWaves]
-    .filter((w) => !hiddenSet.has(w.name.toUpperCase()))
+    .filter((w) => !hiddenSet.has(w.name.toUpperCase()) && w.name.trim().toUpperCase() !== "SOUL PXLMAA")
     .map((w) => {
       const extra = socialsMap.get(w.name.toUpperCase());
       return {
