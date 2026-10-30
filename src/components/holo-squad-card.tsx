@@ -18,16 +18,43 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legend
   const sortedMembers = [...visibleMembers].sort((a,b) => a.localeCompare(b, "es"));
   return (
     <article id={id} className="soul-division scroll-mt-28 overflow-hidden rounded-[28px] border border-white/15 bg-[#111329] sm:rounded-[36px]">
-      <div className={`relative overflow-hidden p-6 sm:p-10 lg:p-12 ${isCrew ? "bg-[#01039E] text-white" : "bg-[#FFFFFF] text-[#01039E]"}`}>
-        <div aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5 bg-[#F05E07]" />
-        <div className="relative grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end lg:gap-12">
-          <div className="min-w-0">
-            <p className={`mb-5 text-[11px] font-semibold uppercase leading-relaxed tracking-[0.12em] ${isCrew ? "text-white/75" : "text-[#01039E]/65"}`}>{subtitle}</p>
-            <h3 className="font-display max-w-full break-words pr-[0.15em] text-[clamp(1.7rem,4.5vw,3.8rem)] leading-[1.12]">{title}</h3>
+      {isCrew ? (
+        <div className="soul-crew-hero">
+          <div aria-hidden="true" className="soul-crew-hero-orbit" />
+          <div className="soul-crew-hero-inner">
+            <div className="soul-crew-hero-heading">
+              <div className="soul-crew-hero-eyebrow">
+                <span className="soul-crew-hero-dot" />
+                <span>{subtitle}</span>
+                <span className="soul-crew-hero-line" aria-hidden="true" />
+                <span>THE SOUL NATION</span>
+              </div>
+              <h3 className="font-display soul-crew-hero-title">{title}</h3>
+              <div className="soul-crew-hero-underline" aria-hidden="true"><span /></div>
+            </div>
+            <div className="soul-crew-hero-description">
+              <span className="soul-crew-hero-quote" aria-hidden="true">“</span>
+              <p>{desc}</p>
+              <div className="soul-crew-hero-meta">
+                <span className="soul-crew-hero-meta-label">COMUNIDAD OFICIAL</span>
+                <span className="soul-crew-hero-meta-rule" aria-hidden="true" />
+                <span className="soul-crew-hero-member-count"><strong>{String(visibleMembers.length).padStart(2, "0")}</strong> INTEGRANTES</span>
+              </div>
+            </div>
           </div>
-          <p className={`max-w-lg text-sm leading-7 ${isCrew ? "text-white/80" : "text-[#292B48]"}`}>{desc}</p>
         </div>
-      </div>
+      ) : (
+        <div className="relative overflow-hidden p-6 sm:p-10 lg:p-12 bg-[#FFFFFF] text-[#01039E]">
+          <div aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5 bg-[#F05E07]" />
+          <div className="relative grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end lg:gap-12">
+            <div className="min-w-0">
+              <p className="mb-5 text-[11px] font-semibold uppercase leading-relaxed tracking-[0.12em] text-[#01039E]/65">{subtitle}</p>
+              <h3 className="font-display max-w-full break-words pr-[0.15em] text-[clamp(1.7rem,4.5vw,3.8rem)] leading-[1.12]">{title}</h3>
+            </div>
+            <p className="max-w-lg text-sm leading-7 text-[#292B48]">{desc}</p>
+          </div>
+        </div>
+      )}
       <div className="p-6 sm:p-10 lg:px-12 lg:py-9">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-white/70">Roster · {visibleMembers.length.toString().padStart(2, "0")}</span>
