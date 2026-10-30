@@ -419,14 +419,7 @@ function IndexContent() {
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
         <Hero3D bannerUrl={siteAssets.home_banner} />
-        <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
-          {[
-            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || waveMaverick},
-            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || soulNationTeam},
-            {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
-            {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
-          ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
-        </div>
+
 
         <div className="pointer-events-none absolute bottom-4 right-4 z-20">
           <div className="pointer-events-auto">
@@ -566,6 +559,15 @@ function IndexContent() {
               ))}
             </div>
           </div>
+        </div>
+        {/* Accesos del inicio, después de Visión y Objetivo */}
+        <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
+          {[
+            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || waveMaverick},
+            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || soulNationTeam},
+            {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
+            {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
+          ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
         </div>
         <div className="mx-auto max-w-7xl px-5 sm:px-6 mt-6 flex justify-end">
           <EasterEgg id="og-member" label="Marca OG oculta" size="sm" />
