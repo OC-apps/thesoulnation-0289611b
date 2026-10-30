@@ -6,11 +6,12 @@ interface Props {
   subtitle: string;
   desc: string;
   members: string[];
+  legendsPhotos?: Record<string,string>;
   accentSeed?: number;
 }
 
 /** Editorial division roster; the original copy and live member data are preserved. */
-export function HoloSquadCard({ id, logo, title, subtitle, desc, members }: Props) {
+export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legendsPhotos = {} }: Props) {
   const visibleMembers = members.filter((member) => typeof member === "string" && member.trim().length > 0);
   const isCrew = id === "crew";
   const isLegends = id === "legends";
@@ -35,7 +36,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members }: Prop
         <ul className={isLegends ? "soul-legends-lineup" : isCrew ? "soul-crew-lineup" : "grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-3"}>
           {sortedMembers.map((member, index) => (
             <li key={member + index} className={isLegends ? "soul-legends-slot" : isCrew ? "soul-crew-slot" : "group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30"}>
-              {isLegends ? <img src={logo} alt="" aria-hidden="true" className="soul-legends-emblem" /> : isCrew ? <span aria-hidden="true" className="soul-crew-accent" /> : <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />}
+              {isLegends ? <>{legendsPhotos[member.trim().toUpperCase()] && <img src={legendsPhotos[member.trim().toUpperCase()]} alt={member} className="soul-legends-photo" loading="lazy" />}<img src={logo} alt="" aria-hidden="true" className={legendsPhotos[member.trim().toUpperCase()] ? "soul-legends-emblem soul-legends-emblem-with-photo" : "soul-legends-emblem"} /></> : isCrew ? <span aria-hidden="true" className="soul-crew-accent" /> : <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />}
               {isLegends ? (
                 <span className="soul-legends-name font-display">
                   {member.trim().toUpperCase().startsWith("SOUL ") ? (
