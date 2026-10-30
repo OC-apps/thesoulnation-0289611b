@@ -137,49 +137,18 @@ function renderWaveCard(
 ) {
   const exploreId = `member:${c.name.toLowerCase().replace(/\s+/g, "-")}`;
   return (
-    <button
-      onClick={onClick}
-      data-explore={exploreId}
-      className={`group relative overflow-hidden rounded-xl border bg-blue-deep/60 backdrop-blur text-left transition-all hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-flame w-full ${
-        leader
-          ? "border-flame shadow-[0_25px_60px_-15px_var(--flame-glow)] hover:shadow-[0_30px_80px_-15px_var(--flame-glow)]"
-          : "border-flame/20 hover:border-flame hover:shadow-[0_20px_50px_-20px_var(--flame-glow)]"
-      }`}
-    >
-      <div className={`relative overflow-hidden ${leader ? "aspect-[16/7]" : "aspect-square"}`}>
-        <img
-          src={c.photo}
-          alt={c.name}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-110"
-        />
-        <span className="pointer-events-none absolute inset-x-0 -top-1 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-[scan_1.4s_ease-in-out_infinite] shadow-[0_0_12px_var(--flame-glow)]" />
-        <div className="absolute inset-0 bg-flame/0 group-hover:bg-flame/10 transition-colors" />
-        <span className="absolute top-1 left-1 w-3 h-3 border-l-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-        <span className="absolute top-1 right-1 w-3 h-3 border-r-2 border-t-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-        <span className="absolute bottom-1 left-1 w-3 h-3 border-l-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-        <span className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-flame transition-all group-hover:w-5 group-hover:h-5" />
-        <span className="absolute top-1.5 right-1.5 text-[8px] font-mono tracking-[0.3em] text-flame bg-background/70 px-1.5 py-0.5 rounded-sm">
-          W·0{i + 1}
-        </span>
-        <span className="absolute top-1.5 left-1/2 -translate-x-1/2 text-[7px] font-mono tracking-[0.3em] text-background bg-flame px-1.5 py-0.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
-          ► OPEN
-        </span>
-        {leader && (
-          <Crown className="absolute top-2 left-2 z-10 w-7 h-7 sm:w-9 sm:h-9 text-amber-300 drop-shadow-[0_0_12px_rgba(255,180,60,0.95)] animate-pulse-glow" strokeWidth={2.5} />
-        )}
-        {isLive && (
-          <span className="absolute z-20 bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 text-[9px] font-mono tracking-[0.25em] text-white bg-red-600 px-2 py-0.5 rounded-sm shadow-[0_0_14px_rgba(220,38,38,0.9)] animate-pulse">
-            <span className="w-1.5 h-1.5 rounded-full bg-white" /> LIVE
-          </span>
-        )}
+    <button onClick={onClick} data-explore={exploreId}
+      className={`group flex h-full w-full flex-col overflow-hidden rounded-[22px] border border-white/15 bg-[#101252] text-left transition-all duration-300 hover:-translate-y-1 hover:border-[#F05E07]/70 focus:outline-none focus:ring-2 focus:ring-[#F05E07] ${leader ? "sm:grid sm:grid-cols-[1.15fr_0.85fr]" : ""}`}>
+      <div className={`relative overflow-hidden bg-[#01039E] ${leader ? "aspect-[16/10] sm:aspect-[16/9]" : "aspect-[4/5]"}`}>
+        <img src={c.photo} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover object-[center_25%] transition-transform duration-500 group-hover:scale-[1.035]" />
+        {leader && <Crown className="absolute left-4 top-4 z-10 h-7 w-7 text-[#F05E07]" strokeWidth={2} />}
+        {isLive && <span className="absolute bottom-3 left-3 z-10 rounded-full bg-red-600 px-3 py-1 text-[10px] font-bold text-white">LIVE</span>}
       </div>
-      <div className={`px-2 py-2 sm:py-3 border-t ${leader ? "bg-gradient-to-r from-flame/30 via-flame/20 to-flame/30 border-flame" : "border-flame/20"}`}>
-        <h4 className={`font-display font-bold leading-tight truncate text-flame ${leader ? "text-sm sm:text-base" : "text-[11px] sm:text-sm"}`}>
-          {c.name}
-        </h4>
-        <div className="mt-1 flex items-center gap-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
-          <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? "bg-red-500" : "bg-emerald-400"}`} />
+      <div className={`flex flex-1 flex-col justify-center border-t border-white/10 p-4 sm:p-5 ${leader ? "sm:border-l sm:border-t-0 sm:p-9" : ""}`}>
+        <div className="mb-3 h-1 w-8 rounded-full bg-[#F05E07]" />
+        <h4 className={`font-display font-bold leading-tight tracking-tight text-white ${leader ? "text-xl sm:text-3xl" : "text-sm sm:text-lg"}`}>{c.name}</h4>
+        <div className="mt-3 flex items-center gap-2 text-[10px] font-medium uppercase tracking-wider text-white/60">
+          <span className={`h-1.5 w-1.5 rounded-full ${isLive ? "bg-red-500" : "bg-[#F05E07]"}`} />
           {isLive ? "en vivo · tiktok" : "online"}
         </div>
       </div>
@@ -232,7 +201,7 @@ function WavesHUD() {
 
   return (
     <>
-      <div className="mb-20 space-y-4">
+      <div className="mb-20 space-y-5">
         {(() => {
           const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
@@ -248,7 +217,7 @@ function WavesHUD() {
                 </div>
               )}
               {/* Rest 4+4 */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
                 {ordered.slice(1).map(({ c, i }) => (
                   <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i), isLiveFor(c.name))}</div>
                 ))}
@@ -580,7 +549,7 @@ function IndexContent() {
 
       {/* ROSTER */}
       <section id="roster" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-flame opacity-10 blur-[140px]" />
+        <div className="hidden" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center mb-20">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">04</div>
@@ -597,7 +566,7 @@ function IndexContent() {
             <img
               src={soulWavesLogo}
               alt="The Soul Waves"
-              className="h-20 md:h-32 lg:h-40 w-auto object-contain drop-shadow-[0_10px_40px_var(--flame-glow)] animate-float"
+              className="h-20 md:h-32 lg:h-40 w-auto object-contain"
             />
             <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
             <p className="mt-6 text-muted-foreground max-w-3xl mx-auto">
@@ -609,7 +578,7 @@ function IndexContent() {
 
 
           {/* KILLERS + LEGENDS — holographic 3D squad cards */}
-          <div className="mb-12 space-y-8">
+          <div className="mb-8 space-y-6">
             <HoloSquadCard
               id="killers"
               logo={soulKillersLogo}
