@@ -36,7 +36,16 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members }: Prop
           {sortedMembers.map((member, index) => (
             <li key={member + index} className={isLegends ? "soul-legends-slot" : "group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30"}>
               {isLegends ? <img src={logo} alt="" aria-hidden="true" className="soul-legends-emblem" /> : <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />}
-              <span className={isLegends ? "soul-legends-name font-display" : "min-w-0 break-words text-sm font-medium leading-relaxed text-white"}>{member}</span>
+              {isLegends ? (
+                <span className="soul-legends-name font-display">
+                  {member.trim().toUpperCase().startsWith("SOUL ") ? (
+                    <>
+                      <span className="soul-legends-prefix">SOUL</span>
+                      <span className="soul-legends-nickname">{member.trim().slice(5)}</span>
+                    </>
+                  ) : <span className="soul-legends-nickname">{member}</span>}
+                </span>
+              ) : <span className="min-w-0 break-words text-sm font-medium leading-relaxed text-white">{member}</span>}
             </li>
           ))}
         </ul>
