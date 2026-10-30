@@ -32,10 +32,10 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members }: Prop
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-white/70">Roster · {visibleMembers.length.toString().padStart(2, "0")}</span>
           <span className="flex items-center gap-2 text-[10px] font-medium tracking-[0.06em] text-white/55"><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#F05E07]" />STATUS · ACTIVE</span>
         </div>
-        <ul className={isLegends ? "soul-legends-lineup" : "grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-3"}>
+        <ul className={isLegends ? "soul-legends-lineup" : isCrew ? "soul-crew-lineup" : "grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-3"}>
           {sortedMembers.map((member, index) => (
-            <li key={member + index} className={isLegends ? "soul-legends-slot" : "group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30"}>
-              {isLegends ? <img src={logo} alt="" aria-hidden="true" className="soul-legends-emblem" /> : <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />}
+            <li key={member + index} className={isLegends ? "soul-legends-slot" : isCrew ? "soul-crew-slot" : "group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30"}>
+              {isLegends ? <img src={logo} alt="" aria-hidden="true" className="soul-legends-emblem" /> : isCrew ? <span aria-hidden="true" className="soul-crew-accent" /> : <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />}
               {isLegends ? (
                 <span className="soul-legends-name font-display">
                   {member.trim().toUpperCase().startsWith("SOUL ") ? (
@@ -44,6 +44,15 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members }: Prop
                       <span className="soul-legends-nickname">{member.trim().slice(5)}</span>
                     </>
                   ) : <span className="soul-legends-nickname">{member}</span>}
+                </span>
+              ) : isCrew ? (
+                <span className="soul-crew-name font-display">
+                  {member.trim().toUpperCase().startsWith("SOUL ") ? (
+                    <>
+                      <span className="soul-crew-prefix">SOUL</span>
+                      <span className="soul-crew-nickname">{member.trim().slice(5)}</span>
+                    </>
+                  ) : <span className="soul-crew-nickname">{member}</span>}
                 </span>
               ) : <span className="min-w-0 break-words text-sm font-medium leading-relaxed text-white">{member}</span>}
             </li>
