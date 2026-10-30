@@ -1163,3 +1163,17 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  #roster .soul-crew-slot { height:82px; padding:12px 13%; }
  #roster .soul-crew-nickname { font-size:clamp(11px,7cqw,20px); }
 }
+
+/* Legends portraits fill their existing diagonal cards. Keep names legible. */
+#roster .soul-legends-slot .soul-legends-photo {
+ position:absolute; inset:0; z-index:0;
+ width:100%; height:100%; object-fit:cover; object-position:center top;
+ pointer-events:none;
+}
+#roster .soul-legends-slot:has(.soul-legends-photo)::after {
+ content:""; position:absolute; z-index:0; inset:28% 0 0;
+ background:linear-gradient(0deg,rgba(4,5,22,.96),rgba(4,5,22,.4) 48%,transparent);
+ pointer-events:none;
+}
+#roster .soul-legends-slot .soul-legends-emblem-with-photo { display:none; }
+#roster .soul-legends-slot .soul-legends-name { position:relative; z-index:2; }
