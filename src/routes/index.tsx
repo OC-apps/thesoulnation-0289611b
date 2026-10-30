@@ -1,4 +1,3 @@
-import homeRosterPhoto from "@/assets/home-roster-team.svg";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import { useLegendsPhotos } from "@/hooks/use-legends-photos";
 import { CURRENT_CREW, CURRENT_LEGENDS } from "@/lib/roster-current";
@@ -565,7 +564,7 @@ function IndexContent() {
         {/* Accesos del inicio, después de Visión y Objetivo */}
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
-            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || homeRosterPhoto},
+            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || "/roster-team-card-2026.jpg"},
             {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || soulNationTeam},
             {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
             {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
