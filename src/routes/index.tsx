@@ -337,7 +337,7 @@ function Index() {
 }
 
 const HUB_SECTIONS = [
-  { id: "top", label: "Inicio" }, { id: "about", label: "La Nación" },
+  { id: "top", label: "Inicio" },
   { id: "roster", label: "Roster" }, { id: "contenido", label: "Contenido" },
   { id: "reclutamiento", label: "Únete" },
 ];
@@ -346,12 +346,12 @@ function IndexContent() {
   const [destination, setDestination] = useState("top");
   const rosterIds = ["waves", "legends", "crew"];
   const view = destination === "killers" || rosterIds.includes(destination) ? "roster" :
-    ["vision", "objetivo"].includes(destination) ? "about" :
+    ["about", "vision", "objetivo"].includes(destination) ? "top" :
     ["videos", "wallpapers", "music", "jersey", "redes", "xplicit-cup"].includes(destination) ? destination :
     destination === "contenido" ? "videos" : HUB_SECTIONS.some((s) => s.id === destination) ? destination : "top";
   const rosterView = destination === "killers" ? "crew" : rosterIds.includes(destination) ? destination : "waves";
   const contentView = ["videos", "wallpapers", "music"].includes(view);
-  const nationView = view === "about" || view === "xplicit-cup";
+  const nationView = view === "xplicit-cup";
   useEffect(() => {
     const update = () => setDestination(window.location.hash.slice(1) === "killers" ? "crew" : window.location.hash.slice(1) || "top");
     update();
@@ -363,6 +363,8 @@ function IndexContent() {
       if (["vision", "objetivo"].includes(destination)) {
         setAboutTab(destination as "vision" | "objetivo");
         document.getElementById("vision")?.scrollIntoView({ block: "start" });
+      } else if (destination === "about") {
+        document.getElementById("about")?.scrollIntoView({ block: "start" });
       } else {
         window.scrollTo({ top: 0, behavior: "instant" });
       }
@@ -400,7 +402,7 @@ function IndexContent() {
             <span className="soul-brand-name">THE SOUL NATION</span>
           </a>
           <nav className="hidden xl:flex gap-1 text-xs" aria-label="Navegación principal">
-            {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView) || (section.id === "about" && nationView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>)}
+            {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>)}
           </nav>
           <a href="#reclutamiento" className="xl:hidden rounded-full bg-[#F05E07] px-4 py-2 text-xs font-semibold text-white">Únete</a>
         </div>
@@ -568,6 +570,7 @@ function IndexContent() {
             {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || "/quick-videos-2026.jpg"},
             {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
             {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
+            {href:"#reclutamiento",title:"Únete",sub:"Forma parte de Soul",image:"/quick-join-2026.jpg"},
           ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
         </div>
         <div className="mx-auto max-w-7xl px-5 sm:px-6 mt-6 flex justify-end">
