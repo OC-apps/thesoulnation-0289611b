@@ -591,17 +591,35 @@ function IndexContent() {
             </p>
           </div>
 
-          <RosterSearch waves={waveNames} legends={legendsList} crew={crewList} />
-
-          <nav className="soul-roster-tabs sticky top-20 z-30 shadow-lg" aria-label="Divisiones del roster">
-            {[{id:"waves",title:"Soul Waves",sub:"Creadores"},{id:"legends",title:"Soul Legends",sub:"Montagers"},{id:"crew",title:"Soul Crew",sub:"Familia"}].map(({id,title,sub}) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}><span className="block">{title}</span><span className="mt-1 block text-[10px] font-normal opacity-70">{sub}</span></a>)}
-          </nav>
+          {/* Division selector: always visible, including when Legends or Crew is active. */}
+          <div className="soul-roster-switcher-layout">
+            <div className="soul-roster-feature">
+              {rosterView === "waves" ? (
+                <img src="/soul-waves-banner-2026.jpg" alt="Soul Waves — streamers y creadores de contenido de The Soul Nation" width={1600} height={533}
+                  className="soul-roster-feature-banner" loading="lazy" />
+              ) : (
+                <div className="soul-roster-feature-placeholder" aria-label={rosterView === "legends" ? "Soul Legends" : "Soul Crew"}>
+                  <span className="soul-roster-feature-overline">THE SOUL NATION / ROSTER</span>
+                  <strong className="font-display">{rosterView === "legends" ? "SOUL LEGENDS" : "SOUL CREW"}</strong>
+                  <span className="soul-roster-feature-tagline">{rosterView === "legends" ? "MONTAGERS" : "FAMILIA"}</span>
+                </div>
+              )}
+            </div>
+            <nav className="soul-roster-switcher" aria-label="Seleccionar división del roster">
+              <span className="soul-roster-switcher-label">EXPLORA LA NACIÓN <span aria-hidden="true">/ 03</span></span>
+              {[{id:"waves",title:"SOUL WAVES",sub:"Creadores",number:"01"},{id:"legends",title:"SOUL LEGENDS",sub:"Montagers",number:"02"},{id:"crew",title:"SOUL CREW",sub:"Familia",number:"03"}].map(({id,title,sub,number}) => (
+                <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined} className="soul-roster-option">
+                  <span className="soul-roster-option-number">{number}</span>
+                  <span className="soul-roster-option-copy"><strong>{title}</strong><small>{sub}</small></span>
+                  <span className="soul-roster-option-indicator" aria-hidden="true" />
+                </a>
+              ))}
+            </nav>
+          </div>
 
           {/* WAVES — creators */}
           <div id="waves" className="soul-waves-heading mb-12 flex w-full flex-col items-start scroll-mt-24">
             <h3 className="sr-only">SOUL WAVES</h3>
-            <img src="/soul-waves-banner-2026.jpg" alt="Soul Waves — streamers y creadores de contenido de The Soul Nation" width={1600} height={533}
-              className="block w-full h-auto rounded-2xl object-contain border border-white/10" loading="lazy" />
             <p className="mt-6 text-muted-foreground max-w-2xl leading-7">
               Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
             </p>
