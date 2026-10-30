@@ -28,12 +28,22 @@ export function useWavesSocials() {
 
 
 
+    // Cloudflare upload server functions do not guarantee a Supabase Realtime event.
+    // Recheck on tab focus and on successful admin uploads.
+    const onFocus = () => { void load(); };
+    const onVisibility = () => { if (document.visibilityState === "visible") void load(); };
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("soul:roster-updated", onFocus);
+    document.addEventListener("visibilitychange", onVisibility);
     const ch = supabase
       .channel("waves_socials_changes")
       .on("postgres_changes", { event: "*", schema: "public", table: "waves_socials" }, () => load())
       .subscribe();
     return () => {
       mounted = false;
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("soul:roster-updated", onFocus);
+      document.removeEventListener("visibilitychange", onVisibility);
       supabase.removeChannel(ch);
     };
   }, []);
