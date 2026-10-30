@@ -47,6 +47,35 @@ const CATEGORIES: { key: RosterCategory; label: string }[] = [
   { key: "crew", label: "Soul Crew" },
 ];
 
+const SectionShell = ({
+  icon: Icon,
+  title,
+  subtitle,
+  children,
+}: {
+  icon: typeof Radio;
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+}) => (
+  <div className="space-y-4">
+    <div className="flex items-start gap-3 border-b border-flame/15 pb-3">
+      <div className="w-9 h-9 rounded-lg bg-flame/15 border border-flame/30 flex items-center justify-center shrink-0">
+        <Icon className="w-4 h-4 text-flame" />
+      </div>
+      <div className="min-w-0">
+        <h2 className="font-display text-lg text-foreground leading-tight">{title}</h2>
+        {subtitle && (
+          <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mt-0.5">
+            {subtitle}
+          </p>
+        )}
+      </div>
+    </div>
+    {children}
+  </div>
+);
+
 function AdminLivePage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
@@ -368,34 +397,7 @@ function AdminLivePage() {
   }
 
 
-  const SectionShell = ({
-    icon: Icon,
-    title,
-    subtitle,
-    children,
-  }: {
-    icon: typeof Radio;
-    title: string;
-    subtitle?: string;
-    children: React.ReactNode;
-  }) => (
-    <div className="space-y-4">
-      <div className="flex items-start gap-3 border-b border-flame/15 pb-3">
-        <div className="w-9 h-9 rounded-lg bg-flame/15 border border-flame/30 flex items-center justify-center shrink-0">
-          <Icon className="w-4 h-4 text-flame" />
-        </div>
-        <div className="min-w-0">
-          <h2 className="font-display text-lg text-foreground leading-tight">{title}</h2>
-          {subtitle && (
-            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mt-0.5">
-              {subtitle}
-            </p>
-          )}
-        </div>
-      </div>
-      {children}
-    </div>
-  );
+
 
   return (
     <div className="min-h-screen bg-background pb-40">
