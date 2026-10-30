@@ -1,4 +1,4 @@
-import { homeRosterPhoto } from "@/lib/home-roster-photo";
+import homeRosterPhoto from "@/assets/home-roster-team.svg";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import { useLegendsPhotos } from "@/hooks/use-legends-photos";
 import { CURRENT_CREW, CURRENT_LEGENDS } from "@/lib/roster-current";
