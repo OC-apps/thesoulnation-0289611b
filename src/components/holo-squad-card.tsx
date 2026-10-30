@@ -15,7 +15,7 @@ export function HoloSquadCard({ id, title, subtitle, desc, members }: Props) {
   const isCrew = id === "crew";
   const sortedMembers = [...visibleMembers].sort((a,b) => a.localeCompare(b, "es"));
   return (
-    <article id={id} className="scroll-mt-28 overflow-hidden rounded-[28px] border border-white/15 bg-[#111329] sm:rounded-[36px]">
+    <article id={id} className="soul-division scroll-mt-28 overflow-hidden rounded-[28px] border border-white/15 bg-[#111329] sm:rounded-[36px]">
       <div className={`relative overflow-hidden p-6 sm:p-10 lg:p-12 ${isCrew ? "bg-[#01039E] text-white" : "bg-[#FFFFFF] text-[#01039E]"}`}>
         <div aria-hidden="true" className="absolute inset-y-0 left-0 w-1.5 bg-[#F05E07]" />
         <div className="relative grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-end lg:gap-12">

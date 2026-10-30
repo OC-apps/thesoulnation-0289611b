@@ -148,7 +148,7 @@ function renderWaveCard(
         <h4 className="font-display">{c.name}</h4>
         <div className="soul-portrait-status">
           <span className={isLive ? "bg-red-500" : "bg-[#F05E07]"} />
-          {isLive ? "en vivo · tiktok" : "online"}
+          {isLive ? "en vivo · tiktok" : "Soul Waves"}
         </div>
         <span aria-hidden="true" className="soul-portrait-arrow">↗</span>
       </div>
@@ -227,7 +227,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
-        <DialogContent onClick={() => setOpenIdx(null)} className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 cursor-pointer [&>button]:hidden rounded-[28px]">
+        <DialogContent className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 cursor-pointer [&>button]:hidden rounded-[28px]">
           {active && (
             <div className="relative">
               {/* scanlines */}
@@ -453,9 +453,9 @@ function IndexContent() {
       {/* ABOUT — integrado: foto + texto + tab animado (Visión / Objetivo) */}
       <section id="about" className="relative py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          <div className="grid sm:grid-cols-12 gap-5 md:gap-6 lg:gap-8 items-start">
+          <div className="soul-about-layout">
             {/* Imagen del equipo */}
-            <div className="mx-auto w-full max-w-[320px] sm:max-w-none sm:mx-0 sm:col-span-5 md:col-span-4 lg:col-span-5 group relative rounded-2xl overflow-hidden border border-flame/30 shadow-[0_20px_60px_-20px_var(--flame-glow)] aspect-[9/16] bg-background">
+            <div className="soul-about-photo group relative overflow-hidden rounded-3xl border border-white/10 bg-[#111329]">
               <img
                 src={soulNationTeam}
                 alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
@@ -471,7 +471,7 @@ function IndexContent() {
                 {[
                   { v: "12+", k: "Años" },
                   { v: "35", k: "Miembros" },
-                  { v: "4", k: "Divisiones" },
+                  { v: "3", k: "Divisiones" },
                 ].map((s) => (
                   <div key={s.k} className="rounded-lg bg-background/70 backdrop-blur border border-flame/20 px-2 py-2 text-center">
                     <div className="font-display font-black text-lg sm:text-xl text-flame leading-none">{s.v}</div>
@@ -482,7 +482,7 @@ function IndexContent() {
             </div>
 
             {/* Columna derecha: título + texto + tab animado */}
-            <div className="sm:col-span-7 md:col-span-8 lg:col-span-7 flex flex-col gap-5">
+            <div className="flex min-w-0 flex-col justify-center gap-5">
               <div>
                 <div className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-flame">01</div>
                 <h2 className="mt-2 font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[0.9]">
@@ -590,10 +590,10 @@ function IndexContent() {
 
 
       {/* ROSTER */}
-      <section id="roster" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
+      <section id="roster" className="relative py-16 md:py-24 border-t border-border">
         <div className="hidden" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <div className="text-center mb-20">
+          <div className="soul-section-intro text-center mb-20">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">04</div>
             <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Nuestro <span className="italic text-flame">Roster</span>
@@ -692,7 +692,7 @@ function IndexContent() {
           </div>
 
           {/* Desktop grid */}
-          <div className="hidden md:grid lg:grid-cols-3 gap-6 perspective">
+          <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-5">
             {VIDEOS.map((v, i) => (
               <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
@@ -872,22 +872,10 @@ function IndexContent() {
         <div className="absolute -top-40 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500 opacity-10 blur-[160px]" />
         <div className="absolute -bottom-40 left-0 w-[500px] h-[500px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-7xl px-6">
-          <div className="text-center mb-12">
+          <div className="soul-section-intro text-center mb-12">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">07</div>
-            <h2 className="mt-6 font-display font-bold leading-[0.95]">
-              <span className="block whitespace-nowrap text-[clamp(2rem,8vw,7rem)]">The Soul Nation</span>
-              <span
-                className="block mt-2 text-flame text-[clamp(3.5rem,14vw,11rem)] leading-none"
-                style={{
-                  fontFamily: "'Bungee Shade', 'Monoton', cursive",
-                  textShadow:
-                    "0 0 18px var(--flame-glow), 0 0 40px oklch(0.70 0.24 45 / 0.55), 4px 6px 0 oklch(0 0 0 / 0.45)",
-                  transform: "rotate(-3deg)",
-                  letterSpacing: "0.02em",
-                }}
-              >
-                Music
-              </span>
+            <h2 className="mt-6 font-display font-bold leading-tight">
+              The Soul Nation <span className="text-flame">Music</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
               El sonido oficial de The Soul Nation. Dale play y siente la nación.
@@ -1049,7 +1037,7 @@ function IndexContent() {
                       title="The Soul Nation · Álbum"
                       src={view === "music" ? "https://open.spotify.com/embed/album/0BA5VLFK2p44KzjuRqmlyF?utm_source=generator&theme=0" : undefined}
                       width="100%"
-                      height="560"
+                      height="352"
                       loading="lazy"
                       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                       className="border-0 block"
@@ -1064,7 +1052,7 @@ function IndexContent() {
                         height="152"
                         loading="lazy"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        className="border-0 block w-full h-[152px] md:h-[274px]"
+                        className="border-0 block w-full h-[152px]"
                       />
                     </div>
                   ))}
@@ -1111,7 +1099,7 @@ function IndexContent() {
         <div className="absolute top-3 left-3 z-30"><EasterEgg id="recruitment-key" label="Llave de reclutamiento oculta" size="xs" /></div>
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-flame opacity-10 blur-[160px]" />
         <div className="relative mx-auto max-w-6xl px-6">
-          <div className="text-center mb-16">
+          <div className="soul-section-intro text-center mb-16">
             <div className="text-xs uppercase tracking-[0.3em] text-flame">08</div>
             <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
               Únete al <span className="italic text-flame">Equipo</span>
@@ -1335,9 +1323,9 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
 function VideoCard({ video, index, featured }: { video: { title: string; id: string }; index: number; featured?: boolean }) {
   return (
     <article
-      className={`group relative tilt-card roster-card rounded-2xl overflow-hidden ${featured ? "lg:col-span-2 lg:row-span-2" : ""}`}
+      className="soul-video-card group relative overflow-hidden rounded-3xl border border-white/10 bg-[#111329]"
     >
-      <div className={`relative ${featured ? "aspect-video lg:aspect-[16/10]" : "aspect-video"} bg-black overflow-hidden`}>
+      <div className="relative aspect-video overflow-hidden bg-[#111329]">
         <a
           href={`https://www.youtube.com/watch?v=${video.id}`}
           target="_blank"
@@ -1347,14 +1335,15 @@ function VideoCard({ video, index, featured }: { video: { title: string; id: str
         >
           <img
             src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
+            onError={event => { if (!event.currentTarget.dataset.fallback) { event.currentTarget.dataset.fallback = "true"; event.currentTarget.src = soulNationTeam; } }}
             alt={video.title}
             loading="lazy"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/play:scale-110"
           />
-          <div className="absolute inset-0 bg-[color:var(--background)]/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070819] via-[#070819]/20 to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="relative flex items-center justify-center w-20 h-20 rounded-full bg-flame/90 text-primary-foreground shadow-[0_0_60px_-5px_var(--flame-glow)] transition-transform duration-300 group-hover/play:scale-110">
-              <span className="absolute inset-0 rounded-full bg-flame/40 animate-ping" />
+
               <svg viewBox="0 0 24 24" className="relative w-8 h-8 ml-1 fill-current"><path d="M8 5v14l11-7z" /></svg>
             </span>
           </div>
@@ -1362,7 +1351,7 @@ function VideoCard({ video, index, featured }: { video: { title: string; id: str
             #{String(index + 1).padStart(2, "0")}
           </span>
           <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
-            <h3 className="font-display font-bold text-lg md:text-xl text-foreground/95 drop-shadow">{video.title}</h3>
+            <h3 className="font-sans text-base font-semibold leading-snug text-white">{video.title}</h3>
             <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-flame" /> Ver en YouTube ↗
             </div>
@@ -1475,7 +1464,7 @@ function WallpapersSection() {
               Wallpapers para tu <span className="italic text-flame">pantalla</span>
             </h2>
           </div>
-          <div className="font-display text-foreground/60 text-sm md:text-base max-w-sm">
+          <div className="font-sans text-foreground/70 text-sm md:text-base max-w-sm leading-relaxed">
             Pasá el mouse sobre cada serie. Hacé clic para descargar en Drive.
           </div>
         </div>
@@ -1491,7 +1480,7 @@ function WallpapersSection() {
               onMouseLeave={() => setPos({ x: 50, y: 50 })}
               className="group relative block aspect-[4/5] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-deep"
               style={{
-                transform: `perspective(1200px) rotateX(${(50 - pos.y) / 18}deg) rotateY(${(pos.x - 50) / 14}deg)`,
+                transform: "none",
                 transition: "transform 0.2s ease-out",
               }}
             >
@@ -1504,9 +1493,9 @@ function WallpapersSection() {
                   style={{
                     opacity: i === active ? 1 : 0,
                     transform: i === active
-                      ? `scale(1.06) translate(${(50 - pos.x) / 8}px, ${(50 - pos.y) / 8}px)`
-                      : "scale(1.15)",
-                    filter: i === active ? "saturate(1.15) contrast(1.05)" : "blur(8px)",
+                      ? "scale(1)"
+                      : "scale(1.02)",
+                    filter: "none",
                   }}
                 />
               ))}
@@ -1589,14 +1578,14 @@ function WallpapersSection() {
                   }`}
                 >
                   <div className="relative flex items-center gap-3 p-2.5 lg:p-3">
-                    <div className="relative h-16 w-20 lg:h-20 lg:w-32 shrink-0 overflow-hidden rounded-lg">
+                    <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg">
                       <img src={w.img} alt={w.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className={`absolute inset-0 bg-gradient-to-br ${w.accent} opacity-40 mix-blend-overlay`} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="font-mono text-[10px] tracking-[0.25em] text-flame">0{i + 1}</div>
-                      <div className="font-display font-bold text-sm md:text-base leading-tight truncate">{w.title}</div>
-                      <div className="text-xs text-muted-foreground truncate">{w.tagline}</div>
+                      <div className="font-sans font-semibold text-sm leading-snug break-words">{w.title}</div>
+                      <div className="text-xs leading-relaxed text-muted-foreground">{w.tagline}</div>
                     </div>
                     <svg
                       width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"

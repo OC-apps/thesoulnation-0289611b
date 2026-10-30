@@ -1,4 +1,4 @@
-import { useState, useRef, type FormEvent, type MouseEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { sendDiscordRecruitment } from "@/lib/discord.functions";
@@ -12,19 +12,7 @@ const AREAS = [
 export function RecruitmentForm() {
   const [area, setArea] = useState<string>("");
   const [status, setStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, mx: 50, my: 50 });
-  const cardRef = useRef<HTMLFormElement>(null);
   const sendDiscord = useServerFn(sendDiscordRecruitment);
-
-  const onMove = (e: MouseEvent) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    setTilt({ rx: (0.5 - y) * 4, ry: (x - 0.5) * 5, mx: x * 100, my: y * 100 });
-  };
-  const onLeave = () => setTilt({ rx: 0, ry: 0, mx: 50, my: 50 });
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,13 +67,14 @@ export function RecruitmentForm() {
         </p>
       </div>
       {/* Selector de área 3D */}
-      <div className="perspective grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 mb-8">
         {AREAS.map((a) => {
           const active = area === a.value;
           return (
             <button
               key={a.value}
               type="button"
+              aria-pressed={active}
               onClick={() => setArea(a.value)}
               className={`area-chip group relative rounded-2xl border p-5 md:p-6 flex flex-col items-center justify-center text-center transition-all overflow-hidden ${
                 active
@@ -108,36 +97,10 @@ export function RecruitmentForm() {
       </div>
 
       {/* Formulario 3D */}
-      <div className="perspective">
+      <div className="soul-form-shell">
         <form
-          ref={cardRef}
-          onSubmit={onSubmit}
-          onMouseMove={onMove}
-          onMouseLeave={onLeave}
-          style={{
-            transform: `perspective(1400px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-            transition: "transform 0.4s cubic-bezier(0.22,1,0.36,1)",
-          }}
           className="relative rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-6 md:p-10 shadow-[0_30px_80px_-20px_var(--flame-glow)] overflow-hidden"
         >
-          {/* Glare cursor */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-3xl opacity-60 mix-blend-overlay"
-            style={{
-              background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, oklch(1 0 0 / 0.18), transparent 55%)`,
-            }}
-          />
-          {/* Conic border glow */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -inset-px rounded-3xl opacity-40 blur-[14px]"
-            style={{
-              background: "conic-gradient(from 180deg at 50% 50%, var(--flame), var(--blue), var(--flame))",
-              zIndex: -1,
-            }}
-          />
-
           <input type="hidden" name="_subject" value="🔥 NUEVA POSTULACIÓN — THE SOUL NATION" />
           <input type="hidden" name="_template" value="table" />
           <input type="hidden" name="_captcha" value="false" />
