@@ -453,3 +453,21 @@ section:hover .animate-marquee { animation-duration: 18s; transition: animation-
 .tilt-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px -20px var(--flame-glow); }
 .wp-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -25px var(--flame-glow); }
 .wave-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -25px var(--flame-glow); }
+
+/* Soul Nation editorial system — minimal, clean, high contrast */
+:root { --flame: #F05E07; --blue: #01039E; --flame-glow: rgba(240,94,7,.12); }
+body { background: #060720; }
+.grain::after, .roster-card::after { display: none !important; }
+h2:hover, h3:hover { animation: none !important; }
+header { background: rgba(6,7,32,.94) !important; border-bottom: 1px solid rgba(255,255,255,.12) !important; }
+header nav a { font-weight: 600; letter-spacing: .025em; text-transform: none; }
+header nav a::after { background: #F05E07; height: 1px; }
+.roster-card { background: #101252 !important; border: 1px solid rgba(255,255,255,.12) !important; box-shadow: none !important; border-radius: 20px; }
+.roster-card:hover { box-shadow: none !important; }
+a[class*="bg-flame"]::before, button[class*="bg-flame"]::before { display: none !important; }
+section:hover .animate-marquee { animation-duration: 35s; }
+.tilt-card, .wave-card, .wp-card { box-shadow: none !important; }
+.tilt-card:hover, .wave-card:hover, .wp-card:hover { transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
