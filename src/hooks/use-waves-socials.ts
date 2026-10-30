@@ -18,11 +18,17 @@ export function useWavesSocials() {
 
   useEffect(() => {
     let mounted = true;
+    let requestId = 0;
     const load = async () => {
-      const { data } = await supabase
+      const currentRequest = ++requestId;
+      const { data, error } = await supabase
         .from("waves_socials")
         .select("name, tiktok_url, twitch_url, youtube_url, x_url, facebook_url, photo_url, bio, redes");
-      if (mounted && data) setRows(data as WavesSocialsRow[]);
+      if (error) {
+        console.error("[Soul Waves] Could not refresh public profiles:", error.message);
+        return;
+      }
+      if (mounted && currentRequest === requestId && data) setRows(data as WavesSocialsRow[]);
     };
     load();
 
@@ -35,12 +41,17 @@ export function useWavesSocials() {
     window.addEventListener("focus", onFocus);
     window.addEventListener("soul:roster-updated", onFocus);
     document.addEventListener("visibilitychange", onVisibility);
+    // Recheck regularly so public roster follows admin saves without relying on Realtime.
+    const poll = window.setInterval(() => {
+      if (document.visibilityState === "visible") void load();
+    }, 15000);
     const ch = supabase
       .channel("waves_socials_changes")
       .on("postgres_changes", { event: "*", schema: "public", table: "waves_socials" }, () => load())
       .subscribe();
     return () => {
       mounted = false;
+      window.clearInterval(poll);
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("soul:roster-updated", onFocus);
       document.removeEventListener("visibilitychange", onVisibility);
