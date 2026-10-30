@@ -25,7 +25,7 @@ export function BottomBar() {
   return <div className="soul-dock">
     {open && <div className="soul-dock-menu">
       <nav aria-label="Menú de secciones" className="grid grid-cols-2 gap-2">
-        {[{id:"about",label:"La Nación"},{id:"reclutamiento",label:"Únete"},{id:"jersey",label:"Jersey Oficial"},{id:"redes",label:"Redes"}].map(s => <button key={s.id} onClick={() => navigate(s.id)}>{s.label}</button>)}
+        {[{id:"waves",label:"Soul Waves"},{id:"legends",label:"Soul Legends"},{id:"crew",label:"Soul Crew"},{id:"about",label:"La Nación"},{id:"reclutamiento",label:"Únete"},{id:"jersey",label:"Jersey Oficial"},{id:"redes",label:"Redes"}].map(s => <button key={s.id} onClick={() => navigate(s.id)}>{s.label}</button>)}
         <a href="/xplicit-cup">Xplicit Cup</a>
         <button onClick={() => { setPanelOpen(true); setOpen(false); }}>Explorar</button>
         <button onClick={() => { togglePanel(); setOpen(false); }}>Logros</button>

@@ -435,7 +435,7 @@ function IndexContent() {
         <Hero3D />
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
-            {href:"#waves",title:"Soul Waves",sub:"Creadores de contenido",image:waveMaverick},
+            {href:"#roster",title:"Nuestro Roster",sub:"Waves · Legends · Crew",image:waveMaverick},
             {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:soulNationTeam},
             {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:wpOlimpo},
             {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:jerseyFront},
@@ -602,8 +602,8 @@ function IndexContent() {
             </p>
           </div>
 
-          <nav className="soul-roster-tabs" aria-label="Divisiones del roster">
-            {["waves", "legends", "crew"].map((id) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}>{id.charAt(0).toUpperCase() + id.slice(1)}</a>)}
+          <nav className="soul-roster-tabs sticky top-20 z-30 shadow-lg" aria-label="Divisiones del roster">
+            {[{id:"waves",title:"Soul Waves",sub:"Creadores"},{id:"legends",title:"Soul Legends",sub:"Montagers"},{id:"crew",title:"Soul Crew",sub:"Familia"}].map(({id,title,sub}) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}><span className="block">{title}</span><span className="mt-1 block text-[10px] font-normal opacity-70">{sub}</span></a>)}
           </nav>
 
           {/* WAVES — creators */}
