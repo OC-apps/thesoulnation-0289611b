@@ -24,6 +24,7 @@ import wpComic from "@/assets/wallpaper-comic.jpg";
 import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
+import { RosterSearch } from "@/components/roster-search";
 import { useRoster } from "@/hooks/use-roster";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
@@ -155,12 +156,9 @@ function renderWaveCard(
   );
 }
 
-function WavesHUD() {
-  const [waveSearch, setWaveSearch] = useState("");
+function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof useWavesMembers>; hiddenSet: Set<string> }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
-  const dynamicWaves = useWavesMembers();
   const socialsMap = useWavesSocials();
-  const hiddenSet = useWavesHidden();
   const extraWaves = dynamicWaves.map((w) => ({
     name: w.name,
     redes: w.redes,
@@ -202,13 +200,12 @@ function WavesHUD() {
   return (
     <>
       <div className="soul-waves-collection mb-20 space-y-5">
-        <label className="block max-w-md"><span className="mb-2 block text-xs text-white/65">Buscar creador</span><input type="search" value={waveSearch} onChange={e => setWaveSearch(e.target.value)} placeholder="Nombre o gamertag" className="min-h-11 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm" /></label>
         {(() => {
           const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
             ...(leaderIdx >= 0 ? [{ c: WAVES_ALL[leaderIdx], i: leaderIdx, leader: true }] : []),
             ...WAVES_ALL.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
-          ].filter(({c}) => c.name.toLowerCase().includes(waveSearch.trim().toLowerCase()));
+          ];
           return (
             <>
               {ordered.length === 0 && <p role="status" className="text-sm text-muted-foreground">No se encontraron integrantes.</p>}
@@ -400,6 +397,9 @@ function IndexContent() {
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
   const roster = useRoster();
+  const dynamicWaves = useWavesMembers();
+  const hiddenSet = useWavesHidden();
+  const waveNames = [...WAVES.map(member => member.name), ...dynamicWaves.map(member => member.name)].filter(name => !hiddenSet.has(name.toUpperCase()) && name.trim().toUpperCase() !== "SOUL PXLMAA");
   const legendsList = roster.legends.length ? roster.legends : LEGENDS;
   const crewList = roster.loaded ? roster.crew : [...new Set([...CREW, ...FORMER_KILLERS])];
 
@@ -603,6 +603,8 @@ function IndexContent() {
             </p>
           </div>
 
+          <RosterSearch waves={waveNames} legends={legendsList} crew={crewList} />
+
           <nav className="soul-roster-tabs sticky top-20 z-30 shadow-lg" aria-label="Divisiones del roster">
             {[{id:"waves",title:"Soul Waves",sub:"Creadores"},{id:"legends",title:"Soul Legends",sub:"Montagers"},{id:"crew",title:"Soul Crew",sub:"Familia"}].map(({id,title,sub}) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}><span className="block">{title}</span><span className="mt-1 block text-[10px] font-normal opacity-70">{sub}</span></a>)}
           </nav>
@@ -616,7 +618,7 @@ function IndexContent() {
             </p>
           </div>
 
-          <WavesHUD />
+          <WavesHUD dynamicWaves={dynamicWaves} hiddenSet={hiddenSet} />
 
 
           {/* KILLERS + LEGENDS — holographic 3D squad cards */}

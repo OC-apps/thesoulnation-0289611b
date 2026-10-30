@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+
 interface Props {
   id?: string;
   logo: string;
@@ -13,9 +13,7 @@ interface Props {
 export function HoloSquadCard({ id, title, subtitle, desc, members }: Props) {
   const visibleMembers = members.filter((member) => typeof member === "string" && member.trim().length > 0);
   const isCrew = id === "crew";
-  const [search, setSearch] = useState("");
-  const sortedMembers = useMemo(() => [...visibleMembers].sort((a,b) => a.localeCompare(b, "es")), [members]);
-  const displayed = sortedMembers.filter(member => member.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()));
+  const sortedMembers = [...visibleMembers].sort((a,b) => a.localeCompare(b, "es"));
   return (
     <article id={id} className="scroll-mt-28 overflow-hidden rounded-[28px] border border-white/15 bg-[#111329] sm:rounded-[36px]">
       <div className={`relative overflow-hidden p-6 sm:p-10 lg:p-12 ${isCrew ? "bg-[#01039E] text-white" : "bg-[#FFFFFF] text-[#01039E]"}`}>
@@ -33,13 +31,8 @@ export function HoloSquadCard({ id, title, subtitle, desc, members }: Props) {
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-white/70">Roster · {visibleMembers.length.toString().padStart(2, "0")}</span>
           <span className="flex items-center gap-2 text-[10px] font-medium tracking-[0.06em] text-white/55"><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#F05E07]" />STATUS · ACTIVE</span>
         </div>
-        <label className="mb-5 block max-w-md">
-          <span className="mb-2 block text-xs text-white/65">Buscar integrante</span>
-          <input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Nombre o gamertag" className="min-h-11 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm text-white" />
-        </label>
-        {displayed.length === 0 && <p role="status" className="py-4 text-sm text-white/60">No se encontraron integrantes.</p>}
         <ul className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-3">
-          {displayed.map((member, index) => (
+          {sortedMembers.map((member, index) => (
             <li key={member + index} className="group/member flex min-h-[68px] min-w-0 items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.035] px-5 py-4 transition-colors hover:border-[#F05E07]/60 hover:bg-[#01039E]/30">
               <span aria-hidden="true" className="h-5 w-0.5 shrink-0 rounded-full bg-[#F05E07]/70 transition-colors group-hover/member:bg-[#F05E07]" />
               <span className="min-w-0 break-words text-sm font-medium leading-relaxed text-white">{member}</span>
