@@ -1653,3 +1653,132 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   object-fit:cover;
   object-position:50% 50%;
 }
+
+
+/* Premium division selector, aligned right of the Waves artwork. */
+.soul-hub #roster .soul-roster-switcher-layout {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(225px,260px);
+  gap:18px;
+  align-items:stretch;
+  margin:0 0 22px;
+}
+.soul-hub #roster .soul-roster-feature {
+  position:relative;min-width:0;min-height:210px;
+  overflow:hidden;border-radius:22px;
+  border:1px solid rgba(255,255,255,.13);
+  background:#050a29;
+}
+.soul-hub #roster .soul-roster-feature-banner {
+  display:block;width:100%;height:100%;
+  min-height:210px;object-fit:cover;object-position:center;
+}
+.soul-hub #roster .soul-roster-feature-placeholder {
+  position:relative;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  width:100%;height:100%;min-height:210px;
+  padding:clamp(22px,4vw,50px);
+  background:radial-gradient(ellipse at 85% 20%,rgba(240,94,7,.16),transparent 48%),linear-gradient(115deg,#01039E,#080c36 75%);
+}
+.soul-hub #roster .soul-roster-feature-placeholder::after {
+  content:"";position:absolute;right:-70px;bottom:-170px;
+  width:290px;height:290px;border:1px solid rgba(240,94,7,.4);
+  border-radius:50%;pointer-events:none;
+}
+.soul-hub #roster .soul-roster-feature-overline {
+  color:#F05E07;font-size:10px;font-weight:700;letter-spacing:.22em;
+}
+.soul-hub #roster .soul-roster-feature-placeholder strong {
+  font-size:clamp(1.9rem,4vw,3.8rem);line-height:1.05;
+  margin:19px 0 12px;color:#fff;
+}
+.soul-hub #roster .soul-roster-feature-tagline {
+  color:#c1c6e2;font-size:11px;letter-spacing:.27em;
+}
+.soul-hub #roster .soul-roster-switcher {
+  position:relative;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:8px;min-width:0;
+  padding:15px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:linear-gradient(150deg,#15182f,#0b0c21);
+}
+.soul-hub #roster .soul-roster-switcher-label {
+  display:flex;justify-content:space-between;gap:8px;
+  margin:0 2px 8px;
+  font:700 9px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.13em;color:#a8adcb;
+}
+.soul-hub #roster .soul-roster-switcher-label span {color:#F05E07;}
+.soul-hub #roster .soul-roster-option {
+  position:relative;
+  display:flex;align-items:center;gap:12px;
+  min-height:62px;
+  padding:10px 12px;
+  border:1px solid transparent;
+  border-radius:13px;
+  background:rgba(255,255,255,.035);
+  color:#fff;
+  text-decoration:none;
+  transition:background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.soul-hub #roster .soul-roster-option:hover,
+.soul-hub #roster .soul-roster-option:focus-visible {
+  background:rgba(255,255,255,.09);border-color:rgba(240,94,7,.48);
+}
+.soul-hub #roster .soul-roster-option[aria-current="page"] {
+  background:#01039E;border-color:rgba(240,94,7,.85);
+  box-shadow:inset 3px 0 #F05E07;
+}
+.soul-hub #roster .soul-roster-option-number {
+  color:#F05E07;font:600 11px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  flex:none;
+}
+.soul-hub #roster .soul-roster-option-copy {
+  min-width:0;display:flex;flex-direction:column;gap:4px;
+}
+.soul-hub #roster .soul-roster-option-copy strong {
+  font-size:12px;line-height:1.2;letter-spacing:.01em;white-space:nowrap;
+}
+.soul-hub #roster .soul-roster-option-copy small {
+  font-size:10px;color:#b0b5d3;
+}
+.soul-hub #roster .soul-roster-option-indicator {
+  width:8px;height:8px;flex:none;margin-left:auto;
+  border:1px solid rgba(255,255,255,.55);border-radius:50%;
+}
+.soul-hub #roster .soul-roster-option[aria-current="page"] .soul-roster-option-indicator {
+  border-color:#F05E07;background:#F05E07;
+  box-shadow:0 0 0 3px rgba(240,94,7,.16);
+}
+.soul-hub #roster .soul-waves-heading {
+  border:0;padding:0; margin-top:0;
+}
+@media(max-width:760px) {
+  .soul-hub #roster .soul-roster-switcher-layout {
+    grid-template-columns:minmax(0,1fr);
+    gap:12px;
+  }
+  .soul-hub #roster .soul-roster-feature,
+  .soul-hub #roster .soul-roster-feature-banner {min-height:0;}
+  .soul-hub #roster .soul-roster-feature-banner {height:auto;aspect-ratio:3/1;object-fit:cover;}
+  .soul-hub #roster .soul-roster-switcher {
+    display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+    padding:8px;border-radius:16px;
+  }
+  .soul-hub #roster .soul-roster-switcher-label {
+    grid-column:1/-1;margin:3px 5px 5px;
+  }
+  .soul-hub #roster .soul-roster-option {
+    gap:5px;min-width:0;min-height:65px;padding:9px 6px;
+    flex-direction:column;align-items:flex-start;justify-content:center;
+  }
+  .soul-hub #roster .soul-roster-option-number {font-size:9px;}
+  .soul-hub #roster .soul-roster-option-copy strong {font-size:clamp(9px,2.5vw,12px);}
+  .soul-hub #roster .soul-roster-option-copy small {font-size:9px;}
+  .soul-hub #roster .soul-roster-option-indicator {position:absolute;right:9px;top:11px;width:6px;height:6px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .soul-hub #roster .soul-roster-option {transition:none;}
+}
