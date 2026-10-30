@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type WavesSocialsRow = {
   name: string;
+  extra_links?: { label: string; href: string }[];
   tiktok_url: string | null;
   twitch_url: string | null;
   youtube_url: string | null;
@@ -23,7 +24,7 @@ export function useWavesSocials() {
       const currentRequest = ++requestId;
       const { data, error } = await supabase
         .from("waves_socials")
-        .select("name, tiktok_url, twitch_url, youtube_url, x_url, facebook_url, photo_url, bio, redes");
+        .select("name, tiktok_url, twitch_url, youtube_url, x_url, facebook_url, photo_url, bio, redes, extra_links");
       if (error) {
         console.error("[Soul Waves] Could not refresh public profiles:", error.message);
         return;
