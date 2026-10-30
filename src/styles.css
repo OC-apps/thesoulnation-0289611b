@@ -900,3 +900,114 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  .soul-hero-banner { width:100%; max-height:220px; }
  .soul-hero > div { padding-block:2rem; }
 }
+
+
+/* SOUL WAVES — equal-width lineup cards at every breakpoint. 
+   Explicit row flow overrides the original column-flow carousel. */
+#roster .soul-waves-collection .soul-lineup {
+ display:grid;
+ grid-auto-flow:row;
+ grid-auto-columns:auto;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:clamp(10px,1.3vw,18px);
+ width:100%;
+ overflow:visible;
+ scroll-snap-type:none;
+ padding:0;
+ align-items:stretch;
+}
+#roster .soul-waves-collection .soul-lineup-slot {
+ display:block;
+ min-width:0;
+ width:100%;
+ flex:none;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait,
+#roster .soul-waves-collection .soul-lineup .soul-portrait-leader {
+ position:relative;
+ display:block;
+ width:100%;
+ height:clamp(320px,35vw,430px);
+ min-height:0;
+ margin:0;
+ overflow:hidden;
+ border:0;
+ border-radius:0;
+ clip-path:polygon(10% 0,100% 0,90% 100%,0 100%);
+ container-type:inline-size;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait-photo,
+#roster .soul-waves-collection .soul-lineup .soul-portrait-leader .soul-portrait-photo {
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:100%;
+ flex:none;
+ aspect-ratio:auto;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait-photo img {
+ display:block;
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ object-position:center 25%;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait-info,
+#roster .soul-waves-collection .soul-lineup .soul-portrait-leader .soul-portrait-info {
+ position:absolute;
+ z-index:5;
+ left:0; right:0; bottom:0;
+ width:100%;
+ padding:18px 13% 24px;
+ border:0;
+ background:transparent;
+ text-align:left;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait h4,
+#roster .soul-waves-collection .soul-lineup .soul-portrait-leader h4 {
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ width:100%;
+ margin:0;
+ padding:0;
+ font-family:var(--font-display);
+ font-style:italic;
+ font-weight:800;
+ line-height:1.1;
+ letter-spacing:-.02em;
+ overflow:visible;
+ overflow-wrap:normal;
+}
+#roster .soul-waves-collection .soul-lineup-prefix {
+ display:block;
+ white-space:nowrap;
+ font-size:clamp(11px,5.5cqw,14px);
+ line-height:1.2;
+ margin-bottom:5px;
+}
+#roster .soul-waves-collection .soul-lineup-nickname {
+ display:block;
+ max-width:100%;
+ white-space:nowrap;
+ font-size:clamp(12px,7.2cqw,22px);
+ line-height:1.12;
+ letter-spacing:-.035em;
+}
+#roster .soul-waves-collection .soul-portrait-status {
+ margin-top:13px;
+ font-size:9px;
+ white-space:nowrap;
+}
+#roster .soul-waves-collection .soul-founder-mark { left:13%; }
+@media(max-width:900px) {
+ #roster .soul-waves-collection .soul-lineup { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ #roster .soul-waves-collection .soul-lineup .soul-portrait,
+ #roster .soul-waves-collection .soul-lineup .soul-portrait-leader { height:clamp(340px,56vw,470px); }
+}
+@media(max-width:520px) {
+ #roster .soul-waves-collection .soul-lineup { grid-template-columns:minmax(0,1fr); gap:12px; }
+ #roster .soul-waves-collection .soul-lineup .soul-portrait,
+ #roster .soul-waves-collection .soul-lineup .soul-portrait-leader { height:440px; }
+ #roster .soul-waves-collection .soul-lineup-nickname { font-size:clamp(18px,6cqw,25px); }
+}
