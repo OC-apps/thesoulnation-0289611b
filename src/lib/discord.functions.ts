@@ -18,7 +18,7 @@ function divisionColor(area: string): number {
   const a = area.toLowerCase();
   if (a.includes("legends")) return 0xff6a00; // flame orange
   if (a.includes("waves")) return 0x2dd4ff; // cyan
-  if (a.includes("killers")) return 0xff2d55; // red
+  if (a.includes("crew")) return 0x01039e;
   return 0x9333ea;
 }
 
@@ -26,7 +26,7 @@ function divisionEmoji(area: string): string {
   const a = area.toLowerCase();
   if (a.includes("legends")) return "🎬";
   if (a.includes("waves")) return "📡";
-  if (a.includes("killers")) return "💀";
+  if (a.includes("crew")) return "🔥";
   return "🔥";
 }
 

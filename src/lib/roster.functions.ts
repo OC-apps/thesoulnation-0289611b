@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const Category = z.enum(["crew", "legends", "killers"]);
+const Category = z.enum(["crew", "legends"]);
 
 const AddInput = z.object({
   password: z.string().min(1).max(200),
@@ -21,6 +21,12 @@ export const addRosterMember = createServerFn({ method: "POST" })
       throw new Error("Contraseña incorrecta");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: existing, error: lookupError } = await supabaseAdmin.from("roster_members")
+      .select("id").eq("nickname", data.nickname.trim())
+      .in("category", data.category === "crew" ? ["crew", "killers"] : ["legends"])
+      .limit(1).maybeSingle();
+    if (lookupError) throw new Error(lookupError.message);
+    if (existing) throw new Error("El integrante ya pertenece a esta división");
     const { data: maxRow } = await supabaseAdmin
       .from("roster_members")
       .select("sort_order")
@@ -43,7 +49,11 @@ export const removeRosterMember = createServerFn({ method: "POST" })
       throw new Error("Contraseña incorrecta");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin.from("roster_members").delete().eq("id", data.id);
+    const { data: member, error: readError } = await supabaseAdmin.from("roster_members").select("nickname, category").eq("id", data.id).single();
+    if (readError) throw new Error(readError.message);
+    let query = supabaseAdmin.from("roster_members").delete().eq("nickname", member.nickname);
+    query = member.category === "legends" ? query.eq("category", "legends") : query.in("category", ["crew", "killers"]);
+    const { error } = await query;
     if (error) throw new Error(error.message);
     return { ok: true };
   });

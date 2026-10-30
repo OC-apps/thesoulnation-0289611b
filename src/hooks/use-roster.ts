@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type RosterCategory = "crew" | "legends" | "killers";
-export type RosterMember = { id: string; nickname: string; category: RosterCategory; sort_order: number };
+import { normalizeRoster, type LegacyRosterCategory } from "@/lib/roster-model";
+export type { RosterCategory } from "@/lib/roster-model";
+export type RosterMember = { id: string; nickname: string; category: LegacyRosterCategory; sort_order: number };
 
 export function useRoster() {
   const [members, setMembers] = useState<RosterMember[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -15,7 +17,7 @@ export function useRoster() {
         .select("id, nickname, category, sort_order")
         .order("category")
         .order("sort_order");
-      if (mounted && data) setMembers(data as RosterMember[]);
+      if (mounted && data) { setMembers(data as RosterMember[]); setLoaded(true); }
     };
     load();
 
@@ -29,10 +31,11 @@ export function useRoster() {
     };
   }, []);
 
+  const normalized = normalizeRoster(members);
   return {
-    all: members,
-    crew: members.filter((m) => m.category === "crew").map((m) => m.nickname),
-    legends: members.filter((m) => m.category === "legends").map((m) => m.nickname),
-    killers: members.filter((m) => m.category === "killers").map((m) => m.nickname),
+    loaded,
+    all: normalized,
+    crew: normalized.filter((m) => m.category === "crew").map((m) => m.nickname),
+    legends: normalized.filter((m) => m.category === "legends").map((m) => m.nickname),
   };
 }

@@ -50,11 +50,10 @@ const OTHER_MEMBERS = [
 
 const MEMBERS = [...FIXED_MEMBERS, ...OTHER_MEMBERS];
 
-type RosterCategory = "crew" | "legends" | "killers";
+import { normalizeRoster, type RosterCategory, type RosterRow as LegacyRosterRow } from "@/lib/roster-model";
 type RosterRow = { id: string; nickname: string; category: RosterCategory; sort_order: number };
 
 const CATEGORIES: { key: RosterCategory; label: string }[] = [
-  { key: "killers", label: "Soul Killers" },
   { key: "legends", label: "Soul Legends" },
   { key: "crew", label: "Soul Crew" },
 ];
@@ -65,7 +64,7 @@ function AdminLivePage() {
   const [msg, setMsg] = useState<string>("");
 
   const [roster, setRoster] = useState<RosterRow[]>([]);
-  const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "", killers: "" });
+  const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
 
   const [photoBusy, setPhotoBusy] = useState<string | null>(null);
@@ -196,7 +195,7 @@ function AdminLivePage() {
         .select("id, nickname, category, sort_order")
         .order("category")
         .order("sort_order");
-      if (data) setRoster(data as RosterRow[]);
+      if (data) setRoster(normalizeRoster(data as LegacyRosterRow[]));
     };
     load();
 
@@ -436,8 +435,8 @@ function AdminLivePage() {
 
 
           <TabsContent value="roster" className="mt-0">
-            <SectionShell icon={Users} title="Roster" subtitle="Crew · Legends · Killers · Waves">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <SectionShell icon={Users} title="Roster" subtitle="Waves · Legends · Crew">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {CATEGORIES.map(({ key, label }) => {
                   const list = roster.filter((r) => r.category === key);
                   const addBusy = rosterBusy === `add:${key}`;

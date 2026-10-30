@@ -24,7 +24,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const a = new Audio("/teamtage.mp3");
     a.loop = true;
     a.volume = 0.55;
-    a.preload = "auto";
+    a.preload = "none";
     audioRef.current = a;
 
     const onPlay = () => setPlaying(true);
@@ -37,26 +37,6 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     a.addEventListener("loadedmetadata", onMeta);
     a.addEventListener("durationchange", onMeta);
 
-    const tryPlay = async () => {
-      try {
-        a.muted = false;
-        await a.play();
-      } catch {
-        try { a.muted = true; await a.play(); } catch {/* ignore */}
-      }
-    };
-    tryPlay();
-
-    const unlock = async () => {
-      if (!a) return;
-      a.muted = false;
-      try { await a.play(); } catch {/* ignore */}
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
-    };
-    window.addEventListener("pointerdown", unlock, { once: true });
-    window.addEventListener("keydown", unlock, { once: true });
-
     return () => {
       a.removeEventListener("play", onPlay);
       a.removeEventListener("pause", onPause);
@@ -64,8 +44,6 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       a.removeEventListener("loadedmetadata", onMeta);
       a.removeEventListener("durationchange", onMeta);
       a.pause();
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
     };
   }, []);
 

@@ -2,14 +2,11 @@ import { useState, useRef, type FormEvent, type MouseEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { sendDiscordRecruitment } from "@/lib/discord.functions";
-import soulLegendsLogo from "@/assets/soul-legends.png";
-import soulWavesLogo from "@/assets/soul-waves.png";
-import soulKillersLogo from "@/assets/soul-killers.png";
 
 const AREAS = [
-  { value: "The Soul Legends (Montager)", label: "Legends", hint: "Montagers", img: soulLegendsLogo },
-  { value: "The Soul Waves (Streamer y CC)", label: "Waves", hint: "Streamers · CC", img: soulWavesLogo },
-  { value: "The Soul Killers (Top 100 Guardian)", label: "Killers", hint: "Top 100 Guardian", img: soulKillersLogo },
+  { value: "The Soul Legends (Montager)", label: "Legends", hint: "Montagers" },
+  { value: "The Soul Waves (Streamer y CC)", label: "Waves", hint: "Streamers · CC" },
+  { value: "The Soul Crew (Familia)", label: "Crew", hint: "Familia" },
 ];
 
 export function RecruitmentForm() {
@@ -96,11 +93,7 @@ export function RecruitmentForm() {
                   : "border-border bg-card/40 hover:border-flame/60 hover:-translate-y-0.5"
               }`}
             >
-              <img
-                src={a.img}
-                alt={a.label}
-                className="h-14 md:h-20 w-auto object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_8px_24px_var(--flame-glow)]"
-              />
+              <span className="font-display text-xl text-white">Soul {a.label}</span>
               <div className="mt-3 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
                 {a.hint}
               </div>

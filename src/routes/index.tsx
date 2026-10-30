@@ -10,7 +10,6 @@ import somosCover from "@/assets/somos-soul-nation-cover.png";
 import soulBellatriix from "@/assets/soul-bellatriix.jpeg";
 import soulCrewLogo from "@/assets/soul-crew.png";
 import soulLegendsLogo from "@/assets/soul-legends.png";
-import soulKillersLogo from "@/assets/soul-killers.png";
 import waveMaverick from "@/assets/wave-maverick.png";
 import waveAleman from "@/assets/wave-aleman.png";
 import waveGizzmo from "@/assets/wave-gizzmo.png";
@@ -23,7 +22,6 @@ import jerseyBack from "@/assets/jersey-back.png";
 import wpOlimpo from "@/assets/wallpaper-olimpo.jpg";
 import wpComic from "@/assets/wallpaper-comic.jpg";
 import wpCinematic from "@/assets/wallpaper-cinematic.jpg";
-import soulWavesLogo from "@/assets/soul-waves.png";
 import { RecruitmentForm } from "@/components/recruitment-form";
 import { HoloSquadCard } from "@/components/holo-squad-card";
 import { useRoster } from "@/hooks/use-roster";
@@ -85,7 +83,7 @@ const VIDEOS = [
   { title: "OSOKTAGE", id: "Ewxs6ufYpbc" },
 ];
 
-const KILLERS = ["SOUL MORTAAL", "SOUL GALLARD", "SOUL RAPID", "SOUL SANTHY", "SOUL SLADE X", "SOUL DIABOLI"];
+const FORMER_KILLERS = ["SOUL MORTAAL", "SOUL GALLARD", "SOUL RAPID", "SOUL SANTHY", "SOUL SLADE X", "SOUL DIABOLI"];
 const LEGENDS = ["SOUL YARBIZ", "SOUL MORTAL", "SOUL CREED", "SOUL EXTRURS"];
 const CREW = [
   "SOUL VELFI", "SOUL VOLCANO",  "SOUL PEYERZ", 
@@ -158,6 +156,7 @@ function renderWaveCard(
 }
 
 function WavesHUD() {
+  const [waveSearch, setWaveSearch] = useState("");
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const dynamicWaves = useWavesMembers();
   const socialsMap = useWavesSocials();
@@ -203,14 +202,16 @@ function WavesHUD() {
   return (
     <>
       <div className="soul-waves-collection mb-20 space-y-5">
+        <label className="block max-w-md"><span className="mb-2 block text-xs text-white/65">Buscar creador</span><input type="search" value={waveSearch} onChange={e => setWaveSearch(e.target.value)} placeholder="Nombre o gamertag" className="min-h-11 w-full rounded-xl border border-white/15 bg-white/5 px-4 text-sm" /></label>
         {(() => {
           const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
             ...(leaderIdx >= 0 ? [{ c: WAVES_ALL[leaderIdx], i: leaderIdx, leader: true }] : []),
             ...WAVES_ALL.map((c, i) => ({ c, i, leader: false })).filter((x) => x.i !== leaderIdx),
-          ];
+          ].filter(({c}) => c.name.toLowerCase().includes(waveSearch.trim().toLowerCase()));
           return (
             <>
+              {ordered.length === 0 && <p role="status" className="text-sm text-muted-foreground">No se encontraron integrantes.</p>}
               {/* Leader row - full width rectangle */}
               {ordered[0]?.leader && (
                 <div className="w-full">
@@ -219,7 +220,7 @@ function WavesHUD() {
               )}
               {/* Rest 4+4 */}
               <div className="grid grid-cols-1 min-[460px]:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
-                {ordered.slice(1).map(({ c, i }) => (
+                {ordered.filter(entry => !entry.leader).map(({ c, i }) => (
                   <div key={c.name}>{renderWaveCard(c, i, false, () => setOpenIdx(i), isLiveFor(c.name))}</div>
                 ))}
               </div>
@@ -362,22 +363,23 @@ function Index() {
 }
 
 const HUB_SECTIONS = [
-  { id: "top", label: "Inicio" }, { id: "about", label: "¿Quiénes Somos?" },
-  { id: "roster", label: "Roster" }, { id: "videos", label: "Videos" },
-  { id: "wallpapers", label: "Wallpapers" }, { id: "jersey", label: "Jersey" },
-  { id: "music", label: "Music" }, { id: "reclutamiento", label: "Reclutamiento" },
-  { id: "redes", label: "Redes" },
+  { id: "top", label: "Inicio" }, { id: "about", label: "La Nación" },
+  { id: "roster", label: "Roster" }, { id: "contenido", label: "Contenido" },
+  { id: "reclutamiento", label: "Únete" },
 ];
 
 function IndexContent() {
   const [destination, setDestination] = useState("top");
-  const rosterIds = ["waves", "killers", "legends", "crew"];
-  const view = rosterIds.includes(destination) ? "roster" :
+  const rosterIds = ["waves", "legends", "crew"];
+  const view = destination === "killers" || rosterIds.includes(destination) ? "roster" :
     ["vision", "objetivo"].includes(destination) ? "about" :
-    HUB_SECTIONS.some((s) => s.id === destination) || destination === "xplicit-cup" ? destination : "top";
-  const rosterView = rosterIds.includes(destination) ? destination : "waves";
+    ["videos", "wallpapers", "music", "jersey", "redes", "xplicit-cup"].includes(destination) ? destination :
+    destination === "contenido" ? "videos" : HUB_SECTIONS.some((s) => s.id === destination) ? destination : "top";
+  const rosterView = destination === "killers" ? "crew" : rosterIds.includes(destination) ? destination : "waves";
+  const contentView = ["videos", "wallpapers", "music"].includes(view);
+  const nationView = view === "about" || view === "xplicit-cup";
   useEffect(() => {
-    const update = () => setDestination(window.location.hash.slice(1) || "top");
+    const update = () => setDestination(window.location.hash.slice(1) === "killers" ? "crew" : window.location.hash.slice(1) || "top");
     update();
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
@@ -398,9 +400,8 @@ function IndexContent() {
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
   const roster = useRoster();
-  const killersList = roster.killers.length ? roster.killers : KILLERS;
   const legendsList = roster.legends.length ? roster.legends : LEGENDS;
-  const crewList = roster.crew.length ? roster.crew : CREW;
+  const crewList = roster.loaded ? roster.crew : [...new Set([...CREW, ...FORMER_KILLERS])];
 
 
 
@@ -413,23 +414,34 @@ function IndexContent() {
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
           </a>
           <nav className="hidden xl:flex gap-1 text-xs" aria-label="Navegación principal">
-            {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={view === section.id ? "page" : undefined} className="soul-header-link">{section.label}</a>)}
-            <Link to="/xplicit-cup" data-explore="nav:xplicit-cup" className="soul-header-link">Xplicit Cup</Link>
+            {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView) || (section.id === "about" && nationView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>)}
           </nav>
-
+          <a href="#reclutamiento" className="xl:hidden rounded-full bg-[#F05E07] px-4 py-2 text-xs font-semibold text-white">Únete</a>
         </div>
       </header>
 
       <nav className="soul-section-menu" aria-label="Secciones">
-        {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={view === section.id ? "page" : undefined}>{section.label}</a>)}
-        <Link to="/xplicit-cup">Xplicit Cup</Link>
+        {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView) || (section.id === "about" && nationView)) ? "page" : undefined}>{section.label}</a>)}
       </nav>
+
+      {(contentView || nationView) && <nav className="soul-subnav" aria-label={contentView ? "Contenido" : "La Nación"}>
+        {(contentView ? [{id:"videos",label:"Videos"},{id:"wallpapers",label:"Wallpapers"},{id:"music",label:"Música"}] : [{id:"about",label:"¿Quiénes Somos?"},{id:"vision",label:"Visión"},{id:"objetivo",label:"Objetivo"},{id:"xplicit-cup",label:"Xplicit Cup"}]).map(item => <a key={item.id} href={`#${item.id}`} aria-current={(view === item.id || destination === item.id) ? "page" : undefined}>{item.label}</a>)}
+      </nav>}
 
       {/* Floating controls moved into the unified BottomBar */}
 
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
         <Hero3D />
+        <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
+          {[
+            {href:"#waves",title:"Soul Waves",sub:"Creadores de contenido",image:waveMaverick},
+            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:soulNationTeam},
+            {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:wpOlimpo},
+            {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:jerseyFront},
+          ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
+        </div>
+
         <div className="pointer-events-none absolute bottom-4 right-4 z-20">
           <div className="pointer-events-auto">
             <EasterEgg id="soul-flame" label="Llama Soul oculta" size="sm" />
@@ -554,8 +566,7 @@ function IndexContent() {
             <div className="soul-purpose-links">
               {[
                 { label: "Waves", href: "#waves" },
-                { label: "Killers", href: "#killers" },
-                { label: "Legends", href: "#legends" },
+                                { label: "Legends", href: "#legends" },
                 { label: "Crew", href: "#crew" },
               ].map((d) => (
                 <a
@@ -587,21 +598,17 @@ function IndexContent() {
               Nuestro <span className="italic text-flame">Roster</span>
             </h2>
             <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
-              Cuatro divisiones, una sola familia. Conoce a quienes representan a Soul dentro y fuera del juego.
+              Tres divisiones, una sola familia. Conoce a quienes representan a Soul dentro y fuera del juego.
             </p>
           </div>
 
           <nav className="soul-roster-tabs" aria-label="Divisiones del roster">
-            {["waves", "killers", "legends", "crew"].map((id) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}>{id.charAt(0).toUpperCase() + id.slice(1)}</a>)}
+            {["waves", "legends", "crew"].map((id) => <a key={id} href={`#${id}`} aria-current={rosterView === id ? "page" : undefined}>{id.charAt(0).toUpperCase() + id.slice(1)}</a>)}
           </nav>
 
           {/* WAVES — creators */}
           <div id="waves" className="soul-waves-heading mb-12 flex flex-col items-start scroll-mt-24">
-            <img
-              src={soulWavesLogo}
-              alt="The Soul Waves"
-              className="h-20 md:h-28 w-auto max-w-full object-contain"
-            />
+            <h3 className="font-display text-3xl sm:text-4xl">SOUL WAVES</h3>
             <div className="mt-3 text-xs uppercase tracking-[0.4em] text-muted-foreground">creadores de contenido</div>
             <p className="mt-6 text-muted-foreground max-w-2xl leading-7">
               Cada uno aporta su estilo, personalidad y forma de vivir el gaming. No se trata solo de clips o transmisiones: es constancia, identidad y conexión real con la comunidad.
@@ -614,18 +621,9 @@ function IndexContent() {
           {/* KILLERS + LEGENDS — holographic 3D squad cards */}
           <div className="mb-8 space-y-6">
             <HoloSquadCard
-              id="killers"
-              logo={soulKillersLogo}
-              title="THE SOUL KILLERS"
-              subtitle="Modo Guardian · Gears 5"
-              desc="Equipo enfocado en grindear el modo Guardian de Gears 5."
-              members={killersList}
-              accentSeed={0}
-            />
-            <HoloSquadCard
               id="legends"
               logo={soulLegendsLogo}
-              title="THE SOUL LEGENDS"
+              title="SOUL LEGENDS"
               subtitle="Montagers · Clips & Highlights"
               desc="Jugadores habilidosos y creadores de clips para montajes editados."
               members={legendsList}
@@ -637,8 +635,8 @@ function IndexContent() {
           <HoloSquadCard
             id="crew"
             logo={soulCrewLogo}
-            title="THE SOUL CREW"
-            subtitle="Apoyo y familia oficial"
+            title="SOUL CREW"
+            subtitle="Familia"
             desc="Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation."
             members={crewList}
             accentSeed={3.4}
@@ -1046,7 +1044,7 @@ function IndexContent() {
                   <div className="md:row-span-2 rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
                     <iframe
                       title="The Soul Nation · Álbum"
-                      src="https://open.spotify.com/embed/album/0BA5VLFK2p44KzjuRqmlyF?utm_source=generator&theme=0"
+                      src={view === "music" ? "https://open.spotify.com/embed/album/0BA5VLFK2p44KzjuRqmlyF?utm_source=generator&theme=0" : undefined}
                       width="100%"
                       height="560"
                       loading="lazy"
@@ -1058,7 +1056,7 @@ function IndexContent() {
                     <div key={id} className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
                       <iframe
                         title={`The Soul Nation · Single ${i + 1}`}
-                        src={`https://open.spotify.com/embed/album/${id}?utm_source=generator&theme=0`}
+                        src={view === "music" ? `https://open.spotify.com/embed/album/${id}?utm_source=generator&theme=0` : undefined}
                         width="100%"
                         height="152"
                         loading="lazy"
@@ -1125,7 +1123,7 @@ function IndexContent() {
             {[
               { t: "The Soul Legends (Montagers)", d: "Buscamos a los mejores jugadores de exhibición (no competitivos). Envía un video con 10 de tus mejores clips de Gears of War — partida normal (no OSOK, no evento), preferentemente DPE." },
               { t: "The Soul Waves (Streamers y CC)", d: "La calidad de tu contenido y la conexión con tu comunidad es lo que importa. Comparte tus redes y plataformas y cuéntanos tu estilo y enfoque como creador." },
-              { t: "The Soul Killers (Guardian · Gears 5)", d: "Top 100 Guardian. Comunicación, lectura de partida y mentalidad de team. Si entras, una semana de prueba y cambio de GT clásico inmediato." },
+              { t: "The Soul Crew (Familia)", d: "Grupo de apoyo y seguidores fieles que forman parte oficial de la familia The Soul Nation." },
             ].map((a) => (
               <div key={a.t} className="rounded-2xl border border-border bg-card/40 backdrop-blur p-6 hover:border-flame transition">
                 <h4 className="font-display font-bold text-lg text-flame">{a.t}</h4>
@@ -1178,6 +1176,9 @@ function IndexContent() {
         </div>
       </section>
 
+      <nav className="soul-footer-links" aria-label="Comunidad">
+        <a href="#jersey">Jersey Oficial</a><a href="#redes">Redes</a><a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer">Discord</a>
+      </nav>
       {/* FOOTER */}
       <footer className="border-t border-border py-12">
         <div className="mx-auto max-w-7xl px-6 flex flex-wrap items-center justify-between gap-6">
