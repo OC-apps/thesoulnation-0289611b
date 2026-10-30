@@ -395,6 +395,7 @@ function IndexContent() {
   const waveNames = [...WAVES.map(member => member.name), ...dynamicWaves.map(member => member.name)].filter(name => !hiddenSet.has(name.toUpperCase()) && name.trim().toUpperCase() !== "SOUL PXLMAA");
   const legendsList = roster.legends.length ? roster.legends : LEGENDS;
   const crewList = (roster.loaded ? roster.crew : [...new Set([...CREW, ...FORMER_KILLERS])]).filter((name) => name.trim().toUpperCase() !== "SOUL MORTAAL");
+  const memberCount = new Set([...waveNames, ...legendsList, ...crewList].map((name) => name.trim().toUpperCase()).filter(Boolean)).size;
 
 
 
@@ -463,7 +464,7 @@ function IndexContent() {
               <div className="absolute left-4 bottom-4 right-4 grid grid-cols-3 gap-2">
                 {[
                   { v: "12+", k: "Años" },
-                  { v: "35", k: "Miembros" },
+                  { v: String(memberCount), k: "Miembros" },
                   { v: "3", k: "Divisiones" },
                 ].map((s) => (
                   <div key={s.k} className="rounded-lg bg-background/70 backdrop-blur border border-flame/20 px-2 py-2 text-center">
