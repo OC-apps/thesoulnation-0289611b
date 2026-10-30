@@ -471,3 +471,20 @@ section:hover .animate-marquee { animation-duration: 35s; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Complete TSN editorial refresh */
+:root { color-scheme: dark; --background:#060720; --foreground:#FFFFFF; --card:#101252; --flame:#F05E07; --blue:#01039E; --border:rgba(255,255,255,.14); }
+html { scroll-padding-top: 85px; }
+body { background:#060720; font-family: Inter,system-ui,sans-serif; }
+section:not(#top) { scroll-margin-top:85px; }
+section:not(#top) h2 { letter-spacing:-.055em; font-style:normal; }
+section:not(#top) h2 .italic { font-style:normal; }
+section:not(#top) .font-mono { font-family:Inter,system-ui,sans-serif; letter-spacing:.12em; }
+section:not(#top) .text-3d { text-shadow:none !important; }
+section:not(#top) .roster-card { background:#101252 !important; border:1px solid rgba(255,255,255,.14) !important; border-radius:24px !important; }
+section:not(#top) .roster-card::before, section:not(#top) .roster-card::after { display:none !important; }
+section:not(#top) .shadow-\[0_0_30px_var\(--flame-glow\)\] { box-shadow:none; }
+.grain::before,.grain::after,.scanlines,.vignette-edges,.hitodama-field { display:none !important; }
+.animate-marquee { animation:none !important; }
+header img { filter:none !important; }
+@media(max-width:767px) { section:not(#top) { padding-top:64px; padding-bottom:64px; } }
