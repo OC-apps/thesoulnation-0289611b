@@ -452,9 +452,12 @@ function IndexContent() {
               </p>
 
 
+            </div>
+          </div>
+
           {/* Tab animado Visión / Objetivo — full width */}
-          <div id="vision" className="roster-card rounded-2xl p-5 sm:p-6 md:p-7 mt-6 md:mt-8 flex flex-col">
-            <div className="flex items-center gap-2 border-b border-flame/20 pb-3">
+          <div id="vision" className="soul-purpose rounded-[28px] mt-8 md:mt-12">
+            <div className="soul-purpose-tabs">
               {([
                 { id: "vision", n: "02", label: "Visión" },
                 { id: "objetivo", n: "03", label: "Objetivo" },
@@ -483,7 +486,7 @@ function IndexContent() {
                 );
               })}
             </div>
-            <div className="relative mt-4 grid md:grid-cols-[auto,1fr] gap-3 md:gap-6 items-start">
+            <div className="soul-purpose-body">
               <AnimatePresence mode="wait">
                 {aboutTab === "vision" ? (
                   <motion.div
@@ -492,7 +495,7 @@ function IndexContent() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="contents"
+                    className="soul-purpose-copy"
                   >
                     <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight md:min-w-[140px]">Visión</h3>
                     <p className="text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
@@ -507,7 +510,7 @@ function IndexContent() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="contents"
+                    className="soul-purpose-copy"
                   >
                     <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight md:min-w-[140px]">Objetivo</h3>
                     <p className="text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
@@ -519,7 +522,7 @@ function IndexContent() {
             </div>
 
             {/* Botones a divisiones */}
-            <div className="mt-5 pt-4 border-t border-flame/15 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div className="soul-purpose-links">
               {[
                 { label: "Waves", href: "#waves" },
                 { label: "Killers", href: "#killers" },
@@ -529,14 +532,12 @@ function IndexContent() {
                 <a
                   key={d.label}
                   href={d.href}
-                  className="group/btn relative overflow-hidden rounded-xl bg-flame text-background px-3 py-3 text-center font-display font-bold uppercase tracking-[0.2em] text-xs sm:text-sm shadow-[0_8px_24px_-8px_var(--flame-glow)] hover:scale-[1.04] hover:shadow-[0_12px_36px_-6px_var(--flame-glow)] active:scale-95 transition"
+                  className="soul-purpose-link"
                 >
                   <span className="relative z-10">{d.label}</span>
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-full transition-transform duration-700" />
                 </a>
               ))}
-            </div>
-          </div>
             </div>
           </div>
         </div>

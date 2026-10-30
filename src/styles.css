@@ -594,12 +594,36 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 .soul-wave-profile .font-mono { font-family: var(--font-sans); letter-spacing: .06em; }
 .soul-wave-profile .animate-pulse { animation: none; }
 @media (min-width: 640px) {
-  .soul-portrait-leader { display: grid; grid-template-columns: 1fr 1fr; min-height: 360px; }
+  .soul-portrait-leader { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 360px; }
   .soul-portrait-leader .soul-portrait-photo { aspect-ratio: 5 / 4; height: 100%; }
   .soul-portrait-leader .soul-portrait-info { align-self: center; padding: 3rem; }
-  .soul-portrait-leader h4 { font-size: clamp(2rem, 4.3vw, 4.5rem); }
+  .soul-portrait-leader h4 { font-size: clamp(1.5rem, 3vw, 3rem); }
   .soul-portrait-leader .soul-portrait-arrow { right: 2rem; bottom: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .soul-portrait:hover, .soul-portrait:hover .soul-portrait-photo img { transform: none; }
+}
+
+/* Keep intrinsic photo and display-font widths inside their grid tracks. */
+.soul-portrait-photo, .soul-portrait-info { min-width: 0; max-width: 100%; }
+.soul-portrait-photo img { display: block; min-width: 0; }
+.soul-portrait h4 { max-width: 100%; padding-right: .15em; overflow-wrap: normal; word-break: normal; }
+.soul-portrait-leader .soul-portrait-info { padding: clamp(1.5rem, 3vw, 3rem); padding-bottom: 4.5rem; }
+.soul-portrait-leader .soul-portrait-arrow { bottom: 1.25rem; right: 1.5rem; }
+#about h2 { font-size: clamp(2.4rem, 5.6vw, 5.5rem); }
+#about > div > .grid > div { min-width: 0; }
+.soul-purpose { background: #111329; border: 1px solid var(--border); padding: clamp(1.25rem, 3vw, 2.5rem); overflow: hidden; }
+.soul-purpose-tabs { display: flex; flex-wrap: wrap; gap: .5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+.soul-purpose-tabs button { min-height: 44px; letter-spacing: .08em; }
+.soul-purpose-body { padding-block: clamp(1.5rem, 3vw, 2.5rem); }
+.soul-purpose-copy { display: grid; gap: 1rem; align-items: start; }
+.soul-purpose-copy h3 { min-width: 0; font-size: clamp(1.75rem, 3vw, 2.5rem); padding-right: .2em; }
+.soul-purpose-copy p { margin: 0; font-size: 1rem; line-height: 1.85; max-width: 75ch; }
+.soul-purpose-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+.soul-purpose-link { display: flex; align-items: center; justify-content: center; min-height: 48px; padding: .75rem 1rem; border: 1px solid #ffffff26; border-radius: 999px; color: white; font: 600 .875rem var(--font-sans); transition: background .2s, border-color .2s; }
+.soul-purpose-link:hover { background: #01039E; border-color: #01039E; }
+.soul-purpose-link > span + span { display: none; }
+@media (min-width: 768px) {
+  .soul-purpose-copy { grid-template-columns: minmax(0, .6fr) minmax(0, 2fr); gap: 2rem; }
+  .soul-purpose-links { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
