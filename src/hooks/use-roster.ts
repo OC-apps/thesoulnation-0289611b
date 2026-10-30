@@ -1,3 +1,4 @@
+import { ROSTER_SYNC_MARKER } from "@/lib/roster-current";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -31,9 +32,11 @@ export function useRoster() {
     };
   }, []);
 
-  const normalized = normalizeRoster(members);
+  const synced = members.some((m) => m.nickname.trim().toUpperCase() === ROSTER_SYNC_MARKER);
+  const normalized = normalizeRoster(members.filter((m) => m.nickname.trim().toUpperCase() !== ROSTER_SYNC_MARKER));
   return {
     loaded,
+    synced,
     all: normalized,
     crew: normalized.filter((m) => m.category === "crew").map((m) => m.nickname),
     legends: normalized.filter((m) => m.category === "legends").map((m) => m.nickname),
