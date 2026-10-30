@@ -5,7 +5,7 @@ import type { Database } from './types';
 function createSupabaseClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://quscgfasziijdjyixsex.supabase.co";
+  // The public roster must use the same independent project as the admin server.\n  // A stale VITE_SUPABASE_URL from an older deployment must not redirect public reads.\n  const SUPABASE_URL = "https://quscgfasziijdjyixsex.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_AT5FDfqPulWKJOHrDsag1Q_9hlAVrl6";
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
