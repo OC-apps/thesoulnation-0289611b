@@ -1,3 +1,4 @@
+import { useLegendsPhotos } from "@/hooks/use-legends-photos";
 import { CURRENT_CREW, CURRENT_LEGENDS } from "@/lib/roster-current";
 import { WAVES, type Social } from "@/lib/waves-defaults";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -372,6 +373,7 @@ function IndexContent() {
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
   const roster = useRoster();
+  const legendsPhotos = useLegendsPhotos();
   const dynamicWaves = useWavesMembers();
   const hiddenSet = useWavesHidden();
   // Until the admin applies the updated roster to Supabase, use the exact published list.
@@ -611,6 +613,7 @@ function IndexContent() {
               subtitle="Montagers · Clips & Highlights"
               desc="Jugadores habilidosos y creadores de clips para montajes editados."
               members={legendsList}
+              legendsPhotos={legendsPhotos}
               accentSeed={1.7}
             />
           </div>
