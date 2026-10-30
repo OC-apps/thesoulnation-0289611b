@@ -1516,3 +1516,73 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  #roster .soul-crew-hero-description p { font-size:15px;margin-bottom:18px; }
  #roster .soul-crew-hero-orbit { right:-45%;top:-45%;width:105vw; }
 }
+
+
+/* 2026 landing: full-bleed official landscape banner; actions overlaid below. */
+.soul-hub #top .soul-hero-fullbleed {
+  position:relative;
+  width:min(1100px,calc(100% - 32px));
+  min-height:0;
+  height:clamp(280px,31vw,420px);
+  margin:0 auto;
+  border-radius:30px;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.soul-hub #top .soul-hero-fullbleed-image {
+  position:absolute;
+  inset:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  max-width:none;
+}
+.soul-hub #top .soul-hero-fullbleed-image img {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  border-radius:0;
+}
+.soul-hub #top .soul-hero-fullbleed::after {
+  content:"";
+  position:absolute;
+  inset:50% 0 0;
+  pointer-events:none;
+  background:linear-gradient(transparent,rgba(0,1,38,.44));
+}
+.soul-hub #top .soul-hero-fullbleed-actions {
+  z-index:2;
+  width:100%;
+  padding:16px 16px 26px;
+}
+.soul-hub[data-view="top"] #about {
+  padding-top:clamp(22px,3.4vw,40px);
+}
+.soul-hub #about .soul-home-grid {
+  max-width:1100px;
+  padding:0;
+  margin:clamp(24px,3vw,40px) auto 0;
+}
+.soul-hub[data-view="about"] #about .soul-home-grid { display:none; }
+.soul-hub #about .soul-home-grid .soul-home-tile img {
+  width:96px;
+  height:96px;
+  flex-shrink:0;
+  object-fit:cover;
+  border-radius:14px;
+}
+@media(max-width:640px) {
+  .soul-hub #top .soul-hero-fullbleed {
+    width:calc(100% - 24px);
+    height:clamp(235px,61vw,325px);
+    border-radius:22px;
+  }
+  .soul-hub #top .soul-hero-fullbleed-image { padding:0; }
+  .soul-hub #top .soul-hero-fullbleed-actions { padding:12px 12px 17px; gap:8px; }
+  .soul-hub #top .soul-hero-fullbleed-actions a { padding:9px 13px; font-size:11px; }
+  .soul-hub #about .soul-home-grid { grid-template-columns:minmax(0,1fr); padding:0 4px; }
+}
