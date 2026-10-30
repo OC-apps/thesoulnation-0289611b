@@ -1011,3 +1011,47 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  #roster .soul-waves-collection .soul-lineup .soul-portrait-leader { height:440px; }
  #roster .soul-waves-collection .soul-lineup-nickname { font-size:clamp(18px,6cqw,25px); }
 }
+
+
+/* Legends gamertags match Waves: small SOUL prefix, one-line nickname. */
+#roster .soul-legends-lineup { gap:clamp(10px,1.3vw,18px); }
+#roster .soul-legends-slot {
+ container-type:inline-size;
+ min-width:0;
+ padding:24px 13% 30px;
+}
+#roster .soul-legends-name {
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ width:100%;
+ min-width:0;
+ font-family:var(--font-display);
+ font-style:italic;
+ font-weight:800;
+ line-height:1.1;
+ letter-spacing:-.02em;
+ overflow:visible;
+ overflow-wrap:normal;
+}
+#roster .soul-legends-prefix {
+ display:block;
+ font-size:clamp(11px,5.5cqw,14px);
+ line-height:1.2;
+ margin-bottom:5px;
+ white-space:nowrap;
+}
+#roster .soul-legends-nickname {
+ display:block;
+ max-width:100%;
+ font-size:clamp(12px,7.2cqw,22px);
+ line-height:1.12;
+ letter-spacing:-.035em;
+ white-space:nowrap;
+}
+#roster .soul-legends-name::before { order:-1; margin-bottom:14px; }
+@media(max-width:520px) {
+ #roster .soul-legends-lineup { grid-template-columns:minmax(0,1fr); }
+ #roster .soul-legends-slot { min-height:360px; }
+ #roster .soul-legends-nickname { font-size:clamp(18px,6cqw,25px); }
+}
