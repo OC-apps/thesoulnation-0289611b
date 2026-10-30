@@ -1,4 +1,4 @@
-import { CURRENT_CREW, CURRENT_LEGENDS, ROSTER_SYNC_MARKER } from "@/lib/roster-current";
+import { ROSTER_SYNC_MARKER } from "@/lib/roster-current";
 import { WAVES } from "@/lib/waves-defaults";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
