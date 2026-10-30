@@ -821,3 +821,42 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 .soul-lineup .soul-portrait h4,.soul-lineup .soul-portrait-leader h4 { font-size:1.1rem !important; }
 .soul-lineup .soul-portrait:focus-visible { outline:0; box-shadow:inset 0 0 0 3px #F05E07; }
 @media(min-width:1024px) { .soul-lineup { grid-auto-columns:calc((100% - 48px)/5); } }
+
+
+/* 2026 diagonal roster lineup — Waves and Legends, inspired by user reference */
+#roster { background: radial-gradient(ellipse at 85% 15%,rgba(1,3,158,.28),transparent 50%),#060818; }
+#roster .soul-waves-collection { position:relative; padding:clamp(16px,3vw,36px); background:linear-gradient(135deg,rgba(1,3,158,.22),rgba(4,6,20,.5)); border:1px solid rgba(255,255,255,.09); border-radius:20px; }
+#roster .soul-lineup { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; overflow:visible; }
+#roster .soul-lineup-slot { min-width:0; }
+#roster .soul-lineup .soul-portrait { position:relative; height:480px; display:block; border:0; border-radius:0; clip-path:polygon(12% 0,100% 0,88% 100%,0 100%); background:linear-gradient(160deg,#01039E,#060716 75%); box-shadow:none; isolation:isolate; }
+#roster .soul-lineup .soul-portrait::before { content:""; position:absolute; z-index:4; left:12%; right:12%; top:0; height:3px; background:#F05E07; }
+#roster .soul-lineup .soul-portrait-photo { position:absolute; inset:0; height:100%; width:100%; aspect-ratio:auto; }
+#roster .soul-lineup .soul-portrait-photo img { width:100%; height:100%; object-fit:cover; object-position:center 25%; }
+#roster .soul-lineup .soul-portrait-photo::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,rgba(4,5,18,.2) 47%,rgba(4,5,18,.98) 91%); }
+#roster .soul-lineup .soul-portrait-info { position:absolute; z-index:3; left:0; right:0; bottom:0; padding:22px 17% 29px 15%; border:0; min-height:0; background:transparent; }
+#roster .soul-lineup .soul-portrait h4 { color:white; font-size:clamp(15px,1.65vw,26px) !important; line-height:1.04; text-transform:uppercase; letter-spacing:-.025em; overflow-wrap:anywhere; }
+#roster .soul-lineup .soul-lineup-prefix { display:block; font-size:.65em; margin-bottom:3px; }
+#roster .soul-lineup .soul-portrait-status { color:#e4e4eb; margin-top:16px; font-size:10px; }
+#roster .soul-lineup .soul-portrait-arrow { display:none; }
+#roster .soul-lineup .soul-founder-mark { z-index:5; }
+#roster .soul-lineup .soul-portrait:hover { transform:translateY(-5px); }
+#roster .soul-legends-lineup { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+#roster .soul-legends-slot { position:relative; min-width:0; min-height:350px; overflow:hidden; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end; padding:24px 16% 32px 17%; clip-path:polygon(12% 0,100% 0,88% 100%,0 100%); background:radial-gradient(ellipse at 50% 30%,#1828a8 0%,#01094a 46%,#060817 90%); transition:transform .3s ease; }
+#roster .soul-legends-slot::before { content:""; position:absolute; top:0; left:12%; right:12%; height:3px; background:#F05E07; }
+#roster .soul-legends-slot:hover { transform:translateY(-5px); }
+#roster .soul-legends-emblem { position:absolute; width:74%; height:55%; object-fit:contain; left:13%; top:10%; opacity:.85; }
+#roster .soul-legends-name { position:relative; z-index:1; display:block; color:white; font-size:clamp(16px,2vw,29px); font-weight:800; line-height:1.05; text-transform:uppercase; overflow-wrap:anywhere; }
+#roster .soul-legends-name::before { content:""; display:block; width:36px; height:5px; margin-bottom:15px; background:#F05E07; }
+@media(max-width:950px) {
+ #roster .soul-lineup { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; gap:8px; padding-bottom:12px; scrollbar-width:thin; }
+ #roster .soul-lineup-slot { flex:0 0 clamp(200px,37vw,260px); scroll-snap-align:start; }
+ #roster .soul-lineup .soul-portrait { height:430px; }
+ #roster .soul-legends-lineup { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:520px) {
+ #roster .soul-waves-collection { padding:10px; }
+ #roster .soul-lineup-slot { flex-basis:70vw; }
+ #roster .soul-lineup .soul-portrait { height:450px; }
+ #roster .soul-legends-slot { min-height:275px; padding-bottom:24px; }
+ #roster .soul-legends-name { font-size:16px; }
+}
