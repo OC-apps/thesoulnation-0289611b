@@ -58,6 +58,7 @@ function AdminLivePage() {
   const [rosterSynced, setRosterSynced] = useState(false);
 
   const [photoBusy, setPhotoBusy] = useState<string | null>(null);
+  const [photoOverrides, setPhotoOverrides] = useState<Record<string, string>>({});
 
 
   const waves = useWavesMembers();
@@ -231,7 +232,7 @@ function AdminLivePage() {
         r.onerror = () => reject(new Error("No se pudo leer la foto"));
         r.readAsDataURL(file);
       });
-      await updateWavePhoto({
+      const result = await updateWavePhoto({
         data: {
           password,
           kind,
@@ -240,6 +241,10 @@ function AdminLivePage() {
           photoMime: file.type,
         },
       });
+      if (!result.ok || !result.url) throw new Error("La foto no pudo actualizarse");
+      setPhotoOverrides((prev) => ({ ...prev, [keyOrId]: result.url }));
+      window.dispatchEvent(new Event("soul:roster-updated"));
+      setMsg("Fotografía guardada correctamente. Ya puedes verla en el roster.");
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
     } finally {
@@ -631,9 +636,9 @@ function AdminLivePage() {
                     const q = socialQuery.trim().toLowerCase();
                     type Card = { id: string; name: string; photo: string; fixed: boolean; dyn?: typeof waves[number] };
                     const cards: Card[] = [
-                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: true })),
-                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: false })),
-                      ...waves.map((w) => ({ id: w.id, name: w.name, photo: w.photo_url, fixed: false, dyn: w })),
+                      ...FIXED_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: photoOverrides[m.name.toUpperCase()] || socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: true })),
+                      ...OTHER_MEMBERS.map((m) => ({ id: m.id, name: m.name, photo: photoOverrides[m.name.toUpperCase()] || socialsMap.get(m.name.toUpperCase())?.photo_url || m.photo, fixed: false })),
+                      ...waves.map((w) => ({ id: w.id, name: w.name, photo: photoOverrides[w.id] || w.photo_url, fixed: false, dyn: w })),
                     ].filter((c) => c.name.toLowerCase().includes(q));
 
                     if (cards.length === 0) {
