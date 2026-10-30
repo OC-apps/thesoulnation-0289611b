@@ -96,6 +96,15 @@ function AdminLivePage() {
   const [waveBusy, setWaveBusy] = useState<string | null>(null);
 
   const socialsMap = useWavesSocials();
+  type WaveLink = { label: string; href: string };
+  const [newLinks, setNewLinks] = useState<WaveLink[]>([
+    { label: "YouTube", href: "" }, { label: "Facebook", href: "" },
+    { label: "Instagram", href: "" }, { label: "TikTok", href: "" },
+    { label: "Twitch", href: "" }, { label: "X", href: "" },
+  ]);
+  const [extraEdits, setExtraEdits] = useState<Record<string, WaveLink[]>>({});
+  const getExtraLinks = (name: string) => extraEdits[name.toUpperCase()] ?? socialsMap.get(name.toUpperCase())?.extra_links ?? [];
+  const setExtraLinks = (name: string, links: WaveLink[]) => setExtraEdits(p => ({...p, [name.toUpperCase()]: links}));
   type SocialFields = { tiktok: string; twitch: string; youtube: string; x: string; facebook: string };
   const [socialEdits, setSocialEdits] = useState<Record<string, SocialFields>>({});
   const [socialBusy, setSocialBusy] = useState<string | null>(null);
@@ -146,6 +155,7 @@ function AdminLivePage() {
         data: {
           password, name: key,
           tiktok: v.tiktok, twitch: v.twitch, youtube: v.youtube, x: v.x, facebook: v.facebook,
+          extraLinks: getExtraLinks(key).filter(l => l.label.trim() && l.href.trim()),
           ...(opts.isFixed ? { bio: c.bio, redes: c.redes } : {}),
         },
       });
@@ -156,6 +166,7 @@ function AdminLivePage() {
       }
       setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
       setContentEdits((p) => { const n = { ...p }; delete n[key]; return n; });
+      setExtraEdits((p) => { const n = { ...p }; delete n[key]; return n; });
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
     } finally {
@@ -337,12 +348,14 @@ function AdminLivePage() {
           bio: waveForm.bio,
           socialLabel: waveForm.socialLabel,
           socialHref: waveForm.socialHref || "",
+          links: newLinks.filter(l => l.label.trim() && l.href.trim()).map(l => ({label:l.label.trim(),href:l.href.trim()})),
           photoBase64: wavePhoto.base64,
           photoMime: wavePhoto.mime,
         },
       });
       setWaveForm({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
       setWavePhoto(null);
+      setNewLinks([{ label: "YouTube", href: "" }, { label: "Facebook", href: "" }, { label: "Instagram", href: "" }, { label: "TikTok", href: "" }, { label: "Twitch", href: "" }, { label: "X", href: "" }]);
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Error");
     } finally {
@@ -562,23 +575,15 @@ function AdminLivePage() {
                       maxLength={200}
                       className="w-full px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-sm focus:border-flame outline-none"
                     />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        value={waveForm.socialLabel}
-                        onChange={(e) => setWaveForm((p) => ({ ...p, socialLabel: e.target.value }))}
-                        placeholder="Etiqueta red"
-                        maxLength={40}
-                        className="px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
-                      />
-                      <input
-                        type="url"
-                        value={waveForm.socialHref}
-                        onChange={(e) => setWaveForm((p) => ({ ...p, socialHref: e.target.value }))}
-                        placeholder="https://…"
-                        maxLength={500}
-                        className="px-3 py-2 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none"
-                      />
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-mono uppercase tracking-widest text-flame">Enlaces sociales (opcionales)</p>
+                      {newLinks.map((link, i) => (
+                        <div key={i} className="grid grid-cols-[105px_1fr] gap-2">
+                          <input value={link.label} onChange={e => setNewLinks(p => p.map((l,j) => j===i ? {...l,label:e.target.value} : l))} placeholder="Red" maxLength={40} className="min-w-0 px-2 py-2 bg-background border border-flame/30 rounded text-foreground text-xs" />
+                          <input type="url" value={link.href} onChange={e => setNewLinks(p => p.map((l,j) => j===i ? {...l,href:e.target.value} : l))} placeholder="https://…" maxLength={500} className="min-w-0 px-2 py-2 bg-background border border-flame/30 rounded text-foreground text-xs" />
+                        </div>
+                      ))}
+                      <button type="button" onClick={() => setNewLinks(p => [...p,{label:"",href:""}])} className="text-flame text-xs font-mono">+ Otra red</button>
                     </div>
                     <textarea
                       value={waveForm.bio}
@@ -816,6 +821,17 @@ function AdminLivePage() {
                                         </label>
                                       ))}
                                     </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <p className="text-[10px] text-flame font-mono uppercase">Instagram y otras redes (opcionales)</p>
+                                    {getExtraLinks(c.name).map((link, i) => (
+                                      <div key={i} className="grid grid-cols-[105px_1fr_24px] gap-2">
+                                        <input value={link.label} onChange={e => setExtraLinks(c.name, getExtraLinks(c.name).map((l,j)=>j===i?{...l,label:e.target.value}:l))} placeholder="Red" className="min-w-0 px-2 py-1.5 bg-background border border-flame/30 rounded text-xs" />
+                                        <input type="url" value={link.href} onChange={e => setExtraLinks(c.name, getExtraLinks(c.name).map((l,j)=>j===i?{...l,href:e.target.value}:l))} placeholder="https://…" className="min-w-0 px-2 py-1.5 bg-background border border-flame/30 rounded text-xs" />
+                                        <button type="button" onClick={() => setExtraLinks(c.name, getExtraLinks(c.name).filter((_,j)=>j!==i))} aria-label="Eliminar red" className="text-red-400">×</button>
+                                      </div>
+                                    ))}
+                                    <button type="button" onClick={() => setExtraLinks(c.name,[...getExtraLinks(c.name),{label:"",href:""}])} className="text-flame text-xs font-mono">+ Añadir red</button>
                                   </div>
                                   <button
                                     onClick={() => saveAll(c.name, { isFixed: c.fixed, dynId: c.dyn?.id, fallbackContent })}
