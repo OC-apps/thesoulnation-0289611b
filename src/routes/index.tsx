@@ -442,7 +442,7 @@ function IndexContent() {
             {/* Imagen del equipo */}
             <div className="soul-about-photo group relative overflow-hidden rounded-3xl border border-white/10 bg-[#111329]">
               <img
-                src={soulNationTeam}
+                src={siteAssets.about_team || soulNationTeam}
                 alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
                 loading="lazy"
                 className="absolute inset-0 w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
