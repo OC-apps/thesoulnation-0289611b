@@ -888,3 +888,15 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media (prefers-reduced-motion:reduce) {
  .soul-hub::before { animation:none; }
 }
+
+/* Keep fixed global navigation above every home/hero section during scroll. */
+.soul-hub > header { position:fixed !important; top:0; left:0; right:0; z-index:1000 !important; isolation:isolate; background:rgba(7,8,25,.96); border-bottom:1px solid rgba(255,255,255,.12); }
+.soul-hub > section { position:relative; z-index:0; }
+.soul-hub #top { overflow:hidden; }
+.soul-hero { min-height:0; border-radius:inherit; }
+.soul-hero-banner { display:block; width:min(100%,960px); height:auto !important; max-height:300px; object-fit:contain; }
+.soul-hub #top .soul-hero-banner { height:auto !important; }
+@media (max-width:639px) {
+ .soul-hero-banner { width:100%; max-height:220px; }
+ .soul-hero > div { padding-block:2rem; }
+}
