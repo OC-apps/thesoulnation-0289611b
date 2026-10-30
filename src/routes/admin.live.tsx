@@ -1,3 +1,4 @@
+import { CURRENT_CREW, CURRENT_LEGENDS, ROSTER_SYNC_MARKER } from "@/lib/roster-current";
 import { WAVES } from "@/lib/waves-defaults";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -6,7 +7,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Radio, Users, Waves as WavesIcon, Link2, Search, Plus, Trash2, EyeOff, Eye, Save, LogOut, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { updateWavePhoto } from "@/lib/wave-photo.functions";
-import { addRosterMember, removeRosterMember } from "@/lib/roster.functions";
+import { addRosterMember, removeRosterMember, syncOfficialRoster } from "@/lib/roster.functions";
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
@@ -54,6 +55,7 @@ function AdminLivePage() {
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
+  const [rosterSynced, setRosterSynced] = useState(false);
 
   const [photoBusy, setPhotoBusy] = useState<string | null>(null);
 
@@ -185,7 +187,10 @@ function AdminLivePage() {
         .select("id, nickname, category, sort_order")
         .order("category")
         .order("sort_order");
-      if (data) setRoster(normalizeRoster(data as LegacyRosterRow[]));
+      if (data) {
+        setRosterSynced(data.some((r) => String(r.nickname).toUpperCase() === ROSTER_SYNC_MARKER));
+        setRoster(normalizeRoster((data as LegacyRosterRow[]).filter((r) => r.nickname.toUpperCase() !== ROSTER_SYNC_MARKER)));
+      }
     };
     load();
 
@@ -195,6 +200,19 @@ function AdminLivePage() {
       .subscribe();
     return () => { supabase.removeChannel(ch); };
   }, []);
+
+  const applyOfficialRoster = async () => {
+    setRosterBusy("sync");
+    setMsg("");
+    try {
+      const result = await syncOfficialRoster({ data: { password } });
+      if (result.ok) setMsg("Roster oficial actualizado: 19 Crew · 6 Waves · 5 Legends. Los cambios ya están en la base de datos.");
+    } catch (error) {
+      setMsg(error instanceof Error ? error.message : "No fue posible sincronizar el roster");
+    } finally {
+      setRosterBusy(null);
+    }
+  };
 
   const onChangePhoto = async (
     kind: "fixed" | "dynamic",
@@ -426,6 +444,22 @@ function AdminLivePage() {
 
           <TabsContent value="roster" className="mt-0">
             <SectionShell icon={Users} title="Roster" subtitle="Waves · Legends · Crew">
+              {!rosterSynced && (
+                <div className="rounded-xl border border-[#F05E07]/50 bg-[#01039E]/20 p-4 mb-5 space-y-3">
+                  <p className="text-sm text-white">Roster actualizado: <strong>19 Crew · 6 Waves · 5 Legends</strong>.</p>
+                  <p className="text-xs text-white/70">La página pública ya utiliza la lista nueva. Sincroniza la base de datos una sola vez para que puedas administrarla desde este panel. Se reemplazarán los registros anteriores de Crew y Legends y se ocultarán los Waves que salieron; sus fotos no se eliminarán.</p>
+                  <button type="button" disabled={rosterBusy === "sync"}
+                    onClick={() => setConfirm({
+                      title: "Sincronizar roster oficial",
+                      description: "Se aplicarán los 30 integrantes de la lista actualizada. Se reemplazará el roster antiguo de Crew y Legends y se ocultarán los Waves anteriores. ¿Confirmas?",
+                      onConfirm: applyOfficialRoster,
+                    })}
+                    className="rounded-lg bg-[#F05E07] px-4 py-3 text-sm font-semibold text-white disabled:opacity-50">
+                    {rosterBusy === "sync" ? "Sincronizando…" : "Aplicar roster actualizado (30 miembros)"}
+                  </button>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {CATEGORIES.map(({ key, label }) => {
                   const list = roster.filter((r) => r.category === key);
