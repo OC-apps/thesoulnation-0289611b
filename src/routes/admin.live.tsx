@@ -1,3 +1,4 @@
+import { WAVES } from "@/lib/waves-defaults";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,22 +34,9 @@ export const Route = createFileRoute("/admin/live")({
   component: AdminLivePage,
 });
 
-const FIXED_MEMBERS = [
-  { id: "soul-maverick-z", name: "SOUL MAVERICK Z", photo: waveMaverick },
-];
-
-const OTHER_MEMBERS = [
-  { id: "soul-aleman", name: "SOUL ALEMAN", photo: waveAleman },
-  { id: "soul-gizzmo", name: "SOUL GIZZMO", photo: waveGizzmo },
-  { id: "soul-pxlmaa", name: "SOUL PXLMAA", photo: wavePxlmaa },
-  { id: "soul-systeem", name: "SOUL SYSTEEM", photo: waveSystem },
-  { id: "soul-templa", name: "SOUL TEMPLA", photo: waveTempla },
-  { id: "soul-enri", name: "SOUL ENRI", photo: waveEnri },
-  { id: "soul-emi-x", name: "SOUL EMI X", photo: waveEmix },
-  { id: "soul-bellatriix", name: "SOUL BELLATRIIX", photo: soulBellatriix },
-];
-
-const MEMBERS = [...FIXED_MEMBERS, ...OTHER_MEMBERS];
+const FIXED_MEMBERS = WAVES.map((member) => ({ id: member.name.toLowerCase().replace(/\s+/g, "-"), name: member.name, photo: member.photo }));
+const OTHER_MEMBERS: typeof FIXED_MEMBERS = [];
+const MEMBERS = FIXED_MEMBERS;
 
 import { normalizeRoster, type RosterCategory, type RosterRow as LegacyRosterRow } from "@/lib/roster-model";
 type RosterRow = { id: string; nickname: string; category: RosterCategory; sort_order: number };
@@ -84,12 +72,14 @@ function AdminLivePage() {
     const key = name.toUpperCase();
     if (socialEdits[key]) return socialEdits[key];
     const row = socialsMap.get(key);
+    const original = WAVES.find((m) => m.name.toUpperCase() === key);
+    const originalUrl = (label: string) => original?.socials?.find((s) => s.label.toLowerCase() === label.toLowerCase())?.href ?? "";
     return {
-      tiktok: row?.tiktok_url ?? "",
-      twitch: row?.twitch_url ?? "",
-      youtube: row?.youtube_url ?? "",
-      x: row?.x_url ?? "",
-      facebook: row?.facebook_url ?? "",
+      tiktok: row?.tiktok_url ?? originalUrl("TikTok"),
+      twitch: row?.twitch_url ?? originalUrl("Twitch"),
+      youtube: row?.youtube_url ?? originalUrl("YouTube"),
+      x: row?.x_url ?? originalUrl("X"),
+      facebook: row?.facebook_url ?? originalUrl("Facebook"),
     };
   };
   const setSocialField = (name: string, field: keyof SocialFields, value: string) => {
@@ -636,8 +626,8 @@ function AdminLivePage() {
                           const pBusy = photoBusy === `${photoKind}:${photoKey}`;
                           const socialsRow = socialsMap.get(key);
                           const fallbackContent: ContentFields = {
-                            bio: c.dyn?.bio ?? socialsRow?.bio ?? "",
-                            redes: c.dyn?.redes ?? socialsRow?.redes ?? "",
+                            bio: c.dyn?.bio || socialsRow?.bio || WAVES.find((m) => m.name.toUpperCase() === key)?.bio || "",
+                            redes: c.dyn?.redes || socialsRow?.redes || WAVES.find((m) => m.name.toUpperCase() === key)?.redes || "",
                           };
                           const content = getContent(c.name, fallbackContent);
                           return (
@@ -753,7 +743,7 @@ function AdminLivePage() {
                                       <textarea
                                         value={content.bio}
                                         onChange={(e) => setContentField(c.name, "bio", e.target.value, fallbackContent)}
-                                        placeholder={c.fixed ? "Deja vacío para usar la bio por defecto" : "Biografía…"}
+                                        placeholder="Biografía…"
                                         maxLength={4000}
                                         rows={5}
                                         className="w-full px-2 py-1.5 bg-background border border-flame/30 rounded text-foreground text-xs focus:border-flame outline-none resize-y"
