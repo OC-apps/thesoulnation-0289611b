@@ -40,6 +40,7 @@ import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X, Menu, Zap, Radio, Trophy, Crown } from "lucide-react";
 import { useLiveStatus } from "@/hooks/use-live-status";
+import { useSoulPosts } from "@/hooks/use-soul-posts";
 
 const formatTime = (s: number) => {
   if (!isFinite(s) || s < 0) return "0:00";
@@ -424,6 +425,7 @@ function IndexContent() {
   const [aboutTab, setAboutTab] = useState<"vision" | "objetivo">("vision");
   const [jerseySpecsOpen, setJerseySpecsOpen] = useState(false);
   const siteAssets = useSiteAssets();
+  const soulPosts = useSoulPosts();
   const roster = useRoster();
   const legendsPhotos = useLegendsPhotos();
   const dynamicWaves = useWavesMembers();
@@ -747,6 +749,31 @@ function IndexContent() {
               <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
           </div>
+          {soulPosts.length > 0 && (
+            <div className="soul-editorial-feed mt-12">
+              <div className="soul-editorial-heading">
+                <div>
+                  <span>THE SOUL NATION / ACTUALIDAD</span>
+                  <h3 className="font-display">Novedades y próximos eventos</h3>
+                </div>
+                <span className="soul-editorial-count">{soulPosts.length} publicaciones</span>
+              </div>
+              <div className="soul-editorial-grid">
+                {soulPosts.map(post => (
+                  <article key={post.id} className="soul-editorial-card">
+                    <div className="soul-editorial-card-label">
+                      {post.kind === "event" ? "AGENDA" : post.kind === "video" ? "VIDEO" : "NOTICIA"}
+                      {post.event_at && post.kind === "event" && <time dateTime={post.event_at}>{new Date(post.event_at).toLocaleString("es-MX",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</time>}
+                    </div>
+                    <h4>{post.title}</h4>
+                    {post.summary && <p>{post.summary}</p>}
+                    {post.link_url && <a href={post.link_url} target="_blank" rel="noopener noreferrer" aria-label={"Ver "+post.title}>Ver publicación ↗</a>}
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-10 flex justify-end">
             <EasterEgg id="hall-of-champions" label="Salón de Campeones oculto" size="sm" />
           </div>
