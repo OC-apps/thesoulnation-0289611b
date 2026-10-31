@@ -98,8 +98,9 @@ fs.mkdirSync(OUT, {recursive:true});
       await page.waitForURL(url=>url.searchParams.get(scenario.param)===scenario.slug,{timeout:15000});
       const dialog=page.getByRole("dialog");
       await dialog.waitFor({state:"visible",timeout:15000});
-      const startingName=await dialog.locator("h3").first().textContent().catch(()=>"");
+      const startingName=(await dialog.getByRole("heading").first().textContent().catch(()=>""))?.trim() || "";
       await dialog.getByRole("button",{name:scenario.nextName}).click();
+      const followingName=(await dialog.getByRole("heading").first().textContent().catch(()=>""))?.trim() || "";
       await dialog.getByRole("button",{name:"Cerrar"}).click();
       await dialog.waitFor({state:"hidden",timeout:15000});
       const state=await page.evaluate(()=>({
@@ -108,8 +109,11 @@ fs.mkdirSync(OUT, {recursive:true});
         hasMember:new URLSearchParams(location.search).has("member"),
         rosterVisible:getComputedStyle(document.getElementById("roster")).display!=="none"
       }));
-      check.ok=state.hash==="#"+scenario.division && !state.hasWave && !state.hasMember && state.rosterVisible;
-      check.state=state;check.openedProfile=Boolean(startingName);
+      check.openedProfile=Boolean(startingName);
+      check.changedProfile=Boolean(followingName && followingName!==startingName);
+      check.ok=state.hash==="#"+scenario.division && !state.hasWave && !state.hasMember &&
+        state.rosterVisible && check.openedProfile && check.changedProfile;
+      check.state=state;
     }catch(e){check.error=String(e).slice(0,380);}
     interactions.push(check);
     console.log("Interaction: "+JSON.stringify(check));
