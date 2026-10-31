@@ -87,7 +87,8 @@ fs.mkdirSync(OUT, {recursive:true});
   const profileContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,reducedMotion:"reduce",locale:"es-MX"});
   for(const scenario of [
     {query:"MAVERICK Z",param:"wave",slug:"soul-maverick-z",division:"waves",nextName:"Siguiente →"},
-    {query:"MORTAL",param:"member",slug:"soul-mortal",division:"legends",nextName:"Ver integrante siguiente"}
+    {query:"MORTAL",param:"member",slug:"soul-mortal",division:"legends",nextName:"Ver integrante siguiente"},
+    {query:"NEXUS Z",param:"member",slug:"soul-nexus-z",division:"crew",nextName:"Ver integrante siguiente"}
   ]) {
     const page=await profileContext.newPage();
     const check={scenario:scenario.division,ok:false};
