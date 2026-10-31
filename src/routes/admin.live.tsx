@@ -741,8 +741,8 @@ function AdminLivePage() {
           </TabsContent>
 
           <TabsContent value="imagenes" className="mt-0">
-            <SectionShell icon={ImageIcon} title="Imágenes del sitio" subtitle="Cambiar portada y tarjetas del inicio">
-              <p className="text-sm text-foreground/75">Reemplaza las fotografías de la portada y los accesos del inicio. Guarda cada cambio desde aquí, sin modificar GitHub. JPG, PNG o WebP, máximo 8 MB.</p>
+            <SectionShell icon={ImageIcon} title="Imágenes del sitio" subtitle="Portada, tarjetas y banners de divisiones">
+              <p className="text-sm text-foreground/75">Aquí puedes subir los banners de Soul Legends y Soul Crew, además de las imágenes del inicio. Las tres divisiones mantienen la misma proporción horizontal. JPG, PNG o WebP, máximo 8 MB.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {HOME_ASSET_KEYS.map(item=>{
                   const url=imageOverrides[item.key]||siteAssets[item.key]||defaultHomeImages[item.key];
@@ -753,9 +753,9 @@ function AdminLivePage() {
                         <h3 className="font-display text-flame text-base">{item.label}</h3>
                         <p className="text-xs text-foreground/60 mt-1">{item.hint}</p>
                       </div>
-                      <div className={item.key==="home_banner"?"aspect-[16/5]":"aspect-video"}>
+                      <div className={["home_banner","roster_legends_banner","roster_crew_banner"].includes(item.key)?"aspect-[3/1]":"aspect-video"}>
                         {url?<img src={url} alt={item.label} className="w-full h-full object-contain bg-black/30 rounded-lg border border-white/10" />:
-                          <div className="w-full h-full flex items-center justify-center rounded-lg border border-dashed border-white/20 text-white/40 text-xs">Sin imagen personalizada. Se muestra la original.</div>}
+                          <div className="w-full h-full flex items-center justify-center rounded-lg border border-dashed border-white/20 text-white/40 text-xs">Sin banner todavía. Sube una imagen desde aquí para mostrarla en el roster.</div>}
                       </div>
                       <label className={`block cursor-pointer text-center rounded-lg bg-flame px-4 py-3 text-sm font-semibold text-background transition hover:brightness-110 ${busy?"pointer-events-none opacity-50":""}`}>
                         {busy?"Subiendo imagen…": "Cambiar imagen"}
