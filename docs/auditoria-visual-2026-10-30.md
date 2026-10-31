@@ -98,3 +98,16 @@ Las capturas **antes y después** fueron tomadas contra el dominio público en d
 La comprobación local con `vite preview` en GitHub Actions no pudo iniciar el entorno de Cloudflare y se retiró del flujo, pues la prueba del dominio público ya funcionó. La compilación de GitHub se ejecutó correctamente para los cambios de interfaz. No se verificó el número de despliegue `Ready` en el panel privado de Cloudflare ni se realizaron pruebas en teléfonos físicos.
 
 **Pendientes manuales**: revisión exhaustiva de navegación por teclado, contraste con herramientas WCAG, Lighthouse/Core Web Vitals en equipos reales, comprobación de todos los formularios con datos controlados en un entorno de pruebas y verificación de Cloudflare `Ready`.
+
+## Tercera ronda: regresiones, navegación y contraste
+
+Se revisó primero el estado actual de la rama y se respetaron las correcciones documentadas en las dos rondas anteriores.
+
+- **Evidencia reutilizada:** 30 capturas posteriores guardadas en el artefacto de la [ejecución visual 41166123496](https://github.com/OC-apps/thesoulnation-0289611b/actions/runs/41166123496), comparadas con el archivo anterior de la [ejecución 41165411560](https://github.com/OC-apps/thesoulnation-0289611b/actions/runs/41165411560). Las capturas son del sitio público en esas fechas, no de una emulación visual de todos los commits posteriores.
+- **Validación comprobada de ese artefacto:** 30/30 pantallas sin desbordamiento horizontal, 0 excepciones reportadas y navegación de Waves/Legends conservando división al cerrar. No se enviaron postulaciones.
+- **Pruebas ampliadas:** `scripts/visual-audit.cjs` ahora exige cuatro pestañas de Contenido con un estado activo, hero de Xplicit Cup visible, apertura y cambio de nombre al avanzar entre perfiles, y añade el caso Soul Crew. La auditoría se dispara cuando cambia el script; su resultado debe consultarse en GitHub Actions, no suponerse aprobado a partir de un commit.
+- **Contraste detectado:** texto blanco sobre el naranja oficial `#F05E07` es ~3.33:1, por debajo de 4.5:1 para texto normal. Se cambia a tinta `#07091B` en botones naranjas principales, superando 5.8:1 sin recolorear el logotipo ni la identidad oficial. Este cálculo no equivale a una auditoría WCAG global.
+- **Imágenes oficiales:** no se alteraron logotipos ni fotografías en esta ronda.
+- **Pendientes:** verificación del último CSS desplegado, evaluación WCAG exhaustiva, Lighthouse en el dominio y pruebas con dispositivos físicos. Ningún formulario real fue enviado durante la auditoría.
+
+Las comparativas de las capturas anterior/posterior se generaron en la sesión a partir de los artefactos de GitHub Actions y pueden descargarse desde la respuesta de la conversación. No se guardaron capturas en el repositorio para evitar introducir imágenes de auditoría dentro del sitio.
