@@ -88,6 +88,9 @@ export type Database = {
           red_twitch: string | null
           red_youtube: string | null
           sobre_ti: string
+          status: string
+          admin_notes: string
+          updated_at: string
         }
         Insert: {
           area: string
@@ -102,6 +105,9 @@ export type Database = {
           red_twitch?: string | null
           red_youtube?: string | null
           sobre_ti: string
+          status: string
+          admin_notes: string
+          updated_at: string
         }
         Update: {
           area?: string
@@ -116,6 +122,9 @@ export type Database = {
           red_twitch?: string | null
           red_youtube?: string | null
           sobre_ti?: string
+          status?: string
+          admin_notes?: string
+          updated_at?: string
         }
         Relationships: []
       }
