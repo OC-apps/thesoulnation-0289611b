@@ -2324,3 +2324,78 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  .soul-wave-profile .relative.md\:col-span-2 {max-height:340px;}
  .soul-wave-profile .soul-wave-profile-meta {font-size:10px;}
 }
+
+
+/* Soul Refined / Content — one contextual navigation for Videos, Wallpapers, Music and Jersey. */
+.soul-hub .soul-content-tabs {
+  width:min(1100px,calc(100% - 40px));
+  margin:0 auto clamp(8px,1.6vw,20px);
+  position:relative;
+  z-index:3;
+}
+.soul-hub .soul-content-tabs-inner {
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:linear-gradient(145deg,rgba(17,21,47,.93),rgba(8,11,31,.98));
+  padding:clamp(12px,2vw,20px);
+  box-shadow:0 16px 44px rgba(0,0,0,.15);
+}
+.soul-hub .soul-content-tabs-heading {
+  padding-inline:4px;
+  font:700 10px/1.4 ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.20em;
+  color:rgba(255,255,255,.70);
+}
+.soul-hub .soul-content-tabs-heading span {color:#F05E07;padding-inline:6px;}
+.soul-hub .soul-content-tabs-options {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;
+}
+.soul-hub .soul-content-tab {
+  min-width:0;min-height:58px;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:13px;
+  padding:10px 8px;
+  background:rgba(255,255,255,.035);
+  color:rgba(255,255,255,.72);
+  font-size:clamp(11px,1.15vw,14px);
+  font-weight:700;
+  text-decoration:none;
+  transition:background-color .2s ease,border-color .2s ease,color .2s ease;
+}
+.soul-hub .soul-content-tab-number {
+  flex:none;
+  font:600 10px/1 ui-monospace,SFMono-Regular,monospace;
+  color:#F05E07;
+  opacity:.75;
+}
+.soul-hub .soul-content-tab:hover,
+.soul-hub .soul-content-tab:focus-visible {
+  color:#fff;
+  border-color:rgba(240,94,7,.5);
+  background:rgba(255,255,255,.10);
+}
+.soul-hub .soul-content-tab[aria-current="page"] {
+  color:#fff;background:#01039E;
+  border-color:rgba(240,94,7,.8);
+  box-shadow:inset 0 -3px #F05E07;
+}
+.soul-hub .soul-content-tab[aria-current="page"] .soul-content-tab-number {color:#fff;opacity:.75;}
+@media(max-width:600px){
+ .soul-hub .soul-content-tabs {width:calc(100% - 24px);margin-bottom:8px;}
+ .soul-hub .soul-content-tabs-inner {border-radius:16px;padding:9px;gap:9px;}
+ .soul-hub .soul-content-tabs-heading {font-size:9px;letter-spacing:.13em;padding:2px 4px 0;}
+ .soul-hub .soul-content-tabs-options {gap:4px;}
+ .soul-hub .soul-content-tab {
+   min-height:49px;flex-direction:column;gap:4px;
+   padding:7px 2px;border-radius:9px;
+   font-size:clamp(9px,2.6vw,12px);line-height:1.15;text-align:center;
+ }
+ .soul-hub .soul-content-tab-number {font-size:8px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .soul-hub .soul-content-tab {transition:none;}
+}
