@@ -22,10 +22,10 @@ jobs:
           node-version: '22'
       - name: Install browser test tools
         run: |
-          npm install --no-save --no-package-lock playwright@1.58.0
-          npx playwright install --with-deps chromium
+          npm install --prefix /tmp/soul-visual-audit --no-package-lock playwright@1.58.0
+          /tmp/soul-visual-audit/node_modules/.bin/playwright install --with-deps chromium
       - name: Capture public site at 320 390 430 768 1440 px
-        run: node scripts/visual-audit.cjs
+        run: NODE_PATH=/tmp/soul-visual-audit/node_modules node scripts/visual-audit.cjs
       - name: Upload screenshots and findings
         if: always()
         uses: actions/upload-artifact@v4
