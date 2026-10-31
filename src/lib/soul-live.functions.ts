@@ -23,7 +23,7 @@ export const updateSoulLive = createServerFn({ method: "POST" })
       stream_url: data.isLive ? (data.streamUrl || null) : null,
       updated_at: new Date().toISOString(),
     };
-    const { error } = await supabaseAdmin.from("live_status").upsert(row as never, { onConflict: "member_id" });
+    const { error } = await supabaseAdmin.from("live_status").upsert(row, { onConflict: "member_id" });
     if (error) throw new Error("No se pudo actualizar el estado en vivo");
     return { ok: true };
   });
