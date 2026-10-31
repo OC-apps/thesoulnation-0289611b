@@ -179,7 +179,7 @@ function AdminLivePage() {
   const [imageBusy,setImageBusy] = useState<SiteAssetKey|null>(null);
   const [imageOverrides,setImageOverrides] = useState<Partial<Record<SiteAssetKey,string>>>({});
   const defaultHomeImages:Partial<Record<SiteAssetKey,string>> = {
-    home_banner:"/the%20soul%20nation%20header.jpg",
+    home_banner:"/home-banner-2026.jpg",
     home_roster:"/roster-team-card-2026.jpg",
     home_videos:"/quick-videos-2026.jpg",
     home_wallpapers:wallpaperTile,
