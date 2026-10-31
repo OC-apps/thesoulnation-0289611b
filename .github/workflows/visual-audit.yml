@@ -1,0 +1,36 @@
+name: Soul Visual Audit — 5 viewports
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [recuperacion-independiente]
+    paths:
+      - '.github/workflows/visual-audit.yml'
+      - 'scripts/visual-audit.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  visual-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test tools
+        run: |
+          npm install --no-save --no-package-lock playwright@1.58.0
+          npx playwright install --with-deps chromium
+      - name: Capture public site at 320 390 430 768 1440 px
+        run: node scripts/visual-audit.cjs
+      - name: Upload screenshots and findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: soul-visual-audit
+          path: visual-audit-artifacts/
+          if-no-files-found: warn
+          retention-days: 30
