@@ -3087,3 +3087,17 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media(max-width:540px){
  .soul-hub #wallpapers h2 {font-size:clamp(24px,6.8vw,32px)!important;}
 }
+
+/* Contrast audit: white on Soul orange (#F05E07) is 3.33:1, below WCAG AA
+   for normal text. Use dark ink on orange CTA surfaces (approx. 5.8:1). */
+.soul-hub .soul-refined-cta,
+.soul-hub .soul-refined-desktop-nav .soul-refined-cta,
+.soul-hub #reclutamiento button[type="submit"],
+.soul-hub #reclutamiento button[type="submit"]:hover,
+.soul-hub #reclutamiento .area-chip[aria-pressed="true"] .font-display {
+  color:#07091B;
+}
+.soul-hub .soul-refined-cta:hover,
+.soul-hub .soul-refined-cta:focus-visible {
+  color:#07091B;
+}
