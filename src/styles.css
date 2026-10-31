@@ -2147,3 +2147,27 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  .soul-hub #about .soul-about-photo img,
  .soul-hub .soul-footer-links a {transition:none;}
 }
+
+
+/* Soul Refined — keyboard and touch accessibility */
+.soul-skip-link {
+  position:fixed;left:16px;top:-100px;z-index:10000;
+  padding:13px 18px;border:2px solid #fff;border-radius:12px;
+  color:#fff;background:#01039E;font-weight:700;text-decoration:none;
+}
+.soul-skip-link:focus {top:12px;}
+.soul-refined-header :is(a,button):focus-visible,
+.soul-hub :is(a,button,input,select,textarea):focus-visible {
+  outline:2px solid #F05E07;
+  outline-offset:3px;
+}
+.soul-refined-menu-toggle,
+.soul-refined-mobile-nav a {touch-action:manipulation;}
+@media(prefers-reduced-motion:reduce){
+  .soul-hub *, .soul-hub *::before, .soul-hub *::after {
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
