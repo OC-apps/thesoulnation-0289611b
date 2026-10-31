@@ -2931,3 +2931,131 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-hub #music button {flex-shrink:0;min-width:44px;min-height:44px;}
   .soul-hub #roster .soul-roster-option-copy strong {white-space:normal;overflow-wrap:anywhere;}
 }
+
+/* Audit 2026-10-30: restrained cross-section and Xplicit Cup refinements. */
+.soul-hub #roster h2,
+.soul-hub #videos h2,
+.soul-hub #wallpapers h2,
+.soul-hub #jersey h2,
+.soul-hub #reclutamiento h2,
+.soul-hub #music h2 {
+  font-size:clamp(2rem,5vw,4.25rem)!important;
+  line-height:1.08;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+}
+.soul-hub .soul-section-intro {margin-bottom:clamp(20px,3.2vw,44px)!important;}
+.soul-hub > section:not(#top) {padding-block:clamp(25px,4.5vw,60px);}
+.soul-hub #roster .soul-roster-switcher {gap:6px;}
+.soul-hub #roster .soul-roster-option-copy,
+.soul-hub #roster .soul-roster-option-copy strong {min-width:0;overflow-wrap:anywhere;white-space:normal;}
+#roster .soul-waves-collection .soul-lineup-nickname,
+#roster .soul-legends-nickname,
+#roster .soul-crew-nickname {
+  max-width:100%;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  line-height:1.06;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait-info,
+#roster .soul-waves-collection .soul-lineup .soul-portrait-leader .soul-portrait-info {
+  min-width:0;
+  padding-bottom:clamp(18px,2.1vw,26px);
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait h4 {
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait .soul-lineup-nickname {
+  font-size:clamp(13px,7cqw,27px);
+}
+.soul-hub #roster .soul-roster-option:focus-visible,
+.soul-hub #roster .soul-portrait:focus-visible,
+.soul-hub #roster .soul-division li > button:focus-visible {
+  outline:3px solid #F05E07;
+  outline-offset:3px;
+}
+
+/* Xplicit Cup uses the same panel scale and brand as the main site. */
+.soul-xplicit-page {
+  --soul-xplicit-radius:20px;
+  background-color:#080b23;
+}
+.soul-xplicit-page .soul-xplicit-header {
+  position:sticky;
+  z-index:50;
+  top:8px;
+  width:min(1120px,calc(100% - 32px));
+  margin:8px auto 0;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  background:rgba(9,13,34,.94);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 14px 36px rgba(0,0,0,.25);
+}
+.soul-xplicit-page .soul-xplicit-header-inner {
+  min-height:60px;
+  height:auto;
+  padding:8px clamp(16px,3vw,27px);
+}
+.soul-xplicit-page .soul-xplicit-header a {
+  text-decoration:none;
+}
+.soul-xplicit-page .soul-xplicit-back:hover {
+  background:#01039E;
+  border-color:#F05E07;
+}
+.soul-xplicit-page .soul-xplicit-back:focus-visible,
+.soul-xplicit-page button:focus-visible,
+.soul-xplicit-page a:focus-visible {
+  outline:2px solid #F05E07;
+  outline-offset:3px;
+}
+.soul-xplicit-page #xplicit-cup {padding-block:clamp(20px,3vw,46px);}
+.soul-xplicit-page #xplicit-cup h1 {
+  font-size:clamp(1.5rem,4.3vw,3.7rem);
+  line-height:1.12;
+  letter-spacing:-.03em;
+  text-wrap:balance;
+}
+.soul-xplicit-page #xplicit-cup h3 {
+  font-size:clamp(1.5rem,3.6vw,2.75rem);
+  line-height:1.16;
+  letter-spacing:-.025em;
+  text-wrap:balance;
+}
+.soul-xplicit-page #xplicit-cup article {
+  border-radius:var(--soul-xplicit-radius);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:0 12px 35px rgba(0,0,0,.12);
+}
+.soul-xplicit-page #xplicit-cup article p {
+  overflow-wrap:anywhere;
+  line-height:1.7;
+}
+.soul-xplicit-page #xplicit-cup .soul-xplicit-hero {opacity:1;transform:none;}
+@media(max-width:430px){
+  .soul-xplicit-page .soul-xplicit-header {
+    width:calc(100% - 20px);
+    border-radius:18px;
+    top:6px;
+  }
+  .soul-xplicit-page .soul-xplicit-header-inner {min-height:54px;padding:7px 12px;}
+  .soul-xplicit-page .soul-xplicit-header a {min-width:0;}
+  .soul-xplicit-page .soul-xplicit-header .font-display {font-size:12px;}
+  .soul-xplicit-page #xplicit-cup h1 {font-size:clamp(1.4rem,6vw,1.7rem);}
+  .soul-hub #roster .soul-roster-option-copy strong {font-size:11px;}
+  #roster .soul-crew-nickname {font-size:clamp(14px,6cqw,23px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .soul-xplicit-page *,
+  .soul-xplicit-page *::before,
+  .soul-xplicit-page *::after {
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+  .soul-xplicit-page .soul-xplicit-hero {opacity:1!important;transform:none!important;}
+}
