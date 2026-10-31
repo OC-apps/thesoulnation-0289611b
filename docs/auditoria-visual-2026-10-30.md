@@ -50,3 +50,51 @@ La medición DOM de escritorio del roster arrojó una columna de 748 px, pero su
 ## Pendiente de aceptación visual
 
 Revisar el commit desplegado en escritorio, en anchos móviles de 320/390/430 px y en orientación horizontal. Comprobar búsqueda con y sin SOUL, casos vacíos, apertura/cierre de perfiles, Frente/Espalda, foco del teclado y movimiento reducido. No se afirma publicación de este commit en el dominio público.
+
+## Segunda ronda: correcciones comprobadas en el sitio público
+
+### Evidencia inicial y hallazgos reales
+
+El informe original conservó capturas visibles en la conversación, pero no exportó archivos. Esta segunda ronda sí generó archivos de pantalla verificables para las cinco anchuras solicitadas y seis superficies: Inicio, Roster, Videos, Música, Jersey y Xplicit Cup.
+
+- Capturas públicas anteriores a las dos correcciones críticas: [ejecución 41165411560](https://github.com/OC-apps/thesoulnation-0289611b/actions/runs/41165411560).
+- **Error confirmado por imagen**: con `prefers-reduced-motion: reduce` el header flotante se desplazaba media pantalla porque una regla anulaba `translateX(-50%)`.
+- **Error confirmado por imagen**: una regla de relleno vertical aplicada a todos los hijos del hero agrandaba una línea de acento hasta convertirla en una franja naranja que cubría el banner móvil.
+
+### Cambios correctivos
+
+- Se restableció la transformación de centrado del header incluso con movimiento reducido; las animaciones siguen desactivadas.
+- Se eliminó exclusivamente el elemento decorativo que producía la franja naranja. No se alteró el archivo ni la geometría de la imagen oficial del hero.
+- Se mantuvieron los cinco accesos rápidos en una única fila.
+- Se compactó y unificó la escala de títulos, espaciados, tarjetas y navegación de las secciones; también se actualizó el header y el estilo de Xplicit Cup.
+- Los nombres largos del roster admiten ajuste de línea sin eliminar su identidad de tarjetas inclinadas.
+- El buscador de SOUL enlaza al perfil exacto y el prefijo fijo no se duplica.
+- El hero de Xplicit Cup es visible aunque falle IntersectionObserver o la animación.
+- El roster ofrece avisos de actualización y error sin bloquear la lista de integrantes por defecto.
+- El trofeo de Xplicit Cup se carga de forma diferida. Ya estaban implementados la carga diferida del reproductor Spotify y de varias imágenes; se conservaron.
+- Los scripts de auditoría son de solo lectura: no acceden a las funciones de escritura ni envían postulaciones.
+
+### Validación posterior del dominio
+
+Comprobación verificada mediante Chromium en [ejecución 41166123496](https://github.com/OC-apps/thesoulnation-0289611b/actions/runs/41166123496), con `prefers-reduced-motion: reduce`, viewport de altura 900 px y anchuras de **320, 390, 430, 768 y 1440 px**.
+
+| Verificación | Resultado |
+| --- | --- |
+| Capturas de las seis superficies en cinco anchos | 30 de 30, HTTP 200 |
+| Desbordamiento horizontal de documento | 0 de 30 |
+| Excepciones JavaScript en los recorridos | 0 |
+| Header flotante dentro del viewport | 30 de 30 |
+| Accesos rápidos en una fila en Inicio | Cinco en una fila, en los cinco anchos |
+| Búsqueda Waves, siguiente perfil y cierre | Aprobado, conserva `#waves` |
+| Búsqueda Legends, siguiente perfil y cierre | Aprobado, conserva `#legends` |
+| Formularios de reclutamiento | No enviados, por indicación expresa |
+
+Los límites horizontales del header en Inicio fueron: 320 px → [12,308], 390 → [12,378], 430 → [12,418], 768 → [12,756] y 1440 → [150,1290], todos contenidos en su viewport.
+
+### Estado de publicación, capturas y límites
+
+Las capturas **antes y después** fueron tomadas contra el dominio público en dos momentos distintos y muestran la corrección real del header y del banner. Los archivos están asociados a los artefactos de GitHub Actions de las ejecuciones enlazadas y se han exportado para entrega en la conversación. Esta evidencia confirma la apariencia pública de las superficies probadas, pero no equivale a un certificado WCAG ni a una auditoría completa de rendimiento.
+
+La comprobación local con `vite preview` en GitHub Actions no pudo iniciar el entorno de Cloudflare y se retiró del flujo, pues la prueba del dominio público ya funcionó. La compilación de GitHub se ejecutó correctamente para los cambios de interfaz. No se verificó el número de despliegue `Ready` en el panel privado de Cloudflare ni se realizaron pruebas en teléfonos físicos.
+
+**Pendientes manuales**: revisión exhaustiva de navegación por teclado, contraste con herramientas WCAG, Lighthouse/Core Web Vitals en equipos reales, comprobación de todos los formularios con datos controlados en un entorno de pruebas y verificación de Cloudflare `Ready`.
