@@ -18,16 +18,58 @@ export type Database = {
         Row: {
           is_live: boolean
           member_id: string
+          platform: string | null
+          stream_url: string | null
           updated_at: string
         }
         Insert: {
           is_live?: boolean
           member_id: string
+          platform?: string | null
+          stream_url?: string | null
           updated_at?: string
         }
         Update: {
           is_live?: boolean
           member_id?: string
+          platform?: string | null
+          stream_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      soul_posts: {
+        Row: {
+          id: string
+          kind: string
+          title: string
+          summary: string
+          link_url: string | null
+          event_at: string | null
+          published: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          kind: string
+          title: string
+          summary?: string
+          link_url?: string | null
+          event_at?: string | null
+          published?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          kind?: string
+          title?: string
+          summary?: string
+          link_url?: string | null
+          event_at?: string | null
+          published?: boolean
+          created_at?: string
           updated_at?: string
         }
         Relationships: []
