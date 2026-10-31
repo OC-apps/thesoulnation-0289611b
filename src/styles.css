@@ -2278,3 +2278,49 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media(prefers-reduced-motion:reduce){
   .soul-refined-header,.soul-refined-header .soul-brand img {transition:none;}
 }
+
+
+/* Editorial Soul Waves profile — no HUD, scanlines or decorative neon */
+.soul-wave-profile {
+  border-radius:clamp(18px,3vw,30px)!important;
+  border-color:rgba(255,255,255,.13)!important;
+  background:#0b0e24!important;
+  box-shadow:0 36px 110px rgba(0,0,0,.6);
+}
+.soul-wave-profile > div {background:transparent;}
+.soul-wave-profile .soul-wave-profile-meta {
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  padding:10px 0 4px;
+  color:#b9bfd7;font-size:11px;font-weight:600;letter-spacing:.025em;
+}
+.soul-wave-profile .soul-wave-profile-meta > span:first-child {
+  color:#F05E07;font-weight:800;letter-spacing:.14em;
+}
+.soul-wave-profile .soul-wave-profile-live {
+  display:inline-flex;align-items:center;min-height:24px;
+  padding:3px 9px;border-radius:999px;
+  background:#7f1d1d;color:#fff;font-size:10px;letter-spacing:.09em;
+}
+.soul-wave-profile .soul-profile-share {
+  border-color:rgba(240,94,7,.6);
+  min-height:42px;
+  padding-inline:17px;
+}
+.soul-wave-profile .soul-profile-share:hover {background:rgba(240,94,7,.13);}
+.soul-wave-profile a[target="_blank"] {
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:38px;padding:8px 12px;border-radius:999px;
+  border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.035);
+  font-size:10px;letter-spacing:.09em;
+}
+.soul-wave-profile a[target="_blank"]:hover {
+  background:#01039E;color:#fff;border-color:#01039E;
+}
+.soul-wave-profile .grid.md\:grid-cols-5 {
+  min-height:420px;
+}
+@media(max-width:767px) {
+ .soul-wave-profile .grid.md\:grid-cols-5 {min-height:0;}
+ .soul-wave-profile .relative.md\:col-span-2 {max-height:340px;}
+ .soul-wave-profile .soul-wave-profile-meta {font-size:10px;}
+}
