@@ -390,7 +390,7 @@ function IndexContent() {
     ["videos", "wallpapers", "music", "jersey", "redes", "xplicit-cup"].includes(destination) ? destination :
     destination === "contenido" ? "videos" : HUB_SECTIONS.some((s) => s.id === destination) ? destination : "top";
   const rosterView = destination === "killers" ? "crew" : rosterIds.includes(destination) ? destination : "waves";
-  const contentView = ["videos", "wallpapers", "music"].includes(view);
+  const contentView = ["videos", "wallpapers", "music", "jersey"].includes(view);
   useEffect(() => {
     const update = () => { setDestination(window.location.hash.slice(1) === "killers" ? "crew" : window.location.hash.slice(1) || "top"); setMobileNavOpen(false); };
     update();
@@ -695,6 +695,30 @@ function IndexContent() {
 
 
 
+
+      {/* A single contextual navigator shared by all four Content destinations. */}
+      {contentView && (
+        <nav className="soul-content-tabs" aria-label="Secciones de Contenido">
+          <div className="soul-content-tabs-inner">
+            <span className="soul-content-tabs-heading">THE SOUL NATION <span aria-hidden="true">/</span> CONTENIDO</span>
+            <div className="soul-content-tabs-options">
+              {[
+                {id:"videos",label:"Videos",number:"01"},
+                {id:"wallpapers",label:"Wallpapers",number:"02"},
+                {id:"music",label:"Música",number:"03"},
+                {id:"jersey",label:"Jersey Oficial",number:"04"},
+              ].map(tab => (
+                <a key={tab.id} href={`#${tab.id}`}
+                  aria-current={view === tab.id ? "page" : undefined}
+                  className="soul-content-tab">
+                  <span className="soul-content-tab-number" aria-hidden="true">{tab.number}</span>
+                  <span className="soul-content-tab-name">{tab.label}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </nav>
+      )}
 
       {/* VIDEOS */}
       <section id="videos" className="relative py-16 md:py-24 border-t border-border overflow-hidden">
