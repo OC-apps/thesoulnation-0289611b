@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { EasterEgg } from "@/components/easter-egg";
 import xplicitLogo from "@/assets/xplicit-cup-header.jpeg";
 import xplicitTrophy from "@/assets/xplicit-cup-trophy.png";
@@ -29,24 +28,7 @@ const panels: { key: PanelKey; label: string; sub: string; icon: string }[] = [
   { key: "legado", label: "Legado", sub: "Lo que dejó", icon: "✦" },
 ];
 
-function useReveal<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [seen, setSeen] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (e) => e.forEach((x) => x.isIntersecting && (setSeen(true), io.disconnect())),
-      { threshold: 0.15 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return { ref, seen };
-}
-
 export function XplicitCup() {
-  const { ref: heroRef, seen: heroSeen } = useReveal<HTMLDivElement>();
 
 
 
@@ -59,18 +41,12 @@ export function XplicitCup() {
       <div className="relative mx-auto max-w-7xl px-5 sm:px-6">
         {/* HERO */}
         <div
-          ref={heroRef}
-          className="flex flex-col items-center text-center"
-          style={{
-            opacity: heroSeen ? 1 : 0,
-            transform: heroSeen ? "translateY(0)" : "translateY(40px)",
-            transition: "opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1)",
-          }}
+          className="soul-xplicit-hero flex flex-col items-center text-center"
         >
           {/* Mobile: imagen arriba (mismo aspect que desktop) + texto debajo */}
-          <div className="sm:hidden w-screen left-1/2 -translate-x-1/2 relative">
+          <div className="sm:hidden relative w-full">
             <div className="w-full aspect-[16/7] overflow-hidden">
-              <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" />
+              <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-top" loading="eager" decoding="async" fetchPriority="high" />
             </div>
             <div className="mx-auto w-full max-w-[360px] px-6 pt-5 overflow-hidden">
               <h1 className="mx-auto max-w-full whitespace-normal break-words text-balance font-display font-black text-center text-[1.55rem] leading-[1.12] drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)]">
@@ -81,7 +57,7 @@ export function XplicitCup() {
 
           {/* Desktop / tablet: imagen contenida con márgenes correctos */}
           <div className="hidden sm:block relative w-full overflow-hidden rounded-2xl border border-flame/20 h-[340px] md:h-[440px] lg:h-[500px] shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
-            <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-center" />
+            <img src={xplicitLogo} alt="Xplicit Cup" className="w-full h-full object-cover object-center" loading="eager" decoding="async" fetchPriority="high" />
 
             <div className="absolute inset-0 flex items-center bg-gradient-to-r from-background/80 via-background/30 to-transparent">
               <div className="w-full px-8 md:px-12 lg:px-16">
