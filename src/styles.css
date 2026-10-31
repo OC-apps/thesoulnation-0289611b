@@ -2013,3 +2013,137 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
  .soul-refined-desktop-nav .soul-header-link,
  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile {transition:none}
 }
+
+
+/* Soul Refined — second pass: consistent vertical rhythm and editorial scale. */
+.soul-hub {
+  padding-top:clamp(78px,8vw,108px);
+  padding-bottom:clamp(28px,5vw,64px);
+}
+.soul-hub > section:not(#top) {
+  padding-block:clamp(28px,4.5vw,64px);
+}
+.soul-hub #about {
+  padding-top:clamp(22px,3vw,42px);
+}
+.soul-hub[data-view="top"] > #about {
+  padding-top:clamp(26px,3.5vw,48px);
+  padding-bottom:clamp(40px,5vw,70px);
+}
+.soul-hub #about .soul-about-layout {
+  gap:clamp(22px,4vw,60px);
+  align-items:center;
+}
+.soul-hub #about .soul-about-layout p {
+  max-width:70ch;
+  font-size:clamp(14px,1.35vw,16px);
+  line-height:1.8;
+  color:#d0d4e5;
+}
+.soul-hub #about .soul-about-photo {
+  border-color:rgba(255,255,255,.10);
+  box-shadow:0 20px 55px rgba(0,0,0,.2);
+}
+.soul-hub #about .soul-purpose {
+  margin-top:clamp(26px,4vw,46px);
+  border:1px solid rgba(255,255,255,.11);
+  background:linear-gradient(135deg,rgba(20,23,47,.86),rgba(11,13,34,.93));
+  box-shadow:0 16px 38px rgba(0,0,0,.13);
+}
+.soul-hub #about .soul-purpose-tabs {
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.soul-hub #about .soul-purpose-copy {
+  align-items:start;
+  gap:clamp(15px,3vw,32px);
+}
+.soul-hub #about .soul-purpose-copy h3 {
+  font-size:clamp(25px,3.3vw,42px);
+  line-height:1.15;
+  white-space:normal;
+  margin:0;
+}
+.soul-hub #about .soul-purpose-copy p {
+  max-width:70ch;
+  margin:0;
+  line-height:1.85;
+}
+.soul-hub .soul-section-intro {
+  margin-bottom:clamp(24px,4vw,48px)!important;
+}
+.soul-hub .soul-section-intro h2,
+.soul-hub #videos h2,
+.soul-hub #reclutamiento h2 {
+  font-size:clamp(34px,5.6vw,68px);
+  line-height:1.04;
+  letter-spacing:-.035em;
+  text-wrap:balance;
+  margin-top:12px;
+}
+.soul-hub .soul-section-intro p,
+.soul-hub #videos h2 + p {
+  max-width:65ch;
+  font-size:clamp(14px,1.3vw,16px);
+  line-height:1.7;
+  margin-top:15px;
+}
+.soul-hub #roster .soul-roster-switcher-layout {
+  gap:clamp(10px,1.8vw,22px);
+}
+.soul-hub #roster .soul-roster-feature,
+.soul-hub #roster .soul-roster-switcher {
+  border-radius:clamp(16px,2vw,24px);
+}
+.soul-hub .soul-footer-links {
+  border-top:1px solid rgba(255,255,255,.09);
+  padding-top:clamp(20px,3vw,32px);
+  margin-top:clamp(24px,4vw,48px);
+  gap:clamp(14px,2.5vw,30px);
+}
+.soul-hub .soul-footer-links a {
+  text-decoration:none;
+  transition:color .2s ease;
+}
+.soul-hub .soul-footer-links a:hover {color:#F05E07;}
+.soul-tile-title-small {display:none;}
+@media(max-width:780px) {
+  .soul-hub {padding-top:78px;padding-bottom:28px;}
+  .soul-hub > section:not(#top) {padding-block:26px;}
+  .soul-hub[data-view="top"] > #about {padding-top:24px;padding-bottom:36px;}
+  .soul-hub #about .soul-about-photo {max-width:min(100%,420px);}
+  .soul-hub #about .soul-about-layout {gap:22px;}
+  .soul-hub #about .soul-purpose {border-radius:20px;}
+  .soul-hub .soul-section-intro h2,
+  .soul-hub #videos h2,
+  .soul-hub #reclutamiento h2 {font-size:clamp(30px,7.4vw,50px);}
+}
+@media(max-width:540px) {
+  .soul-hub #about .soul-about-photo {height:clamp(340px,110vw,460px);}
+  .soul-hub #about .soul-purpose-copy {display:block;}
+  .soul-hub #about .soul-purpose-copy h3 {margin-bottom:14px;}
+  .soul-hub #about .soul-purpose-copy p {line-height:1.7;}
+  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile > span:not(.soul-tile-arrow) {
+    flex-basis:32%;
+    min-height:0;
+    padding:2px;
+    align-items:center;
+    text-align:center;
+  }
+  .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile strong {
+    font-size:clamp(8px,2vw,11px);
+    font-weight:700;
+    line-height:1.1;
+    white-space:nowrap;
+    letter-spacing:-.02em;
+  }
+  .soul-tile-title-full {display:none;}
+  .soul-tile-title-small {display:inline;}
+}
+@media(max-width:360px) {
+ .soul-hub[data-view="top"] #about .soul-home-grid {gap:3px;}
+ .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile strong {font-size:7px;}
+}
+@media(prefers-reduced-motion:reduce){
+ .soul-hub #about .soul-about-photo img,
+ .soul-hub .soul-footer-links a {transition:none;}
+}
