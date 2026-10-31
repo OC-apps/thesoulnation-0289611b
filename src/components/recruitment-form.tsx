@@ -19,6 +19,7 @@ export function RecruitmentForm() {
     if (!area) return;
     const form = e.currentTarget;
     const data = new FormData(form);
+    if (String(data.get("_honey") || "").trim()) return;
     setStatus("sending");
     try {
       const payload = {
@@ -99,6 +100,7 @@ export function RecruitmentForm() {
       {/* Formulario 3D */}
       <div className="soul-form-shell">
         <form
+          onSubmit={onSubmit}
           className="relative rounded-3xl border border-border bg-card/50 backdrop-blur-xl p-6 md:p-10 shadow-[0_30px_80px_-20px_var(--flame-glow)] overflow-hidden"
         >
           <input type="hidden" name="_subject" value="🔥 NUEVA POSTULACIÓN — THE SOUL NATION" />
