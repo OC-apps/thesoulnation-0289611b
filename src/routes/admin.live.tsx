@@ -22,6 +22,8 @@ import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-social
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { updateSoulLive } from "@/lib/soul-live.functions";
+import { getSoulPostsAdmin, saveSoulPost, deleteSoulPost } from "@/lib/soul-posts.functions";
+import type { SoulPost } from "@/hooks/use-soul-posts";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
 import { useWavesHidden } from "@/hooks/use-waves-hidden";
@@ -90,6 +92,47 @@ function AdminLivePage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
   const [msg, setMsg] = useState<string>("");
+  const [adminPosts,setAdminPosts]=useState<SoulPost[]>([]);
+  const [postBusy,setPostBusy]=useState(false);
+  type PostDraft={id?:string;kind:"news"|"event"|"video";title:string;summary:string;linkUrl:string;eventAt:string;published:boolean};
+  const emptyPost=():PostDraft=>({kind:"news",title:"",summary:"",linkUrl:"",eventAt:"",published:false});
+  const [postForm,setPostForm]=useState<PostDraft>(emptyPost);
+  const loadAdminPosts=async()=>{
+    try {
+      const result=await getSoulPostsAdmin({data:{password}});
+      setAdminPosts(result.posts);
+    } catch(e) {setMsg(e instanceof Error?e.message:"No se pudieron cargar las publicaciones");}
+  };
+  useEffect(()=>{
+    if (authed) void loadAdminPosts();
+  },[authed]);
+  const savePost=async()=>{
+    setPostBusy(true);setMsg("");
+    try{
+      const result=await saveSoulPost({data:{password,post:{
+        id:postForm.id,kind:postForm.kind,title:postForm.title,summary:postForm.summary,
+        linkUrl:postForm.linkUrl,eventAt:postForm.eventAt?new Date(postForm.eventAt).toISOString():null,
+        published:postForm.published
+      }}});
+      if (result.ok){
+        setPostForm(emptyPost());await loadAdminPosts();
+        window.dispatchEvent(new Event("soul:posts-updated"));
+        setMsg("Publicación guardada.");
+      }
+    }catch(e){setMsg(e instanceof Error?e.message:"No se pudo guardar la publicación");}
+    finally{setPostBusy(false);}
+  };
+  const removePost=async(id:string)=>{
+    setPostBusy(true);setMsg("");
+    try{
+      await deleteSoulPost({data:{password,id}});
+      setPostForm(emptyPost());await loadAdminPosts();
+      window.dispatchEvent(new Event("soul:posts-updated"));
+      setMsg("Publicación eliminada.");
+    }catch(e){setMsg(e instanceof Error?e.message:"No se pudo eliminar");}
+    finally{setPostBusy(false);}
+  };
+
   type LiveEntry = { is_live: boolean; platform: "tiktok"|"twitch"|"youtube"|"facebook"|"instagram"|"other"|null; stream_url: string };
   const [liveEntries, setLiveEntries] = useState<Record<string, LiveEntry>>({});
   const [liveBusy, setLiveBusy] = useState<string|null>(null);
@@ -557,7 +600,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-5 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -574,9 +617,78 @@ function AdminLivePage() {
               <Radio className="w-3.5 h-3.5" />
               <span>Soul Live</span>
             </TabsTrigger>
+            <TabsTrigger value="posts" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-[10px] sm:text-xs font-mono uppercase tracking-widest">
+              <Link2 className="w-3.5 h-3.5" />
+              <span>Contenido</span>
+            </TabsTrigger>
           </TabsList>
 
 
+
+          <TabsContent value="posts" className="mt-0">
+            <SectionShell icon={Link2} title="Publicaciones y agenda Soul" subtitle="Noticias, eventos y videos">
+              <div className="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6">
+                <form onSubmit={e=>{e.preventDefault();void savePost();}} className="space-y-3 rounded-xl border border-flame/25 bg-blue-deep/30 p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-display text-base text-white">{postForm.id?"Editar publicación":"Nueva publicación"}</h3>
+                    {postForm.id&&<button type="button" onClick={()=>setPostForm(emptyPost())} className="text-xs text-flame">Cancelar edición</button>}
+                  </div>
+                  <label className="block text-xs text-white/75">Tipo
+                    <select value={postForm.kind} onChange={e=>setPostForm(p=>({...p,kind:e.target.value as PostDraft["kind"]}))}
+                      className="mt-1 w-full rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white">
+                      <option value="news">Noticia</option><option value="event">Evento</option><option value="video">Video</option>
+                    </select>
+                  </label>
+                  <label className="block text-xs text-white/75">Título
+                    <input required minLength={3} maxLength={150} value={postForm.title} onChange={e=>setPostForm(p=>({...p,title:e.target.value}))}
+                      className="mt-1 w-full rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white"/>
+                  </label>
+                  <label className="block text-xs text-white/75">Descripción
+                    <textarea maxLength={1500} rows={4} value={postForm.summary} onChange={e=>setPostForm(p=>({...p,summary:e.target.value}))}
+                      className="mt-1 w-full rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white"/>
+                  </label>
+                  <label className="block text-xs text-white/75">Enlace externo (opcional)
+                    <input type="url" placeholder="https://..." value={postForm.linkUrl} onChange={e=>setPostForm(p=>({...p,linkUrl:e.target.value}))}
+                      className="mt-1 w-full rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white"/>
+                  </label>
+                  {postForm.kind==="event"&&<label className="block text-xs text-white/75">Fecha y hora del evento
+                    <input type="datetime-local" value={postForm.eventAt} onChange={e=>setPostForm(p=>({...p,eventAt:e.target.value}))}
+                      className="mt-1 w-full rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white"/>
+                  </label>}
+                  <label className="flex items-center gap-3 text-sm text-white">
+                    <input type="checkbox" checked={postForm.published} onChange={e=>setPostForm(p=>({...p,published:e.target.checked}))} className="h-5 w-5 accent-orange-500"/>
+                    Publicar en la web (desmarcado = borrador)
+                  </label>
+                  <button type="submit" disabled={postBusy} className="min-h-11 w-full rounded-lg bg-[#F05E07] px-5 py-2 font-semibold text-white disabled:opacity-50">
+                    {postBusy?"Guardando…":postForm.published?"Guardar y publicar":"Guardar borrador"}
+                  </button>
+                </form>
+                <div className="space-y-3">
+                  <h3 className="font-display text-base text-white">Publicaciones guardadas</h3>
+                  {adminPosts.length===0&&<p className="text-sm text-white/60">Aún no hay publicaciones.</p>}
+                  {adminPosts.map(post=><div key={post.id} className="rounded-xl border border-flame/20 bg-blue-deep/30 p-4 space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[10px] uppercase tracking-widest text-flame">{post.kind==="event"?"Evento":post.kind==="video"?"Video":"Noticia"}</span>
+                      <span className="text-[10px] text-white/65">{post.published?"Publicado":"Borrador"}</span>
+                    </div>
+                    <h4 className="font-semibold text-white">{post.title}</h4>
+                    <p className="text-xs text-white/65 line-clamp-3">{post.summary}</p>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      <button type="button" onClick={()=>setPostForm({
+                        id:post.id,kind:post.kind as PostDraft["kind"],title:post.title,summary:post.summary,
+                        linkUrl:post.link_url??"",eventAt:post.event_at?post.event_at.slice(0,16):"",published:post.published
+                      })} className="min-h-10 rounded-full border border-white/20 px-4 text-xs text-white">Editar</button>
+                      <button type="button" disabled={postBusy} onClick={()=>setConfirm({
+                        title:"Eliminar publicación",
+                        description:"La publicación se eliminará del sitio y no podrá recuperarse.",
+                        onConfirm:()=>{void removePost(post.id);}
+                      })} className="min-h-10 rounded-full border border-red-400/30 px-4 text-xs text-red-300">Eliminar</button>
+                    </div>
+                  </div>)}
+                </div>
+              </div>
+            </SectionShell>
+          </TabsContent>
 
           <TabsContent value="live" className="mt-0">
             <SectionShell icon={Radio} title="Soul Live" subtitle="Estados en vivo administrados">
