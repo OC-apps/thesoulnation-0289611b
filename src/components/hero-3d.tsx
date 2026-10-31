@@ -15,7 +15,7 @@ export function Hero3D({ bannerUrl }: { bannerUrl?: string }) {
        className="block w-full h-full object-cover object-center"
        onError={()=>{if(displaySrc!==defaultBanner)setFailedUrl(src)}} />
    </div>
-   <div className="absolute inset-x-0 bottom-0 h-1 bg-[#F05E07]" />
+
   </div>
  );
 }
