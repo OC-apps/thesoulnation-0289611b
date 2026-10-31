@@ -2264,3 +2264,17 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-editorial-heading {align-items:start;flex-direction:column;gap:8px;}
   .soul-editorial-card {min-height:0;border-radius:17px;}
 }
+
+
+/* Soul Refined header: subtle Apple-like compact state on scroll */
+.soul-refined-header {transition:box-shadow .35s ease,background-color .35s ease,border-color .35s ease;}
+.soul-refined-header .soul-brand img {transition:height .35s cubic-bezier(.22,1,.36,1);}
+.soul-refined-header.is-scrolled {
+  background-color:rgba(6,8,28,.98);
+  border-bottom-color:rgba(255,255,255,.15);
+  box-shadow:0 12px 36px rgba(0,0,0,.22);
+}
+.soul-refined-header.is-scrolled .soul-brand img {height:32px;}
+@media(prefers-reduced-motion:reduce){
+  .soul-refined-header,.soul-refined-header .soul-brand img {transition:none;}
+}
