@@ -2868,3 +2868,47 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-member-profile .soul-member-profile-content {animation:none!important;}
   .soul-member-profile-navigation button {transition:none!important;}
 }
+
+/* Responsive safety pass: narrow phones, long labels and keyboard focus. */
+.soul-hub,
+.soul-hub > section,
+.soul-hub > section > div {
+  min-width:0;
+}
+.soul-hub .soul-content-tabs-options {
+  min-width:0;
+}
+.soul-hub .soul-content-tab {
+  overflow-wrap:anywhere;
+  min-width:0;
+}
+.soul-hub .soul-refined-mobile-nav a,
+.soul-hub .soul-refined-menu-toggle {
+  min-height:44px;
+}
+.soul-hub #roster .soul-roster-feature img {
+  max-width:100%;
+}
+.soul-hub .soul-video-card a:focus-visible,
+.soul-hub #roster .soul-portrait:focus-visible {
+  outline:3px solid #F05E07;
+  outline-offset:3px;
+}
+@media(max-width:420px){
+  .soul-hub .soul-content-tabs-heading {
+    letter-spacing:.08em;
+  }
+  .soul-hub .soul-content-tabs-options {
+    gap:3px;
+  }
+  .soul-hub .soul-content-tab {
+    padding-inline:2px;
+    font-size:clamp(8px,2.65vw,11px);
+  }
+  .soul-hub .soul-content-tab-number {
+    font-size:8px;
+  }
+  .soul-hub #about .soul-refined-access-grid .soul-home-tile > span:not(.soul-tile-arrow) {
+    min-width:0;
+  }
+}
