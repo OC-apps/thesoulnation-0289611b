@@ -21,6 +21,7 @@ import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
+import { updateSoulLive } from "@/lib/soul-live.functions";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { useWavesSocials } from "@/hooks/use-waves-socials";
 import { useWavesHidden } from "@/hooks/use-waves-hidden";
@@ -89,6 +90,42 @@ function AdminLivePage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
   const [msg, setMsg] = useState<string>("");
+  type LiveEntry = { is_live: boolean; platform: "tiktok"|"twitch"|"youtube"|"facebook"|"instagram"|"other"|null; stream_url: string };
+  const [liveEntries, setLiveEntries] = useState<Record<string, LiveEntry>>({});
+  const [liveBusy, setLiveBusy] = useState<string|null>(null);
+  const getLiveEntry = (id: string): LiveEntry => liveEntries[id] ?? { is_live:false, platform:"tiktok", stream_url:"" };
+  const editLiveEntry = (id: string, patch: Partial<LiveEntry>) => {
+    setLiveEntries(prev => ({...prev,[id]: {...(prev[id] ?? {is_live:false,platform:"tiktok",stream_url:""}),...patch}}));
+  };
+  const saveLiveEntry = async (id: string) => {
+    const value = getLiveEntry(id);
+    if (value.is_live && value.stream_url && !value.stream_url.startsWith("https://")) {
+      setMsg("La URL de transmisión debe comenzar con https://"); return;
+    }
+    setLiveBusy(id); setMsg("");
+    try {
+      await updateSoulLive({data:{password,memberId:id,isLive:value.is_live,platform:value.platform,streamUrl:value.stream_url.trim()}});
+      setMsg("Estado Soul Live guardado.");
+    } catch(e) {
+      setMsg(e instanceof Error ? e.message : "No se pudo guardar Soul Live");
+    } finally {setLiveBusy(null);}
+  };
+  useEffect(() => {
+    if (!authed) return;
+    let mounted=true;
+    const load = async () => {
+      const {data,error}=await supabase.from("live_status").select("member_id,is_live,platform,stream_url");
+      if (error || !mounted || !data) return;
+      const values:Record<string,LiveEntry>={};
+      for (const row of data as unknown as Array<{member_id:string;is_live:boolean;platform:LiveEntry["platform"];stream_url:string|null}>) {
+        values[row.member_id]={is_live:row.is_live,platform:row.platform ?? "tiktok",stream_url:row.stream_url ?? ""};
+      }
+      setLiveEntries(values);
+    };
+    void load();
+    return () => {mounted=false;};
+  }, [authed]);
+
 
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "" });
@@ -520,7 +557,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-3 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-4 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -533,9 +570,46 @@ function AdminLivePage() {
               <ImageIcon className="w-3.5 h-3.5" />
               <span>Imágenes</span>
             </TabsTrigger>
+            <TabsTrigger value="live" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-[10px] sm:text-xs font-mono uppercase tracking-widest">
+              <Radio className="w-3.5 h-3.5" />
+              <span>Soul Live</span>
+            </TabsTrigger>
           </TabsList>
 
 
+
+          <TabsContent value="live" className="mt-0">
+            <SectionShell icon={Radio} title="Soul Live" subtitle="Estados en vivo administrados">
+              <p className="text-sm text-foreground/70">Marca como «En vivo» únicamente a quienes estén transmitiendo. Este control es manual: no detecta automáticamente TikTok, Twitch o YouTube. Al terminar un directo, desactívalo.</p>
+              <div className="space-y-3">
+                {[...new Map([...MEMBERS,...waves.map(w=>({id:w.name.toLowerCase().replace(/\s+/g,"-"),name:w.name,photo:w.photo_url}))].map(m=>[m.id,m])).values()].map(member=>{
+                  const entry=getLiveEntry(member.id);
+                  return <div key={member.id} className="rounded-xl border border-flame/20 bg-blue-deep/30 p-3 sm:p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <strong className="text-sm text-white">{member.name}</strong>
+                      <label className="inline-flex items-center gap-2 text-xs text-white">
+                        <input type="checkbox" checked={entry.is_live} onChange={e=>editLiveEntry(member.id,{is_live:e.target.checked})} className="accent-orange-500 h-5 w-5"/>
+                        En vivo
+                      </label>
+                    </div>
+                    <div className="grid sm:grid-cols-[160px_1fr_auto] gap-2">
+                      <select value={entry.platform ?? "tiktok"} onChange={e=>editLiveEntry(member.id,{platform:e.target.value as LiveEntry["platform"]})}
+                        aria-label={"Plataforma de "+member.name} className="min-w-0 rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white">
+                        {["tiktok","twitch","youtube","facebook","instagram","other"].map(p=><option key={p} value={p}>{p.toUpperCase()}</option>)}
+                      </select>
+                      <input type="url" value={entry.stream_url} onChange={e=>editLiveEntry(member.id,{stream_url:e.target.value})}
+                        aria-label={"Enlace de transmisión de "+member.name} placeholder="https://... (enlace al directo)"
+                        className="min-w-0 rounded-lg border border-white/20 bg-[#090d29] p-3 text-sm text-white" />
+                      <button type="button" disabled={liveBusy===member.id} onClick={()=>void saveLiveEntry(member.id)}
+                        className="min-h-11 rounded-lg bg-[#F05E07] px-5 py-2 text-sm font-semibold text-white disabled:opacity-50">
+                        {liveBusy===member.id?"Guardando…":"Guardar"}
+                      </button>
+                    </div>
+                  </div>;
+                })}
+              </div>
+            </SectionShell>
+          </TabsContent>
 
           <TabsContent value="imagenes" className="mt-0">
             <SectionShell icon={ImageIcon} title="Imágenes del sitio" subtitle="Cambiar portada y tarjetas del inicio">
