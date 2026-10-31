@@ -623,16 +623,24 @@ function IndexContent() {
           {/* Division selector: always visible, including when Legends or Crew is active. */}
           <div className="soul-roster-switcher-layout">
             <div className="soul-roster-feature">
-              {rosterView === "waves" ? (
-                <img src="/soul-waves-banner-2026.jpg" alt="Soul Waves — streamers y creadores de contenido de The Soul Nation" width={1600} height={533}
-                  className="soul-roster-feature-banner" loading="lazy" />
-              ) : (
-                <div className="soul-roster-feature-placeholder" aria-label={rosterView === "legends" ? "Soul Legends" : "Soul Crew"}>
-                  <span className="soul-roster-feature-overline">THE SOUL NATION / ROSTER</span>
-                  <strong className="font-display">{rosterView === "legends" ? "SOUL LEGENDS" : "SOUL CREW"}</strong>
-                  <span className="soul-roster-feature-tagline">{rosterView === "legends" ? "MONTAGERS" : "FAMILIA"}</span>
-                </div>
-              )}
+              {(() => {
+                const banner = rosterView === "waves"
+                  ? "/soul-waves-banner-2026.jpg"
+                  : rosterView === "legends"
+                    ? siteAssets.roster_legends_banner
+                    : siteAssets.roster_crew_banner;
+                return banner ? (
+                  <img key={rosterView + banner} src={banner}
+                    alt={rosterView === "waves" ? "Banner Soul Waves" : rosterView === "legends" ? "Banner Soul Legends" : "Banner Soul Crew"}
+                    width={1600} height={533} className="soul-roster-feature-banner" loading="lazy" decoding="async" />
+                ) : (
+                  <div className="soul-roster-feature-empty" role="img"
+                    aria-label={rosterView === "legends" ? "Espacio para el banner de Soul Legends" : "Espacio para el banner de Soul Crew"}>
+                    <span>THE SOUL NATION</span>
+                    <small>IMAGEN DE DIVISIÓN PENDIENTE</small>
+                  </div>
+                );
+              })()}
             </div>
             <nav className="soul-roster-switcher" aria-label="Seleccionar división del roster">
               <span className="soul-roster-switcher-label">EXPLORA LA NACIÓN <span aria-hidden="true">/ 03</span></span>
