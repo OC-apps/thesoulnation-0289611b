@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -124,6 +125,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -142,7 +144,7 @@ function RootComponent() {
         <ExplorationProvider>
           <AudioProvider>
             <EffectsLayer />
-            <BottomBar />
+            {location.pathname !== "/" && <BottomBar />}
             <Outlet />
             <EasterEggNotification />
             <ExplorerPanel hideButton />
