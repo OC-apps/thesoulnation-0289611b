@@ -977,16 +977,11 @@ function IndexContent() {
           <div className="relative rounded-[28px] border border-[#2a5cff]/40 bg-gradient-to-br from-[#0a1a4a]/80 via-background/60 to-[#0a1a4a]/40 backdrop-blur-xl shadow-[0_40px_120px_-30px_rgba(0,0,0,0.8)] overflow-hidden">
             {/* Top bar */}
             <div className="flex items-center justify-between px-5 md:px-7 py-4 border-b border-white/10 bg-[#081245]/60">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-flame shadow-[0_0_12px_var(--flame-glow)]" />
-                <span className="w-3 h-3 rounded-full bg-white/70" />
-                <span className="w-3 h-3 rounded-full bg-[#2a5cff]" />
-                <span className="ml-4 text-[11px] uppercase tracking-[0.3em] text-white/60 hidden sm:inline">soul.player · v2025</span>
+              <div className="flex items-center gap-3">
+                <span className="h-2 w-2 rounded-full bg-[#F05E07]" aria-hidden="true" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/85">The Soul Nation Music</span>
               </div>
-              <div className="hidden md:flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-white/70">
-                <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-flame opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-flame"></span></span>
-                streaming live
-              </div>
+              <span className="hidden sm:inline text-[11px] font-medium tracking-[0.06em] text-white/55">Reproductor integrado</span>
             </div>
 
             <div className="grid lg:grid-cols-12 gap-0">
@@ -1557,7 +1552,7 @@ function WallpapersSection() {
             </h2>
           </div>
           <div className="font-sans text-foreground/70 text-sm md:text-base max-w-sm leading-relaxed">
-            Pasá el mouse sobre cada serie. Hacé clic para descargar en Drive.
+            Explora las colecciones y abre tu favorita para ver los diseños disponibles.
           </div>
         </div>
 
