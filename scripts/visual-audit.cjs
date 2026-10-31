@@ -7,12 +7,12 @@ const OUT = path.join(process.cwd(), process.env.SOUL_AUDIT_OUT || "visual-audit
 const BASE = (process.env.SOUL_AUDIT_BASE_URL || "https://thesoulnation.org").replace(/\/$/, "");
 const widths = [320, 390, 430, 768, 1440];
 const pages = [
-  { name:"inicio", url:`${BASE}/" },
-  { name:"roster", url:`${BASE}/#roster" },
-  { name:"videos", url:`${BASE}/#videos" },
-  { name:"musica", url:`${BASE}/#music" },
-  { name:"jersey", url:`${BASE}/#jersey" },
-  { name:"xplicit-cup", url:`${BASE}/xplicit-cup" },
+  { name:"inicio", url:`${BASE}/` },
+  { name:"roster", url:`${BASE}/#roster` },
+  { name:"videos", url:`${BASE}/#videos` },
+  { name:"musica", url:`${BASE}/#music` },
+  { name:"jersey", url:`${BASE}/#jersey` },
+  { name:"xplicit-cup", url:`${BASE}/xplicit-cup` },
 ];
 const results = [];
 fs.mkdirSync(OUT, {recursive:true});
