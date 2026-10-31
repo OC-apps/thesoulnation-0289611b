@@ -267,6 +267,7 @@ function PanelContent({ which }: { which: PanelKey }) {
             <img
               src={xplicitTrophy}
               alt="Trofeo Xplicit Cup"
+              loading="lazy" decoding="async"
               className="relative w-56 md:w-[22rem] h-auto object-contain"
             />
           </div>
