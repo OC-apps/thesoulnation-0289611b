@@ -162,6 +162,11 @@ export function RecruitmentForm() {
             <FloatField label="Correo de contacto" name="email" type="email" placeholder="tucorreo@ejemplo.com" />
           </div>
 
+          <label className="mt-8 flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.035] p-4 text-sm leading-relaxed text-white/75">
+            <input type="checkbox" name="Consentimiento" value="Sí" required className="mt-1 h-5 w-5 shrink-0 accent-orange-500" />
+            <span>Autorizo que The Soul Nation utilice los datos proporcionados para evaluar mi postulación y contactarme sobre el proceso de reclutamiento.</span>
+          </label>
+
           <button
             type="submit"
             disabled={status === "sending" || !area}
