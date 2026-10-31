@@ -671,6 +671,16 @@ function AdminLivePage() {
                   <button type="submit" disabled={postBusy} className="min-h-11 w-full rounded-lg bg-[#F05E07] px-5 py-2 font-semibold text-white disabled:opacity-50">
                     {postBusy?"Guardando…":postForm.published?"Guardar y publicar":"Guardar borrador"}
                   </button>
+                  <div className="mt-5 border-t border-white/10 pt-4">
+                    <h4 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/65">Vista previa · así aparecerá en la web</h4>
+                    <div className="space-y-3 rounded-2xl border border-white/10 bg-gradient-to-br from-[#14193c] to-[#0a0d24] p-5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#F05E07]">{postForm.kind==="event"?"AGENDA":postForm.kind==="video"?"VIDEO":"NOTICIA"}</span>
+                      <h5 className="break-words text-xl font-bold text-white">{postForm.title||"Título de la publicación"}</h5>
+                      <p className="whitespace-pre-line text-sm leading-relaxed text-white/75">{postForm.summary||"Aquí aparecerá la descripción."}</p>
+                      {postForm.kind==="event"&&postForm.eventAt&&<p className="text-xs text-white/60">Evento: {new Date(postForm.eventAt).toLocaleString("es-MX",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}</p>}
+                      {postForm.linkUrl&&<span className="text-xs font-semibold text-[#F05E07]">Ver publicación ↗</span>}
+                    </div>
+                  </div>
                 </form>
                 <div className="space-y-3">
                   <h3 className="font-display text-base text-white">Publicaciones guardadas</h3>
