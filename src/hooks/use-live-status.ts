@@ -8,11 +8,17 @@ export function useLiveStatus() {
     let mounted = true;
 
     const load = async () => {
-      const { data } = await supabase.from("live_status").select("member_id, is_live");
+      const { data, error } = await supabase.from("live_status").select("member_id, is_live");
+      if (error) { console.warn("[Soul Live] No fue posible actualizar los estados:", error.message); return; }
       if (!mounted || !data) return;
       setLiveSet(new Set(data.filter((r) => r.is_live).map((r) => r.member_id)));
     };
-    load();
+    void load();
+    const refresh = window.setInterval(() => {
+      if (document.visibilityState === "visible") void load();
+    }, 60000);
+    const onFocus = () => { void load(); };
+    window.addEventListener("focus", onFocus);
 
     const channel = supabase
       .channel("live_status_changes")
@@ -34,6 +40,8 @@ export function useLiveStatus() {
 
     return () => {
       mounted = false;
+      window.clearInterval(refresh);
+      window.removeEventListener("focus", onFocus);
       supabase.removeChannel(channel);
     };
   }, []);
