@@ -103,6 +103,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const waveSlug = (name: string) => name.toLowerCase().trim().replace(/\s+/g, "-");
+
 function renderWaveCard(
   c: (typeof WAVES)[number],
   i: number,
@@ -178,6 +180,37 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
 
 
   const active = openIdx !== null ? WAVES_ALL[openIdx] : null;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get("wave");
+    if (!requested) return;
+    const found = WAVES_ALL.findIndex((entry) => waveSlug(entry.name) === requested);
+    if (found >= 0) setOpenIdx(found);
+  }, [dynamicWaves.length, socialsMap.size, hiddenSet.size]);
+
+  const closeWave = () => {
+    setOpenIdx(null);
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("wave")) {
+      url.searchParams.delete("wave");
+      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    }
+  };
+
+  const shareWave = async (name: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("wave", waveSlug(name));
+    url.hash = "waves";
+    const link = url.toString();
+    if (navigator.share) {
+      try { await navigator.share({ title: name + " | The Soul Nation", url: link }); return; }
+      catch { /* Sharing was canceled; allow copying instead. */ }
+    }
+    try { await navigator.clipboard.writeText(link); setCopiedWave(name); }
+    catch { window.prompt("Copia el enlace del perfil:", link); }
+  };
+
+  const [copiedWave, setCopiedWave] = useState<string | null>(null);
   const liveSet = useLiveStatus();
   const isLiveFor = (name: string) => liveSet.has(name.toLowerCase().replace(/\s+/g, "-"));
 
@@ -203,7 +236,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
         })()}
       </div>
 
-      <Dialog open={active !== null} onOpenChange={(o) => !o && setOpenIdx(null)}>
+      <Dialog open={active !== null} onOpenChange={(o) => !o && closeWave()}>
         <DialogContent className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 cursor-pointer [&>button]:hidden rounded-[28px]">
           {active && (
             <div className="relative">
@@ -217,7 +250,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES_ALL.length}</span>
-                  <button onClick={() => setOpenIdx(null)} className="hover:text-foreground transition" aria-label="Cerrar">
+                  <button onClick={closeWave} className="hover:text-foreground transition" aria-label="Cerrar">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -253,6 +286,13 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                       )}
                     </h3>
                   </div>
+
+                  <button type="button" onClick={() => void shareWave(active.name)}
+                    className="soul-profile-share inline-flex w-fit items-center gap-2 rounded-full border border-flame/50 px-4 py-2 text-xs font-semibold text-white hover:bg-[#F05E07]/15"
+                    aria-label={`Compartir perfil de ${active.name}`}>
+                    <Share2 className="h-4 w-4 text-flame" />
+                    {copiedWave === active.name ? "Enlace copiado" : "Compartir perfil"}
+                  </button>
 
                   <div className="grid grid-cols-3 gap-2 font-mono text-[10px] uppercase">
                     <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
