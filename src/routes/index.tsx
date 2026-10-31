@@ -5,7 +5,7 @@ import { WAVES, type Social } from "@/lib/waves-defaults";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { EasterEgg } from "@/components/easter-egg";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig, useReducedMotion } from "framer-motion";
 import { Pause, Play, Share2, Youtube, Facebook } from "lucide-react";
 import soulMascot from "@/assets/soul-mascot.svg";
 import soulLogo from "@/assets/soul-logo-official.png";
@@ -357,7 +357,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
 }
 
 function Index() {
-  return <IndexContent />;
+  return <MotionConfig reducedMotion="user"><IndexContent /></MotionConfig>;
 }
 
 const HUB_SECTIONS = [
@@ -626,7 +626,7 @@ function IndexContent() {
             </p>
           </div>
 
-          <RosterSearch waves={waveNames} legends={legendsList} crew={crewList} />
+          <RosterSearch waves={waveNames.filter(name => name.trim().toUpperCase() !== "SOUL PXLMAA")} legends={legendsList} crew={crewList} />
           {!roster.loaded && <p role="status" className="mx-auto mb-4 max-w-3xl text-xs text-white/60">Actualizando integrantes…</p>}
           {roster.error && <p role="status" className="mx-auto mb-4 max-w-3xl rounded-xl border border-[#F05E07]/30 bg-[#0c1029] px-4 py-3 text-sm text-white/80">{roster.error}</p>}
 
@@ -646,7 +646,7 @@ function IndexContent() {
                 ) : (
                   <div className="soul-roster-feature-empty">
                     <h3 className="font-display">{rosterView === "legends" ? "SOUL LEGENDS" : "SOUL CREW"}</h3>
-                    <small>{rosterView === "legends" ? "Montagers · Clips & Highlights" : "Familia"}</small>
+                    <p>{rosterView === "legends" ? "Montagers · Clips & Highlights" : "Familia"}</p>
                   </div>
                 );
               })()}
@@ -743,7 +743,7 @@ function IndexContent() {
         <div className="absolute -bottom-40 right-1/4 w-[500px] h-[500px] rounded-full bg-flame opacity-[0.06] blur-[140px]" />
         <div className="absolute inset-0 pointer-events-none opacity-30" style={{backgroundImage:"radial-gradient(circle at 20% 30%, color-mix(in oklab, var(--flame) 8%, transparent), transparent 40%), radial-gradient(circle at 80% 70%, color-mix(in oklab, var(--flame) 6%, transparent), transparent 45%)"}} />
         <div className="relative mx-auto max-w-7xl px-6">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8 md:mb-12">
             <div>
               <div className="text-xs uppercase tracking-[0.3em] text-flame">05 · Reel</div>
               <h2 className="mt-6 font-display text-6xl md:text-8xl lg:text-9xl font-bold leading-[0.95]">
@@ -851,6 +851,7 @@ function IndexContent() {
               type="button"
               onClick={() => setJerseySpecsOpen((v) => !v)}
               aria-expanded={jerseySpecsOpen}
+              aria-controls="jersey-specs"
               
               className="mt-4 inline-flex min-h-11 items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.25em] hover:bg-flame hover:text-background transition active:scale-95"
             >
@@ -859,7 +860,7 @@ function IndexContent() {
             </button>
 
             {/* Specs colapsables */}
-            <div
+            <div id="jersey-specs"
               inert={!jerseySpecsOpen}
               aria-hidden={!jerseySpecsOpen}
               className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${
@@ -995,9 +996,9 @@ function IndexContent() {
               <span className="hidden sm:inline text-[11px] font-medium tracking-[0.06em] text-white/55">Reproductor integrado</span>
             </div>
 
-            <div className="grid lg:grid-cols-12 gap-0">
+            <div className="soul-music-layout grid min-w-0 lg:grid-cols-12 gap-0">
               {/* LEFT: Album art + meta */}
-              <div className="lg:col-span-4 p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-white/10 bg-gradient-to-b from-[#081245]/40 to-[#0a1a4a]/20">
+              <div className="min-w-0 lg:col-span-4 p-4 sm:p-6 md:p-8 border-b lg:border-b-0 lg:border-r border-white/10 bg-gradient-to-b from-[#081245]/40 to-[#0a1a4a]/20">
                 <div className="relative aspect-square rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(255,107,53,0.5)]">
                   <img
                     src={somosCover}
@@ -1033,8 +1034,8 @@ function IndexContent() {
                 </div>
 
                 {/* TRANSPORT CONTROLS */}
-                <div className="mt-5 rounded-2xl border border-white/10 bg-[#040a2a]/70 p-4">
-                  <div className="flex items-center gap-3">
+                <div className="mt-5 rounded-2xl border border-white/10 bg-[#040a2a]/70 p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <button
                       type="button"
                       onClick={() => skipAudio(-10)}
@@ -1117,8 +1118,8 @@ function IndexContent() {
               </div>
 
               {/* RIGHT: Spotify embed */}
-              <div className="lg:col-span-8 p-4 md:p-6 bg-gradient-to-br from-[#081245]/30 to-[#0a1a4a]/40">
-                <div className="flex items-center justify-between mb-3 px-2">
+              <div className="min-w-0 lg:col-span-8 p-4 md:p-6 bg-gradient-to-br from-[#081245]/30 to-[#0a1a4a]/40">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-3 px-2">
                   <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-white/60">
                     <span className="w-1.5 h-1.5 rounded-full bg-flame animate-pulse" />
                     Playlist · The Soul Nation Music
@@ -1210,7 +1211,7 @@ function IndexContent() {
 
       {/* REDES */}
       <section id="redes" className="relative py-16 md:py-24 overflow-hidden border-t border-border">
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[720px] aspect-square">
+        <div aria-hidden className="soul-social-backdrop pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[720px] aspect-square">
           <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,var(--flame-glow)_0%,transparent_60%)] opacity-60 animate-pulse" />
           <div className="absolute inset-[15%] rounded-full bg-[radial-gradient(circle,var(--flame-glow)_0%,transparent_70%)] opacity-50 blur-2xl" />
           <img src={soulLogo} alt="" width={720} height={720} loading="lazy" className="relative w-full h-full opacity-40 drop-shadow-[0_0_60px_var(--flame-glow)] animate-[pulse_4s_ease-in-out_infinite]" />
@@ -1266,12 +1267,13 @@ function RosterName({ name }: { name: string }) {
 
 function JerseyShowcase({ front, back }: { front: string; back: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
   const [t, setT] = useState({ rx: 0, ry: 0, mx: 50, my: 50, active: false });
   const [side, setSide] = useState<"front" | "back">("front");
 
   const onMove = (e: MouseEvent) => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || reducedMotion) return;
     const r = el.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
     const y = (e.clientY - r.top) / r.height;
@@ -1548,16 +1550,14 @@ function WallpapersSection() {
               onMouseMove={onMove}
               onMouseLeave={() => setPos({ x: 50, y: 50 })}
               className="group relative block aspect-[4/5] sm:aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-deep"
-              style={{
-                transform: "none",
-                transition: "transform 0.2s ease-out",
-              }}
+              aria-label={`Abrir colección ${wp.title}`}
             >
               {WALLPAPERS.map((w, i) => (
                 <img
                   key={w.title}
                   src={w.img}
-                  alt={w.title}
+                  alt={i === active ? w.title : ""}
+                  aria-hidden={i !== active}
                   className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
                   style={{
                     opacity: i === active ? 1 : 0,
@@ -1603,7 +1603,7 @@ function WallpapersSection() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flame opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-flame" />
                 </span>
-                LIVE
+                4K
               </span>
 
               {/* info */}
@@ -1631,15 +1631,8 @@ function WallpapersSection() {
                 <button
                   key={w.title}
                   type="button"
-                  onMouseEnter={() => setActive(i)}
-                  onFocus={() => setActive(i)}
-                  onClick={() => {
-                    if (i === active) {
-                      window.open(w.href, "_blank", "noopener,noreferrer");
-                    } else {
-                      setActive(i);
-                    }
-                  }}
+                  aria-pressed={i === active}
+                  onClick={() => setActive(i)}
                   className={`group relative overflow-hidden rounded-xl border text-left transition-all duration-500 shrink-0 w-[260px] lg:w-auto snap-start ${
                     i === active
                       ? "border-flame lg:scale-[1.02] shadow-[0_20px_60px_-20px_var(--flame-glow)]"

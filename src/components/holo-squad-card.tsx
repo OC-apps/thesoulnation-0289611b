@@ -104,11 +104,11 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legend
         </ul>
       </div>
       <Dialog open={selectedMember !== null} onOpenChange={open=>!open&&closeProfile()}>
-        <DialogContent className="soul-member-profile max-w-[min(92vw,720px)] overflow-hidden rounded-[24px] border border-white/15 bg-[#0b0e24] p-0 text-white">
+        <DialogContent className="soul-member-profile max-w-[min(92vw,720px)] max-h-[calc(100dvh-2rem)] overflow-y-auto [&>button]:hidden rounded-[24px] border border-white/15 bg-[#0b0e24] p-0 text-white">
           {selectedMember&&<div key={selectedMember} className={`soul-member-profile-content ${profileDirection > 0 ? "is-forward" : "is-backward"} relative`}>
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="text-[10px] font-semibold tracking-[.22em] text-[#F05E07]">THE SOUL NATION / PERFIL</span>
-              <button type="button" onClick={closeProfile} aria-label="Cerrar perfil" className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"><X size={18}/></button>
+              <button type="button" onClick={closeProfile} aria-label="Cerrar perfil" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"><X size={18}/></button>
             </div>
             <div className="grid items-center gap-0 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
               <div className="relative flex min-h-[240px] items-center justify-center bg-[#01039E]">

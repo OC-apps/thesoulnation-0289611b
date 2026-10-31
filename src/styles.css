@@ -898,7 +898,7 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 .soul-hub #top .soul-hero-banner { height:auto !important; }
 @media (max-width:639px) {
  .soul-hero-banner { width:100%; max-height:220px; }
- .soul-hero > div { padding-block:2rem; }
+
 }
 
 
@@ -1755,7 +1755,7 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 .soul-hub #roster .soul-waves-heading {
   border:0;padding:0; margin-top:0;
 }
-@media(max-width:760px) {
+@media(max-width:900px) {
   .soul-hub #roster .soul-roster-switcher-layout {
     grid-template-columns:minmax(0,1fr);
     gap:12px;
@@ -2732,6 +2732,8 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 /* Soul Roster / unified division artwork and editorial profiles */
 .soul-hub #roster .soul-roster-feature {
   display:block;
+  width:100%;
+  max-width:100%;
   aspect-ratio:3/1;
   min-height:0;
   height:auto;
@@ -2767,9 +2769,9 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   font-weight:800;
   letter-spacing:.08em;
 }
-.soul-hub #roster .soul-roster-feature-empty > small {
+.soul-hub #roster .soul-roster-feature-empty > p {
   color:rgba(255,255,255,.62);
-  font:600 clamp(11px,1vw,13px)/1.4 ui-monospace,SFMono-Regular,monospace;
+  font:500 clamp(12px,1.2vw,15px)/1.4 var(--font-sans);
   letter-spacing:.16em;
 }
 .soul-hub #roster .soul-roster-switcher-layout {align-items:start;}
@@ -2903,6 +2905,8 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-hub .soul-content-tab {
     padding-inline:2px;
     font-size:clamp(11px,3vw,12px);
+    letter-spacing:-.035em;
+    overflow-wrap:normal;
   }
   .soul-hub .soul-content-tab-number {
     font-size:8px;
@@ -3073,4 +3077,13 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-hub #top .soul-hero.soul-hero-fullbleed > div {
     padding-block:0;
   }
+}
+
+/* Audit: keep decoration behind readable content without changing the source asset. */
+.soul-hub #redes .soul-social-backdrop { opacity:.14; }
+.soul-hub #redes .soul-social-backdrop * { animation:none; }
+
+/* Keep long collection titles whole after the shared heading scale. */
+@media(max-width:540px){
+ .soul-hub #wallpapers h2 {font-size:clamp(24px,6.8vw,32px)!important;}
 }

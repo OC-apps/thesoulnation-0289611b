@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "@tanstack/react-router";
 import { Pause, Play, Menu, X, Home, Users, LayoutGrid } from "lucide-react";
 import { useAudio } from "@/hooks/use-audio";
 import { useExploration } from "@/lib/exploration";
@@ -6,6 +7,7 @@ import { useEasterEggs } from "@/lib/easter-eggs";
 import { SOCIALS } from "@/lib/socials";
 
 export function BottomBar() {
+  const { pathname } = useLocation();
   const { playing, toggle } = useAudio();
   const { setPanelOpen } = useExploration();
   const { togglePanel } = useEasterEggs();
@@ -21,7 +23,7 @@ export function BottomBar() {
     else window.location.href = `/#${id}`;
     setOpen(false);
   };
-  const active = ["waves", "legends", "crew", "roster"].includes(hash) ? "roster" : ["videos", "wallpapers", "music", "contenido"].includes(hash) ? "contenido" : hash;
+  const active = pathname !== "/" ? null : ["waves", "legends", "crew", "roster"].includes(hash) ? "roster" : ["videos", "wallpapers", "music", "contenido"].includes(hash) ? "contenido" : hash;
   return <div className="soul-dock">
     {open && <div className="soul-dock-menu">
       <nav aria-label="Menú de secciones" className="grid grid-cols-2 gap-2">

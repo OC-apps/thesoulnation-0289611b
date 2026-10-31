@@ -46,9 +46,9 @@ function XplicitCupPage() {
               alt="The Soul Nation"
               width={26}
               height={26}
-              className="drop-shadow-[0_0_12px_var(--flame-glow)]"
+              className="shrink-0 drop-shadow-[0_0_12px_var(--flame-glow)]"
             />
-            <span className="text-sm">
+            <span className="whitespace-nowrap text-[11px] sm:text-sm">
               THE SOUL <span className="text-flame">NATION</span>
             </span>
           </Link>
