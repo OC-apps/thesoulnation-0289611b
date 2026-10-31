@@ -31,6 +31,8 @@ export function ExplorerPanel({ hideButton = false }: { hideButton?: boolean } =
 
       {/* Panel */}
       <div
+        inert={!panelOpen}
+        aria-hidden={!panelOpen}
         className={`fixed bottom-14 left-3 z-[100] w-[min(360px,calc(100vw-1.5rem))] origin-bottom-left transition-all duration-300 sm:bottom-20 sm:left-auto sm:right-4 sm:origin-bottom-right ${
           panelOpen ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}

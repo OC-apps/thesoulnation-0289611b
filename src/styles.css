@@ -2762,18 +2762,17 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   color:white;
   text-align:center;
 }
-.soul-hub #roster .soul-roster-feature-empty > span {
-  font-size:clamp(12px,2vw,22px);
+.soul-hub #roster .soul-roster-feature-empty > h3 {
+  font-size:clamp(20px,3vw,32px);
   font-weight:800;
-  font-style:italic;
   letter-spacing:.08em;
 }
 .soul-hub #roster .soul-roster-feature-empty > small {
   color:rgba(255,255,255,.62);
-  font:600 clamp(7px,.8vw,10px)/1.4 ui-monospace,SFMono-Regular,monospace;
+  font:600 clamp(11px,1vw,13px)/1.4 ui-monospace,SFMono-Regular,monospace;
   letter-spacing:.16em;
 }
-.soul-hub #roster .soul-roster-switcher-layout {align-items:stretch;}
+.soul-hub #roster .soul-roster-switcher-layout {align-items:start;}
 .soul-hub #roster .soul-roster-switcher {min-height:0;}
 .soul-hub #roster .soul-division {
   background:transparent;
@@ -2903,7 +2902,7 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   }
   .soul-hub .soul-content-tab {
     padding-inline:2px;
-    font-size:clamp(8px,2.65vw,11px);
+    font-size:clamp(11px,3vw,12px);
   }
   .soul-hub .soul-content-tab-number {
     font-size:8px;
@@ -2911,4 +2910,24 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   .soul-hub #about .soul-refined-access-grid .soul-home-tile > span:not(.soul-tile-arrow) {
     min-width:0;
   }
+}
+
+/* Audit corrections: keyboard visibility and touch targets across destinations. */
+.soul-hub :is(a,button,input,textarea,select):focus-visible {
+  outline: 3px solid #F05E07;
+  outline-offset: 4px;
+}
+.soul-hub :is(a,button,input,textarea,select) {scroll-margin-block:110px 24px;}
+.soul-hub > section:focus {outline:none;}
+.soul-hub .soul-refined-mobile-nav {
+  max-height:calc(100dvh - 110px - env(safe-area-inset-bottom));
+  overflow-y:auto;
+}
+.soul-hub .soul-footer-links {flex-wrap:wrap;}
+.soul-hub .soul-footer-links a {display:inline-flex;align-items:center;min-height:44px;}
+.soul-wave-profile h3 {overflow-wrap:anywhere;}
+@media(max-width:600px) {
+  .soul-hub :is(input:not([type="checkbox"]):not([type="range"]),textarea,select) {font-size:16px;}
+  .soul-hub #music button {flex-shrink:0;min-width:44px;min-height:44px;}
+  .soul-hub #roster .soul-roster-option-copy strong {white-space:normal;overflow-wrap:anywhere;}
 }

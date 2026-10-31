@@ -65,6 +65,8 @@ export function ExplorationPanel({ hideButton = false }: { hideButton?: boolean 
       )}
 
       <div
+        inert={!open}
+        aria-hidden={!open}
         className={`fixed bottom-16 left-3 z-[100] w-[min(380px,calc(100vw-1.5rem))] origin-bottom-left transition-all duration-300 sm:bottom-20 sm:left-4 ${
           open ? "scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}

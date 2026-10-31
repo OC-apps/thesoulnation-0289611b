@@ -24,7 +24,7 @@ export const Route = createFileRoute("/xplicit-cup")({
 
 function XplicitCupPage() {
   return (
-    <div className="relative min-h-screen text-foreground overflow-hidden">
+    <div className="relative min-h-screen text-foreground overflow-hidden pb-[calc(7rem+env(safe-area-inset-bottom))]">
       {/* Fondo azul vivo tipo home */}
       <div
         aria-hidden

@@ -238,7 +238,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && closeWave()}>
-        <DialogContent className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 cursor-pointer [&>button]:hidden rounded-[28px]">
+        <DialogContent className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 [&>button]:hidden rounded-[28px]">
           {active && (
             <div className="relative">
               {/* Editorial header */}
@@ -248,7 +248,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES_ALL.length}</span>
-                  <button onClick={closeWave} className="hover:text-foreground transition" aria-label="Cerrar">
+                  <button onClick={closeWave} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-white/10 hover:text-foreground transition" aria-label="Cerrar">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -434,7 +434,11 @@ function IndexContent() {
 
   return (
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
-      <a href={`#${view}`} className="soul-skip-link">Saltar al contenido</a>
+      <a href={`#${view}`} className="soul-skip-link" onClick={(event) => {
+        event.preventDefault();
+        const section = document.getElementById(view);
+        if (section) { section.tabIndex = -1; section.focus({ preventScroll: true }); section.scrollIntoView({ block: "start", behavior: "instant" }); }
+      }}>Saltar al contenido</a>
       {/* NAV — a single consistent responsive navigation system */}
       <header className={`soul-refined-header ${headerCompact ? "is-scrolled" : ""} fixed top-0 inset-x-0 z-50 border border-white/10 bg-[#06081c]/90 backdrop-blur-xl`}>
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
@@ -446,7 +450,7 @@ function IndexContent() {
             {HUB_SECTIONS.filter(section => section.id !== "reclutamiento").map(section =>
               <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>
             )}
-            <a href="#reclutamiento" className="soul-refined-cta">Únete</a>
+            <a href="#reclutamiento" aria-current={view === "reclutamiento" ? "page" : undefined} className="soul-refined-cta">Únete</a>
           </nav>
           <button type="button" className="soul-refined-menu-toggle" onClick={() => setMobileNavOpen(v => !v)} aria-label={mobileNavOpen ? "Cerrar menú" : "Abrir menú"} aria-controls="soul-mobile-navigation" aria-expanded={mobileNavOpen}>
             {mobileNavOpen ? <X size={22}/> : <Menu size={22}/>}
@@ -530,6 +534,8 @@ function IndexContent() {
                 return (
                   <button
                     key={tab.id}
+                    type="button"
+                    aria-pressed={active}
                     onClick={() => setAboutTab(tab.id)}
                     className={`relative px-4 py-2 rounded-full text-xs font-mono uppercase tracking-[0.25em] transition ${
                       active ? "text-background" : "text-foreground/60 hover:text-flame"
@@ -620,6 +626,8 @@ function IndexContent() {
             </p>
           </div>
 
+          <RosterSearch waves={waveNames} legends={legendsList} crew={crewList} />
+
           {/* Division selector: always visible, including when Legends or Crew is active. */}
           <div className="soul-roster-switcher-layout">
             <div className="soul-roster-feature">
@@ -634,10 +642,9 @@ function IndexContent() {
                     alt={rosterView === "waves" ? "Banner Soul Waves" : rosterView === "legends" ? "Banner Soul Legends" : "Banner Soul Crew"}
                     width={1600} height={533} className="soul-roster-feature-banner" loading="lazy" decoding="async" />
                 ) : (
-                  <div className="soul-roster-feature-empty" role="img"
-                    aria-label={rosterView === "legends" ? "Espacio para el banner de Soul Legends" : "Espacio para el banner de Soul Crew"}>
-                    <span>THE SOUL NATION</span>
-                    <small>IMAGEN DE DIVISIÓN PENDIENTE</small>
+                  <div className="soul-roster-feature-empty">
+                    <h3 className="font-display">{rosterView === "legends" ? "SOUL LEGENDS" : "SOUL CREW"}</h3>
+                    <small>{rosterView === "legends" ? "Montagers · Clips & Highlights" : "Familia"}</small>
                   </div>
                 );
               })()}
@@ -843,14 +850,16 @@ function IndexContent() {
               onClick={() => setJerseySpecsOpen((v) => !v)}
               aria-expanded={jerseySpecsOpen}
               
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.25em] hover:bg-flame hover:text-background transition active:scale-95"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 px-4 py-2 rounded-full border border-flame/50 bg-flame/10 text-flame text-[10px] font-mono uppercase tracking-[0.25em] hover:bg-flame hover:text-background transition active:scale-95"
             >
               <span className={`transition-transform ${jerseySpecsOpen ? "rotate-180" : ""}`}>▾</span>
-              {jerseySpecsOpen ? "Ocultar specs" : "Ver specs · toca la jersey"}
+              {jerseySpecsOpen ? "Ocultar specs" : "Ver especificaciones"}
             </button>
 
             {/* Specs colapsables */}
             <div
+              inert={!jerseySpecsOpen}
+              aria-hidden={!jerseySpecsOpen}
               className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${
                 jerseySpecsOpen ? "grid-rows-[1fr] opacity-100 mt-4" : "grid-rows-[0fr] opacity-0 mt-0"
               }`}
@@ -900,15 +909,7 @@ function IndexContent() {
 
           {/* Showcase interactivo */}
           <div className="md:col-span-7 md:order-2 order-1">
-            <button
-              type="button"
-              onClick={() => setJerseySpecsOpen((v) => !v)}
-              aria-label={jerseySpecsOpen ? "Ocultar specs de la jersey" : "Mostrar specs de la jersey"}
-              
-              className="block w-full text-left cursor-pointer group"
-            >
-              <JerseyShowcase front={jerseyFront} back={jerseyBack} />
-            </button>
+            <JerseyShowcase front={jerseyFront} back={jerseyBack} />
           </div>
         </div>
       </section>
@@ -1006,7 +1007,7 @@ function IndexContent() {
                 </div>
 
                 <div className="mt-6">
-                  <div className="text-[11px] uppercase tracking-[0.3em] text-flame">Now Playing</div>
+                  <div role="status" className="text-[11px] uppercase tracking-[0.3em] text-flame">{playing ? "Reproduciendo" : "En pausa"}</div>
                   <h3 className="mt-2 font-display text-2xl md:text-3xl font-bold leading-tight text-white">
                     Somos <span className="italic text-flame">The Soul Nation</span>
                   </h3>
@@ -1154,36 +1155,6 @@ function IndexContent() {
               </div>
             </div>
 
-            {/* Bottom player bar */}
-            <div className="flex items-center justify-between gap-4 px-5 md:px-7 py-4 border-t border-white/10 bg-[#081245]/80 backdrop-blur">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-flame to-[#2a5cff] flex items-center justify-center shrink-0">
-                  <img src={soulLogo} alt="" className="w-6 h-6 object-contain" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate text-white">The Soul Nation Music</div>
-                  <div className="text-[11px] text-white/50 truncate">Somos The Soul Nation · 2025</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 text-white/60">
-                <button
-                  type="button"
-                  onClick={toggleAudio}
-                  className="w-12 h-12 rounded-full bg-flame text-primary-foreground flex items-center justify-center shadow-[0_0_30px_-5px_var(--flame-glow)] hover:scale-110 transition active:scale-95"
-                  aria-label={playing ? "Detener" : "Reproducir"}
-                >
-                  {playing ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  )}
-                </button>
-              </div>
-              <div className="hidden md:flex items-center gap-2 text-white/50 min-w-[160px] justify-end">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg>
-                <div className="w-24 h-1 rounded-full bg-white/10 overflow-hidden"><div className={`h-full bg-gradient-to-r from-flame to-[#2a5cff] ${playing ? "w-3/4" : "w-0"} transition-all`} /></div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -1262,7 +1233,7 @@ function IndexContent() {
       </section>
 
       <nav className="soul-footer-links" aria-label="Comunidad">
-        <a href="#jersey">Jersey Oficial</a><a href="#redes">Redes</a><a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer">Discord</a>
+        <a href="#jersey">Jersey Oficial</a><Link to="/xplicit-cup">Xplicit Cup</Link><a href="#redes">Redes</a><a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer">Discord</a>
       </nav>
       {/* FOOTER */}
       <footer className="border-t border-border py-12">
@@ -1400,8 +1371,9 @@ function JerseyShowcase({ front, back }: { front: string; back: string }) {
               key={s}
               type="button"
               onClick={() => setSide(s)}
+              aria-pressed={side === s}
               data-explore={s === "front" ? "jersey:front" : "jersey:back"}
-              className={`px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.3em] font-bold transition ${
+              className={`min-h-11 px-5 py-2 rounded-full text-[11px] uppercase tracking-[0.3em] font-bold transition ${
                 side === s ? "bg-flame text-primary-foreground shadow-[0_0_30px_-5px_var(--flame-glow)]" : "text-muted-foreground hover:text-foreground"
               }`}
             >
