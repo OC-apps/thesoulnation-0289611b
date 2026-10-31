@@ -2727,3 +2727,144 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
     transform:none!important;
   }
 }
+
+
+/* Soul Roster / unified division artwork and editorial profiles */
+.soul-hub #roster .soul-roster-feature {
+  display:block;
+  aspect-ratio:3/1;
+  min-height:0;
+  height:auto;
+  overflow:hidden;
+  background:#090d2b;
+}
+.soul-hub #roster .soul-roster-feature-banner {
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:0;
+  aspect-ratio:3/1;
+  object-fit:cover;
+  object-position:center;
+  animation:soul-banner-reveal .5s cubic-bezier(.22,1,.36,1) both;
+}
+.soul-hub #roster .soul-roster-feature-empty {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  height:100%;
+  min-height:0;
+  aspect-ratio:3/1;
+  background:linear-gradient(135deg,#01039E 0%,#11163e 65%,#07091b 100%);
+  color:white;
+  text-align:center;
+}
+.soul-hub #roster .soul-roster-feature-empty > span {
+  font-size:clamp(12px,2vw,22px);
+  font-weight:800;
+  font-style:italic;
+  letter-spacing:.08em;
+}
+.soul-hub #roster .soul-roster-feature-empty > small {
+  color:rgba(255,255,255,.62);
+  font:600 clamp(7px,.8vw,10px)/1.4 ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.16em;
+}
+.soul-hub #roster .soul-roster-switcher-layout {align-items:stretch;}
+.soul-hub #roster .soul-roster-switcher {min-height:0;}
+.soul-hub #roster .soul-division {
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  overflow:visible;
+}
+.soul-hub #roster .soul-division-intro {
+  padding:clamp(22px,3vw,42px) 0 14px!important;
+  background:transparent;
+  border:0;
+}
+.soul-hub #roster .soul-division-intro p {
+  max-width:70ch;
+  color:#adb4cd;
+  font-size:clamp(14px,1.5vw,17px);
+  line-height:1.75;
+  margin:0;
+}
+.soul-hub #roster .soul-division > .p-6 {
+  padding:16px 0 0!important;
+}
+.soul-hub #roster .soul-division .soul-legends-lineup,
+.soul-hub #roster .soul-division .soul-crew-lineup {
+  padding:0;
+  margin:0;
+}
+.soul-hub #roster .soul-division .soul-legends-slot,
+.soul-hub #roster .soul-division .soul-crew-slot {
+  cursor:pointer;
+}
+.soul-member-profile [data-state="open"] {
+  animation:soul-profile-appear .34s cubic-bezier(.22,1,.36,1);
+}
+.soul-member-profile .soul-member-profile-content {
+  animation:soul-profile-appear .34s cubic-bezier(.22,1,.36,1) both;
+}
+.soul-member-profile .soul-member-profile-content.is-backward {
+  animation-name:soul-profile-appear-reverse;
+}
+.soul-member-profile-navigation {
+  width:100%;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:8px;
+  border-top:1px solid rgba(255,255,255,.11);
+  padding-top:16px;
+  margin-top:6px;
+}
+.soul-member-profile-navigation button {
+  min-height:44px;
+  border-radius:10px;
+  padding:8px 10px;
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  transition:background .2s ease;
+}
+.soul-member-profile-navigation button:hover {background:rgba(255,255,255,.09);}
+.soul-member-profile-navigation button:disabled {opacity:.35;cursor:default;}
+.soul-member-profile-navigation span {
+  color:rgba(255,255,255,.58);
+  font-size:11px;
+  font-variant-numeric:tabular-nums;
+}
+@keyframes soul-banner-reveal {
+  from {opacity:.45;transform:scale(1.018);}
+  to {opacity:1;transform:scale(1);}
+}
+@keyframes soul-profile-appear {
+  from {opacity:0;transform:translateX(14px) scale(.986);}
+  to {opacity:1;transform:translateX(0) scale(1);}
+}
+@keyframes soul-profile-appear-reverse {
+  from {opacity:0;transform:translateX(-14px) scale(.986);}
+  to {opacity:1;transform:translateX(0) scale(1);}
+}
+@media(max-width:780px) {
+  .soul-hub #roster .soul-roster-feature,
+  .soul-hub #roster .soul-roster-feature-banner,
+  .soul-hub #roster .soul-roster-feature-empty {
+    aspect-ratio:3/1;
+    min-height:0;
+  }
+  .soul-hub #roster .soul-division-intro {
+    padding-top:22px!important;
+  }
+  .soul-hub #roster .soul-division > .p-6 {padding:14px 0 0!important;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .soul-hub #roster .soul-roster-feature-banner,
+  .soul-member-profile .soul-member-profile-content {animation:none!important;}
+  .soul-member-profile-navigation button {transition:none!important;}
+}
