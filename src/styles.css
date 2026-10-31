@@ -3059,3 +3059,18 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   }
   .soul-xplicit-page .soul-xplicit-hero {opacity:1!important;transform:none!important;}
 }
+
+/* Visual evidence: fixed header must remain centered even with reduced motion. */
+@media(prefers-reduced-motion:reduce){
+  .soul-hub > .soul-refined-header,
+  .soul-hub > .soul-refined-header.is-scrolled {
+    transform:translateX(-50%)!important;
+    transition:none!important;
+  }
+}
+/* Legacy mobile padding must not stretch the official hero artwork or overlays. */
+@media(max-width:639px){
+  .soul-hub #top .soul-hero.soul-hero-fullbleed > div {
+    padding-block:0;
+  }
+}
