@@ -402,7 +402,7 @@ function IndexContent() {
 
   return (
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
-      <a href="#main-content" className="soul-skip-link">Saltar al contenido</a>
+      <a href="#top" className="soul-skip-link">Saltar al contenido</a>
       {/* NAV — a single consistent responsive navigation system */}
       <header className="soul-refined-header fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl">
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
@@ -427,9 +427,8 @@ function IndexContent() {
         </nav>}
       </header>
 
-      <main id="main-content" className="contents">
       {/* HERO */}
-      <section id="top" className="relative overflow-hidden grain">
+      <section id="top" role="main" tabIndex={-1} className="relative overflow-hidden grain">
         <Hero3D bannerUrl={siteAssets.home_banner} />
 
 
@@ -1176,7 +1175,6 @@ function IndexContent() {
       <nav className="soul-footer-links" aria-label="Comunidad">
         <a href="#jersey">Jersey Oficial</a><a href="#redes">Redes</a><a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer">Discord</a>
       </nav>
-      </main>
       {/* FOOTER */}
       <footer className="border-t border-border py-12">
         <div className="mx-auto max-w-7xl px-6 flex flex-wrap items-center justify-between gap-6">
