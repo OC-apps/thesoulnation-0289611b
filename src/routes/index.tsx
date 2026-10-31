@@ -386,6 +386,13 @@ const HUB_SECTIONS = [
 function IndexContent() {
   const [destination, setDestination] = useState("top");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [headerCompact, setHeaderCompact] = useState(false);
+  useEffect(() => {
+    const update = () => setHeaderCompact(window.scrollY > 48);
+    update();
+    window.addEventListener("scroll",update,{passive:true});
+    return () => window.removeEventListener("scroll",update);
+  }, []);
   useEffect(() => {
     if (!mobileNavOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -446,7 +453,7 @@ function IndexContent() {
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
       <a href={`#${view}`} className="soul-skip-link">Saltar al contenido</a>
       {/* NAV — a single consistent responsive navigation system */}
-      <header className="soul-refined-header fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl">
+      <header className={`soul-refined-header ${headerCompact ? "is-scrolled" : ""} fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl`}>
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
           <a href="#top" aria-label="The Soul Nation — inicio" className="soul-brand flex shrink-0 items-center gap-3">
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
