@@ -436,7 +436,7 @@ function IndexContent() {
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
       <a href={`#${view}`} className="soul-skip-link">Saltar al contenido</a>
       {/* NAV — a single consistent responsive navigation system */}
-      <header className={`soul-refined-header ${headerCompact ? "is-scrolled" : ""} fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl`}>
+      <header className={`soul-refined-header ${headerCompact ? "is-scrolled" : ""} fixed top-0 inset-x-0 z-50 border border-white/10 bg-[#06081c]/90 backdrop-blur-xl`}>
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
           <a href="#top" aria-label="The Soul Nation — inicio" className="soul-brand flex shrink-0 items-center gap-3">
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
@@ -590,7 +590,7 @@ function IndexContent() {
         </div>
         {/* Accesos del inicio, después de Visión y Objetivo */}
         <div className="soul-refined-quick-title"><span>EXPLORA SOUL</span><h3 className="font-display">Descubre la Nación</h3></div>
-        <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
+        <div className="soul-home-grid soul-refined-access-grid mx-auto max-w-6xl px-6 py-8">
           {[
             {href:"#roster",title:"Roster",short:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || "/roster-team-card-2026.jpg"},
             {href:"#videos",title:"Nuestros Videos",short:"Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || "/quick-videos-2026.jpg"},
@@ -747,7 +747,7 @@ function IndexContent() {
           </div>
 
           {/* Mobile carrusel */}
-          <div className="md:hidden">
+          <div className="soul-editorial-mobile-carousel md:hidden">
             <MobileCarousel>
               {VIDEOS.map((v, i) => (
                 <div key={v.id} className="snap-center shrink-0 w-[85%]">
@@ -758,7 +758,7 @@ function IndexContent() {
           </div>
 
           {/* Desktop grid */}
-          <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="soul-editorial-video-grid hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-5">
             {VIDEOS.map((v, i) => (
               <VideoCard key={v.id} video={v} index={i} featured={i === 0} />
             ))}
