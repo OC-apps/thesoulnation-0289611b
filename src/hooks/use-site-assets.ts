@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type SiteAssetKey = "home_banner"|"home_roster"|"home_videos"|"home_wallpapers"|"home_jersey"|"about_team";
+export type SiteAssetKey = "home_banner"|"home_roster"|"home_videos"|"home_wallpapers"|"home_jersey"|"about_team"|"roster_legends_banner"|"roster_crew_banner";
 export const HOME_ASSET_KEYS: {key:SiteAssetKey;label:string;hint:string}[] = [
  {key:"home_banner",label:"Banner principal",hint:"Imagen horizontal recomendada: 1920 × 600"},
  {key:"home_roster",label:"Tarjeta Roster",hint:"Imagen cuadrada recomendada"},
@@ -9,6 +9,8 @@ export const HOME_ASSET_KEYS: {key:SiteAssetKey;label:string;hint:string}[] = [
  {key:"home_wallpapers",label:"Tarjeta Wallpapers",hint:"Imagen cuadrada recomendada"},
  {key:"home_jersey",label:"Tarjeta Jersey Oficial",hint:"Imagen cuadrada recomendada"},
  {key:"about_team",label:"Foto de ¿Quiénes somos?",hint:"Fotografía horizontal o de grupo"},
+ {key:"roster_legends_banner",label:"Banner Soul Legends",hint:"Imagen horizontal de la división · recomendado 1600 × 533"},
+ {key:"roster_crew_banner",label:"Banner Soul Crew",hint:"Imagen horizontal de la división · recomendado 1600 × 533"},
 ];
 export function useSiteAssets(){
  const [assets,setAssets]=useState<Partial<Record<SiteAssetKey,string>>>({});
