@@ -1934,3 +1934,82 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
   }
 }
 
+
+
+/* SOUL REFINED 2026: one navigation surface, less repeated chrome */
+.soul-refined-header { min-height:64px; }
+.soul-refined-desktop-nav { display:flex;align-items:center;gap:6px; }
+.soul-refined-desktop-nav .soul-header-link {
+  display:inline-flex;align-items:center;justify-content:center;min-height:40px;
+  padding:10px 16px;border-radius:999px;
+  font-size:12px;letter-spacing:.015em;color:rgba(255,255,255,.72);
+  transition:color .2s ease,background .2s ease;
+}
+.soul-refined-desktop-nav .soul-header-link:hover,
+.soul-refined-desktop-nav .soul-header-link[aria-current="page"] {
+  color:#fff;background:rgba(255,255,255,.10);
+}
+.soul-refined-desktop-nav .soul-refined-cta {
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:11px 24px;min-height:40px;margin-left:12px;
+  border-radius:999px;background:#F05E07;color:#fff;
+  font-size:12px;font-weight:700;transition:background .2s ease,transform .2s ease;
+}
+.soul-refined-desktop-nav .soul-refined-cta:hover {background:#ff7424;transform:translateY(-1px)}
+.soul-refined-menu-toggle {display:none;align-items:center;justify-content:center;color:#fff;width:44px;height:44px;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(255,255,255,.04)}
+.soul-refined-mobile-nav {display:none;}
+.soul-refined-quick-title {
+  max-width:1100px;margin:clamp(26px,4vw,52px) auto 0;
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px;
+}
+.soul-refined-quick-title span {
+  font:700 11px/1.2 ui-monospace,monospace;
+  color:#F05E07;letter-spacing:.23em;
+}
+.soul-refined-quick-title h3 {
+  margin:0;color:#fff;font-size:clamp(27px,3vw,42px);letter-spacing:-.025em;line-height:1.1;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid {margin-top:19px;}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile {
+  border-color:rgba(255,255,255,.10);
+  box-shadow:0 7px 25px rgba(0,0,0,.12);
+  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
+}
+.soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile:hover {
+  box-shadow:0 16px 40px rgba(1,3,158,.20);
+}
+.soul-hub #top .soul-hero.soul-hero-fullbleed {
+  border-radius:clamp(18px,3vw,32px);
+  box-shadow:0 18px 70px rgba(1,3,158,.12);
+}
+.soul-hub #about .soul-purpose-links {display:none;}
+@media(max-width:780px) {
+ .soul-refined-desktop-nav {display:none;}
+ .soul-refined-menu-toggle {display:flex;}
+ .soul-refined-mobile-nav {
+   display:grid;grid-template-columns:1fr 1fr;
+   gap:7px;padding:12px 18px 17px;
+   border-top:1px solid rgba(255,255,255,.1);
+   background:#08091f;
+ }
+ .soul-refined-mobile-nav a {
+   display:flex;justify-content:center;align-items:center;
+   min-height:48px;padding:10px 12px;border-radius:12px;
+   color:#fff;font-size:13px;font-weight:600;
+   background:rgba(255,255,255,.045);
+   border:1px solid rgba(255,255,255,.08);
+ }
+ .soul-refined-mobile-nav a[aria-current="page"] {background:#01039E;border-color:rgba(255,255,255,.2);}
+ .soul-refined-mobile-nav a[href="#reclutamiento"] {background:#F05E07;border-color:#F05E07;}
+ .soul-refined-quick-title {padding:0 5px;gap:6px;}
+ .soul-refined-quick-title h3 {font-size:clamp(19px,4vw,27px);}
+}
+@media(max-width:420px) {
+ .soul-refined-mobile-nav {grid-template-columns:1fr 1fr;}
+ .soul-refined-quick-title span {font-size:9px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .soul-refined-desktop-nav .soul-refined-cta,
+ .soul-refined-desktop-nav .soul-header-link,
+ .soul-hub[data-view="top"] #about .soul-home-grid .soul-home-tile {transition:none}
+}
