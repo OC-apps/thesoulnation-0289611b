@@ -126,7 +126,7 @@ function renderWaveCard(
         <h4 className="font-display">{c.name.startsWith("SOUL ") ? <><span className="soul-lineup-prefix">SOUL</span><span className="soul-lineup-nickname">{c.name.slice(5)}</span></> : <span className="soul-lineup-nickname">{c.name}</span>}</h4>
         <div className="soul-portrait-status">
           <span className={isLive ? "bg-red-500" : "bg-[#F05E07]"} />
-          {isLive ? "en vivo · tiktok" : "Soul Waves"}
+          {isLive ? "EN VIVO" : "Soul Waves"}
         </div>
         <span aria-hidden="true" className="soul-portrait-arrow">↗</span>
       </div>
@@ -721,8 +721,13 @@ function IndexContent() {
               </p>
             </div>
             <div className="hidden md:flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-              <span className="w-2 h-2 rounded-full bg-flame animate-pulse" /> Live archive · {VIDEOS.length} clips
+              <span className="w-2 h-2 rounded-full bg-flame" /> Archivo Soul · {VIDEOS.length} videos
             </div>
+          </div>
+
+          <div className="soul-content-channel-link mb-8">
+            <div><strong>¿Buscas el contenido más reciente?</strong><span>Explora el canal oficial de The Soul Nation para ver los nuevos videos y transmisiones.</span></div>
+            <a href={SOCIALS.youtube} target="_blank" rel="noopener noreferrer">Canal oficial de YouTube ↗</a>
           </div>
 
           {/* Mobile carrusel */}
@@ -1383,6 +1388,7 @@ function VideoCard({ video, index, featured }: { video: { title: string; id: str
             onError={event => { if (!event.currentTarget.dataset.fallback) { event.currentTarget.dataset.fallback = "true"; event.currentTarget.src = soulNationTeam; } }}
             alt={video.title}
             loading="lazy"
+            decoding="async"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/play:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#070819] via-[#070819]/20 to-transparent" />
