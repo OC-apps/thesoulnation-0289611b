@@ -22,6 +22,7 @@ import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-social
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { updateSoulLive } from "@/lib/soul-live.functions";
+import { RecruitmentAdminPanel } from "@/components/recruitment-admin-panel";
 import { getSoulPostsAdmin, saveSoulPost, deleteSoulPost } from "@/lib/soul-posts.functions";
 import type { SoulPost } from "@/hooks/use-soul-posts";
 import { useWavesMembers } from "@/hooks/use-waves-members";
@@ -600,7 +601,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-5 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -621,9 +622,17 @@ function AdminLivePage() {
               <Link2 className="w-3.5 h-3.5" />
               <span>Contenido</span>
             </TabsTrigger>
+            <TabsTrigger value="applications" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-[10px] sm:text-xs font-mono uppercase tracking-widest">
+              <Users className="w-3.5 h-3.5" />
+              <span>Solicitudes</span>
+            </TabsTrigger>
           </TabsList>
 
 
+
+          <TabsContent value="applications" className="mt-0">
+            <RecruitmentAdminPanel password={password} />
+          </TabsContent>
 
           <TabsContent value="posts" className="mt-0">
             <SectionShell icon={Link2} title="Publicaciones y agenda Soul" subtitle="Noticias, eventos y videos">
