@@ -16,10 +16,6 @@ export function Hero3D({ bannerUrl }: { bannerUrl?: string }) {
        className="block w-full h-full object-cover object-center"
        onError={()=>{if(displaySrc!==homeBannerEmbedded)setFailedUrl(src)}} />
    </div>
-   <div className="soul-hero-fullbleed-actions relative flex flex-wrap justify-center gap-3 px-4 pb-5 pt-3 sm:pb-7">
-     <a href="#roster" className="rounded-full bg-[#F05E07] px-7 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-[#01039E]">► Conoce el Roster</a>
-     <a href="#reclutamiento" className="rounded-full border border-white/35 px-7 py-3 text-sm font-semibold text-white transition hover:bg-white/10">Únete a la Nación</a>
-   </div>
    <div className="absolute inset-x-0 bottom-0 h-1 bg-[#F05E07]" />
   </div>
  );
