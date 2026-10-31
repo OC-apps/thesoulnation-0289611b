@@ -54,10 +54,22 @@ fs.mkdirSync(OUT, {recursive:true});
           const hr=header?.getBoundingClientRect();
           const headerBounds=hr?{left:Math.round(hr.left),right:Math.round(hr.right),top:Math.round(hr.top)}:null;
           const headerVisible=hr?hr.left>=-2&&hr.right<=innerWidth+2:false;
-          return {documentWidth,clientWidth,overflowPx:Math.max(0,documentWidth-clientWidth),overflowElements:overflowing,visibleSections,shortcuts,shortcutRows,headerBounds,headerVisible};
+          const contentTabs=Array.from(document.querySelectorAll(".soul-content-tabs .soul-content-tab"))
+            .filter(el=>getComputedStyle(el).display!=="none");
+          const expectedTabs=["Videos","Wallpapers","Música","Jersey Oficial"];
+          const tabsValid=contentTabs.length===4 && contentTabs.every((el,i)=>el.textContent.trim().includes(expectedTabs[i]));
+          const activeTabs=contentTabs.filter(el=>el.getAttribute("aria-current")==="page");
+          const hero=document.querySelector("#xplicit-cup .soul-xplicit-hero");
+          const heroStyle=hero?getComputedStyle(hero):null;
+          const xplicitHeroVisible=!!hero && heroStyle.display!=="none" && Number(heroStyle.opacity)>.95;
+          return {documentWidth,clientWidth,overflowPx:Math.max(0,documentWidth-clientWidth),overflowElements:overflowing,visibleSections,shortcuts,shortcutRows,headerBounds,headerVisible,
+            contentTabCount:contentTabs.length,tabsValid,activeTabCount:activeTabs.length,xplicitHeroVisible};
         });
         Object.assign(entry,check);
-        entry.ok=(entry.http===200 && entry.overflowPx===0 && entry.headerVisible && (target.name!=="inicio" || (entry.shortcuts===5 && entry.shortcutRows===1)));
+        entry.ok=(entry.http===200 && entry.overflowPx===0 && entry.headerVisible &&
+          (target.name!=="inicio" || (entry.shortcuts===5 && entry.shortcutRows===1)) &&
+          (!["videos","musica","jersey"].includes(target.name) || (entry.tabsValid && entry.activeTabCount===1)) &&
+          (target.name!=="xplicit-cup" || entry.xplicitHeroVisible));
         const name=target.name+"-"+width+".png";
         await page.screenshot({path:path.join(OUT,name),fullPage:true,animations:"disabled",timeout:30000});
         entry.screenshot=name;
