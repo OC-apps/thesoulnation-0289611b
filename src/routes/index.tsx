@@ -402,7 +402,7 @@ function IndexContent() {
 
   return (
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
-      <a href="#top" className="soul-skip-link">Saltar al contenido</a>
+      <a href={`#${view}`} className="soul-skip-link">Saltar al contenido</a>
       {/* NAV — a single consistent responsive navigation system */}
       <header className="soul-refined-header fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl">
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
@@ -428,7 +428,7 @@ function IndexContent() {
       </header>
 
       {/* HERO */}
-      <section id="top" role="main" tabIndex={-1} className="relative overflow-hidden grain">
+      <section id="top" className="relative overflow-hidden grain">
         <Hero3D bannerUrl={siteAssets.home_banner} />
 
 
