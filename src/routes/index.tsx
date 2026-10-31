@@ -551,12 +551,12 @@ function IndexContent() {
         <div className="soul-refined-quick-title"><span>EXPLORA SOUL</span><h3 className="font-display">Descubre la Nación</h3></div>
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
-            {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || "/roster-team-card-2026.jpg"},
-            {href:"#videos",title:"Nuestros Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || "/quick-videos-2026.jpg"},
-            {href:"#wallpapers",title:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
-            {href:"#jersey",title:"Jersey Oficial",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
-            {href:"#reclutamiento",title:"Únete",sub:"Forma parte de Soul",image:"/quick-join-2026.jpg"},
-          ].map(item => <a key={item.href} href={item.href} className="soul-home-tile"><img src={item.image} alt="" loading="lazy" /><span><strong>{item.title}</strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
+            {href:"#roster",title:"Roster",short:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || "/roster-team-card-2026.jpg"},
+            {href:"#videos",title:"Nuestros Videos",short:"Videos",sub:"Clips & Highlights",image:siteAssets.home_videos || "/quick-videos-2026.jpg"},
+            {href:"#wallpapers",title:"Wallpapers",short:"Wallpapers",sub:"OLIMPO SERIES",image:siteAssets.home_wallpapers || wpOlimpo},
+            {href:"#jersey",title:"Jersey Oficial",short:"Jersey",sub:"The Soul Nation",image:siteAssets.home_jersey || jerseyFront},
+            {href:"#reclutamiento",title:"Únete",short:"Únete",sub:"Forma parte de Soul",image:"/quick-join-2026.jpg"},
+          ].map(item => <a key={item.href} href={item.href} className="soul-home-tile" aria-label={item.title}><img src={item.image} alt="" loading="lazy" /><span><strong><span className="soul-tile-title-full">{item.title}</span><span className="soul-tile-title-small" aria-hidden="true">{item.short}</span></strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
         </div>
         <div className="mx-auto max-w-7xl px-5 sm:px-6 mt-6 flex justify-end">
           <EasterEgg id="og-member" label="Marca OG oculta" size="sm" />
