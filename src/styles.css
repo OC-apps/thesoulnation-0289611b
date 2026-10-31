@@ -3093,8 +3093,7 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 .soul-hub .soul-refined-cta,
 .soul-hub .soul-refined-desktop-nav .soul-refined-cta,
 .soul-hub #reclutamiento button[type="submit"],
-.soul-hub #reclutamiento button[type="submit"]:hover,
-.soul-hub #reclutamiento .area-chip[aria-pressed="true"] .font-display {
+.soul-hub #reclutamiento button[type="submit"]:hover {
   color:#07091B;
 }
 .soul-hub .soul-refined-cta:hover,
