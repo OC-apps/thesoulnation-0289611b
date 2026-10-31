@@ -2399,3 +2399,331 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 @media(prefers-reduced-motion:reduce){
  .soul-hub .soul-content-tab {transition:none;}
 }
+
+
+/* ══════════════════════════════════════════════════════════════
+   SOUL REFINED / INTERFACE SYSTEM — 2026
+   One premium visual language, original identity and assets.
+   ══════════════════════════════════════════════════════════════ */
+.soul-hub {
+  --soul-ink:#07091b;
+  --soul-panel:#10152b;
+  --soul-stroke:rgba(255,255,255,.12);
+  --soul-blue:#01039E;
+  --soul-orange:#F05E07;
+  --soul-content:1160px;
+  --soul-premium-ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* Floating frosted navigation: no second bar or duplicate CTA. */
+.soul-hub > .soul-refined-header {
+  inset-inline:auto!important;
+  left:50%!important;
+  top:clamp(10px,1.9vw,22px)!important;
+  transform:translateX(-50%);
+  width:min(1140px,calc(100vw - 40px));
+  min-height:0;
+  border-radius:999px;
+  background:rgba(9,13,34,.86);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 18px 55px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.07);
+  -webkit-backdrop-filter:blur(22px) saturate(135%);
+  backdrop-filter:blur(22px) saturate(135%);
+  transition:top .36s var(--soul-premium-ease),width .36s var(--soul-premium-ease),
+    background-color .36s ease,box-shadow .36s ease;
+}
+.soul-hub > .soul-refined-header.is-scrolled {
+  top:9px!important;
+  width:min(990px,calc(100vw - 40px));
+  background:rgba(7,10,29,.96);
+  box-shadow:0 14px 42px rgba(0,0,0,.45);
+}
+.soul-hub .soul-refined-header .soul-header-inner {
+  height:68px;
+  max-width:none;
+  padding-inline:clamp(17px,2.6vw,30px);
+}
+.soul-hub .soul-refined-header .soul-brand {
+  gap:11px;
+  text-decoration:none;
+}
+.soul-hub .soul-refined-header .soul-brand img {height:40px;width:auto;}
+.soul-hub .soul-refined-header .soul-brand-name {
+  font-size:clamp(12px,1.25vw,18px);
+  letter-spacing:-.03em;
+  font-weight:800;
+}
+.soul-hub .soul-refined-desktop-nav {gap:3px;}
+.soul-hub .soul-refined-desktop-nav .soul-header-link {
+  padding-inline:18px;
+  font-size:13px;
+  min-height:44px;
+}
+.soul-hub .soul-refined-desktop-nav .soul-header-link[aria-current="page"] {
+  background:rgba(255,255,255,.10);
+}
+.soul-hub .soul-refined-desktop-nav .soul-refined-cta {
+  padding-inline:24px;
+  min-height:42px;
+  box-shadow:0 6px 18px rgba(240,94,7,.2);
+}
+.soul-hub .soul-refined-header .soul-refined-menu-toggle {
+  border-radius:50%;
+  width:44px;height:44px;flex:none;
+}
+.soul-hub {padding-top:clamp(94px,11vw,132px);}
+.soul-hub[data-view="top"] > #top {
+  width:min(var(--soul-content),calc(100% - 32px));
+  margin:auto;
+}
+.soul-hub #top .soul-hero.soul-hero-fullbleed {
+  border-radius:clamp(16px,2.8vw,30px);
+  border:1px solid rgba(255,255,255,.12);
+  overflow:hidden;
+  box-shadow:0 25px 90px rgba(1,3,158,.20);
+}
+
+/* Editorial rhythm: image and content instead of nested chrome. */
+.soul-hub > section:not(#top) {
+  padding-block:clamp(34px,5vw,72px);
+}
+.soul-hub section h2,
+.soul-hub .soul-section-intro h2 {
+  letter-spacing:-.04em;
+  text-wrap:balance;
+}
+.soul-hub .soul-section-intro p {
+  max-width:65ch;
+  line-height:1.7;
+}
+.soul-hub #about .soul-about-layout {
+  gap:clamp(24px,4.5vw,72px);
+}
+.soul-hub #about .soul-purpose {
+  border-radius:24px;
+  box-shadow:0 18px 54px rgba(0,0,0,.16);
+}
+.soul-hub #about .soul-purpose-tabs {gap:6px;}
+.soul-hub #about .soul-purpose-tabs button {min-height:44px;}
+.soul-hub .soul-refined-quick-title {margin-top:clamp(34px,5vw,64px);}
+
+/* Five accessible image-led shortcuts, always a single row. */
+.soul-hub[data-view="top"] #about .soul-refined-access-grid {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:clamp(6px,1.5vw,16px);
+  margin-block:20px 0;
+}
+.soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile {
+  position:relative;min-width:0;aspect-ratio:1/1;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:clamp(9px,1.6vw,20px);
+  background:#10152d;
+  box-shadow:0 10px 34px rgba(0,0,0,.18);
+  transition:transform .4s var(--soul-premium-ease),
+    box-shadow .4s var(--soul-premium-ease),border-color .3s ease;
+}
+.soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile:hover {
+  transform:translateY(-5px);
+  border-color:rgba(240,94,7,.8);
+  box-shadow:0 18px 44px rgba(1,3,158,.26);
+}
+.soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile img {
+  object-fit:cover;
+  transition:transform .7s var(--soul-premium-ease);
+}
+.soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile:hover img {
+  transform:scale(1.065);
+}
+
+/* Preserve the tilted roster geometry, but make photos and names cinematic. */
+.soul-hub #roster .soul-roster-switcher-layout {
+  grid-template-columns:minmax(0,1fr) minmax(235px,280px);
+  gap:clamp(12px,2vw,24px);
+}
+.soul-hub #roster .soul-roster-feature {
+  border-color:rgba(255,255,255,.15);
+  background:#080c24;
+  min-height:250px;
+  box-shadow:0 24px 58px rgba(0,0,0,.2);
+}
+.soul-hub #roster .soul-roster-feature-banner {
+  min-height:250px;
+  object-fit:cover;
+  object-position:center;
+}
+.soul-hub #roster .soul-roster-option {
+  min-height:64px;
+  border-radius:14px;
+  transition:background-color .3s ease,border-color .3s ease,transform .3s var(--soul-premium-ease);
+}
+.soul-hub #roster .soul-roster-option[aria-current="page"] {
+  box-shadow:inset 3px 0 #F05E07,0 8px 28px rgba(1,3,158,.16);
+}
+#roster .soul-waves-collection .soul-lineup {
+  gap:clamp(9px,1.4vw,18px);
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait,
+#roster .soul-waves-collection .soul-lineup .soul-portrait-leader {
+  height:clamp(320px,35vw,455px);
+  clip-path:polygon(10% 0,100% 0,90% 100%,0 100%);
+  background:#101634;
+  isolation:isolate;
+  transition:transform .35s var(--soul-premium-ease),filter .35s ease;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait::after {
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,transparent 35%,rgba(3,5,22,.16) 56%,rgba(2,4,16,.88) 100%);
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait-photo img {
+  filter:saturate(.88) contrast(1.05);
+  transition:transform .75s var(--soul-premium-ease),filter .4s ease;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait:hover {
+  transform:translateY(-5px);
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait:hover img {
+  transform:scale(1.045);
+  filter:saturate(1) contrast(1.06);
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait-info {
+  z-index:5;
+}
+#roster .soul-waves-collection .soul-lineup .soul-portrait h4 {
+  text-shadow:0 2px 14px rgba(0,0,0,.6);
+}
+#roster .soul-legends-slot,
+#roster .soul-crew-slot {
+  isolation:isolate;
+  transition:transform .36s var(--soul-premium-ease),filter .25s ease;
+}
+#roster .soul-legends-slot:hover,
+#roster .soul-crew-slot:hover {
+  transform:translateY(-5px);
+  filter:brightness(1.12);
+}
+#roster .soul-legends-photo {object-fit:cover;}
+.soul-hub .soul-division {
+  border-color:rgba(255,255,255,.12);
+  background:#0c1028;
+  box-shadow:0 22px 65px rgba(0,0,0,.15);
+}
+
+/* Editorial video mosaic and improved card hierarchy. */
+.soul-hub #videos .soul-editorial-video-grid {gap:clamp(12px,1.6vw,20px);}
+.soul-hub #videos .soul-editorial-video-grid > .soul-video-card:first-child {
+  grid-column:span 2;
+  grid-row:span 2;
+}
+.soul-hub #videos .soul-video-card {
+  border-radius:clamp(16px,2vw,25px);
+  border-color:rgba(255,255,255,.13);
+  background:#0d1229;
+  box-shadow:0 14px 36px rgba(0,0,0,.18);
+  transition:transform .36s var(--soul-premium-ease),border-color .25s ease;
+}
+.soul-hub #videos .soul-video-card:hover {
+  border-color:rgba(240,94,7,.62);
+  transform:translateY(-4px);
+}
+.soul-hub #videos .soul-video-card .group\/play > img {
+  filter:saturate(.9) contrast(1.03);
+  transition:transform .7s var(--soul-premium-ease),filter .35s ease;
+}
+.soul-hub #videos .soul-video-card:hover img {
+  filter:saturate(1.05) contrast(1.04);
+}
+.soul-hub #videos .soul-video-card h3 {line-height:1.3;letter-spacing:-.01em;}
+.soul-hub #videos .soul-video-card .bg-flame\/90 {
+  box-shadow:0 10px 35px rgba(240,94,7,.2);
+}
+
+/* Uniform panel radius, restrained shadows and balanced typography. */
+.soul-hub #music .relative.rounded-\[28px\],
+.soul-hub #jersey .relative.rounded-\[28px\] {
+  border-radius:24px;
+}
+.soul-hub #wallpapers article,
+.soul-hub #jersey article {border-color:rgba(255,255,255,.12);}
+.soul-hub #music h2 {font-size:clamp(35px,5.7vw,68px);}
+.soul-hub .soul-content-tabs-inner {box-shadow:0 16px 48px rgba(0,0,0,.18);}
+.soul-hub .soul-content-tab {transition:background .26s ease,color .26s ease,border-color .26s ease;}
+.soul-hub .soul-content-tab[aria-current="page"] {
+  background:linear-gradient(145deg,#01039E,#090b77);
+}
+.soul-hub .soul-content-tab-name {text-wrap:balance;}
+.soul-hub :is(button,a,input,textarea,select):focus-visible {
+  outline:2px solid #F05E07;
+  outline-offset:3px;
+}
+
+/* Mobile: intentional proportions and one row of five shortcuts. */
+@media(max-width:900px){
+  .soul-hub #roster .soul-roster-switcher-layout {grid-template-columns:minmax(0,1fr);}
+}
+@media(max-width:780px){
+  .soul-hub > .soul-refined-header,
+  .soul-hub > .soul-refined-header.is-scrolled {
+    top:10px!important;
+    width:calc(100vw - 24px);
+    border-radius:22px;
+  }
+  .soul-hub .soul-refined-header .soul-header-inner {
+    height:60px;padding-inline:16px;
+  }
+  .soul-hub .soul-refined-header .soul-brand img {height:34px;}
+  .soul-hub .soul-refined-header .soul-brand-name {font-size:clamp(11px,3vw,15px);}
+  .soul-hub .soul-refined-mobile-nav {
+    position:absolute;
+    top:calc(100% + 8px);
+    left:0;right:0;
+    padding:12px;
+    background:rgba(8,11,29,.98);
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:18px;
+    box-shadow:0 22px 55px rgba(0,0,0,.45);
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+  }
+  .soul-hub {padding-top:88px;}
+  .soul-hub #top .soul-hero.soul-hero-fullbleed {border-radius:18px;}
+  .soul-hub[data-view="top"] > #top {width:calc(100% - 24px);}
+  .soul-hub #videos .soul-editorial-video-grid > .soul-video-card:first-child {
+    grid-column:span 2;grid-row:span 1;
+  }
+}
+@media(max-width:540px){
+  .soul-hub[data-view="top"] #about .soul-refined-access-grid {
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:4px;
+    padding:0;
+    width:100%;
+    max-width:100%;
+  }
+  .soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile {
+    border-radius:8px;
+    min-width:0;aspect-ratio:1/1;
+  }
+  .soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile strong {
+    font-size:clamp(7px,2vw,10px);
+  }
+  .soul-hub #roster .soul-roster-feature,
+  .soul-hub #roster .soul-roster-feature-banner {min-height:170px;}
+  .soul-hub #roster .soul-roster-switcher {padding:10px;}
+  .soul-hub #roster .soul-roster-option {min-height:52px;}
+  .soul-hub #videos .soul-editorial-mobile-carousel .soul-video-card {border-radius:15px;}
+  .soul-hub #videos .soul-video-card h3 {font-size:14px;}
+  .soul-hub .soul-content-tabs-inner {border-radius:17px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .soul-hub > .soul-refined-header,
+  .soul-hub .soul-roster-option,
+  .soul-hub #videos .soul-video-card,
+  #roster .soul-waves-collection .soul-lineup .soul-portrait,
+  #roster .soul-waves-collection .soul-lineup .soul-portrait-photo img,
+  .soul-hub[data-view="top"] #about .soul-refined-access-grid .soul-home-tile {
+    transition:none!important;
+    transform:none!important;
+  }
+}
