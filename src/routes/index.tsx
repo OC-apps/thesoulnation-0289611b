@@ -241,13 +241,10 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
         <DialogContent className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 cursor-pointer [&>button]:hidden rounded-[28px]">
           {active && (
             <div className="relative">
-              {/* scanlines */}
-              <div className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-screen" style={{ backgroundImage: "repeating-linear-gradient(0deg, #fff 0, #fff 1px, transparent 1px, transparent 3px)" }} />
-              {/* HUD top bar */}
+              {/* Editorial header */}
               <div className="flex items-center justify-between px-4 py-2 border-b border-flame/30 bg-background/40 font-mono text-[10px] uppercase tracking-[0.3em] text-flame">
                 <div className="flex items-center gap-2">
-                  <Radio className="w-3 h-3 animate-pulse" />
-                  <span>SOUL · INTEL · PROFILE</span>
+                  <span>THE SOUL NATION / PERFIL OFICIAL</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="hidden sm:inline">ID · 0{(openIdx ?? 0) + 1}/0{WAVES_ALL.length}</span>
@@ -265,13 +262,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                   <img src={active.photo} alt={active.name} className="absolute inset-0 w-full h-full object-cover" />
                   {/* subtle edge fade only towards info side */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-background/70 via-transparent to-transparent" />
-                  {/* animated scan line */}
-                  <span className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-flame to-transparent shadow-[0_0_14px_var(--flame-glow)] animate-[scan_2.6s_ease-in-out_infinite]" />
-                  {/* corners */}
-                  <span className="absolute top-2 left-2 w-5 h-5 border-l-2 border-t-2 border-flame" />
-                  <span className="absolute top-2 right-2 w-5 h-5 border-r-2 border-t-2 border-flame" />
-                  <span className="absolute bottom-2 left-2 w-5 h-5 border-l-2 border-b-2 border-flame" />
-                  <span className="absolute bottom-2 right-2 w-5 h-5 border-r-2 border-b-2 border-flame" />
+                  {/* Foto original del integrante sin decoraciones técnicas. */}
                 </div>
 
                 {/* Info panel */}
@@ -295,23 +286,15 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                     {copiedWave === active.name ? "Enlace copiado" : "Compartir perfil"}
                   </button>
 
-                  <div className="grid grid-cols-3 gap-2 font-mono text-[10px] uppercase">
-                    <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
-                      <div className="flex items-center gap-1 text-flame"><Zap className="w-3 h-3" /> Status</div>
-                      <div className="mt-1 text-emerald-400">ACTIVE</div>
-                    </div>
-                    <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
-                      <div className="flex items-center gap-1 text-flame"><Trophy className="w-3 h-3" /> Role</div>
-                      <div className="mt-1 text-foreground">{active.name === "SOUL MAVERICK Z" ? "Leader / Content Creator" : "Streamer"}</div>
-                    </div>
-                    <div className="border border-flame/30 bg-background/40 px-2 py-2 rounded">
-                      <div className="flex items-center gap-1 text-flame"><Radio className="w-3 h-3" /> Squad</div>
-                      <div className="mt-1 text-foreground">WAVES</div>
-                    </div>
+                  <div className="soul-wave-profile-meta">
+                    <span>SOUL WAVES</span>
+                    <span aria-hidden="true">·</span>
+                    <span>{active.name === "SOUL MAVERICK Z" ? "Fundador y creador" : "Creador de contenido"}</span>
+                    {isLiveFor(active.name) && <span className="soul-wave-profile-live">EN VIVO</span>}
                   </div>
 
                   <div>
-                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Networks</div>
+                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Redes sociales</div>
                     {active.socials && active.socials.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
                         {active.socials.map((s) => (
@@ -342,7 +325,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                   </div>
 
                   <div className="relative">
-                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Bio · Intel</div>
+                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-flame mb-1">Sobre el integrante</div>
                     <div className="max-h-56 overflow-y-auto pr-2 text-sm text-foreground/90 leading-relaxed whitespace-pre-line border-l-2 border-flame/40 pl-3">
                       {active.bio}
                     </div>
@@ -353,14 +336,14 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                       onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! - 1 + WAVES_ALL.length) % WAVES_ALL.length); }}
                       className="hover:text-flame transition"
                     >
-                      ◄ prev
+                      ← Anterior
                     </button>
-                    <span>Toca afuera para cerrar</span>
+                    <span>THE SOUL NATION</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); setOpenIdx((openIdx! + 1) % WAVES_ALL.length); }}
                       className="hover:text-flame transition"
                     >
-                      next ►
+                      Siguiente →
                     </button>
                   </div>
                 </div>
