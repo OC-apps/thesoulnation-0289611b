@@ -34,3 +34,44 @@ jobs:
           path: visual-audit-artifacts/
           if-no-files-found: warn
           retention-days: 30
+
+  candidate-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build exact checked-out commit
+        run: |
+          bun install --frozen-lockfile
+          bun run build
+      - name: Install isolated browser tools
+        run: |
+          npm install --prefix /tmp/soul-visual-audit --no-package-lock playwright@1.58.0
+          /tmp/soul-visual-audit/node_modules/.bin/playwright install --with-deps chromium
+      - name: Start candidate preview
+        run: |
+          bun run preview --host 127.0.0.1 --port 4173 > /tmp/soul-preview.log 2>&1 &
+          echo $! > /tmp/soul-preview.pid
+          for i in $(seq 1 45); do
+            if curl --silent --fail http://127.0.0.1:4173/ >/dev/null; then
+              echo "Candidate preview responding"
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/soul-preview.log
+          exit 1
+      - name: Capture compiled candidate at five viewport widths
+        run: SOUL_AUDIT_BASE_URL=http://127.0.0.1:4173 SOUL_AUDIT_OUT=visual-audit-candidate NODE_PATH=/tmp/soul-visual-audit/node_modules node scripts/visual-audit.cjs
+      - name: Upload compiled candidate screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: soul-visual-audit-candidate
+          path: visual-audit-candidate/
+          if-no-files-found: warn
+          retention-days: 30
