@@ -70,9 +70,45 @@ fs.mkdirSync(OUT, {recursive:true});
     }
     await context.close();
   }
+  // Read-only member navigation tests; never touch recruitment forms or admin endpoints.
+  const interactions = [];
+  const profileContext=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,reducedMotion:"reduce",locale:"es-MX"});
+  for(const scenario of [
+    {query:"MAVERICK Z",param:"wave",slug:"soul-maverick-z",division:"waves",nextName:"Siguiente →"},
+    {query:"MORTAL",param:"member",slug:"soul-mortal",division:"legends",nextName:"Ver integrante siguiente"}
+  ]) {
+    const page=await profileContext.newPage();
+    const check={scenario:scenario.division,ok:false};
+    try {
+      await page.goto(BASE+"/#roster",{waitUntil:"domcontentloaded",timeout:45000});
+      await page.locator("#roster-search").fill(scenario.query);
+      await page.locator('#roster-search-results a[href*="'+scenario.param+'='+scenario.slug+'"]').first().click({timeout:15000});
+      await page.waitForURL(url=>url.searchParams.get(scenario.param)===scenario.slug,{timeout:15000});
+      const dialog=page.getByRole("dialog");
+      await dialog.waitFor({state:"visible",timeout:15000});
+      const startingName=await dialog.locator("h3").first().textContent().catch(()=>"");
+      await dialog.getByRole("button",{name:scenario.nextName}).click();
+      await dialog.getByRole("button",{name:"Cerrar"}).click();
+      await dialog.waitFor({state:"hidden",timeout:15000});
+      const state=await page.evaluate(()=>({
+        hash:location.hash,
+        hasWave:new URLSearchParams(location.search).has("wave"),
+        hasMember:new URLSearchParams(location.search).has("member"),
+        rosterVisible:getComputedStyle(document.getElementById("roster")).display!=="none"
+      }));
+      check.ok=state.hash==="#"+scenario.division && !state.hasWave && !state.hasMember && state.rosterVisible;
+      check.state=state;check.openedProfile=Boolean(startingName);
+    }catch(e){check.error=String(e).slice(0,380);}
+    interactions.push(check);
+    console.log("Interaction: "+JSON.stringify(check));
+    await page.close();
+  }
+  await profileContext.close();
+  fs.writeFileSync(path.join(OUT,"interaction-results.json"),JSON.stringify(interactions,null,2));
   await browser.close();
   fs.writeFileSync(path.join(OUT,"results.json"),JSON.stringify(results,null,2));
   const failures=results.filter(r=>!r.ok);
-  console.log("Visual audit: "+results.length+" viewports, failures="+failures.length);
-  process.exitCode=failures.length ? 1:0;
+  const interactionFailures=interactions.filter(r=>!r.ok);
+  console.log("Visual audit: "+results.length+" viewports, failures="+failures.length+", interaction failures="+interactionFailures.length);
+  process.exitCode=(failures.length || interactionFailures.length) ? 1:0;
 })().catch(e=>{console.error(e);process.exitCode=1;});
