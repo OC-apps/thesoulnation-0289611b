@@ -627,6 +627,8 @@ function IndexContent() {
           </div>
 
           <RosterSearch waves={waveNames} legends={legendsList} crew={crewList} />
+          {!roster.loaded && <p role="status" className="mx-auto mb-4 max-w-3xl text-xs text-white/60">Actualizando integrantes…</p>}
+          {roster.error && <p role="status" className="mx-auto mb-4 max-w-3xl rounded-xl border border-[#F05E07]/30 bg-[#0c1029] px-4 py-3 text-sm text-white/80">{roster.error}</p>}
 
           {/* Division selector: always visible, including when Legends or Crew is active. */}
           <div className="soul-roster-switcher-layout">
