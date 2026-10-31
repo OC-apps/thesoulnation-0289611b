@@ -3,15 +3,16 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { chromium } = require("playwright");
 
-const OUT = path.join(process.cwd(), "visual-audit-artifacts");
+const OUT = path.join(process.cwd(), process.env.SOUL_AUDIT_OUT || "visual-audit-artifacts");
+const BASE = (process.env.SOUL_AUDIT_BASE_URL || "https://thesoulnation.org").replace(/\/$/, "");
 const widths = [320, 390, 430, 768, 1440];
 const pages = [
-  { name:"inicio", url:"https://thesoulnation.org/" },
-  { name:"roster", url:"https://thesoulnation.org/#roster" },
-  { name:"videos", url:"https://thesoulnation.org/#videos" },
-  { name:"musica", url:"https://thesoulnation.org/#music" },
-  { name:"jersey", url:"https://thesoulnation.org/#jersey" },
-  { name:"xplicit-cup", url:"https://thesoulnation.org/xplicit-cup" },
+  { name:"inicio", url:`${BASE}/" },
+  { name:"roster", url:`${BASE}/#roster" },
+  { name:"videos", url:`${BASE}/#videos" },
+  { name:"musica", url:`${BASE}/#music" },
+  { name:"jersey", url:`${BASE}/#jersey" },
+  { name:"xplicit-cup", url:`${BASE}/xplicit-cup" },
 ];
 const results = [];
 fs.mkdirSync(OUT, {recursive:true});
