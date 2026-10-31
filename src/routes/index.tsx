@@ -95,11 +95,33 @@ const VIDEOS = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "The Soul Nation — desde el 2012" },
-      { name: "description", content: "The Soul Nation: comunidad de gaming desde el 10 de noviembre de 2012." },
-      { property: "og:title", content: "The Soul Nation — desde el 2012" },
-      { property: "og:description", content: "Comunidad de gaming desde 2012." },
+      { title: "The Soul Nation | Comunidad gamer y creadores de contenido desde 2012" },
+      { name: "description", content: "Sitio oficial de The Soul Nation, comunidad gamer mexicana fundada en 2012. Conoce nuestro roster Soul Waves, Soul Crew y Soul Legends, videos, torneos y reclutamiento." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { property: "og:title", content: "The Soul Nation | Sitio oficial" },
+      { property: "og:description", content: "Comunidad gamer mexicana y creadores de contenido desde 2012. Roster, videos, torneos y reclutamiento en el sitio oficial." },
+      { property: "og:url", content: "https://thesoulnation.org/" },
+      { name: "twitter:title", content: "The Soul Nation | Sitio oficial" },
+      { name: "twitter:description", content: "Comunidad gamer mexicana y creadores de contenido desde 2012." },
     ],
+    links: [{ rel: "canonical", href: "https://thesoulnation.org/" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "The Soul Nation",
+        url: "https://thesoulnation.org/",
+        description: "Comunidad gamer mexicana de creadores de contenido, streamers y jugadores fundada en 2012.",
+        foundingDate: "2012-11-10",
+        sameAs: [
+          "https://www.youtube.com/@TheSoulNationHD",
+          "https://www.tiktok.com/@thesoulnation",
+          "https://www.facebook.com/TheSoulNationHD",
+          "https://x.com/TheSoulNation",
+        ],
+      }),
+    }],
   }),
   component: Index,
 });
