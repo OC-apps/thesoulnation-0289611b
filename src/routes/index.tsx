@@ -38,7 +38,7 @@ import { useWavesHidden } from "@/hooks/use-waves-hidden";
 import { Hero3D } from "@/components/hero-3d";
 import { AudioProvider, useAudio } from "@/hooks/use-audio";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { X, Zap, Radio, Trophy, Crown } from "lucide-react";
+import { X, Menu, Zap, Radio, Trophy, Crown } from "lucide-react";
 import { useLiveStatus } from "@/hooks/use-live-status";
 
 const formatTime = (s: number) => {
@@ -344,6 +344,7 @@ const HUB_SECTIONS = [
 
 function IndexContent() {
   const [destination, setDestination] = useState("top");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const rosterIds = ["waves", "legends", "crew"];
   const view = destination === "killers" || rosterIds.includes(destination) ? "roster" :
     ["about", "vision", "objetivo"].includes(destination) ? "top" :
@@ -352,7 +353,7 @@ function IndexContent() {
   const rosterView = destination === "killers" ? "crew" : rosterIds.includes(destination) ? destination : "waves";
   const contentView = ["videos", "wallpapers", "music"].includes(view);
   useEffect(() => {
-    const update = () => setDestination(window.location.hash.slice(1) === "killers" ? "crew" : window.location.hash.slice(1) || "top");
+    const update = () => { setDestination(window.location.hash.slice(1) === "killers" ? "crew" : window.location.hash.slice(1) || "top"); setMobileNavOpen(false); };
     update();
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
@@ -393,29 +394,29 @@ function IndexContent() {
 
   return (
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
-      {/* NAV */}
-      <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-background/40 border-b border-border">
+      {/* NAV — a single consistent responsive navigation system */}
+      <header className="soul-refined-header fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl">
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
           <a href="#top" aria-label="The Soul Nation — inicio" className="soul-brand flex shrink-0 items-center gap-3">
             <img src={soulLogo} alt="" width={1344} height={1785} className="h-10 w-auto object-contain" />
             <span className="soul-brand-name">THE SOUL NATION</span>
           </a>
-          <nav className="hidden xl:flex gap-1 text-xs" aria-label="Navegación principal">
-            {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>)}
+          <nav className="soul-refined-desktop-nav" aria-label="Navegación principal">
+            {HUB_SECTIONS.filter(section => section.id !== "reclutamiento").map(section =>
+              <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined} className="soul-header-link">{section.label}</a>
+            )}
+            <a href="#reclutamiento" className="soul-refined-cta">Únete</a>
           </nav>
-          <a href="#reclutamiento" className="xl:hidden rounded-full bg-[#F05E07] px-4 py-2 text-xs font-semibold text-white">Únete</a>
+          <button type="button" className="soul-refined-menu-toggle" onClick={() => setMobileNavOpen(v => !v)} aria-label={mobileNavOpen ? "Cerrar menú" : "Abrir menú"} aria-controls="soul-mobile-navigation" aria-expanded={mobileNavOpen}>
+            {mobileNavOpen ? <X size={22}/> : <Menu size={22}/>}
+          </button>
         </div>
+        {mobileNavOpen && <nav id="soul-mobile-navigation" className="soul-refined-mobile-nav" aria-label="Navegación móvil">
+          {HUB_SECTIONS.map(section =>
+            <a key={section.id} href={`#${section.id}`} onClick={() => setMobileNavOpen(false)} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined}>{section.label}</a>
+          )}
+        </nav>}
       </header>
-
-      <nav className="soul-section-menu" aria-label="Secciones">
-        {HUB_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined}>{section.label}</a>)}
-      </nav>
-
-      {contentView && <nav className="soul-subnav" aria-label="Contenido">
-        {[{id:"videos",label:"Videos"},{id:"wallpapers",label:"Wallpapers"},{id:"music",label:"Música"}].map(item => <a key={item.id} href={`#${item.id}`} aria-current={(view === item.id || destination === item.id) ? "page" : undefined}>{item.label}</a>)}
-      </nav>}
-
-      {/* Floating controls moved into the unified BottomBar */}
 
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
@@ -543,26 +544,11 @@ function IndexContent() {
               </AnimatePresence>
             </div>
 
-            {/* Botones a divisiones */}
-            <div className="soul-purpose-links">
-              {[
-                { label: "Waves", href: "#waves" },
-                                { label: "Legends", href: "#legends" },
-                { label: "Crew", href: "#crew" },
-              ].map((d) => (
-                <a
-                  key={d.label}
-                  href={d.href}
-                  className="soul-purpose-link"
-                >
-                  <span className="relative z-10">{d.label}</span>
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-full transition-transform duration-700" />
-                </a>
-              ))}
-            </div>
+
           </div>
         </div>
         {/* Accesos del inicio, después de Visión y Objetivo */}
+        <div className="soul-refined-quick-title"><span>EXPLORA SOUL</span><h3 className="font-display">Descubre la Nación</h3></div>
         <div className="soul-home-grid mx-auto max-w-6xl px-6 py-8">
           {[
             {href:"#roster",title:"Roster",sub:"Waves · Legends · Crew",image:siteAssets.home_roster || "/roster-team-card-2026.jpg"},
