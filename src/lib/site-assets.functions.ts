@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-const keys = ["home_banner","home_roster","home_videos","home_wallpapers","home_jersey","about_team"] as const;
+const keys = ["home_banner","home_roster","home_videos","home_wallpapers","home_jersey","about_team","roster_legends_banner","roster_crew_banner"] as const;
 export const updateSiteAsset = createServerFn({ method: "POST" })
   .inputValidator((raw) => z.object({
     password: z.string().min(1).max(200),
