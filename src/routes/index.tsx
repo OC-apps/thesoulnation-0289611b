@@ -345,6 +345,14 @@ const HUB_SECTIONS = [
 function IndexContent() {
   const [destination, setDestination] = useState("top");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [mobileNavOpen]);
   const rosterIds = ["waves", "legends", "crew"];
   const view = destination === "killers" || rosterIds.includes(destination) ? "roster" :
     ["about", "vision", "objetivo"].includes(destination) ? "top" :
@@ -394,6 +402,7 @@ function IndexContent() {
 
   return (
     <div className="soul-hub min-h-screen text-foreground relative" data-view={view} data-roster={rosterView}>
+      <a href="#main-content" className="soul-skip-link">Saltar al contenido</a>
       {/* NAV — a single consistent responsive navigation system */}
       <header className="soul-refined-header fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[#06081c]/90 backdrop-blur-xl">
         <div className="soul-header-inner h-16 flex items-center justify-between gap-4">
@@ -418,6 +427,7 @@ function IndexContent() {
         </nav>}
       </header>
 
+      <main id="main-content" className="contents">
       {/* HERO */}
       <section id="top" className="relative overflow-hidden grain">
         <Hero3D bannerUrl={siteAssets.home_banner} />
@@ -441,7 +451,7 @@ function IndexContent() {
                 onError={(event) => { if (!event.currentTarget.src.includes("about-team-2026.jpg")) return; event.currentTarget.onerror = null; event.currentTarget.src = soulNationTeam; }}
                 alt="The Soul Nation — equipo oficial con chamarras azul y naranja"
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 scale-[1.18] group-hover:scale-[1.24]"
+                className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 scale-[1.18] group-hover:scale-[1.24]" decoding="async"
               />
 
               <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-background via-background/30 to-transparent" />
@@ -1166,6 +1176,7 @@ function IndexContent() {
       <nav className="soul-footer-links" aria-label="Comunidad">
         <a href="#jersey">Jersey Oficial</a><a href="#redes">Redes</a><a href={SOCIALS.discord} target="_blank" rel="noopener noreferrer">Discord</a>
       </nav>
+      </main>
       {/* FOOTER */}
       <footer className="border-t border-border py-12">
         <div className="mx-auto max-w-7xl px-6 flex flex-wrap items-center justify-between gap-6">
