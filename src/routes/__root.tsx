@@ -95,8 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
             { name: "twitter:title", content: "The Soul Nation" },
       { name: "twitter:description", content: "Página Web de The Soul Nation" },
-      { property: "og:image", content: "https://raw.githubusercontent.com/OC-apps/thesoulnation-0289611b/recuperacion-independiente/src/assets/soul-logo-official.png" },
-      { name: "twitter:image", content: "https://raw.githubusercontent.com/OC-apps/thesoulnation-0289611b/recuperacion-independiente/src/assets/soul-logo-official.png" },
+      { property: "og:image", content: "https://thesoulnation.org/soul-share.jpg" },
+      { name: "twitter:image", content: "https://thesoulnation.org/soul-share.jpg" },
     ],
     links: [
       {
