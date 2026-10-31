@@ -2171,3 +2171,32 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
     transition-duration:.01ms!important;
   }
 }
+
+
+/* Soul Refined: content discovery without duplicate navigation */
+.soul-content-channel-link {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;padding:17px 20px;
+  background:linear-gradient(115deg,rgba(1,3,158,.26),rgba(9,12,35,.8));
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;
+}
+.soul-content-channel-link > div {display:flex;flex-direction:column;gap:5px;min-width:0;}
+.soul-content-channel-link strong {font-size:14px;color:#fff;line-height:1.3;}
+.soul-content-channel-link span {font-size:12px;line-height:1.5;color:#b9bed6;}
+.soul-content-channel-link > a {
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  padding:12px 17px;min-height:44px;border-radius:999px;
+  color:#fff;font-size:12px;font-weight:700;
+  background:#01039E;border:1px solid rgba(255,255,255,.18);
+  transition:background .2s ease;
+}
+.soul-content-channel-link > a:hover {background:#F05E07;}
+.soul-profile-share {touch-action:manipulation;min-height:40px;transition:background .2s ease;}
+.soul-profile-share:focus-visible {outline:2px solid #F05E07;outline-offset:3px;}
+@media(max-width:640px){
+  .soul-content-channel-link {flex-direction:column;align-items:stretch;padding:16px;gap:14px;}
+  .soul-content-channel-link > a {width:100%;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .soul-content-channel-link > a, .soul-profile-share {transition:none;}
+}
