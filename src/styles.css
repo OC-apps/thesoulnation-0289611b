@@ -875,12 +875,7 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 
 /* Restrained blue/orange ambient motion, with no extra imagery or logo changes. */
 .soul-hub { isolation:isolate; background:transparent; }
-.soul-hub::before {
- content:""; position:fixed; z-index:-1; pointer-events:none; inset:-30%;
- background:radial-gradient(ellipse 35% 34% at 19% 30%,rgba(1,3,158,.20),transparent 75%),
- radial-gradient(ellipse 26% 30% at 80% 70%,rgba(240,94,7,.065),transparent 78%);
- animation:soul-ambient-drift 24s ease-in-out infinite alternate;
-}
+.soul-hub::before { content:none; }
 @keyframes soul-ambient-drift {
  from { transform:translate3d(-2%,1%,0) scale(1); }
  to { transform:translate3d(3%,-2%,0) scale(1.07); }
@@ -3104,25 +3099,44 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 /* Keep negative fixed decoration above the body paint, behind page content. */
 body { isolation: isolate; }
 
-/* Branded full-site motion background; fixed across route changes. */
-.soul-global-video {
-  position: fixed;
-  inset: 0;
-  z-index: -50;
-  pointer-events: none;
-  overflow: hidden;
-  background: #060720;
+/* Soft brand color fields: no media downloads or dark overlay. */
+.soul-global-gradient {
+  position:fixed;
+  inset:0;
+  z-index:-50;
+  overflow:hidden;
+  pointer-events:none;
+  background:#01039E;
 }
-.soul-global-video video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 1;
-  filter: none;
+.soul-global-gradient::before,
+.soul-global-gradient::after {
+  content:"";
+  position:absolute;
+  inset:-25%;
+  background-repeat:no-repeat;
+  will-change:transform;
 }
-.soul-global-video::after {
-  content: none;
+.soul-global-gradient::before {
+  background:
+    radial-gradient(ellipse 34% 30% at 88% 18%, #F05E07 0%, rgba(240,94,7,.9) 28%, rgba(240,94,7,.42) 54%, transparent 82%),
+    radial-gradient(ellipse 29% 23% at 77% 79%, #F05E07 0%, rgba(240,94,7,.74) 32%, rgba(240,94,7,.2) 62%, transparent 88%),
+    radial-gradient(ellipse 22% 29% at 10% 49%, rgba(240,94,7,.95) 0%, rgba(240,94,7,.4) 42%, transparent 82%);
+  animation:soul-gradient-flow 32s ease-in-out infinite alternate;
 }
-@media (prefers-reduced-motion: reduce) {
-  .soul-global-video video { display: none; }
+.soul-global-gradient::after {
+  background:radial-gradient(ellipse 40% 46% at 46% 47%, #01039E 0%, rgba(1,3,158,.85) 36%, rgba(1,3,158,.3) 65%, transparent 90%);
+  animation:soul-gradient-blue 38s ease-in-out infinite alternate;
+}
+@keyframes soul-gradient-flow {
+  0% {transform:translate3d(-3%,2%,0) rotate(-8deg) scale(1.04);}
+  50% {transform:translate3d(3%,-2%,0) rotate(4deg) scale(1.1);}
+  100% {transform:translate3d(-1%,4%,0) rotate(12deg) scale(1.04);}
+}
+@keyframes soul-gradient-blue {
+  from {transform:translate3d(2%,-2%,0) scale(1);}
+  to {transform:translate3d(-4%,3%,0) scale(1.12);}
+}
+@media(prefers-reduced-motion:reduce) {
+  .soul-global-gradient::before,
+  .soul-global-gradient::after {animation:none;will-change:auto;}
 }

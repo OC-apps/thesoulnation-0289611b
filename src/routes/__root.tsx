@@ -131,18 +131,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="soul-global-video" aria-hidden="true">
-        <video autoPlay muted loop playsInline preload="none" poster="/soul-share.jpg">
-          <source src="/TSN_fondo_branding.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <div
-        className="fixed inset-0 -z-40 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(60% 55% at 85% 10%, rgba(1,3,158,0.22), transparent 75%)",
-        }}
-      />
+      <div className="soul-global-gradient" aria-hidden="true" />
       <EasterEggProvider>
         <ExplorationProvider>
           <AudioProvider>
