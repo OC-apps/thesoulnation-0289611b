@@ -73,7 +73,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=template.id==="avi"?"center":a.align;
-  const vertical=a.verticalAlign??"middle";
+  const vertical="bottom";
   context.textBaseline=vertical==="top"?"top":vertical==="bottom"?"bottom":"middle";
   const textY=vertical==="top"?a.y+inset:vertical==="bottom"?a.y+a.height-inset:a.y+a.height/2;
   context.fillStyle=a.color;
@@ -105,7 +105,7 @@ function StreamPackStudio(){
   const chosenName=selectedIsOfficial?selectedMember.replace(/^SOUL\s+/i,"").trim():"";
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
-  const [templates,setTemplates]=useState<Template[]>(START);
+  const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area,verticalAlign:"bottom"},zones:t.zones?.map(z=>({...z,verticalAlign:"bottom"}))})));
   const [selected,setSelected]=useState("avi");
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
@@ -124,7 +124,7 @@ function StreamPackStudio(){
   const activeZone=t.zones?.find(z=>z.id===zoneId);
   const updateZone=(patch:Partial<Zone>)=>{if(!activeZone)return;update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)});};
   const updateArea=(patch:Partial<Area>)=>activeZone ? (activeZone.locked?undefined:update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)})) : update({area:{...t.area,...patch}});
-  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,verticalAlign:"bottom",x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
   const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
   const reorderZone=(direction:-1|1)=>{if(!activeZone||!t.zones)return;const current=t.zones.findIndex(z=>z.id===zoneId),target=current+direction;if(target<0||target>=t.zones.length)return;const next=[...t.zones];[next[current],next[target]]=[next[target],next[current]];update({zones:next});};
   const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
@@ -192,7 +192,7 @@ function StreamPackStudio(){
           if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color)|| (z.verticalAlign!==undefined&&!["top","middle","bottom"].includes(z.verticalAlign)))throw Error("Una capa contiene datos inválidos.");
           return {...z,x:Math.max(0,Math.min(z.x,item.width-1)),y:Math.max(0,Math.min(z.y,item.height-1)),width:Math.min(z.width,item.width),height:Math.min(z.height,item.height)};
         });
-        return {...item,zones,assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
+        return {...item,area:{...item.area,verticalAlign:"bottom"},zones:zones.map(z=>({...z,verticalAlign:"bottom" as const})),assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
       });
       const ids=new Set(incoming.map(x=>x.id));if(ids.size!==incoming.length)throw Error("Hay identificadores de plantilla repetidos.");
       // Preserve official templates not present in an older backup.
@@ -272,7 +272,7 @@ function StreamPackStudio(){
               <button onClick={()=>setAdvanced(p=>!p)} className="text-xs text-slate-400 underline">{advanced?"Ocultar controles precisos":"Mostrar controles precisos (avanzado)"}</button>
               {advanced&&<div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs text-slate-300">{key}<input type="number" value={(activeZone||t.area)[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-white"/></label>)}</div>}
             </div>
-            <div className="space-y-2"><p className="text-sm font-semibold">Alineación vertical del texto</p><div className="grid grid-cols-3 gap-2">{(["top","middle","bottom"] as const).map(v=><button key={v} type="button" onClick={()=>updateArea({verticalAlign:v})} className={`rounded-lg border px-2 py-3 text-xs ${(activeZone||t.area).verticalAlign===v||(!(activeZone||t.area).verticalAlign&&v==="middle")?"border-[#F05E07] bg-[#F05E07]/15":"border-white/20"}`}>{v==="top"?"Arriba":v==="middle"?"Centro":"Abajo"}</button>)}</div><p className="text-xs text-slate-400">Abajo fija la base del texto al borde inferior de su zona, incluso cuando cambia el tamaño de letra.</p></div>
+            <p className="text-xs text-slate-400">Todos los textos están anclados al margen inferior de su zona.</p>
             <div className="flex items-center justify-between gap-3"><label className="text-sm">Color <input type="color" value={(activeZone||t.area).color} onChange={e=>updateArea({color:e.target.value})}/></label><label className="text-sm">Alineación <select value={(activeZone||t.area).align} onChange={e=>updateArea({align:e.target.value as Area["align"]})} className="rounded-lg bg-[#07122c] p-2"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></label></div>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={guides} onChange={e=>setGuides(e.target.checked)}/><MoveHorizontal size={16}/> Mostrar márgenes en la vista previa</label>
           </div>}
