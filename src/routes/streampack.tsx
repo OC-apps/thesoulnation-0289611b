@@ -15,7 +15,7 @@ export const Route = createFileRoute("/streampack")({
   component: StreamPackStudio,
 });
 
-type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; verticalAlign?: "top" | "middle" | "bottom"; align: "center" | "left" | "right" };
+type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"; text?:string; hidden?:boolean; locked?:boolean }; 
 type Template = { assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
@@ -73,9 +73,8 @@ async function render(template:Template, nickname:string, asset:string|undefined
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=template.id==="avi"?"center":a.align;
-  const vertical="bottom";
-  context.textBaseline=vertical==="top"?"top":vertical==="bottom"?"bottom":"middle";
-  const textY=vertical==="top"?a.y+inset:vertical==="bottom"?a.y+a.height-inset:a.y+a.height/2;
+  context.textBaseline="bottom";
+  const textY=a.y+a.height-inset;
   context.fillStyle=a.color;
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
@@ -105,7 +104,7 @@ function StreamPackStudio(){
   const chosenName=selectedIsOfficial?selectedMember.replace(/^SOUL\s+/i,"").trim():"";
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
-  const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area,verticalAlign:"bottom"},zones:t.zones?.map(z=>({...z,verticalAlign:"bottom"}))})));
+  const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
   const [selected,setSelected]=useState("avi");
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
@@ -124,7 +123,7 @@ function StreamPackStudio(){
   const activeZone=t.zones?.find(z=>z.id===zoneId);
   const updateZone=(patch:Partial<Zone>)=>{if(!activeZone)return;update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)});};
   const updateArea=(patch:Partial<Area>)=>activeZone ? (activeZone.locked?undefined:update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)})) : update({area:{...t.area,...patch}});
-  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,verticalAlign:"bottom",x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
   const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
   const reorderZone=(direction:-1|1)=>{if(!activeZone||!t.zones)return;const current=t.zones.findIndex(z=>z.id===zoneId),target=current+direction;if(target<0||target>=t.zones.length)return;const next=[...t.zones];[next[current],next[target]]=[next[target],next[current]];update({zones:next});};
   const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
@@ -189,10 +188,10 @@ function StreamPackStudio(){
       const incoming:Template[]=data.templates.map((item:Template)=>{
         if(!item||typeof item.id!=="string"||!item.id||typeof item.name!=="string"||!Number.isInteger(item.width)||!Number.isInteger(item.height)||item.width<1||item.width>8192||item.height<1||item.height>8192||!Array.isArray(item.zones)||item.zones.length>100)throw Error("Una plantilla tiene datos inválidos.");
         const zones=item.zones.map(z=>{
-          if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color)|| (z.verticalAlign!==undefined&&!["top","middle","bottom"].includes(z.verticalAlign)))throw Error("Una capa contiene datos inválidos.");
+          if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color))throw Error("Una capa contiene datos inválidos.");
           return {...z,x:Math.max(0,Math.min(z.x,item.width-1)),y:Math.max(0,Math.min(z.y,item.height-1)),width:Math.min(z.width,item.width),height:Math.min(z.height,item.height)};
         });
-        return {...item,area:{...item.area,verticalAlign:"bottom"},zones:zones.map(z=>({...z,verticalAlign:"bottom" as const})),assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
+        return {...item,area:{...item.area},zones:zones.map(z=>({...z as const})),assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
       });
       const ids=new Set(incoming.map(x=>x.id));if(ids.size!==incoming.length)throw Error("Hay identificadores de plantilla repetidos.");
       // Preserve official templates not present in an older backup.
