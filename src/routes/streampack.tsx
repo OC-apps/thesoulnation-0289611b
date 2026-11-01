@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
 import { buildZip } from "@/lib/streampack-zip";
 import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
+import { useRoster } from "@/hooks/use-roster";
+import { useWavesMembers } from "@/hooks/use-waves-members";
+import { CURRENT_WAVES } from "@/lib/roster-current";
 
 export const Route = createFileRoute("/streampack")({
   head: () => ({ links:[{rel:"stylesheet",href:"https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@1,700;1,900&family=Bebas+Neue&family=Oswald:wght@700&family=Rajdhani:wght@700&family=Roboto+Condensed:ital,wght@1,900&display=swap"}], meta: [
@@ -97,7 +100,14 @@ async function render(template:Template, nickname:string, asset:string|undefined
   return canvas;
 }
 function StreamPackStudio(){
-  const [nickname,setNickname]=useState("Soul Maverick z");
+  const roster=useRoster();
+  const waves=useWavesMembers();
+  const rosterOptions=[...new Set([...CURRENT_WAVES,...waves.map(m=>m.name.toUpperCase()),...roster.all.map(m=>m.nickname.toUpperCase())])].filter(name=>name.startsWith("SOUL ")&&name.length<70).sort((a,b)=>a.localeCompare(b));
+  const [selectedMember,setSelectedMember]=useState("");
+  const [memberSearch,setMemberSearch]=useState("");
+  const selectedIsOfficial=rosterOptions.includes(selectedMember);
+  const chosenName=selectedIsOfficial?selectedMember:"";
+  const [nickname,setNickname]=useState("");
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
   const [templates,setTemplates]=useState<Template[]>(START);
@@ -123,7 +133,7 @@ function StreamPackStudio(){
   const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
   const reorderZone=(direction:-1|1)=>{if(!activeZone||!t.zones)return;const current=t.zones.findIndex(z=>z.id===zoneId),target=current+direction;if(target<0||target>=t.zones.length)return;const next=[...t.zones];[next[current],next[target]]=[next[target],next[current]];update({zones:next});};
   const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
-  useEffect(()=>{let active=true;render(t,nickname,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,nickname,assets,available,fontFamily,guides,socials]);
+  useEffect(()=>{let active=true;render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,chosenName,assets,available,fontFamily,guides,socials]);
   const upload=(file?:File)=>{
     if(!file)return;
     if(!file.type.startsWith("image/")){setMessage("Selecciona una imagen PNG o JPG.");return;}
@@ -144,7 +154,7 @@ function StreamPackStudio(){
       const c=await render(t,nickname,assets[t.id],fontFamily,false,socials);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
       if(!blob)throw Error("No se pudo crear el PNG");
-      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Soul_${safeName(nickname)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
+      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Soul_${safeName(chosenName)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
     }catch(e){setMessage(e instanceof Error?e.message:"Error de exportación");}finally{setBusy(false);}
   };
   const downloadPack=async()=>{
@@ -154,7 +164,7 @@ function StreamPackStudio(){
       if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
       const files:{name:string;bytes:Uint8Array}[]=[];
       for(const item of valid){
-        const canvas=await render(item,nickname,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials);
+        const canvas=await render(item,chosenName,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials);
         const blob=await new Promise<Blob|null>(resolve=>canvas.toBlob(resolve,"image/png"));
         if(!blob)throw Error("No se pudo generar "+item.name);
         files.push({name:`${item.category}/${safeName(nickname)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
@@ -183,12 +193,15 @@ function StreamPackStudio(){
       </div>
       <div className="mt-8 grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
         <section className="space-y-5 rounded-3xl border border-white/10 bg-white/[.045] p-5">
-          <label className="block text-sm font-semibold" htmlFor="soul-nickname">Nickname</label>
-          <input id="soul-nickname" maxLength={65} value={nickname} onChange={e=>setNickname(e.target.value)} className="w-full rounded-xl border border-white/20 bg-[#07122c] px-4 py-3 text-base outline-none focus:border-[#F05E07]" placeholder="Soul Emi X"/>
+          <div className="space-y-2"><label htmlFor="soul-roster-search" className="block text-sm font-semibold">Selecciona tu gamertag del roster oficial</label>
+            <input id="soul-roster-search" value={memberSearch} onChange={e=>setMemberSearch(e.target.value)} className="w-full rounded-xl border border-white/20 bg-[#07122c] px-4 py-3 text-base outline-none focus:border-[#F05E07]" placeholder="Buscar miembro Soul…"/>
+            <select aria-label="Gamertag oficial" value={selectedMember} onChange={e=>setSelectedMember(e.target.value)} className="w-full rounded-xl border border-white/20 bg-[#07122c] px-4 py-3 text-base text-white"><option value="">Elige un integrante…</option>{rosterOptions.filter(name=>name.toLowerCase().includes(memberSearch.trim().toLowerCase())).map(name=><option key={name} value={name}>{name}</option>)}{selectedMember&&!rosterOptions.some(name=>name===selectedMember&&name.toLowerCase().includes(memberSearch.trim().toLowerCase()))&&<option value={selectedMember}>{selectedMember}</option>}</select>
+            <p className="text-xs text-slate-400">{selectedIsOfficial?`Seleccionado: ${selectedMember}`:"Solo se pueden generar paquetes con nombres del roster oficial."}</p>
+            <p className="text-xs text-amber-200">Esta selección no verifica tu identidad: cualquier visitante podría escoger el nombre de otro miembro. Para impedir suplantaciones se requiere un acceso verificado por integrante.</p></div>
           <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
           <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
-          <button onClick={download} disabled={busy || !nickname.trim() || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
+          <button onClick={download} disabled={busy || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
           <button onClick={downloadPack} disabled={packBusy || !nickname.trim() || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
           <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
         </section>
@@ -230,8 +243,8 @@ function StreamPackStudio(){
                 <input type="range" min={control.key==="padding"?0:1} max={control.max} value={control.key==="padding" ? ((activeZone||t.area).padding??8) : (activeZone||t.area)[control.key]} onChange={e=>updateArea({[control.key]:Number(e.target.value)} as Partial<Area>)} className="w-full accent-[#F05E07]"/>
               </label>)}
               <div className="flex gap-2">
-                <button className="flex-1 rounded-lg border border-white/20 px-2 py-2 text-xs" onClick={()=>setNickname("Soul Emi X")}>Probar nombre corto</button>
-                <button className="flex-1 rounded-lg border border-white/20 px-2 py-2 text-xs" onClick={()=>setNickname("Soul Maverick z")}>Probar nombre largo</button>
+                <button className="flex-1 rounded-lg border border-white/20 px-2 py-2 text-xs" onClick={()=>setSelectedMember("SOUL EMI")}>Probar nombre corto</button>
+                <button className="flex-1 rounded-lg border border-white/20 px-2 py-2 text-xs" onClick={()=>setSelectedMember("SOUL MAVERICK Z")}>Probar nombre largo</button>
               </div>
               <button onClick={()=>setAdvanced(p=>!p)} className="text-xs text-slate-400 underline">{advanced?"Ocultar controles precisos":"Mostrar controles precisos (avanzado)"}</button>
               {advanced&&<div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs text-slate-300">{key}<input type="number" value={(activeZone||t.area)[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-white"/></label>)}</div>}
