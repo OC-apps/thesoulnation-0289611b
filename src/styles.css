@@ -3117,14 +3117,11 @@ body { isolation: isolate; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.65;
-  filter: saturate(1.12) brightness(0.9);
+  opacity: 1;
+  filter: none;
 }
 .soul-global-video::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(6,7,32,.44), rgba(6,7,32,.68));
+  content: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .soul-global-video video { display: none; }
