@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "notes": "Inventario de PNG originales recibidos. assetPath reservado hasta que los binarios sean publicados. Los rectángulos son estimaciones, no posiciones aprobadas.",
+  "templates": [
+    {
+      "id": "tsn-01",
+      "filename": "TSN_AVI_1x1.png",
+      "category": "AVI",
+      "width": 2048,
+      "height": 2048,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_AVI_1x1.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": false,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 369,
+          "y": 1556,
+          "width": 1311,
+          "height": 184,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-02",
+      "filename": "TSN_Webcam_16x9.png",
+      "category": "Webcam",
+      "width": 1672,
+      "height": 941,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Webcam_16x9.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 301,
+          "y": 790,
+          "width": 1070,
+          "height": 85,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-03",
+      "filename": "TSN_Webcam_16x9 (2).png",
+      "category": "Webcam",
+      "width": 1920,
+      "height": 600,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Webcam_16x9 (2).png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 346,
+          "y": 504,
+          "width": 1229,
+          "height": 54,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-04",
+      "filename": "TSN_Overlay_16x9_Cam.png",
+      "category": "Horizontal",
+      "width": 1920,
+      "height": 1080,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_16x9_Cam.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 346,
+          "y": 907,
+          "width": 1229,
+          "height": 97,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-05",
+      "filename": "TSN_Overlay_16x9_NoCam.png",
+      "category": "Horizontal",
+      "width": 1920,
+      "height": 1080,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_16x9_NoCam.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 346,
+          "y": 907,
+          "width": 1229,
+          "height": 97,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-06",
+      "filename": "TSN_Overlay_16x9_4Cams.png",
+      "category": "Invitados",
+      "width": 1920,
+      "height": 1080,
+      "editMode": "none",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_16x9_4Cams.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": false,
+        "showSoul": false,
+        "highlightTrailingLetter": false,
+        "socials": false
+      },
+      "zones": []
+    },
+    {
+      "id": "tsn-07",
+      "filename": "TSN_Overlay_9x16_Cam.png",
+      "category": "Vertical",
+      "width": 941,
+      "height": 1672,
+      "editMode": "nickname+social",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_Cam.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": true
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 169,
+          "y": 1404,
+          "width": 602,
+          "height": 150,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-08",
+      "filename": "TSN_Overlay_9x16_Cam_V02.png",
+      "category": "Vertical",
+      "width": 941,
+      "height": 1672,
+      "editMode": "nickname+social",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_Cam_V02.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": true
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 169,
+          "y": 1404,
+          "width": 602,
+          "height": 150,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-09",
+      "filename": "TSN_Overlay_9x16_NoCam.png",
+      "category": "Vertical",
+      "width": 1080,
+      "height": 1920,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_NoCam.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 194,
+          "y": 1613,
+          "width": 691,
+          "height": 173,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-10",
+      "filename": "TSN_Overlay_9x16_NoCam_V02.png",
+      "category": "Vertical",
+      "width": 1080,
+      "height": 1920,
+      "editMode": "nickname",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_NoCam_V02.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": true,
+        "showSoul": true,
+        "highlightTrailingLetter": true,
+        "socials": false
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "x": 194,
+          "y": 1613,
+          "width": 691,
+          "height": 173,
+          "note": "Zona inicial estimada; ajustar visualmente"
+        }
+      ]
+    },
+    {
+      "id": "tsn-11",
+      "filename": "TSN_Iniciamos_16X9.png",
+      "category": "Pantallas",
+      "width": 1920,
+      "height": 1080,
+      "editMode": "none",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Iniciamos_16X9.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": false,
+        "showSoul": false,
+        "highlightTrailingLetter": false,
+        "socials": false
+      },
+      "zones": []
+    },
+    {
+      "id": "tsn-12",
+      "filename": "TSN_Iniciamos_9x16.png",
+      "category": "Pantallas",
+      "width": 941,
+      "height": 1672,
+      "editMode": "none",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Iniciamos_9x16.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": false,
+        "showSoul": false,
+        "highlightTrailingLetter": false,
+        "socials": false
+      },
+      "zones": []
+    },
+    {
+      "id": "tsn-13",
+      "filename": "TSN_Regresamos_16X9.png",
+      "category": "Pantallas",
+      "width": 1920,
+      "height": 1080,
+      "editMode": "none",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Regresamos_16X9.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": false,
+        "showSoul": false,
+        "highlightTrailingLetter": false,
+        "socials": false
+      },
+      "zones": []
+    },
+    {
+      "id": "tsn-14",
+      "filename": "TSN_Finalizada_16X9.png",
+      "category": "Pantallas",
+      "width": 1920,
+      "height": 1080,
+      "editMode": "none",
+      "access": "public",
+      "assetPath": "/streampack/templates/TSN_Finalizada_16X9.png",
+      "uploaded": false,
+      "textRules": {
+        "nickname": false,
+        "showSoul": false,
+        "highlightTrailingLetter": false,
+        "socials": false
+      },
+      "zones": []
+    }
+  ]
+}
