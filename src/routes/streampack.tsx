@@ -15,7 +15,7 @@ export const Route = createFileRoute("/streampack")({
   component: StreamPackStudio,
 });
 
-type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; align: "center" | "left" | "right" };
+type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; verticalAlign?: "top" | "middle" | "bottom"; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"; text?:string; hidden?:boolean; locked?:boolean }; 
 type Template = { assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
@@ -72,11 +72,15 @@ async function render(template:Template, nickname:string, asset:string|undefined
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
-  context.textAlign=template.id==="avi"?"center":a.align; context.textBaseline="middle"; context.fillStyle=a.color;
+  context.textAlign=template.id==="avi"?"center":a.align;
+  const vertical=a.verticalAlign??"middle";
+  context.textBaseline=vertical==="top"?"top":vertical==="bottom"?"bottom":"middle";
+  const textY=vertical==="top"?a.y+inset:vertical==="bottom"?a.y+a.height-inset:a.y+a.height/2;
+  context.fillStyle=a.color;
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
-  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
-  else context.fillText(label,x,a.y+a.height/2);
+  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,textY);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,textY);}
+  else context.fillText(label,x,textY);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
 
@@ -242,6 +246,7 @@ function StreamPackStudio(){
               <button onClick={()=>setAdvanced(p=>!p)} className="text-xs text-slate-400 underline">{advanced?"Ocultar controles precisos":"Mostrar controles precisos (avanzado)"}</button>
               {advanced&&<div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs text-slate-300">{key}<input type="number" value={(activeZone||t.area)[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-white"/></label>)}</div>}
             </div>
+            <div className="space-y-2"><p className="text-sm font-semibold">Alineación vertical del texto</p><div className="grid grid-cols-3 gap-2">{(["top","middle","bottom"] as const).map(v=><button key={v} type="button" onClick={()=>updateArea({verticalAlign:v})} className={`rounded-lg border px-2 py-3 text-xs ${(activeZone||t.area).verticalAlign===v||(!(activeZone||t.area).verticalAlign&&v==="middle")?"border-[#F05E07] bg-[#F05E07]/15":"border-white/20"}`}>{v==="top"?"Arriba":v==="middle"?"Centro":"Abajo"}</button>)}</div><p className="text-xs text-slate-400">Abajo fija la base del texto al borde inferior de su zona, incluso cuando cambia el tamaño de letra.</p></div>
             <div className="flex items-center justify-between gap-3"><label className="text-sm">Color <input type="color" value={(activeZone||t.area).color} onChange={e=>updateArea({color:e.target.value})}/></label><label className="text-sm">Alineación <select value={(activeZone||t.area).align} onChange={e=>updateArea({align:e.target.value as Area["align"]})} className="rounded-lg bg-[#07122c] p-2"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></label></div>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={guides} onChange={e=>setGuides(e.target.checked)}/><MoveHorizontal size={16}/> Mostrar márgenes en la vista previa</label>
           </div>}
