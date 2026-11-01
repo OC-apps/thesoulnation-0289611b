@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "notes": "Inventario de PNG originales recibidos. assetPath reservado hasta que los binarios sean publicados. Los rectángulos son estimaciones, no posiciones aprobadas.",
+  "notes": "PNG originales publicados sin modificaciones. Los rectángulos son estimaciones; SOUL solo se añade mediante una capa explícita del editor.",
   "templates": [
     {
       "id": "tsn-01",
@@ -11,7 +11,7 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_AVI_1x1.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
         "showSoul": false,
@@ -39,10 +39,10 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Webcam_16x9.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": false
       },
@@ -67,10 +67,10 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Webcam_16x9 (2).png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": false
       },
@@ -95,10 +95,10 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_16x9_Cam.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": false
       },
@@ -123,10 +123,10 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_16x9_NoCam.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": false
       },
@@ -151,7 +151,7 @@
       "editMode": "none",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_16x9_4Cams.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": false,
         "showSoul": false,
@@ -169,10 +169,10 @@
       "editMode": "nickname+social",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_9x16_Cam.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": true
       },
@@ -197,10 +197,10 @@
       "editMode": "nickname+social",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_9x16_Cam_V02.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": true
       },
@@ -225,10 +225,10 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_9x16_NoCam.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": false
       },
@@ -253,10 +253,10 @@
       "editMode": "nickname",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Overlay_9x16_NoCam_V02.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": true,
-        "showSoul": true,
+        "showSoul": false,
         "highlightTrailingLetter": true,
         "socials": false
       },
@@ -281,7 +281,7 @@
       "editMode": "none",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Iniciamos_16X9.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": false,
         "showSoul": false,
@@ -299,7 +299,7 @@
       "editMode": "none",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Iniciamos_9x16.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": false,
         "showSoul": false,
@@ -317,7 +317,7 @@
       "editMode": "none",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Regresamos_16X9.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": false,
         "showSoul": false,
@@ -335,7 +335,7 @@
       "editMode": "none",
       "access": "public",
       "assetPath": "/streampack/templates/TSN_Finalizada_16X9.png",
-      "uploaded": false,
+      "uploaded": true,
       "textRules": {
         "nickname": false,
         "showSoul": false,

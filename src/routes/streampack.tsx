@@ -38,13 +38,13 @@ const safeName = (name:string) => (name.trim().replace(/[^a-z0-9-_]+/gi,"_").sli
 const loadImage = (src:string):Promise<HTMLImageElement> => new Promise((resolve,reject) => {
   const image=new Image(); image.onload=()=>resolve(image); image.onerror=reject; image.src=src;
 });
-async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}, soulLayout:"stacked"|"inline"="stacked") {
+async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}) {
   const canvas=document.createElement("canvas"); canvas.width=template.width; canvas.height=template.height;
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\s+/i,"") || "NICKNAME";
   await document.fonts.load(`900 italic 40px "${fontFamily}"`);
-  const drawText=(a:Area,label:string,highlightFinal=false,inlineSoul=false)=>{
+  const drawText=(a:Area,label:string,highlightFinal=false)=>{
   if(!label.trim())return;
   const inset=Math.min((a.padding??8),Math.max(0,Math.min(a.width,a.height)/2-1));
   let low=1, high=Math.max(2,a.maxFont);
@@ -67,7 +67,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
     context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
-    const measure=context.measureText(inlineSoul?"SOUL "+label:label);
+    const measure=context.measureText(label);
     const height=(measure.actualBoundingBoxAscent || mid*.85)+(measure.actualBoundingBoxDescent || mid*.25);
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
@@ -75,22 +75,14 @@ async function render(template:Template, nickname:string, asset:string|undefined
   context.textAlign=template.id==="avi"?"center":a.align; context.textBaseline="middle"; context.fillStyle=a.color;
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
-  if(inlineSoul){
-    const prefix="SOUL "; const full=prefix+label;const fullWidth=context.measureText(full).width;
-    const start=a.align==="center"?x-fullWidth/2:a.align==="right"?x-fullWidth:x;
-    const trailing=label.match(/^(.*\S)\s+([A-Z])$/i);
-    context.textAlign="left";context.fillStyle="#F05E07";context.fillText(prefix,start,a.y+a.height/2);
-    const nameStart=start+context.measureText(prefix).width;
-    if(trailing){const base=trailing[1]+" ";context.fillStyle="#FFFFFF";context.fillText(base,nameStart,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(trailing[2],nameStart+context.measureText(base).width,a.y+a.height/2);}
-    else{context.fillStyle="#FFFFFF";context.fillText(label,nameStart,a.y+a.height/2);}
-  }else if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
+  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
   else context.fillText(label,x,a.y+a.height/2);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
 
   if(template.zones){
     for(const zone of template.zones){
-      if(zone.hidden || (template.id==="avi" && zone.kind==="soul"))continue;
+      if(zone.hidden)continue;
       if(zone.kind==="nickname")drawText(zone,displayName,true);
       else if(zone.kind==="soul")drawText(zone,"SOUL");
       else if(zone.kind==="social")drawText(zone,socials[zone.label]||"");
@@ -107,7 +99,6 @@ function StreamPackStudio(){
   const [memberSearch,setMemberSearch]=useState("");
   const selectedIsOfficial=rosterOptions.includes(selectedMember);
   const chosenName=selectedIsOfficial?selectedMember.replace(/^SOUL\s+/i,"").trim():"";
-  const [nickname,setNickname]=useState("");
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
   const [templates,setTemplates]=useState<Template[]>(START);
@@ -115,7 +106,7 @@ function StreamPackStudio(){
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
   useEffect(()=>{let cancelled=false;Promise.all(START.map(async item=>{try{const response=await fetch(item.assetPath||"",{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}})).then(entries=>{if(!cancelled)setAvailable(Object.fromEntries(entries));});return()=>{cancelled=true;};},[]);
-  const [fontFamily,setFontFamily]=useState("Arial");
+  const [fontFamily,setFontFamily]=useState("The Soul Nation");
   const [advanced,setAdvanced]=useState(false);
 
   const [preview,setPreview]=useState("");
@@ -151,15 +142,17 @@ function StreamPackStudio(){
   const download=async()=>{
     setBusy(true);setMessage("");
     try{
-      const c=await render(t,nickname,assets[t.id],fontFamily,false,socials);
+      if(!selectedIsOfficial)throw Error("Selecciona un integrante del roster oficial.");
+      const c=await render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,false,socials);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
       if(!blob)throw Error("No se pudo crear el PNG");
-      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Soul_${safeName(chosenName)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
+      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`${safeName(chosenName)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
     }catch(e){setMessage(e instanceof Error?e.message:"Error de exportación");}finally{setBusy(false);}
   };
   const downloadPack=async()=>{
     setPackBusy(true);setMessage("");
     try{
+      if(!selectedIsOfficial)throw Error("Selecciona un integrante del roster oficial.");
       const valid=templates.filter(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]));
       if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
       const files:{name:string;bytes:Uint8Array}[]=[];
@@ -167,10 +160,10 @@ function StreamPackStudio(){
         const canvas=await render(item,chosenName,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials);
         const blob=await new Promise<Blob|null>(resolve=>canvas.toBlob(resolve,"image/png"));
         if(!blob)throw Error("No se pudo generar "+item.name);
-        files.push({name:`${item.category}/${safeName(nickname)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
+        files.push({name:`${item.category}/${safeName(chosenName)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
       }
       const zip=buildZip(files);const url=URL.createObjectURL(zip);const a=document.createElement("a");
-      a.href=url;a.download=`TheSoulNation_${safeName(nickname)}_StreamPack.zip`;a.click();
+      a.href=url;a.download=`TheSoulNation_${safeName(chosenName)}_StreamPack.zip`;a.click();
       setTimeout(()=>URL.revokeObjectURL(url),3000);
       setMessage(`Paquete generado: ${files.length} gráfico(s) con fondo cargado.`);
     }catch(e){setMessage(e instanceof Error?e.message:"No se pudo generar el paquete.");}
@@ -202,7 +195,7 @@ function StreamPackStudio(){
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
           <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
           <button onClick={download} disabled={busy || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
-          <button onClick={downloadPack} disabled={packBusy || !nickname.trim() || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
+          <button onClick={downloadPack} disabled={packBusy || !selectedIsOfficial || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
           <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
         </section>
         <section className="min-w-0 space-y-4">
@@ -217,16 +210,16 @@ function StreamPackStudio(){
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
-            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{t.id!=="avi"&&<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
+            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="space-y-2 rounded-xl border border-white/15 p-3"><p className="text-sm font-semibold">Capas de texto</p>{t.zones?.map(z=><div key={z.id} className={`flex items-center gap-2 rounded-lg p-1 ${zoneId===z.id?"bg-[#F05E07]/15":"bg-white/5"}`}><button onClick={()=>setZoneId(z.id)} className="min-w-0 flex-1 truncate px-2 py-2 text-left text-xs">{z.label}</button><button title={z.hidden?"Mostrar":"Ocultar"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,hidden:!a.hidden}:a)})} className="px-2 text-xs">{z.hidden?"Oculto":"Visible"}</button><button title={z.locked?"Desbloquear":"Bloquear"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,locked:!a.locked}:a)})} className="px-2 text-xs">{z.locked?"Bloqueado":"Libre"}</button></div>)}</div>
             {activeZone&&<div className="space-y-2"><label className="block text-xs text-slate-300">Nombre de capa<input value={activeZone.label} onChange={e=>updateZone({label:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>{activeZone.kind==="custom"&&<label className="block text-xs text-slate-300">Texto<input value={activeZone.text||""} onChange={e=>updateZone({text:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>}<div className="flex flex-wrap gap-2"><button onClick={duplicateZone} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Duplicar</button><button onClick={()=>reorderZone(-1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Atrás</button><button onClick={()=>reorderZone(1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Adelante</button><button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar</button></div></div>}
             
             <div className="space-y-3 rounded-xl border border-white/10 p-3">
               <label className="block text-xs font-semibold text-slate-200">Tipografía</label>
               <select value={fontFamily} onChange={e=>setFontFamily(e.target.value)} className="w-full rounded-lg border border-white/20 bg-[#07122c] p-3 text-sm text-white">
-                {["Arial","SoulUploadedFont","Anton","Barlow Condensed","Bebas Neue","Oswald","Rajdhani","Roboto Condensed"].map(font=><option key={font} value={font}>{font==="SoulUploadedFont"?"The Soul Nation (fuente cargada)":font}</option>)}
+                {["The Soul Nation","Arial","SoulUploadedFont","Anton","Barlow Condensed","Bebas Neue","Oswald","Rajdhani","Roboto Condensed"].map(font=><option key={font} value={font}>{font==="SoulUploadedFont"?"The Soul Nation (fuente cargada)":font}</option>)}
               </select>
-              <p className="text-xs text-slate-400">La fuente oficial aparece después de cargar su archivo TTF. Las Google Fonts requieren conexión.</p>
+              <p className="text-xs text-slate-400">La fuente oficial está incluida y seleccionada por defecto. Las Google Fonts requieren conexión.</p>
               <div className="grid grid-cols-2 gap-2">
                 <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({x:Math.round((t.width-(activeZone||t.area).width)/2),align:"center"})}>Centrar horizontal</button>
                 <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({y:Math.round((t.height-(activeZone||t.area).height)/2)})}>Centrar vertical</button>
