@@ -173,8 +173,34 @@ function StreamPackStudio(){
     }catch(e){setMessage(e instanceof Error?e.message:"No se pudo generar el paquete.");}
     finally{setPackBusy(false);}
   };
-  const saveConfiguration=()=>{const json=JSON.stringify({version:1,templates},null,2);const url=URL.createObjectURL(new Blob([json],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download="TSN_StreamPack_Plantillas.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);setMessage("Configuración exportada. Conserva también los PNG originales.");};
-  const loadConfiguration=async(file?:File)=>{if(!file)return;try{const data=JSON.parse(await file.text());if(data.version!==1||!Array.isArray(data.templates)||data.templates.length>100)throw Error("Formato de configuración inválido");const clean:Template[]=data.templates.map((item:Template)=>{if(typeof item.id!=="string"||typeof item.name!=="string"||!Number.isInteger(item.width)||!Number.isInteger(item.height)||item.width<1||item.width>8192||item.height<1||item.height>8192||!Array.isArray(item.zones))throw Error("Plantilla inválida");return {...item,zones:item.zones.filter(z=>typeof z.id==="string"&&["nickname","soul","social"].includes(z.kind)&&Number.isFinite(z.x)&&Number.isFinite(z.y)&&Number.isFinite(z.width)&&Number.isFinite(z.height)).slice(0,32)};});setTemplates(clean);setSelected(clean[0]?.id||"webcam");setZoneId("nickname");setMessage("Configuración importada. Vuelve a cargar los PNG correspondientes.");}catch(e){setMessage(e instanceof Error?e.message:"No se pudo importar el JSON");}};
+  const saveConfiguration=()=>{
+    const json=JSON.stringify({version:2,scope:"all-templates",exportedAt:new Date().toISOString(),templates},null,2);
+    const url=URL.createObjectURL(new Blob([json],{type:"application/json"}));
+    const link=document.createElement("a");link.href=url;link.download="TSN_StreamPack_CONFIGURACION_COMPLETA.json";link.click();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    setMessage(`Se exportaron las ${templates.length} plantillas con todas sus capas. El JSON no contiene los archivos PNG ni las fuentes TTF.`);
+  };
+  const loadConfiguration=async(file?:File)=>{
+    if(!file)return;
+    try{
+      if(file.size>2_000_000)throw Error("Archivo demasiado grande para una configuración.");
+      const data=JSON.parse(await file.text());
+      if(![1,2].includes(data.version)||!Array.isArray(data.templates)||!data.templates.length||data.templates.length>100)throw Error("Archivo de configuración incompatible.");
+      const incoming:Template[]=data.templates.map((item:Template)=>{
+        if(!item||typeof item.id!=="string"||!item.id||typeof item.name!=="string"||!Number.isInteger(item.width)||!Number.isInteger(item.height)||item.width<1||item.width>8192||item.height<1||item.height>8192||!Array.isArray(item.zones)||item.zones.length>100)throw Error("Una plantilla tiene datos inválidos.");
+        const zones=item.zones.map(z=>{
+          if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color)|| (z.verticalAlign!==undefined&&!["top","middle","bottom"].includes(z.verticalAlign)))throw Error("Una capa contiene datos inválidos.");
+          return {...z,x:Math.max(0,Math.min(z.x,item.width-1)),y:Math.max(0,Math.min(z.y,item.height-1)),width:Math.min(z.width,item.width),height:Math.min(z.height,item.height)};
+        });
+        return {...item,zones,assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
+      });
+      const ids=new Set(incoming.map(x=>x.id));if(ids.size!==incoming.length)throw Error("Hay identificadores de plantilla repetidos.");
+      // Preserve official templates not present in an older backup.
+      setTemplates(current=>[...current.map(t=>incoming.find(x=>x.id===t.id)||t),...incoming.filter(t=>!current.some(x=>x.id===t.id))]);
+      setZoneId("nickname");
+      setMessage(`Configuración global importada: ${incoming.length} plantillas restauradas. Las imágenes deben existir en el sitio o cargarse por separado.`);
+    }catch(e){setMessage(e instanceof Error?e.message:"No se pudo importar el JSON.");}
+  };
   const createTemplate=()=>{const id=`custom-${Date.now()}`;setTemplates(p=>[...p,{...START[0],id,name:"Nuevo gráfico",membersOnly:false}]);setSelected(id);setEditor(true);};
   const setNumber=(key:keyof Area,value:number)=>{
     if(!Number.isFinite(value))return;
@@ -210,7 +236,7 @@ function StreamPackStudio(){
           {editor&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
             <div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">Editor local de gráficos</h2><button onClick={createTemplate} className="text-sm text-[#F05E07]">+ Nueva plantilla</button></div>
             <p className="text-xs text-amber-200">Edita las zonas directamente sobre la vista previa superior. Los PNG permanecen solo durante esta sesión. Exporta un JSON para conservar posiciones y márgenes; no incluye imágenes ni habilita descargas privadas.</p>
-            <div className="flex flex-wrap gap-2"><button onClick={saveConfiguration} className="rounded-lg bg-blue-700 px-3 py-2 text-sm">Exportar configuración JSON</button><label className="cursor-pointer rounded-lg border border-blue-500/50 px-3 py-2 text-sm">Importar configuración<input type="file" accept=".json,application/json" className="hidden" onChange={e=>void loadConfiguration(e.target.files?.[0])}/></label></div>
+            <div className="flex flex-wrap gap-2"><button onClick={saveConfiguration} className="rounded-lg bg-blue-700 px-3 py-2 text-sm">Exportar todas las plantillas</button><label className="cursor-pointer rounded-lg border border-blue-500/50 px-3 py-2 text-sm">Importar todas las plantillas<input type="file" accept=".json,application/json" className="hidden" onChange={e=>void loadConfiguration(e.target.files?.[0])}/></label></div>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
