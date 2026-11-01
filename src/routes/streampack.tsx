@@ -13,11 +13,11 @@ export const Route = createFileRoute("/streampack")({
 });
 
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; align: "center" | "left" | "right" };
-type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul" }; 
+type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"; text?:string; hidden?:boolean; locked?:boolean }; 
 type Template = { zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
   {id:"avi",name:"AVI · Imagen de perfil",width:2048,height:2048,category:"AVI",membersOnly:false,area:{x:310,y:1570,width:1428,height:190,maxFont:190,minFont:12,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",label:"Nickname",kind:"nickname",x:310,y:1570,width:1428,height:190,maxFont:190,minFont:12,color:"#FFFFFF",align:"center"}]},
-  {id:"4cams",name:"4 webcams · Invitados",width:1920,height:1080,category:"Invitados",membersOnly:false,area:{x:1,y:1,width:100,height:30,maxFont:30,minFont:8,color:"#FFFFFF",align:"center"},zones:[]},
+  {id:"4cams",name:"4 webcams · Invitados",width:1920,height:1080,category:"Invitados",membersOnly:false,area:{x:1,y:1,width:100,height:30,maxFont:30,minFont:8,color:"#FFFFFF",align:"center"},zones:[0,1,2,3].map(i=>({id:`guest-${i+1}`,kind:"custom" as const,label:`Invitado ${i+1}`,text:`Invitado ${i+1}`,x:130+i*455,y:930,width:390,height:70,maxFont:60,minFont:8,color:"#FFFFFF",align:"center" as const}))},
   { id:"webcam", name:"Webcam horizontal", width:1920, height:1080, category:"Webcam", membersOnly:false,
     area:{x:480,y:914,width:960,height:104,maxFont:105,minFont:14,color:"#FFFFFF",align:"center"} },
   { id:"vertical", name:"Transmisión vertical", width:1080, height:1920, category:"TikTok", membersOnly:false,
@@ -76,13 +76,14 @@ async function render(template:Template, nickname:string, asset:string|undefined
   else context.fillText(label,x,a.y+a.height/2);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
-  if(template.id==="4cams")return canvas;
+
   if(template.zones){
     for(const zone of template.zones){
-      if(template.id==="avi" && zone.kind==="soul")continue;
+      if(zone.hidden || (template.id==="avi" && zone.kind==="soul"))continue;
       if(zone.kind==="nickname")drawText(zone,displayName,true);
       else if(zone.kind==="soul")drawText(zone,"SOUL");
       else if(zone.kind==="social")drawText(zone,socials[zone.label]||"");
+      else if(zone.kind==="custom")drawText(zone,zone.text||"");
     }
   }else drawText(a,displayName,true);
   return canvas;
@@ -106,8 +107,11 @@ function StreamPackStudio(){
   const t=templates.find(item=>item.id===selected) || templates[0];
   const update=(patch:Partial<Template>)=>setTemplates(current=>current.map(x=>x.id===t.id?{...x,...patch}:x));
   const activeZone=t.zones?.find(z=>z.id===zoneId);
-  const updateArea=(patch:Partial<Area>)=>activeZone ? update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)}) : update({area:{...t.area,...patch}});
-  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const updateZone=(patch:Partial<Zone>)=>{if(!activeZone)return;update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)});};
+  const updateArea=(patch:Partial<Area>)=>activeZone ? (activeZone.locked?undefined:update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)})) : update({area:{...t.area,...patch}});
+  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
+  const reorderZone=(direction:-1|1)=>{if(!activeZone||!t.zones)return;const current=t.zones.findIndex(z=>z.id===zoneId),target=current+direction;if(target<0||target>=t.zones.length)return;const next=[...t.zones];[next[current],next[target]]=[next[target],next[current]];update({zones:next});};
   const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
   useEffect(()=>{let active=true;render(t,nickname,assets[t.id],fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,nickname,assets,fontFamily,guides,socials]);
   const upload=(file?:File)=>{
@@ -180,7 +184,7 @@ function StreamPackStudio(){
         </section>
         <section className="min-w-0 space-y-4">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
-            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]">{editor ? <StreamPackAreaEditor background={preview || assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>:<span>Preparando vista previa…</span>}</div>
+            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]">{editor ? <StreamPackAreaEditor background={preview || assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>:<span>Preparando vista previa…</span>}</div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div>
           {editor&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
@@ -190,8 +194,9 @@ function StreamPackStudio(){
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
-            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{t.id!=="avi"&&<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
-            <div className="flex flex-wrap gap-2">{t.zones?.map(z=><button key={z.id} onClick={()=>setZoneId(z.id)} className={`rounded-lg border px-3 py-2 text-xs ${zoneId===z.id?"border-orange-500 text-orange-400":"border-white/20"}`}>{z.label}</button>)}{activeZone&&<button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar zona</button>}</div>
+            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{t.id!=="avi"&&<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
+            <div className="space-y-2 rounded-xl border border-white/15 p-3"><p className="text-sm font-semibold">Capas de texto</p>{t.zones?.map(z=><div key={z.id} className={`flex items-center gap-2 rounded-lg p-1 ${zoneId===z.id?"bg-[#F05E07]/15":"bg-white/5"}`}><button onClick={()=>setZoneId(z.id)} className="min-w-0 flex-1 truncate px-2 py-2 text-left text-xs">{z.label}</button><button title={z.hidden?"Mostrar":"Ocultar"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,hidden:!a.hidden}:a)})} className="px-2 text-xs">{z.hidden?"Oculto":"Visible"}</button><button title={z.locked?"Desbloquear":"Bloquear"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,locked:!a.locked}:a)})} className="px-2 text-xs">{z.locked?"Bloqueado":"Libre"}</button></div>)}</div>
+            {activeZone&&<div className="space-y-2"><label className="block text-xs text-slate-300">Nombre de capa<input value={activeZone.label} onChange={e=>updateZone({label:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>{activeZone.kind==="custom"&&<label className="block text-xs text-slate-300">Texto<input value={activeZone.text||""} onChange={e=>updateZone({text:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>}<div className="flex flex-wrap gap-2"><button onClick={duplicateZone} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Duplicar</button><button onClick={()=>reorderZone(-1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Atrás</button><button onClick={()=>reorderZone(1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Adelante</button><button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar</button></div></div>}
             
             <div className="space-y-3 rounded-xl border border-white/10 p-3">
               <label className="block text-xs font-semibold text-slate-200">Tipografía</label>
