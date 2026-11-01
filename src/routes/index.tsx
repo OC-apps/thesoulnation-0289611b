@@ -627,6 +627,12 @@ function IndexContent() {
             {href:"#reclutamiento",title:"Únete",short:"Únete",sub:"Forma parte de Soul",image:"/quick-join-2026.jpg"},
           ].map(item => <a key={item.href} href={item.href} className="soul-home-tile" aria-label={item.title}><img src={item.image} alt="" loading="lazy" /><span><strong><span className="soul-tile-title-full">{item.title}</span><span className="soul-tile-title-small" aria-hidden="true">{item.short}</span></strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
         </div>
+        <div className="mx-auto max-w-6xl px-6 pb-4">
+          <a href="/streampack" className="group flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#F05E07]/25 bg-[#091540]/80 px-5 py-4 transition hover:border-[#F05E07]/70 hover:bg-[#0c1c52]">
+            <span className="min-w-0"><strong className="block text-sm font-bold uppercase tracking-widest text-white">StreamPack Studio</strong><small className="mt-1 block text-xs text-slate-300">Personaliza tus overlays y marcos para transmisión</small></span>
+            <span className="shrink-0 text-sm font-semibold text-[#F05E07]">Abrir estudio ↗</span>
+          </a>
+        </div>
         <div className="mx-auto max-w-7xl px-5 sm:px-6 mt-6 flex justify-end">
           <EasterEgg id="og-member" label="Marca OG oculta" size="sm" />
         </div>
