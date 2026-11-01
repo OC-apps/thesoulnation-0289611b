@@ -13,7 +13,8 @@ export const Route = createFileRoute("/streampack")({
 });
 
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; align: "center" | "left" | "right" };
-type Template = { id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
+type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul" }; 
+type Template = { zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
   { id:"webcam", name:"Webcam horizontal", width:1920, height:1080, category:"Webcam", membersOnly:false,
     area:{x:480,y:914,width:960,height:104,maxFont:105,minFont:14,color:"#FFFFFF",align:"center"} },
@@ -24,29 +25,36 @@ const safeName = (name:string) => (name.trim().replace(/[^a-z0-9-_]+/gi,"_").sli
 const loadImage = (src:string):Promise<HTMLImageElement> => new Promise((resolve,reject) => {
   const image=new Image(); image.onload=()=>resolve(image); image.onerror=reject; image.src=src;
 });
-async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean) {
+async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}) {
   const canvas=document.createElement("canvas"); canvas.width=template.width; canvas.height=template.height;
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase() || "NICKNAME";
+  const drawText=(a:Area,label:string)=>{
+  if(!label.trim())return;
   let low=4, high=Math.max(5,a.maxFont);
   const permittedWidth=Math.max(1,a.width-16); const permittedHeight=Math.max(1,a.height-12);
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
     context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
-    const measure=context.measureText(displayName);
+    const measure=context.measureText(label);
     const height=(measure.actualBoundingBoxAscent || mid*.85)+(measure.actualBoundingBoxDescent || mid*.25);
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=a.align; context.textBaseline="middle"; context.fillStyle=a.color;
   const x=a.align==="left"?a.x+8:a.align==="right"?a.x+a.width-8:a.x+a.width/2;
-  context.fillText(displayName,x,a.y+a.height/2);
-  if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);}
+  context.fillText(label,x,a.y+a.height/2);
+  if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
+  };
+  if(template.zones?.length){for(const zone of template.zones){const value=zone.kind==="social" ? (socials[zone.label]||"") : zone.kind==="soul" ? "SOUL" : displayName.replace(/^SOUL\\s+/i,"");drawText(zone,value);}}
+  else drawText(a,displayName);
   return canvas;
 }
 function StreamPackStudio(){
   const [nickname,setNickname]=useState("Soul Maverick z");
+  const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
+  const [zoneId,setZoneId]=useState("nickname");
   const [templates,setTemplates]=useState<Template[]>(START);
   const [selected,setSelected]=useState("webcam");
   const [assets,setAssets]=useState<Record<string,string>>({});
@@ -59,8 +67,11 @@ function StreamPackStudio(){
   const [packBusy,setPackBusy]=useState(false);
   const t=templates.find(item=>item.id===selected) || templates[0];
   const update=(patch:Partial<Template>)=>setTemplates(current=>current.map(x=>x.id===t.id?{...x,...patch}:x));
-  const updateArea=(patch:Partial<Area>)=>update({area:{...t.area,...patch}});
-  useEffect(()=>{let active=true;render(t,nickname,assets[t.id],fontFamily,guides).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,nickname,assets,fontFamily,guides]);
+  const activeZone=t.zones?.find(z=>z.id===zoneId);
+  const updateArea=(patch:Partial<Area>)=>activeZone ? update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)}) : update({area:{...t.area,...patch}});
+  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
+  useEffect(()=>{let active=true;render(t,nickname,assets[t.id],fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,nickname,assets,fontFamily,guides,socials]);
   const upload=(file?:File)=>{
     if(!file)return;
     if(!file.type.startsWith("image/")){setMessage("Selecciona una imagen PNG o JPG.");return;}
@@ -78,7 +89,7 @@ function StreamPackStudio(){
   const download=async()=>{
     setBusy(true);setMessage("");
     try{
-      const c=await render(t,nickname,assets[t.id],fontFamily,false);
+      const c=await render(t,nickname,assets[t.id],fontFamily,false,socials);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
       if(!blob)throw Error("No se pudo crear el PNG");
       const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Soul_${safeName(nickname)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
@@ -91,7 +102,7 @@ function StreamPackStudio(){
       if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
       const files:{name:string;bytes:Uint8Array}[]=[];
       for(const item of valid){
-        const canvas=await render(item,nickname,assets[item.id],fontFamily,false);
+        const canvas=await render(item,nickname,assets[item.id],fontFamily,false,socials);
         const blob=await new Promise<Blob|null>(resolve=>canvas.toBlob(resolve,"image/png"));
         if(!blob)throw Error("No se pudo generar "+item.name);
         files.push({name:`${item.category}/${safeName(nickname)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
@@ -120,6 +131,7 @@ function StreamPackStudio(){
         <section className="space-y-5 rounded-3xl border border-white/10 bg-white/[.045] p-5">
           <label className="block text-sm font-semibold" htmlFor="soul-nickname">Nickname</label>
           <input id="soul-nickname" maxLength={65} value={nickname} onChange={e=>setNickname(e.target.value)} className="w-full rounded-xl border border-white/20 bg-[#07122c] px-4 py-3 text-base outline-none focus:border-[#F05E07]" placeholder="Soul Emi X"/>
+          <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{item.width}×{item.height}</span></button>)}</div></div>
           <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
           <button onClick={download} disabled={busy || !nickname.trim() || !assets[t.id]} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
@@ -137,9 +149,11 @@ function StreamPackStudio(){
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
-            <StreamPackAreaEditor background={assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={t.area} onChange={rect=>updateArea(rect)}/>
-            <div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs uppercase text-slate-300">{({x:"Margen izquierdo",y:"Margen superior",width:"Ancho de texto",height:"Alto de texto",maxFont:"Tamaño máximo",minFont:"Tamaño mínimo"} as const)[key]}<input type="number" value={t.area[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-base text-white"/></label>)}</div>
-            <div className="flex items-center justify-between gap-3"><label className="text-sm">Color <input type="color" value={t.area.color} onChange={e=>updateArea({color:e.target.value})}/></label><label className="text-sm">Alineación <select value={t.area.align} onChange={e=>updateArea({align:e.target.value as Area["align"]})} className="rounded-lg bg-[#07122c] p-2"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></label></div>
+            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button><button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
+            <div className="flex flex-wrap gap-2">{t.zones?.map(z=><button key={z.id} onClick={()=>setZoneId(z.id)} className={`rounded-lg border px-3 py-2 text-xs ${zoneId===z.id?"border-orange-500 text-orange-400":"border-white/20"}`}>{z.label}</button>)}{activeZone&&<button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar zona</button>}</div>
+            <StreamPackAreaEditor background={assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones} selectedId={zoneId} onSelect={setZoneId}/>
+            <div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs uppercase text-slate-300">{({x:"Margen izquierdo",y:"Margen superior",width:"Ancho de texto",height:"Alto de texto",maxFont:"Tamaño máximo",minFont:"Tamaño mínimo"} as const)[key]}<input type="number" value={(activeZone||t.area)[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-base text-white"/></label>)}</div>
+            <div className="flex items-center justify-between gap-3"><label className="text-sm">Color <input type="color" value={(activeZone||t.area).color} onChange={e=>updateArea({color:e.target.value})}/></label><label className="text-sm">Alineación <select value={(activeZone||t.area).align} onChange={e=>updateArea({align:e.target.value as Area["align"]})} className="rounded-lg bg-[#07122c] p-2"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></label></div>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={guides} onChange={e=>setGuides(e.target.checked)}/><MoveHorizontal size={16}/> Mostrar márgenes en la vista previa</label>
           </div>}
           <div className="flex gap-3 rounded-2xl border border-white/10 bg-white/[.035] p-4 text-sm text-slate-300"><ShieldCheck className="shrink-0 text-[#F05E07]"/><p><strong className="text-white">Paquetes exclusivos:</strong> la descarga protegida para miembros oficiales se habilitará tras conectar una verificación de identidad y permisos del servidor. El editor de esta versión no es un panel administrativo persistente.</p></div>
