@@ -37,7 +37,22 @@ async function render(template:Template, nickname:string, asset:string|undefined
   if(!label.trim())return;
   const inset=Math.min((a.padding??8),Math.max(0,Math.min(a.width,a.height)/2-1));
   let low=1, high=Math.max(2,a.maxFont);
-  const permittedWidth=Math.max(1,a.width-2*inset); const permittedHeight=Math.max(1,a.height-2*inset);
+  let permittedWidth=Math.max(1,a.width-2*inset); const permittedHeight=Math.max(1,a.height-2*inset);
+  // Xbox displays the square AVI as a circle. The 5% inset is a non-exported safe margin.
+  // Use the narrowest horizontal chord at the zone's top/bottom to avoid clipping.
+  let textCenterX=a.x+a.width/2;
+  if(template.id==="avi"){
+    const cx=template.width/2,cy=template.height/2,r=Math.min(template.width,template.height)*0.45;
+    const textY=a.y+a.height/2;
+    const maxDy=Math.max(Math.abs(a.y+inset-cy),Math.abs(a.y+a.height-inset-cy));
+    const chord=2*Math.sqrt(Math.max(0,r*r-maxDy*maxDy));
+    const chordWidth=Math.max(1,chord-2*inset);
+    const chordLeft=cx-chordWidth/2,chordRight=cx+chordWidth/2;
+    const zoneLeft=Math.max(a.x+inset,chordLeft),zoneRight=Math.min(a.x+a.width-inset,chordRight);
+    permittedWidth=Math.max(1,zoneRight-zoneLeft);
+    textCenterX=(zoneLeft+zoneRight)/2;
+    if(Math.abs(textY-cy)>=r || zoneRight<=zoneLeft)return;
+  }
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
     context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
@@ -46,10 +61,10 @@ async function render(template:Template, nickname:string, asset:string|undefined
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
-  context.textAlign=a.align; context.textBaseline="middle"; context.fillStyle=a.color;
-  const x=a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
+  context.textAlign=template.id==="avi"?"center":a.align; context.textBaseline="middle"; context.fillStyle=a.color;
+  const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\\S)\\s+([A-Z])$/i) : null;
-  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
+  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
   else context.fillText(label,x,a.y+a.height/2);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
@@ -150,7 +165,7 @@ function StreamPackStudio(){
         </section>
         <section className="min-w-0 space-y-4">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
-            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]">{editor ? <StreamPackAreaEditor background={preview || assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones} selectedId={zoneId} onSelect={setZoneId}/> : preview?<img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>:<span>Preparando vista previa…</span>}</div>
+            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]">{editor ? <StreamPackAreaEditor background={preview || assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>:<span>Preparando vista previa…</span>}</div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div>
           {editor&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
