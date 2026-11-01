@@ -29,9 +29,9 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
  const end=()=>{interaction.current=null;setActive(false);};
  const left=area.x/imageWidth*100,top=area.y/imageHeight*100,w=area.width/imageWidth*100,h=area.height/imageHeight*100;
  return <div className="space-y-2">
-  <p className="text-xs text-slate-300">Arrastra el rectángulo para moverlo. Usa la esquina naranja para cambiar el tamaño. Dibuja en un área vacía para crear otra selección.</p>
+  <p className="text-xs text-slate-300">Selecciona la zona que quieres editar. Arrástrala para moverla o usa la esquina naranja para cambiar su tamaño. Los clics fuera de las zonas no modifican nada.</p>
   <div ref={surface} className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-lg border border-white/20 bg-[#0b1021] touch-none select-none" style={{aspectRatio:`${imageWidth}/${imageHeight}`}}
-    onPointerDown={e=>begin(e,"draw")} onPointerMove={move} onPointerUp={end} onPointerCancel={end}>
+    onPointerMove={move} onPointerUp={end} onPointerCancel={end}>
    {background?<img src={background} alt="Plantilla original" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-fill"/>:<div className="absolute inset-0 grid place-items-center text-xs text-white/40">Sube un PNG para editar sobre él</div>}
    {circleGuide&&<div aria-hidden="true" className="pointer-events-none absolute rounded-full border-2 border-dashed border-[#F05E07] shadow-[0_0_0_9999px_rgba(0,0,0,0.18)]" style={{width:"90%",height:"90%",top:"5%",left:"5%"}}/>}
    {zones?.filter(z=>z.id!==selectedId).map(z=><div key={z.id} role="button" tabIndex={0} aria-label={`Seleccionar ${z.label}`} onKeyDown={e=>{if(e.key==="Enter")onSelect?.(z.id)}} onPointerDown={e=>{e.stopPropagation();onSelect?.(z.id)}} className="absolute cursor-pointer border border-blue-300 bg-blue-400/15" style={{left:`${z.x/imageWidth*100}%`,top:`${z.y/imageHeight*100}%`,width:`${z.width/imageWidth*100}%`,height:`${z.height/imageHeight*100}%`}}><span className="absolute top-0 left-0 bg-blue-800 px-1 text-[10px]">{z.label}</span></div>)}
