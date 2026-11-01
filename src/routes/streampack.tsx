@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
+import { buildZip } from "@/lib/streampack-zip";
 
 export const Route = createFileRoute("/streampack")({
   head: () => ({ meta: [
@@ -27,7 +28,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase() || "NICKNAME";
-  let low=a.minFont, high=a.maxFont;
+  let low=4, high=Math.max(5,a.maxFont);
   const permittedWidth=Math.max(1,a.width-16); const permittedHeight=Math.max(1,a.height-12);
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
@@ -39,7 +40,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=a.align; context.textBaseline="middle"; context.fillStyle=a.color;
   const x=a.align==="left"?a.x+8:a.align==="right"?a.x+a.width-8:a.x+a.width/2;
-  context.fillText(displayName,x,a.y+a.height/2,permittedWidth);
+  context.fillText(displayName,x,a.y+a.height/2);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);}
   return canvas;
 }
@@ -54,7 +55,7 @@ function StreamPackStudio(){
   const [message,setMessage]=useState("");
   const [busy,setBusy]=useState(false);
   const [editor,setEditor]=useState(false);
-  const canvasRef=useRef<HTMLCanvasElement|null>(null);
+  const [packBusy,setPackBusy]=useState(false);
   const t=templates.find(item=>item.id===selected) || templates[0];
   const update=(patch:Partial<Template>)=>setTemplates(current=>current.map(x=>x.id===t.id?{...x,...patch}:x));
   const updateArea=(patch:Partial<Area>)=>update({area:{...t.area,...patch}});
@@ -70,7 +71,7 @@ function StreamPackStudio(){
   };
   const fontUpload=async(file?:File)=>{
     if(!file)return;
-    try {const family="SoulUploadedFont";const face=new FontFace(family,`url("${URL.createObjectURL(file)}")`);await face.load();document.fonts.add(face);setFontFamily(family);setMessage("Tipografía cargada para esta sesión.");}
+    try {const family="SoulUploadedFont";const url=URL.createObjectURL(file);const face=new FontFace(family,`url("${url}")`);await face.load();document.fonts.add(face);URL.revokeObjectURL(url);setFontFamily(family);setMessage("Tipografía cargada para esta sesión.");}
     catch {setMessage("No se pudo cargar la fuente. Usa un archivo TTF u OTF válido.");}
   };
   const download=async()=>{
@@ -81,6 +82,25 @@ function StreamPackStudio(){
       if(!blob)throw Error("No se pudo crear el PNG");
       const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Soul_${safeName(nickname)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
     }catch(e){setMessage(e instanceof Error?e.message:"Error de exportación");}finally{setBusy(false);}
+  };
+  const downloadPack=async()=>{
+    setPackBusy(true);setMessage("");
+    try{
+      const valid=templates.filter(item=>!item.membersOnly && Boolean(assets[item.id]));
+      if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
+      const files:{name:string;bytes:Uint8Array}[]=[];
+      for(const item of valid){
+        const canvas=await render(item,nickname,assets[item.id],fontFamily,false);
+        const blob=await new Promise<Blob|null>(resolve=>canvas.toBlob(resolve,"image/png"));
+        if(!blob)throw Error("No se pudo generar "+item.name);
+        files.push({name:`${item.category}/${safeName(nickname)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
+      }
+      const zip=buildZip(files);const url=URL.createObjectURL(zip);const a=document.createElement("a");
+      a.href=url;a.download=`TheSoulNation_${safeName(nickname)}_StreamPack.zip`;a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),3000);
+      setMessage(`Paquete generado: ${files.length} gráfico(s) con fondo cargado.`);
+    }catch(e){setMessage(e instanceof Error?e.message:"No se pudo generar el paquete.");}
+    finally{setPackBusy(false);}
   };
   const createTemplate=()=>{const id=`custom-${Date.now()}`;setTemplates(p=>[...p,{...START[0],id,name:"Nuevo gráfico",membersOnly:false}]);setSelected(id);setEditor(true);};
   const setNumber=(key:keyof Area,value:number)=>{
@@ -101,7 +121,9 @@ function StreamPackStudio(){
           <input id="soul-nickname" maxLength={65} value={nickname} onChange={e=>setNickname(e.target.value)} className="w-full rounded-xl border border-white/20 bg-[#07122c] px-4 py-3 text-base outline-none focus:border-[#F05E07]" placeholder="Soul Emi X"/>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{item.width}×{item.height}</span></button>)}</div></div>
           <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
-          <button onClick={download} disabled={busy || !nickname.trim()} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
+          <button onClick={download} disabled={busy || !nickname.trim() || !assets[t.id]} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
+          <button onClick={downloadPack} disabled={packBusy || !nickname.trim() || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
+          <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
         </section>
         <section className="min-w-0 space-y-4">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
