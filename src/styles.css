@@ -3100,3 +3100,29 @@ a[class*="bg-flame"]::before, button[class*="bg-flame"]::before {
 .soul-hub .soul-refined-cta:focus-visible {
   color:#07091B;
 }
+
+/* Branded full-site motion background; fixed across route changes. */
+.soul-global-video {
+  position: fixed;
+  inset: 0;
+  z-index: -50;
+  pointer-events: none;
+  overflow: hidden;
+  background: #060720;
+}
+.soul-global-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.46;
+  filter: saturate(1.12) brightness(0.76);
+}
+.soul-global-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6,7,32,.44), rgba(6,7,32,.68));
+}
+@media (prefers-reduced-motion: reduce) {
+  .soul-global-video video { display: none; }
+}
