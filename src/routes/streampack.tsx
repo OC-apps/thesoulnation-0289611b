@@ -27,13 +27,13 @@ const safeName = (name:string) => (name.trim().replace(/[^a-z0-9-_]+/gi,"_").sli
 const loadImage = (src:string):Promise<HTMLImageElement> => new Promise((resolve,reject) => {
   const image=new Image(); image.onload=()=>resolve(image); image.onerror=reject; image.src=src;
 });
-async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}) {
+async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}, soulLayout:"stacked"|"inline"="stacked") {
   const canvas=document.createElement("canvas"); canvas.width=template.width; canvas.height=template.height;
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\\s+/i,"") || "NICKNAME";
   await document.fonts.load(`900 italic 40px "${fontFamily}"`);
-  const drawText=(a:Area,label:string,highlightFinal=false)=>{
+  const drawText=(a:Area,label:string,highlightFinal=false,inlineSoul=false)=>{
   if(!label.trim())return;
   const inset=Math.min((a.padding??8),Math.max(0,Math.min(a.width,a.height)/2-1));
   let low=1, high=Math.max(2,a.maxFont);
@@ -56,7 +56,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
     context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
-    const measure=context.measureText(label);
+    const measure=context.measureText(inlineSoul?"SOUL "+label:label);
     const height=(measure.actualBoundingBoxAscent || mid*.85)+(measure.actualBoundingBoxDescent || mid*.25);
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
@@ -64,13 +64,29 @@ async function render(template:Template, nickname:string, asset:string|undefined
   context.textAlign=template.id==="avi"?"center":a.align; context.textBaseline="middle"; context.fillStyle=a.color;
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\\S)\\s+([A-Z])$/i) : null;
-  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
+  if(inlineSoul){
+    const prefix="SOUL "; const full=prefix+label;const fullWidth=context.measureText(full).width;
+    const start=a.align==="center"?x-fullWidth/2:a.align==="right"?x-fullWidth:x;
+    const trailing=label.match(/^(.*\S)\s+([A-Z])$/i);
+    context.textAlign="left";context.fillStyle="#F05E07";context.fillText(prefix,start,a.y+a.height/2);
+    const nameStart=start+context.measureText(prefix).width;
+    if(trailing){const base=trailing[1]+" ";context.fillStyle="#FFFFFF";context.fillText(base,nameStart,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(trailing[2],nameStart+context.measureText(base).width,a.y+a.height/2);}
+    else{context.fillStyle="#FFFFFF";context.fillText(label,nameStart,a.y+a.height/2);}
+  }else if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
   else context.fillText(label,x,a.y+a.height/2);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
   if(template.id==="4cams")return canvas;
-  if(template.zones){for(const zone of template.zones){const value=zone.kind==="social" ? (socials[zone.label]||"") : zone.kind==="soul" ? "SOUL" : displayName;drawText(zone,value,zone.kind==="nickname");}}
-  else drawText(a,displayName,true);
+  const drawNickname=(zone:Area)=>{
+    if(template.id==="avi"){drawText(zone,displayName,true);return;}
+    if(soulLayout==="inline"){drawText(zone,displayName,true,true);return;}
+    const soulHeight=Math.max(10,Math.round(zone.height*0.26));
+    const upper={...zone,height:soulHeight,maxFont:Math.min(zone.maxFont,Math.round(soulHeight*0.8)),color:"#F05E07",align:"center" as const};
+    const lower={...zone,y:zone.y+soulHeight,height:Math.max(1,zone.height-soulHeight),align:"center" as const};
+    drawText(upper,"SOUL");drawText(lower,displayName,true);
+  };
+  if(template.zones){for(const zone of template.zones){if(zone.kind==="social")drawText(zone,socials[zone.label]||"");else if(zone.kind==="nickname")drawNickname(zone);}}
+  else drawNickname(a);
   return canvas;
 }
 function StreamPackStudio(){
@@ -82,6 +98,7 @@ function StreamPackStudio(){
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [fontFamily,setFontFamily]=useState("Arial");
   const [advanced,setAdvanced]=useState(false);
+  const [soulLayout,setSoulLayout]=useState<"stacked"|"inline">("stacked");
   const [preview,setPreview]=useState("");
   const [guides,setGuides]=useState(false);
   const [message,setMessage]=useState("");
@@ -94,7 +111,7 @@ function StreamPackStudio(){
   const updateArea=(patch:Partial<Area>)=>activeZone ? update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)}) : update({area:{...t.area,...patch}});
   const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
   const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
-  useEffect(()=>{let active=true;render(t,nickname,assets[t.id],fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,nickname,assets,fontFamily,guides,socials]);
+  useEffect(()=>{let active=true;render(t,nickname,assets[t.id],fontFamily,guides,socials,soulLayout).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,nickname,assets,fontFamily,guides,socials,soulLayout]);
   const upload=(file?:File)=>{
     if(!file)return;
     if(!file.type.startsWith("image/")){setMessage("Selecciona una imagen PNG o JPG.");return;}
@@ -112,7 +129,7 @@ function StreamPackStudio(){
   const download=async()=>{
     setBusy(true);setMessage("");
     try{
-      const c=await render(t,nickname,assets[t.id],fontFamily,false,socials);
+      const c=await render(t,nickname,assets[t.id],fontFamily,false,socials,soulLayout);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
       if(!blob)throw Error("No se pudo crear el PNG");
       const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`Soul_${safeName(nickname)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
@@ -156,6 +173,7 @@ function StreamPackStudio(){
         <section className="space-y-5 rounded-3xl border border-white/10 bg-white/[.045] p-5">
           <label className="block text-sm font-semibold" htmlFor="soul-nickname">Nickname</label>
           <input id="soul-nickname" maxLength={65} value={nickname} onChange={e=>setNickname(e.target.value)} className="w-full rounded-xl border border-white/20 bg-[#07122c] px-4 py-3 text-base outline-none focus:border-[#F05E07]" placeholder="Soul Emi X"/>
+          {t.id!=="avi"&&t.id!=="4cams"&&<div className="space-y-2"><p className="text-sm font-semibold">Distribución de SOUL</p><div className="grid grid-cols-2 gap-2"><button onClick={()=>setSoulLayout("stacked")} className={`rounded-xl border px-3 py-3 text-xs ${soulLayout==="stacked"?"border-[#F05E07] bg-[#F05E07]/10":"border-white/20"}`}>SOUL arriba / nombre abajo</button><button onClick={()=>setSoulLayout("inline")} className={`rounded-xl border px-3 py-3 text-xs ${soulLayout==="inline"?"border-[#F05E07] bg-[#F05E07]/10":"border-white/20"}`}>SOUL + nombre en una línea</button></div></div>}
           <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{item.width}×{item.height}</span></button>)}</div></div>
           <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
@@ -175,7 +193,7 @@ function StreamPackStudio(){
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
-            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button><button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
+            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="flex flex-wrap gap-2">{t.zones?.map(z=><button key={z.id} onClick={()=>setZoneId(z.id)} className={`rounded-lg border px-3 py-2 text-xs ${zoneId===z.id?"border-orange-500 text-orange-400":"border-white/20"}`}>{z.label}</button>)}{activeZone&&<button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar zona</button>}</div>
             
             <div className="space-y-3 rounded-xl border border-white/10 p-3">
