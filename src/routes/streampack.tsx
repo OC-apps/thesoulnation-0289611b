@@ -73,8 +73,10 @@ async function render(template:Template, nickname:string, asset:string|undefined
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=template.id==="avi"?"center":a.align;
-  context.textBaseline="bottom";
-  const textY=a.y+a.height-inset;
+  // Align the visible glyph bottom, not the font em-box (which leaves a gap).
+  context.textBaseline="alphabetic";
+  const glyphMetrics=context.measureText(label);
+  const textY=a.y+a.height-Math.max(0,glyphMetrics.actualBoundingBoxDescent);
   context.fillStyle=a.color;
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
