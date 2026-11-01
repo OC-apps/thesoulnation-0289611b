@@ -5,14 +5,14 @@ import { buildZip } from "@/lib/streampack-zip";
 import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
 
 export const Route = createFileRoute("/streampack")({
-  head: () => ({ meta: [
+  head: () => ({ links:[{rel:"stylesheet",href:"https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@1,700;1,900&family=Bebas+Neue&family=Oswald:wght@700&family=Rajdhani:wght@700&family=Roboto+Condensed:ital,wght@1,900&display=swap"}], meta: [
     { title: "StreamPack Studio | The Soul Nation" },
     { name: "description", content: "Personaliza gráficos para tus transmisiones con nicknames ajustados automáticamente." },
   ] }),
   component: StreamPackStudio,
 });
 
-type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; align: "center" | "left" | "right" };
+type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul" }; 
 type Template = { zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
@@ -32,10 +32,12 @@ async function render(template:Template, nickname:string, asset:string|undefined
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\\s+/i,"") || "NICKNAME";
+  await document.fonts.load(`900 italic 40px "${fontFamily}"`);
   const drawText=(a:Area,label:string,highlightFinal=false)=>{
   if(!label.trim())return;
-  let low=4, high=Math.max(5,a.maxFont);
-  const permittedWidth=Math.max(1,a.width-16); const permittedHeight=Math.max(1,a.height-12);
+  const inset=Math.min((a.padding??8),Math.max(0,Math.min(a.width,a.height)/2-1));
+  let low=1, high=Math.max(2,a.maxFont);
+  const permittedWidth=Math.max(1,a.width-2*inset); const permittedHeight=Math.max(1,a.height-2*inset);
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
     context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
@@ -45,7 +47,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   }
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=a.align; context.textBaseline="middle"; context.fillStyle=a.color;
-  const x=a.align==="left"?a.x+8:a.align==="right"?a.x+a.width-8:a.x+a.width/2;
+  const x=a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\\S)\\s+([A-Z])$/i) : null;
   if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
   else context.fillText(label,x,a.y+a.height/2);
@@ -64,6 +66,7 @@ function StreamPackStudio(){
   const [selected,setSelected]=useState("avi");
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [fontFamily,setFontFamily]=useState("Arial");
+  const [advanced,setAdvanced]=useState(false);
   const [preview,setPreview]=useState("");
   const [guides,setGuides]=useState(false);
   const [message,setMessage]=useState("");
@@ -160,7 +163,34 @@ function StreamPackStudio(){
             <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button><button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="flex flex-wrap gap-2">{t.zones?.map(z=><button key={z.id} onClick={()=>setZoneId(z.id)} className={`rounded-lg border px-3 py-2 text-xs ${zoneId===z.id?"border-orange-500 text-orange-400":"border-white/20"}`}>{z.label}</button>)}{activeZone&&<button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar zona</button>}</div>
             
-            <div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs uppercase text-slate-300">{({x:"Margen izquierdo",y:"Margen superior",width:"Ancho de texto",height:"Alto de texto",maxFont:"Tamaño máximo",minFont:"Tamaño mínimo"} as const)[key]}<input type="number" value={(activeZone||t.area)[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-base text-white"/></label>)}</div>
+            <div className="space-y-3 rounded-xl border border-white/10 p-3">
+              <label className="block text-xs font-semibold text-slate-200">Tipografía</label>
+              <select value={fontFamily} onChange={e=>setFontFamily(e.target.value)} className="w-full rounded-lg border border-white/20 bg-[#07122c] p-3 text-sm text-white">
+                {["Arial","SoulUploadedFont","Anton","Barlow Condensed","Bebas Neue","Oswald","Rajdhani","Roboto Condensed"].map(font=><option key={font} value={font}>{font==="SoulUploadedFont"?"The Soul Nation (fuente cargada)":font}</option>)}
+              </select>
+              <p className="text-xs text-slate-400">La fuente oficial aparece después de cargar su archivo TTF. Las Google Fonts requieren conexión.</p>
+              <div className="grid grid-cols-2 gap-2">
+                <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({x:Math.round((t.width-(activeZone||t.area).width)/2),align:"center"})}>Centrar horizontal</button>
+                <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({y:Math.round((t.height-(activeZone||t.area).height)/2)})}>Centrar vertical</button>
+                <button className="rounded-lg border border-[#F05E07]/50 px-2 py-2 text-xs hover:bg-orange-500/10" onClick={()=>updateArea({x:Math.round((t.width-(activeZone||t.area).width)/2),y:Math.round((t.height-(activeZone||t.area).height)/2),align:"center"})}>Centrar al lienzo</button>
+                <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({align:"center"})}>Centrar en la zona</button>
+              </div>
+              <p className="text-xs text-slate-400">Cambia el área arrastrando sus bordes directamente sobre la vista previa.</p>
+              {([
+                 {key:"minFont",label:"Tamaño mínimo",max:Math.max(20,(activeZone||t.area).maxFont)},
+                 {key:"maxFont",label:"Tamaño máximo",max:Math.max(120,Math.round(t.height/3))},
+                 {key:"padding",label:"Margen interior seguro",max:Math.max(8,Math.round(Math.min((activeZone||t.area).width,(activeZone||t.area).height)/2-1))}
+              ] as const).map(control=><label key={control.key} className="block space-y-2 text-xs text-slate-300">
+                <span>{control.label}</span>
+                <input type="range" min={control.key==="padding"?0:1} max={control.max} value={control.key==="padding" ? ((activeZone||t.area).padding??8) : (activeZone||t.area)[control.key]} onChange={e=>updateArea({[control.key]:Number(e.target.value)} as Partial<Area>)} className="w-full accent-[#F05E07]"/>
+              </label>)}
+              <div className="flex gap-2">
+                <button className="flex-1 rounded-lg border border-white/20 px-2 py-2 text-xs" onClick={()=>setNickname("Soul Emi X")}>Probar nombre corto</button>
+                <button className="flex-1 rounded-lg border border-white/20 px-2 py-2 text-xs" onClick={()=>setNickname("Soul Maverick z")}>Probar nombre largo</button>
+              </div>
+              <button onClick={()=>setAdvanced(p=>!p)} className="text-xs text-slate-400 underline">{advanced?"Ocultar controles precisos":"Mostrar controles precisos (avanzado)"}</button>
+              {advanced&&<div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs text-slate-300">{key}<input type="number" value={(activeZone||t.area)[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-white"/></label>)}</div>}
+            </div>
             <div className="flex items-center justify-between gap-3"><label className="text-sm">Color <input type="color" value={(activeZone||t.area).color} onChange={e=>updateArea({color:e.target.value})}/></label><label className="text-sm">Alineación <select value={(activeZone||t.area).align} onChange={e=>updateArea({align:e.target.value as Area["align"]})} className="rounded-lg bg-[#07122c] p-2"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></label></div>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={guides} onChange={e=>setGuides(e.target.checked)}/><MoveHorizontal size={16}/> Mostrar márgenes en la vista previa</label>
           </div>}
