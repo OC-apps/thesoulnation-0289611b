@@ -7,6 +7,7 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
  const surface=useRef<HTMLDivElement>(null);
  const interaction=useRef<{kind:"move"|"resize"|"draw";startX:number;startY:number;initial:TextRect}|null>(null);
  const [active,setActive]=useState(false);
+ const [lines,setLines]=useState<{axis:"x"|"y";value:number}[]>([]);
  const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
  const coords=(e:PointerEvent<HTMLDivElement>)=>{
   const r=surface.current!.getBoundingClientRect();
@@ -23,11 +24,24 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
  const move=(e:PointerEvent<HTMLDivElement>)=>{
   const op=interaction.current;if(!op)return;
   const {x,y}=coords(e);const dx=x-op.startX,dy=y-op.startY;const a=op.initial;
-  if(op.kind==="move")onChange({...a,x:Math.round(clamp(a.x+dx,0,imageWidth-a.width)),y:Math.round(clamp(a.y+dy,0,imageHeight-a.height))});
+  if(op.kind==="move"){
+    let nx=clamp(a.x+dx,0,imageWidth-a.width),ny=clamp(a.y+dy,0,imageHeight-a.height);
+    const threshold=Math.max(5,imageWidth*.008),newLines:{axis:"x"|"y";value:number}[]=[];
+    const other=zones?.filter(z=>z.id!==selectedId)||[];
+    const xs=[{v:nx,offset:0},{v:nx+a.width/2,offset:a.width/2},{v:nx+a.width,offset:a.width}];
+    const ys=[{v:ny,offset:0},{v:ny+a.height/2,offset:a.height/2},{v:ny+a.height,offset:a.height}];
+    let bestX=threshold,bestY=Math.max(5,imageHeight*.008);
+    for(const z of other){
+      for(const p of xs)for(const target of [z.x,z.x+z.width/2,z.x+z.width]){const d=Math.abs(p.v-target);if(d<bestX){bestX=d;nx=clamp(target-p.offset,0,imageWidth-a.width);newLines[0]={axis:"x",value:target};}}
+      for(const p of ys)for(const target of [z.y,z.y+z.height/2,z.y+z.height]){const d=Math.abs(p.v-target);if(d<bestY){bestY=d;ny=clamp(target-p.offset,0,imageHeight-a.height);newLines[1]={axis:"y",value:target};}}
+    }
+    setLines(newLines.filter(Boolean));
+    onChange({...a,x:Math.round(nx),y:Math.round(ny)});
+  }
   else if(op.kind==="resize")onChange({...a,width:Math.round(clamp(a.width+dx,MIN,imageWidth-a.x)),height:Math.round(clamp(a.height+dy,MIN,imageHeight-a.y))});
   else onChange({x:Math.round(Math.min(op.startX,x)),y:Math.round(Math.min(op.startY,y)),width:Math.round(Math.max(MIN,Math.abs(dx))),height:Math.round(Math.max(MIN,Math.abs(dy)))});
  };
- const end=()=>{interaction.current=null;setActive(false);};
+ const end=()=>{interaction.current=null;setActive(false);setLines([]);};
  const left=area.x/imageWidth*100,top=area.y/imageHeight*100,w=area.width/imageWidth*100,h=area.height/imageHeight*100;
  return <div className="space-y-2">
   <p className="text-xs text-slate-300">Selecciona la zona que quieres editar. Arrástrala para moverla o usa la esquina naranja para cambiar su tamaño. Los clics fuera de las zonas no modifican nada.</p>
@@ -36,6 +50,7 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
    {background?<img src={background} alt="Plantilla original" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-fill"/>:<div className="absolute inset-0 grid place-items-center text-xs text-white/40">Sube un PNG para editar sobre él</div>}
    {circleGuide&&<div aria-hidden="true" className="pointer-events-none absolute rounded-full border-2 border-dashed border-[#F05E07] shadow-[0_0_0_9999px_rgba(0,0,0,0.18)]" style={{width:"90%",height:"90%",top:"5%",left:"5%"}}/>}
    {zones?.filter(z=>z.id!==selectedId).map(z=><div key={z.id} role="button" tabIndex={0} aria-label={`Seleccionar ${z.label}`} onKeyDown={e=>{if(e.key==="Enter")onSelect?.(z.id)}} onPointerDown={e=>{e.stopPropagation();onSelect?.(z.id)}} className="absolute cursor-pointer border border-blue-300 bg-blue-400/15" style={{left:`${z.x/imageWidth*100}%`,top:`${z.y/imageHeight*100}%`,width:`${z.width/imageWidth*100}%`,height:`${z.height/imageHeight*100}%`}}><span className="absolute top-0 left-0 bg-blue-800 px-1 text-[10px]">{z.label}</span></div>)}
+   {lines.map(line=><div key={line.axis} aria-hidden="true" className="pointer-events-none absolute z-20 bg-cyan-300 shadow-[0_0_6px_#67e8f9]" style={line.axis==="x"?{left:`${line.value/imageWidth*100}%`,top:0,bottom:0,width:1}:{top:`${line.value/imageHeight*100}%`,left:0,right:0,height:1}}/>)}
    <div role="group" aria-label="Zona editable de texto" className="absolute border-2 border-[#F05E07] bg-[#F05E07]/15" style={{left:`${left}%`,top:`${top}%`,width:`${w}%`,height:`${h}%`,cursor:zones?.find(z=>z.id===selectedId)?.locked?"not-allowed":"move"}}
      onPointerDown={e=>begin(e,"move")}>
      <span className="pointer-events-none absolute left-0 top-0 -translate-y-full rounded-t bg-[#F05E07] px-2 py-0.5 text-[10px] font-bold text-black">{zones?.find(z=>z.id===selectedId)?.label || "NICKNAME"}</span>
