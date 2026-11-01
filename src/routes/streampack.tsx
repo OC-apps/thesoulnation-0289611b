@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
 import { buildZip } from "@/lib/streampack-zip";
+import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
 
 export const Route = createFileRoute("/streampack")({
   head: () => ({ meta: [
@@ -136,6 +137,7 @@ function StreamPackStudio(){
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
+            <StreamPackAreaEditor background={assets[t.id]} imageWidth={t.width} imageHeight={t.height} area={t.area} onChange={rect=>updateArea(rect)}/>
             <div className="grid grid-cols-2 gap-3">{(["x","y","width","height","maxFont","minFont"] as const).map(key=><label key={key} className="text-xs uppercase text-slate-300">{({x:"Margen izquierdo",y:"Margen superior",width:"Ancho de texto",height:"Alto de texto",maxFont:"Tamaño máximo",minFont:"Tamaño mínimo"} as const)[key]}<input type="number" value={t.area[key]} onChange={e=>setNumber(key,Number(e.target.value))} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2 text-base text-white"/></label>)}</div>
             <div className="flex items-center justify-between gap-3"><label className="text-sm">Color <input type="color" value={t.area.color} onChange={e=>updateArea({color:e.target.value})}/></label><label className="text-sm">Alineación <select value={t.area.align} onChange={e=>updateArea({align:e.target.value as Area["align"]})} className="rounded-lg bg-[#07122c] p-2"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></label></div>
             <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={guides} onChange={e=>setGuides(e.target.checked)}/><MoveHorizontal size={16}/> Mostrar márgenes en la vista previa</label>
