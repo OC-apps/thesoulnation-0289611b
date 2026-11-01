@@ -1,8 +1,9 @@
 import { useRef, useState, type PointerEvent } from "react";
 export type TextRect = {x:number;y:number;width:number;height:number};
-type Props = { background?:string; imageWidth:number; imageHeight:number; area:TextRect; onChange:(a:TextRect)=>void; };
+type Zone = TextRect & {id:string;label:string};
+type Props = { background?:string; imageWidth:number; imageHeight:number; area:TextRect; onChange:(a:TextRect)=>void; zones?:Zone[]; selectedId?:string; onSelect?:(id:string)=>void; };
 const MIN=12;
-export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onChange}:Props){
+export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onChange,zones,selectedId,onSelect}:Props){
  const surface=useRef<HTMLDivElement>(null);
  const interaction=useRef<{kind:"move"|"resize"|"draw";startX:number;startY:number;initial:TextRect}|null>(null);
  const [active,setActive]=useState(false);
@@ -32,9 +33,10 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
   <div ref={surface} className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-lg border border-white/20 bg-[#0b1021] touch-none select-none" style={{aspectRatio:`${imageWidth}/${imageHeight}`}}
     onPointerDown={e=>begin(e,"draw")} onPointerMove={move} onPointerUp={end} onPointerCancel={end}>
    {background?<img src={background} alt="Plantilla original" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-fill"/>:<div className="absolute inset-0 grid place-items-center text-xs text-white/40">Sube un PNG para editar sobre él</div>}
+   {zones?.filter(z=>z.id!==selectedId).map(z=><div key={z.id} role="button" tabIndex={0} aria-label={`Seleccionar ${z.label}`} onKeyDown={e=>{if(e.key==="Enter")onSelect?.(z.id)}} onPointerDown={e=>{e.stopPropagation();onSelect?.(z.id)}} className="absolute cursor-pointer border border-blue-300 bg-blue-400/15" style={{left:`${z.x/imageWidth*100}%`,top:`${z.y/imageHeight*100}%`,width:`${z.width/imageWidth*100}%`,height:`${z.height/imageHeight*100}%`}}><span className="absolute top-0 left-0 bg-blue-800 px-1 text-[10px]">{z.label}</span></div>)}
    <div role="group" aria-label="Zona editable de texto" className="absolute border-2 border-[#F05E07] bg-[#F05E07]/15" style={{left:`${left}%`,top:`${top}%`,width:`${w}%`,height:`${h}%`,cursor:"move"}}
      onPointerDown={e=>begin(e,"move")}>
-     <span className="pointer-events-none absolute left-0 top-0 -translate-y-full rounded-t bg-[#F05E07] px-2 py-0.5 text-[10px] font-bold text-black">NICKNAME</span>
+     <span className="pointer-events-none absolute left-0 top-0 -translate-y-full rounded-t bg-[#F05E07] px-2 py-0.5 text-[10px] font-bold text-black">{zones?.find(z=>z.id===selectedId)?.label || "NICKNAME"}</span>
      <div className="absolute bottom-0 right-0 h-5 w-5 translate-x-1/3 translate-y-1/3 rounded-sm border-2 border-white bg-[#F05E07] shadow-lg" style={{cursor:"nwse-resize"}} onPointerDown={e=>begin(e,"resize")}/>
    </div>
   </div>
