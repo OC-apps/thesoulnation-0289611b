@@ -131,10 +131,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div
-        className="fixed inset-0 -z-50"
-        style={{ background: "#060720" }}
-      />
+      <div className="soul-global-video" aria-hidden="true">
+        <video autoPlay muted loop playsInline preload="none" poster="/soul-share.jpg">
+          <source src="/TSN_fondo_branding.mp4" type="video/mp4" />
+        </video>
+      </div>
       <div
         className="fixed inset-0 -z-40 pointer-events-none"
         style={{
