@@ -16,6 +16,8 @@ type Area = { x: number; y: number; width: number; height: number; maxFont: numb
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul" }; 
 type Template = { zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
+  {id:"avi",name:"AVI · Imagen de perfil",width:2048,height:2048,category:"AVI",membersOnly:false,area:{x:310,y:1570,width:1428,height:190,maxFont:190,minFont:12,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",label:"Nickname",kind:"nickname",x:310,y:1570,width:1428,height:190,maxFont:190,minFont:12,color:"#FFFFFF",align:"center"}]},
+  {id:"4cams",name:"4 webcams · Invitados",width:1920,height:1080,category:"Invitados",membersOnly:false,area:{x:1,y:1,width:100,height:30,maxFont:30,minFont:8,color:"#FFFFFF",align:"center"},zones:[]},
   { id:"webcam", name:"Webcam horizontal", width:1920, height:1080, category:"Webcam", membersOnly:false,
     area:{x:480,y:914,width:960,height:104,maxFont:105,minFont:14,color:"#FFFFFF",align:"center"} },
   { id:"vertical", name:"Transmisión vertical", width:1080, height:1920, category:"TikTok", membersOnly:false,
@@ -29,8 +31,8 @@ async function render(template:Template, nickname:string, asset:string|undefined
   const canvas=document.createElement("canvas"); canvas.width=template.width; canvas.height=template.height;
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
-  const a=template.area; const displayName=nickname.trim().toUpperCase() || "NICKNAME";
-  const drawText=(a:Area,label:string)=>{
+  const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\\s+/i,"") || "NICKNAME";
+  const drawText=(a:Area,label:string,highlightFinal=false)=>{
   if(!label.trim())return;
   let low=4, high=Math.max(5,a.maxFont);
   const permittedWidth=Math.max(1,a.width-16); const permittedHeight=Math.max(1,a.height-12);
@@ -44,11 +46,14 @@ async function render(template:Template, nickname:string, asset:string|undefined
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=a.align; context.textBaseline="middle"; context.fillStyle=a.color;
   const x=a.align==="left"?a.x+8:a.align==="right"?a.x+a.width-8:a.x+a.width/2;
-  context.fillText(label,x,a.y+a.height/2);
+  const pieces=highlightFinal ? label.match(/^(.*\\S)\\s+([A-Z])$/i) : null;
+  if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,a.y+a.height/2);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,a.y+a.height/2);}
+  else context.fillText(label,x,a.y+a.height/2);
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
-  if(template.zones?.length){for(const zone of template.zones){const value=zone.kind==="social" ? (socials[zone.label]||"") : zone.kind==="soul" ? "SOUL" : displayName.replace(/^SOUL\\s+/i,"");drawText(zone,value);}}
-  else drawText(a,displayName);
+  if(template.id==="4cams")return canvas;
+  if(template.zones){for(const zone of template.zones){const value=zone.kind==="social" ? (socials[zone.label]||"") : zone.kind==="soul" ? "SOUL" : displayName;drawText(zone,value,zone.kind==="nickname");}}
+  else drawText(a,displayName,true);
   return canvas;
 }
 function StreamPackStudio(){
@@ -56,7 +61,7 @@ function StreamPackStudio(){
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
   const [templates,setTemplates]=useState<Template[]>(START);
-  const [selected,setSelected]=useState("webcam");
+  const [selected,setSelected]=useState("avi");
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [fontFamily,setFontFamily]=useState("Arial");
   const [preview,setPreview]=useState("");
