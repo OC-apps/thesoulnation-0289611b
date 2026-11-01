@@ -189,9 +189,9 @@ function StreamPackStudio(){
         if(!item||typeof item.id!=="string"||!item.id||typeof item.name!=="string"||!Number.isInteger(item.width)||!Number.isInteger(item.height)||item.width<1||item.width>8192||item.height<1||item.height>8192||!Array.isArray(item.zones)||item.zones.length>100)throw Error("Una plantilla tiene datos inválidos.");
         const zones=item.zones.map(z=>{
           if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color))throw Error("Una capa contiene datos inválidos.");
-          return {...z,x:Math.max(0,Math.min(z.x,item.width-1)),y:Math.max(0,Math.min(z.y,item.height-1)),width:Math.min(z.width,item.width),height:Math.min(z.height,item.height)};
+          const {verticalAlign: _ignored,...cleanZone}=z as Zone & {verticalAlign?:string};return {...cleanZone,x:Math.max(0,Math.min(z.x,item.width-1)),y:Math.max(0,Math.min(z.y,item.height-1)),width:Math.min(z.width,item.width),height:Math.min(z.height,item.height)};
         });
-        return {...item,area:{...item.area},zones:zones.map(z=>({...z as const})),assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
+        return {...item,area:{...item.area},zones,assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
       });
       const ids=new Set(incoming.map(x=>x.id));if(ids.size!==incoming.length)throw Error("Hay identificadores de plantilla repetidos.");
       // Preserve official templates not present in an older backup.
