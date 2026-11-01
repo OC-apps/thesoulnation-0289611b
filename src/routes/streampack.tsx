@@ -31,7 +31,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   const canvas=document.createElement("canvas"); canvas.width=template.width; canvas.height=template.height;
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
-  const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\\s+/i,"") || "NICKNAME";
+  const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\s+/i,"") || "NICKNAME";
   await document.fonts.load(`900 italic 40px "${fontFamily}"`);
   const drawText=(a:Area,label:string,highlightFinal=false,inlineSoul=false)=>{
   if(!label.trim())return;
@@ -63,7 +63,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=template.id==="avi"?"center":a.align; context.textBaseline="middle"; context.fillStyle=a.color;
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
-  const pieces=highlightFinal ? label.match(/^(.*\\S)\\s+([A-Z])$/i) : null;
+  const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
   if(inlineSoul){
     const prefix="SOUL "; const full=prefix+label;const fullWidth=context.measureText(full).width;
     const start=a.align==="center"?x-fullWidth/2:a.align==="right"?x-fullWidth:x;
