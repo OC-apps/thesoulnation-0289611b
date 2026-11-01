@@ -478,11 +478,22 @@ function IndexContent() {
             {mobileNavOpen ? <X size={22}/> : <Menu size={22}/>}
           </button>
         </div>
-        {mobileNavOpen && <nav id="soul-mobile-navigation" className="soul-refined-mobile-nav" aria-label="Navegación móvil">
-          {HUB_SECTIONS.map(section =>
-            <a key={section.id} href={`#${section.id}`} onClick={() => setMobileNavOpen(false)} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined}>{section.label}</a>
-          )}
-        </nav>}
+        {mobileNavOpen && (
+          <>
+            <button type="button" className="soul-mobile-nav-scrim" aria-label="Cerrar menú" onClick={() => setMobileNavOpen(false)} />
+            <nav id="soul-mobile-navigation" className="soul-refined-mobile-nav soul-mobile-drawer" aria-label="Navegación móvil">
+              <div className="soul-mobile-drawer-caption">EXPLORA THE SOUL NATION</div>
+              {HUB_SECTIONS.map((section, index) => (
+                <a key={section.id} href={`#${section.id}`} onClick={() => setMobileNavOpen(false)} aria-current={(view === section.id || (section.id === "contenido" && contentView)) ? "page" : undefined}>
+                  <span className="soul-mobile-nav-number">{String(index + 1).padStart(2, "0")}</span>
+                  <span>{section.label}</span>
+                  <span className="soul-mobile-nav-arrow" aria-hidden="true">↗</span>
+                </a>
+              ))}
+              <div className="soul-mobile-drawer-foot">SOUL WAVES · LEGENDS · CREW</div>
+            </nav>
+          </>
+        )}
       </header>
 
       {/* HERO */}
