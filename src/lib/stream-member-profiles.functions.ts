@@ -17,6 +17,7 @@ export const saveStreamMemberProfile=createServerFn({method:"POST"})
     const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
     const oldKey=data.memberKey.trim().toUpperCase(),name=data.nickname.trim().toUpperCase();
     if(!name.startsWith("SOUL "))throw Error("El nickname debe comenzar con SOUL ");
+    if(name!==oldKey){const {data:existing}=await supabaseAdmin.from("roster_members").select("id").eq("nickname",name).maybeSingle();if(existing)throw Error("Ese nickname ya está en uso.");}
     const cleaned=Object.fromEntries(Object.entries(data.socials).map(([k,v])=>[k,v.trim()]));
     if(data.memberId&&data.category!=="waves"){
       const {error}=await supabaseAdmin.from("roster_members").update({nickname:name}).eq("id",data.memberId).eq("category",data.category);
@@ -25,7 +26,22 @@ export const saveStreamMemberProfile=createServerFn({method:"POST"})
       const {error}=await supabaseAdmin.from("waves_members").update({name}).eq("id",data.memberId);
       if(error)throw Error(error.message);
     }else if(name!==oldKey){
-      throw Error("Este integrante es parte del listado fijo de Waves. Su nickname debe actualizarse también en el roster oficial antes de cambiarlo.");
+      // A fixed Wave has no database row. Copy its existing visual profile to a
+      // dynamic row, then hide only its old static name.
+      const {WAVES}=await import("@/lib/waves-defaults");
+      const original=WAVES.find(m=>m.name.toUpperCase()===oldKey);
+      if(!original)throw Error("No se encontró este Wave oficial.");
+      const {data:duplicate}=await supabaseAdmin.from("waves_members").select("id").eq("name",name).maybeSingle();
+      if(duplicate)throw Error("El nuevo nickname ya existe.");
+      const {data:last}=await supabaseAdmin.from("waves_members").select("sort_order").order("sort_order",{ascending:false}).limit(1).maybeSingle();
+      const {error:insertError}=await supabaseAdmin.from("waves_members").insert({
+        name,redes:original.redes,bio:original.bio,photo_url:original.photo,
+        social_label:original.socials?.[0]?.label??null,social_href:original.socials?.[0]?.href??null,
+        sort_order:(last?.sort_order??0)+1,
+      });
+      if(insertError)throw Error(insertError.message);
+      const {error:hideError}=await supabaseAdmin.from("waves_hidden").upsert({name:oldKey},{onConflict:"name"});
+      if(hideError)throw Error(hideError.message);
     }
     const {error:writeError}=await supabaseAdmin.from("stream_member_profiles").upsert({member_key:name,socials:cleaned,updated_at:new Date().toISOString()},{onConflict:"member_key"});
     if(writeError)throw Error(writeError.message);
