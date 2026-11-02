@@ -43,6 +43,16 @@ export const saveStreamMemberProfile=createServerFn({method:"POST"})
       const {error:hideError}=await supabaseAdmin.from("waves_hidden").upsert({name:oldKey},{onConflict:"name"});
       if(hideError)throw Error(hideError.message);
     }
+    if(oldKey!==name&&data.category==="waves"){
+      const {data:oldSocials,error:readSocialError}=await supabaseAdmin.from("waves_socials").select("*").eq("name",oldKey).maybeSingle();
+      if(readSocialError)throw Error(readSocialError.message);
+      if(oldSocials){
+        const {name:_oldName,...socialFields}=oldSocials;
+        const {error:moveError}=await supabaseAdmin.from("waves_socials").upsert({...socialFields,name},{onConflict:"name"});
+        if(moveError)throw Error(moveError.message);
+        await supabaseAdmin.from("waves_socials").delete().eq("name",oldKey);
+      }
+    }
     const {error:writeError}=await supabaseAdmin.from("stream_member_profiles").upsert({member_key:name,socials:cleaned,updated_at:new Date().toISOString()},{onConflict:"member_key"});
     if(writeError)throw Error(writeError.message);
     if(oldKey!==name){
