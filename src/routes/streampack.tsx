@@ -282,6 +282,7 @@ function StreamPackStudio(){
       if(element?.closest('input, textarea, select, [contenteditable="true"]'))return;
       const modifier=event.ctrlKey||event.metaKey;
       const key=event.key.toLowerCase();
+      if(modifier&&key==="g"&&multiSelected.length>1){event.preventDefault();const id="group-"+Date.now();recordHistory();update({zones:(t.zones||[]).map(z=>multiSelected.includes(z.id)?{...z,groupId:id}:z)});setMessage("Grupo creado. Puedes mover sus capas juntas.");return;}
       if(modifier&&key==="c"&&activeZone){event.preventDefault();clipboardRef.current={...activeZone};return;}
       if(modifier&&key==="v"&&clipboardRef.current){event.preventDefault();pasteElement();return;}
       if(modifier&&key==="d"&&activeZone){event.preventDefault();duplicateElement();return;}
@@ -372,6 +373,17 @@ function StreamPackStudio(){
     const position=new Map<string,Partial<Zone>>();
     ordered.forEach(z=>{position.set(z.id,mode==="left"?{x:left}:mode==="bottom"?{y:bottom-z.height}:{x:Math.round(cursor)});if(mode==="space")cursor+=z.width+free/(ordered.length-1);});
     recordHistory();update({zones:(t.zones||[]).map(z=>position.has(z.id)?{...z,...position.get(z.id)}:z)});
+  };
+  const selectCanvasZones=(ids:string[])=>{setMultiSelected(ids);if(ids.length)setZoneId(ids[0]);};
+  const moveCanvasSelection=(dx:number,dy:number)=>{
+    if(!dx&&!dy)return;
+    const selected=(t.zones||[]).filter(z=>multiSelected.includes(z.id)&&!z.locked);
+    const groups=new Set(selected.map(z=>z.groupId).filter(Boolean));
+    const targets=(t.zones||[]).filter(z=>!z.locked&&(multiSelected.includes(z.id)||(z.groupId&&groups.has(z.groupId))));
+    if(!targets.length)return;
+    const offsetX=Math.max(-Math.min(...targets.map(z=>z.x)),Math.min(dx,Math.min(...targets.map(z=>t.width-z.x-z.width))));
+    const offsetY=Math.max(-Math.min(...targets.map(z=>z.y)),Math.min(dy,Math.min(...targets.map(z=>t.height-z.y-z.height))));
+    update({zones:(t.zones||[]).map(z=>targets.some(item=>item.id===z.id)?{...z,x:z.x+offsetX,y:z.y+offsetY}:z)});
   };
   const groupSelected=()=>{
     if(multiSelected.length<2)return;
@@ -504,7 +516,7 @@ function StreamPackStudio(){
         </section>
         <section className={editor&&adminVerified?"min-w-0 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-4":"min-w-0 space-y-4"}>
           <div className="lg:sticky lg:top-20 lg:z-10"><div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
-            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]" style={simulator==="obs"?{background:"linear-gradient(125deg,#14243f 0%,#32485d 35%,#262b34 70%,#131824 100%)"}:simulator==="tiktok"?{background:"linear-gradient(160deg,#0e0c22 0%,#21183c 45%,#0c1020 100%)"}:{}}>{editor&&adminVerified ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<div className="relative w-full"><img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>{simulator!=="none"&&<div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-2 text-[10px] text-white/80">{simulator==="obs"?"Simulación OBS • escena de juego":"Simulación TikTok • cámara y chat"}</div>}</div>:<span>Preparando vista previa…</span>}</div>
+            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]" style={simulator==="obs"?{background:"linear-gradient(125deg,#14243f 0%,#32485d 35%,#262b34 70%,#131824 100%)"}:simulator==="tiktok"?{background:"linear-gradient(160deg,#0e0c22 0%,#21183c 45%,#0c1020 100%)"}:{}}>{editor&&adminVerified ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={id=>{setZoneId(id);const zone=t.zones?.find(z=>z.id===id);setMultiSelected(zone?.groupId?t.zones!.filter(z=>z.groupId===zone.groupId).map(z=>z.id):[id]);}} selectedIds={multiSelected} onMultiSelect={selectCanvasZones} onMoveSelection={moveCanvasSelection} circleGuide={t.id==="avi"}/> : preview?<div className="relative w-full"><img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>{simulator!=="none"&&<div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-2 text-[10px] text-white/80">{simulator==="obs"?"Simulación OBS • escena de juego":"Simulación TikTok • cámara y chat"}</div>}</div>:<span>Preparando vista previa…</span>}</div>
             <div className="flex flex-wrap gap-2 pt-2"><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("none")}>Fondo transparente</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("obs")}>Simular OBS</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("tiktok")}>Simular TikTok</button></div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div></div>
