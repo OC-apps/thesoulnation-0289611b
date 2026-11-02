@@ -126,10 +126,10 @@ async function render(template:Template, nickname:string, asset:string|undefined
       if(zone.hidden)continue;
       const linked=master&&(zone.id==="nickname"||/^guest-[123]$/.test(zone.id));
       const paint=linked?{...zone,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:zone;
-      if(zone.kind==="social-icon"){drawSocialIcon(context,zone);continue;}
+      if(zone.kind==="social-icon"){if((socials[zone.label.replace(/^Icono /,"")]||"").trim())drawSocialIcon(context,zone);continue;}
       if(zone.kind==="nickname")drawText(paint,displayName,true,linked?groupFont:undefined);
       else if(zone.kind==="soul")drawText(paint,"SOUL");
-      else if(zone.kind==="social")drawText(paint,socials[zone.label]||"");
+      else if(zone.kind==="social"){const account=(socials[zone.label]||"").trim();if(account)drawText(paint,account.startsWith("@")?account:"@"+account);}
       else if(zone.kind==="custom")drawText(paint,zone.text||"",false,linked?groupFont:undefined);
     }
   }else drawText(a,displayName,true);
@@ -179,6 +179,34 @@ function StreamPackStudio(){
     return {...z,...patch};
   })})) : update({area:{...t.area,...patch}});
   const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const organizeSocials=()=>{
+    const networks=(["YouTube","Twitch","Instagram","TikTok"] as const).filter(n=>(socials[n]||"").trim());
+    const cleaned=(t.zones||[]).filter(z=>!(z.kind==="social-icon"||z.kind==="social"));
+    if(!networks.length){update({zones:cleaned});setMessage("Escribe al menos un usuario de redes sociales.");return;}
+    const iconSize=Math.max(28,Math.min(72,Math.round(t.width*.033)));
+    const gap=Math.round(iconSize*.18),pairWidth=Math.floor((t.width*.86-(networks.length-1)*gap)/networks.length);
+    const textWidth=Math.max(60,pairWidth-iconSize-gap),left=Math.round(t.width*.07),baseY=Math.min(t.height-iconSize-12,Math.round(t.height*.88));
+    const items:Zone[]=networks.flatMap((name,i)=>{
+      const x=left+i*(pairWidth+gap);
+      return [
+        {id:`socialicon-${name}`,kind:"social-icon" as const,label:`Icono ${name}`,x,y:baseY,width:iconSize,height:iconSize,maxFont:iconSize,minFont:1,color:"#FFFFFF",align:"left" as const},
+        {id:`socialtext-${name}`,kind:"social" as const,label:name,x:x+iconSize+gap,y:baseY,width:textWidth,height:iconSize,maxFont:Math.round(iconSize*.7),minFont:8,padding:0,color:"#FFFFFF",align:"left" as const}
+      ];
+    });
+    update({zones:[...cleaned,...items]});
+    setZoneId(items[0].id);
+    setMessage(`Se organizaron ${networks.length} redes con iconos iguales y @usuario a un lado. Las redes vacías no se muestran.`);
+  };
+  const equalizeSocialIcons=()=>{
+    const icons=(t.zones||[]).filter(z=>z.kind==="social-icon");
+    if(!icons.length)return;
+    const size=Math.min(...icons.map(z=>Math.min(z.width,z.height)));
+    const y=Math.round(icons[0].y);
+    const ordered=[...icons].sort((a,b)=>a.x-b.x);
+    const gap=Math.round(size*.25),start=ordered[0].x;
+    update({zones:(t.zones||[]).map(z=>{const index=ordered.findIndex(icon=>icon.id===z.id);return index<0?z:{...z,x:Math.min(t.width-size,start+index*(size+gap)),y,width:size,height:size};})});
+    setMessage("Los iconos quedaron del mismo tamaño, alineados horizontalmente.");
+  };
   const copyStyle=()=>{if(!activeZone)return;const {width,height,maxFont,minFont,padding,align,color}=activeZone;setCopiedStyle({width,height,maxFont,minFont,padding,align,color});};
   const pasteStyle=()=>{if(!activeZone||!copiedStyle)return;updateZone({...copiedStyle,width:Math.min(copiedStyle.width??activeZone.width,t.width-activeZone.x),height:Math.min(copiedStyle.height??activeZone.height,t.height-activeZone.y)});};
   const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
@@ -298,6 +326,7 @@ function StreamPackStudio(){
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
             <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="space-y-2"><p className="text-xs text-slate-300">Agregar logotipo de red social (capa independiente, ajustable y exportable)</p><div className="flex flex-wrap gap-2">{(["YouTube","Twitch","Instagram","TikTok"] as const).map(net=><button key={net} onClick={()=>{const id=`icon-${Date.now()}`;const size=Math.max(40,Math.round(t.width*.045));update({zones:[...(t.zones||[]),{id,kind:"social-icon",label:`Icono ${net}`,x:Math.round(t.width*.12),y:Math.round(t.height*.75),width:size,height:size,maxFont:size,minFont:1,color:"#FFFFFF",align:"left"}]});setZoneId(id);}} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs">+ {net} icono</button>)}</div></div>
+            <div className="flex flex-wrap gap-2"><button onClick={organizeSocials} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">Organizar mis redes: icono + @usuario</button><button onClick={equalizeSocialIcons} className="rounded-lg border border-white/30 px-3 py-2 text-xs">Igualar y alinear iconos</button></div>
             <div className="space-y-2 rounded-xl border border-white/15 p-3"><p className="text-sm font-semibold">Capas de texto</p>{t.zones?.map(z=><div key={z.id} className={`flex items-center gap-2 rounded-lg p-1 ${zoneId===z.id?"bg-[#F05E07]/15":"bg-white/5"}`}><button onClick={()=>setZoneId(z.id)} className="min-w-0 flex-1 truncate px-2 py-2 text-left text-xs">{z.label}</button><button title={z.hidden?"Mostrar":"Ocultar"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,hidden:!a.hidden}:a)})} className="px-2 text-xs">{z.hidden?"Oculto":"Visible"}</button><button title={z.locked?"Desbloquear":"Bloquear"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,locked:!a.locked}:a)})} className="px-2 text-xs">{z.locked?"Bloqueado":"Libre"}</button></div>)}</div>
             {activeZone&&<div className="space-y-2"><label className="block text-xs text-slate-300">Nombre de capa<input value={activeZone.label} onChange={e=>updateZone({label:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>{activeZone.kind==="custom"&&<label className="block text-xs text-slate-300">Texto<input value={activeZone.text||""} onChange={e=>updateZone({text:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>}<div className="flex flex-wrap gap-2"><button onClick={copyStyle} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Copiar formato</button><button disabled={!copiedStyle||activeZone.locked} onClick={pasteStyle} className="rounded-lg border border-white/20 px-3 py-2 text-xs disabled:opacity-40">Pegar formato</button><button onClick={duplicateZone} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Duplicar</button><button onClick={()=>reorderZone(-1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Atrás</button><button onClick={()=>reorderZone(1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Adelante</button><button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar</button></div></div>}
             
