@@ -5,7 +5,7 @@ import { updateSiteAsset } from "@/lib/site-assets.functions";
 import { CURRENT_LEGENDS } from "@/lib/roster-current";
 import { useLegendsPhotos } from "@/hooks/use-legends-photos";
 import { uploadLegendPhoto } from "@/lib/legends-photo.functions";
-import { ROSTER_SYNC_MARKER } from "@/lib/roster-current";
+import { CURRENT_WAVES, ROSTER_SYNC_MARKER } from "@/lib/roster-current";
 import { WAVES } from "@/lib/waves-defaults";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -782,7 +782,7 @@ function AdminLivePage() {
               <p className="text-sm text-muted-foreground">Edita los datos de Waves, Legends y Crew. Las redes se guardan para completar automáticamente StreamPack; no se añaden al sitio público.</p>
               {(()=>{const all=[
                 ...waves.map(m=>({key:m.name.toUpperCase(),name:m.name.toUpperCase(),category:"waves" as const,id:m.id})),
-                ...WAVES.filter(w=>!waves.some(m=>m.name.toUpperCase()===w.name.toUpperCase())).map(w=>({key:w.name.toUpperCase(),name:w.name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
+                ...CURRENT_WAVES.filter(name=>!waves.some(m=>m.name.toUpperCase()===name.toUpperCase())).map(name=>({key:name.toUpperCase(),name:name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
                 ...roster.filter(m=>m.category==="legends"||m.category==="crew").map(m=>({key:m.nickname.toUpperCase(),name:m.nickname.toUpperCase(),category:m.category as "legends"|"crew",id:m.id}))
               ];const selected=all.find(m=>m.key===profileMember);
               const choose=(key:string)=>{const found=all.find(m=>m.key===key);setProfileMember(key);setProfileName(found?.name??"");setProfileSocials(savedProfiles[key]??{});};
