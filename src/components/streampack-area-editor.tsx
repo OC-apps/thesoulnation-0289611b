@@ -1,29 +1,32 @@
 import { useRef, useState, type PointerEvent } from "react";
 export type TextRect = {x:number;y:number;width:number;height:number};
 type Zone = TextRect & {id:string;label:string;locked?:boolean};
-type Props = { background?:string; imageWidth:number; imageHeight:number; area:TextRect; onChange:(a:TextRect)=>void; zones?:Zone[]; selectedId?:string; onSelect?:(id:string)=>void; circleGuide?:boolean; };
+type Props = { background?:string; imageWidth:number; imageHeight:number; area:TextRect; onChange:(a:TextRect)=>void; zones?:Zone[]; selectedId?:string; onSelect?:(id:string)=>void; circleGuide?:boolean; selectedIds?:string[]; onMultiSelect?:(ids:string[])=>void; onMoveSelection?:(dx:number,dy:number)=>void; };
 const MIN=12;
-export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onChange,zones,selectedId,onSelect,circleGuide=false}:Props){
+export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onChange,zones,selectedId,onSelect,circleGuide=false,selectedIds=[],onMultiSelect,onMoveSelection}:Props){
  const surface=useRef<HTMLDivElement>(null);
- const interaction=useRef<{kind:"move"|"resize"|"draw";startX:number;startY:number;initial:TextRect}|null>(null);
+ const interaction=useRef<{kind:"move"|"resize"|"draw"|"marquee";startX:number;startY:number;initial:TextRect}|null>(null);
  const [active,setActive]=useState(false);
+ const [marquee,setMarquee]=useState<TextRect|null>(null);
  const [lines,setLines]=useState<{axis:"x"|"y";value:number}[]>([]);
  const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
  const coords=(e:PointerEvent<HTMLDivElement>)=>{
   const r=surface.current!.getBoundingClientRect();
   return {x:clamp((e.clientX-r.left)/r.width*imageWidth,0,imageWidth),y:clamp((e.clientY-r.top)/r.height*imageHeight,0,imageHeight)};
  };
- const begin=(e:PointerEvent<HTMLDivElement>,kind:"move"|"resize"|"draw")=>{
+ const begin=(e:PointerEvent<HTMLDivElement>,kind:"move"|"resize"|"draw"|"marquee")=>{
   if(zones?.find(z=>z.id===selectedId)?.locked)return;
   e.preventDefault();e.stopPropagation();
   const {x,y}=coords(e);
   interaction.current={kind,startX:x,startY:y,initial:area};
   setActive(true);e.currentTarget.setPointerCapture(e.pointerId);
   if(kind==="draw")onChange({x,y,width:MIN,height:MIN});
+  if(kind==="marquee")setMarquee({x,y,width:0,height:0});
  };
  const move=(e:PointerEvent<HTMLDivElement>)=>{
   const op=interaction.current;if(!op)return;
   const {x,y}=coords(e);const dx=x-op.startX,dy=y-op.startY;const a=op.initial;
+  if(op.kind==="marquee"){setMarquee({x:Math.min(x,op.startX),y:Math.min(y,op.startY),width:Math.abs(x-op.startX),height:Math.abs(y-op.startY)});return;}
   if(op.kind==="move"){
     let nx=clamp(a.x+dx,0,imageWidth-a.width),ny=clamp(a.y+dy,0,imageHeight-a.height);
     const threshold=Math.max(5,imageWidth*.008),newLines:{axis:"x"|"y";value:number}[]=[];
@@ -36,20 +39,21 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
       for(const p of ys)for(const target of [z.y,z.y+z.height/2,z.y+z.height]){const d=Math.abs(p.v-target);if(d<bestY){bestY=d;ny=clamp(target-p.offset,0,imageHeight-a.height);newLines[1]={axis:"y",value:target};}}
     }
     setLines(newLines.filter(Boolean));
-    onChange({...a,x:Math.round(nx),y:Math.round(ny)});
+    if(selectedIds.length>1&&selectedIds.includes(selectedId||"")&&onMoveSelection)onMoveSelection(Math.round(nx-a.x),Math.round(ny-a.y));else onChange({...a,x:Math.round(nx),y:Math.round(ny)});
   }
   else if(op.kind==="resize")onChange({...a,width:Math.round(clamp(a.width+dx,MIN,imageWidth-a.x)),height:Math.round(clamp(a.height+dy,MIN,imageHeight-a.y))});
   else onChange({x:Math.round(Math.min(op.startX,x)),y:Math.round(Math.min(op.startY,y)),width:Math.round(Math.max(MIN,Math.abs(dx))),height:Math.round(Math.max(MIN,Math.abs(dy)))});
  };
- const end=()=>{interaction.current=null;setActive(false);setLines([]);};
+ const end=()=>{if(interaction.current?.kind==="marquee"&&marquee){onMultiSelect?.((zones||[]).filter(z=>z.x<marquee.x+marquee.width&&z.x+z.width>marquee.x&&z.y<marquee.y+marquee.height&&z.y+z.height>marquee.y).map(z=>z.id));}interaction.current=null;setMarquee(null);setActive(false);setLines([]);};
  const left=area.x/imageWidth*100,top=area.y/imageHeight*100,w=area.width/imageWidth*100,h=area.height/imageHeight*100;
  return <div className="space-y-2">
   <p className="text-xs text-slate-300">Selecciona la zona que quieres editar. Arrástrala para moverla o usa la esquina naranja para cambiar su tamaño. Los clics fuera de las zonas no modifican nada.</p>
   <div ref={surface} className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-lg border border-white/20 bg-[#0b1021] touch-none select-none" style={{aspectRatio:`${imageWidth}/${imageHeight}`}}
-    onPointerMove={move} onPointerUp={end} onPointerCancel={end}>
+    onPointerDown={e=>{if(e.target===e.currentTarget)begin(e,"marquee");}} onPointerMove={move} onPointerUp={end} onPointerCancel={end}>
    {background?<img src={background} alt="Plantilla original" draggable={false} className="pointer-events-none absolute inset-0 h-full w-full object-fill"/>:<div className="absolute inset-0 grid place-items-center text-xs text-white/40">Sube un PNG para editar sobre él</div>}
    {circleGuide&&<div aria-hidden="true" className="pointer-events-none absolute rounded-full border-2 border-dashed border-[#F05E07] shadow-[0_0_0_9999px_rgba(0,0,0,0.18)]" style={{width:"90%",height:"90%",top:"5%",left:"5%"}}/>}
-   {zones?.filter(z=>z.id!==selectedId).map(z=><div key={z.id} role="button" tabIndex={0} aria-label={`Seleccionar ${z.label}`} title={z.label} onKeyDown={e=>{if(e.key==="Enter")onSelect?.(z.id)}} onPointerDown={e=>{e.stopPropagation();onSelect?.(z.id)}} className="absolute cursor-pointer border border-blue-300 bg-blue-400/15" style={{left:`${z.x/imageWidth*100}%`,top:`${z.y/imageHeight*100}%`,width:`${z.width/imageWidth*100}%`,height:`${z.height/imageHeight*100}%`}}></div>)}
+   {zones?.filter(z=>z.id!==selectedId).map(z=><div key={z.id} role="button" tabIndex={0} aria-label={`Seleccionar ${z.label}`} title={z.label} onKeyDown={e=>{if(e.key==="Enter")onSelect?.(z.id)}} onPointerDown={e=>{e.stopPropagation();if(e.shiftKey||e.ctrlKey||e.metaKey)onMultiSelect?.([...new Set([...selectedIds,z.id])]);else onSelect?.(z.id)}} className={`absolute cursor-pointer border ${selectedIds.includes(z.id)?"border-[#F05E07] bg-[#F05E07]/20":"border-blue-300 bg-blue-400/15"}`} style={{left:`${z.x/imageWidth*100}%`,top:`${z.y/imageHeight*100}%`,width:`${z.width/imageWidth*100}%`,height:`${z.height/imageHeight*100}%`}}></div>)}
+   {marquee&&<div className="pointer-events-none absolute z-30 border border-cyan-300 bg-cyan-300/15" style={{left:`${marquee.x/imageWidth*100}%`,top:`${marquee.y/imageHeight*100}%`,width:`${marquee.width/imageWidth*100}%`,height:`${marquee.height/imageHeight*100}%`}}/>}
    {lines.map(line=><div key={line.axis} aria-hidden="true" className="pointer-events-none absolute z-20 bg-cyan-300 shadow-[0_0_6px_#67e8f9]" style={line.axis==="x"?{left:`${line.value/imageWidth*100}%`,top:0,bottom:0,width:1}:{top:`${line.value/imageHeight*100}%`,left:0,right:0,height:1}}/>)}
    <div role="group" aria-label="Zona editable de texto" title={zones?.find(z=>z.id===selectedId)?.label || "Zona seleccionada"} className="absolute border-2 border-[#F05E07] bg-[#F05E07]/15" style={{left:`${left}%`,top:`${top}%`,width:`${w}%`,height:`${h}%`,cursor:zones?.find(z=>z.id===selectedId)?.locked?"not-allowed":"move"}}
      onPointerDown={e=>begin(e,"move")}>
