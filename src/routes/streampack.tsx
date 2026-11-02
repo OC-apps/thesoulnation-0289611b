@@ -55,7 +55,7 @@ function drawSocialIcon(context:CanvasRenderingContext2D,zone:Zone){
   context.fillStyle=zone.color;context.fill(new Path2D(ICON_PATHS[network]));
   context.restore();
 }
-async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}) {
+async function render(template:Template, nickname:string, asset:string|undefined, fontFamily:string, showGuides:boolean, socials:Record<string,string>={}, guests:Record<string,string>={}) {
   const canvas=document.createElement("canvas"); canvas.width=template.width; canvas.height=template.height;
   const context=canvas.getContext("2d"); if(!context) throw Error("Canvas no disponible");
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
@@ -113,7 +113,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   if(template.zones){
     const guestGroup=template.id==="4cams"?template.zones.filter(z=>z.id==="nickname"||/^guest-[123]$/.test(z.id)):[];
     const master=guestGroup.find(z=>z.id==="nickname");
-    const guestText=(z:Zone)=>z.kind==="nickname"?displayName:(z.text||"");
+    const guestText=(z:Zone)=>z.kind==="nickname"?displayName:(guests[z.id]??z.text??"");
     // All four boxes share a single font size, limited by the longest visible name.
     let groupFont: number|undefined;
     if(master){
@@ -149,7 +149,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
       }
       else if(zone.kind==="soul"){if(!zone.anchorTo)drawText(paint,"SOUL");}
       else if(zone.kind==="social"){const account=(socials[zone.label]||"").trim();if(account)drawText(paint,account.startsWith("@")?account:"@"+account);}
-      else if(zone.kind==="custom")drawText(paint,zone.text||"",false,linked?groupFont:undefined);
+      else if(zone.kind==="custom")drawText(paint,template.id==="4cams"&&/^guest-[123]$/.test(zone.id)?(guests[zone.id]??zone.text??""):(zone.text||""),false,linked?groupFont:undefined);
     }
   }else drawText(a,displayName,true);
   return canvas;
@@ -170,6 +170,7 @@ function StreamPackStudio(){
   const restoreProfile=()=>{if(!selectedIsOfficial)return;const entry=savedProfiles[selectedMember];if(entry)setSocials(entry);else setMessage("Este gamertag todavía no tiene redes guardadas en este navegador.");};
   const saveVersion=()=>{const entry={date:new Date().toLocaleString("es-MX"),templates:structuredClone(templates)};const next=[entry,...versions].slice(0,8);setVersions(next);localStorage.setItem("tsn-streampack-versions",JSON.stringify(next));setMessage("Versión de proyecto guardada en este dispositivo.");};
   const restoreVersion=(n:number)=>{const entry=versions[n];if(entry){setTemplates(structuredClone(entry.templates));setMessage("Versión restaurada.");}};
+  const [guests,setGuests]=useState<Record<string,string>>({"guest-1":"","guest-2":"","guest-3":""});
   const [zoneId,setZoneId]=useState("nickname");
   const [groupSameSocials,setGroupSameSocials]=useState(true);
   const [simulator,setSimulator]=useState<"none"|"obs"|"tiktok">("none");
@@ -347,7 +348,7 @@ function StreamPackStudio(){
   const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
   const reorderZone=(direction:-1|1)=>{if(!activeZone||!t.zones)return;const current=t.zones.findIndex(z=>z.id===zoneId),target=current+direction;if(target<0||target>=t.zones.length)return;const next=[...t.zones];[next[current],next[target]]=[next[target],next[current]];update({zones:next});};
   const removeZone=()=>{if(!activeZone||activeZone.locked)return;recordHistory();update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
-  useEffect(()=>{let active=true;render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,chosenName,assets,available,fontFamily,guides,socials]);
+  useEffect(()=>{let active=true;render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,guides,socials,guests).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,chosenName,assets,available,fontFamily,guides,socials,guests]);
   const upload=(file?:File)=>{
     if(!file)return;
     if(!file.type.startsWith("image/")){setMessage("Selecciona una imagen PNG o JPG.");return;}
@@ -367,7 +368,7 @@ function StreamPackStudio(){
     try{
       if(!officialLoaded)throw Error("No se cargó la configuración oficial.");
       if(!selectedIsOfficial)throw Error("Selecciona un integrante del roster oficial.");
-      const c=await render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,false,socials);
+      const c=await render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,false,socials,guests);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
       if(!blob)throw Error("No se pudo crear el PNG");
       const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`${safeName(chosenName)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
@@ -443,6 +444,7 @@ function StreamPackStudio(){
             <p className="text-xs text-amber-200">Esta selección no verifica tu identidad: cualquier visitante podría escoger el nombre de otro miembro. Para impedir suplantaciones se requiere un acceso verificado por integrante.</p></div>
           <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2><div className="flex flex-wrap gap-2"><button type="button" onClick={saveProfile} disabled={!selectedIsOfficial} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs disabled:opacity-40">Guardar mis redes</button><button type="button" onClick={restoreProfile} disabled={!selectedIsOfficial} className="rounded-lg border border-white/25 px-3 py-2 text-xs disabled:opacity-40">Cargar redes guardadas</button></div>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
           <div className="rounded-xl border border-white/15 p-3 space-y-2"><p className="text-sm font-semibold">Exportación por piezas</p><div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedExport(templates.map(x=>x.id))}>Todas</button><button className="text-xs underline" onClick={()=>setSelectedExport([])}>Ninguna</button></div><div className="grid grid-cols-2 gap-2">{templates.map(item=><label key={item.id} className="flex gap-2 text-xs"><input type="checkbox" checked={selectedExport.includes(item.id)} onChange={e=>setSelectedExport(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>{item.name}</label>)}</div></div>
+          {selected==="4cams"&&<div className="rounded-xl border border-[#F05E07]/30 p-3 space-y-3"><h2 className="text-sm font-semibold">Nombres de tus invitados</h2><p className="text-xs text-slate-400">Tu nickname se toma del roster. Escribe los otros tres nombres; solo cambiarán en tu descarga.</p>{[1,2,3].map(n=><label key={n} className="block text-xs text-slate-300">Invitado {n}<input maxLength={50} value={guests[`guest-${n}`]??""} onChange={e=>setGuests(current=>({...current,[`guest-${n}`]:e.target.value}))} placeholder={`Nombre del invitado ${n}`} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-3 text-base text-white"/></label>)}</div>}
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
           {adminVerified?<button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor":"Abrir editor de plantilla"}</button>:<p className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Solo administración puede modificar plantillas. Aquí puedes elegir tu nickname, agregar tus redes y descargar tu StreamPack.</p>}
           <button onClick={download} disabled={busy || !officialLoaded || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
