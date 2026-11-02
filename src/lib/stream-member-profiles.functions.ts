@@ -32,11 +32,12 @@ export const saveStreamMemberProfile=createServerFn({method:"POST"})
       const {WAVES}=await import("@/lib/waves-defaults");
       const original=WAVES.find(m=>m.name.toUpperCase()===oldKey);
       if(!original)throw Error("No se encontró este Wave oficial.");
+      const {data:previousWaveSocials}=await supabaseAdmin.from("waves_socials").select("photo_url").eq("name",oldKey).maybeSingle();
       const {data:duplicate}=await supabaseAdmin.from("waves_members").select("id").eq("name",name).maybeSingle();
       if(duplicate)throw Error("El nuevo nickname ya existe.");
       const {data:last}=await supabaseAdmin.from("waves_members").select("sort_order").order("sort_order",{ascending:false}).limit(1).maybeSingle();
       const {error:insertError}=await supabaseAdmin.from("waves_members").insert({
-        name,redes:original.redes,bio:original.bio,photo_url:original.photo,
+        name,redes:original.redes,bio:original.bio,photo_url:previousWaveSocials?.photo_url||original.photo,
         social_label:original.socials?.[0]?.label??null,social_href:original.socials?.[0]?.href??null,
         sort_order:(last?.sort_order??0)+1,
       });
