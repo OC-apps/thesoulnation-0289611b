@@ -7,6 +7,7 @@ import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
 import { useRoster } from "@/hooks/use-roster";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { CURRENT_WAVES } from "@/lib/roster-current";
+import { supabase } from "@/integrations/supabase/client";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 
 export const Route = createFileRoute("/streampack")({
@@ -216,6 +217,23 @@ function StreamPackStudio(){
   const [savedProfiles,setSavedProfiles]=useState<Record<string,Record<string,string>>>({});
   const [versions,setVersions]=useState<{date:string;templates:Template[]}[]>([]);
   useEffect(()=>{try{setSavedProfiles(JSON.parse(localStorage.getItem("tsn-member-social-profiles")||"{}"));setVersions(JSON.parse(localStorage.getItem("tsn-streampack-versions")||"[]"));}catch{}},[]);
+  useEffect(()=>{
+    let active=true;
+    if(!selectedIsOfficial){setSocials({Twitch:"",TikTok:"",YouTube:"",Instagram:""});return;}
+    // Prefer saved official profiles. Members can still edit inputs for their own download.
+    const key=selectedMember.trim().toUpperCase();
+    setSocials({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
+    supabase.from("stream_member_profiles").select("socials").eq("member_key",key).maybeSingle()
+      .then(({data,error})=>{
+        if(!active)return;
+        if(!error&&data?.socials){
+          const values=data.socials as Record<string,string>;
+          const normalize=(value:string)=>{const v=(value||"").trim();if(!v)return "";if(v.startsWith("http")){try{return "@"+decodeURIComponent(new URL(v).pathname.split("/").filter(Boolean).pop()||"").replace(/^@/,"");}catch{return v;}}return v.startsWith("@")?v:"@"+v.replace(/^@/,"");};
+          setSocials({Twitch:normalize(values.Twitch),TikTok:normalize(values.TikTok),YouTube:normalize(values.YouTube),Instagram:normalize(values.Instagram),Facebook:normalize(values.Facebook),X:normalize(values.X)});
+        }
+      });
+    return()=>{active=false};
+  },[selectedMember,selectedIsOfficial]);
   const saveProfile=()=>{if(!selectedIsOfficial)return;const next={...savedProfiles,[selectedMember]:{...socials}};setSavedProfiles(next);localStorage.setItem("tsn-member-social-profiles",JSON.stringify(next));setMessage("Redes guardadas para este gamertag en este navegador.");};
   const restoreProfile=()=>{if(!selectedIsOfficial)return;const entry=savedProfiles[selectedMember];if(entry)setSocials(entry);else setMessage("Este gamertag todavía no tiene redes guardadas en este navegador.");};
   const saveVersion=()=>{const entry={date:new Date().toLocaleString("es-MX"),templates:structuredClone(templates)};const next=[entry,...versions].slice(0,8);setVersions(next);localStorage.setItem("tsn-streampack-versions",JSON.stringify(next));setMessage("Versión de proyecto guardada en este dispositivo.");};
