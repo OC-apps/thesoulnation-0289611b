@@ -145,6 +145,7 @@ function StreamPackStudio(){
   const chosenName=selectedIsOfficial?selectedMember.replace(/^SOUL\s+/i,"").trim():"";
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
+  const [groupSameSocials,setGroupSameSocials]=useState(true);
   const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
   const [selected,setSelected]=useState("avi");
   const [assets,setAssets]=useState<Record<string,string>>({});
@@ -183,19 +184,38 @@ function StreamPackStudio(){
     const networks=(["YouTube","Twitch","Instagram","TikTok"] as const).filter(n=>(socials[n]||"").trim());
     const cleaned=(t.zones||[]).filter(z=>!(z.kind==="social-icon"||z.kind==="social"));
     if(!networks.length){update({zones:cleaned});setMessage("Escribe al menos un usuario de redes sociales.");return;}
+    const groups:{handle:string;networks:typeof networks}[]=[];
+    for(const network of networks){
+      const handle=(socials[network]||"").trim().replace(/^@+/,"");
+      const match=groupSameSocials?groups.find(g=>g.handle.toLocaleLowerCase()===handle.toLocaleLowerCase()):undefined;
+      if(match)match.networks.push(network);
+      else groups.push({handle,networks:[network]});
+    }
     const iconSize=Math.max(28,Math.min(72,Math.round(t.width*.033)));
-    const gap=Math.round(iconSize*.18),pairWidth=Math.floor((t.width*.86-(networks.length-1)*gap)/networks.length);
-    const textWidth=Math.max(60,pairWidth-iconSize-gap),left=Math.round(t.width*.07),baseY=Math.min(t.height-iconSize-12,Math.round(t.height*.88));
-    const items:Zone[]=networks.flatMap((name,i)=>{
-      const x=left+i*(pairWidth+gap);
-      return [
-        {id:`socialicon-${name}`,kind:"social-icon" as const,label:`Icono ${name}`,x,y:baseY,width:iconSize,height:iconSize,maxFont:iconSize,minFont:1,color:"#FFFFFF",align:"left" as const},
-        {id:`socialtext-${name}`,kind:"social" as const,label:name,x:x+iconSize+gap,y:baseY,width:textWidth,height:iconSize,maxFont:Math.round(iconSize*.7),minFont:8,padding:0,color:"#FFFFFF",align:"left" as const}
-      ];
+    const gap=Math.round(iconSize*.18),groupGap=Math.round(iconSize*.55);
+    const left=Math.round(t.width*.07),usableWidth=Math.round(t.width*.86);
+    const totalIcons=networks.length;
+    const minText=90;
+    const equalTextWidth=Math.max(minText,Math.floor((usableWidth-totalIcons*iconSize-(totalIcons-groups.length)*gap-(groups.length-1)*groupGap-groups.length*gap)/groups.length));
+    const totalWidth=totalIcons*iconSize+(totalIcons-groups.length)*gap+(groups.length-1)*groupGap+groups.length*(gap+equalTextWidth);
+    const scale=Math.min(1,usableWidth/totalWidth);
+    const icon=Math.round(iconSize*scale);
+    const iconGap=Math.round(gap*scale),separation=Math.round(groupGap*scale),textWidth=Math.round(equalTextWidth*scale);
+    const baseY=Math.min(t.height-icon-12,Math.round(t.height*.88));
+    let x=left;
+    const items:Zone[]=[];
+    groups.forEach((group,groupIndex)=>{
+      group.networks.forEach((network)=>{
+        items.push({id:`socialicon-${network}`,kind:"social-icon",label:`Icono ${network}`,x,y:baseY,width:icon,height:icon,maxFont:icon,minFont:1,color:"#FFFFFF",align:"left"});
+        x+=icon+iconGap;
+      });
+      const label=group.networks[0];
+      items.push({id:`socialtext-${label}`,kind:"social",label,x,y:baseY,width:textWidth,height:icon,maxFont:Math.round(icon*.7),minFont:8,padding:0,color:"#FFFFFF",align:"left"});
+      x+=textWidth+(groupIndex<groups.length-1?separation:0);
     });
     update({zones:[...cleaned,...items]});
     setZoneId(items[0].id);
-    setMessage(`Se organizaron ${networks.length} redes con iconos iguales y @usuario a un lado. Las redes vacías no se muestran.`);
+    setMessage(groupSameSocials?`Se agruparon ${networks.length} redes en ${groups.length} grupo(s) según su @usuario.`:`Se organizaron ${networks.length} redes individualmente.`);
   };
   const equalizeSocialIcons=()=>{
     const icons=(t.zones||[]).filter(z=>z.kind==="social-icon");
@@ -326,7 +346,7 @@ function StreamPackStudio(){
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
             <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="space-y-2"><p className="text-xs text-slate-300">Agregar logotipo de red social (capa independiente, ajustable y exportable)</p><div className="flex flex-wrap gap-2">{(["YouTube","Twitch","Instagram","TikTok"] as const).map(net=><button key={net} onClick={()=>{const id=`icon-${Date.now()}`;const size=Math.max(40,Math.round(t.width*.045));update({zones:[...(t.zones||[]),{id,kind:"social-icon",label:`Icono ${net}`,x:Math.round(t.width*.12),y:Math.round(t.height*.75),width:size,height:size,maxFont:size,minFont:1,color:"#FFFFFF",align:"left"}]});setZoneId(id);}} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs">+ {net} icono</button>)}</div></div>
-            <div className="flex flex-wrap gap-2"><button onClick={organizeSocials} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">Organizar mis redes: icono + @usuario</button><button onClick={equalizeSocialIcons} className="rounded-lg border border-white/30 px-3 py-2 text-xs">Igualar y alinear iconos</button></div>
+            <label className="flex items-center gap-2 text-sm text-slate-200"><input type="checkbox" checked={groupSameSocials} onChange={e=>setGroupSameSocials(e.target.checked)} className="accent-[#F05E07]"/>Agrupar iconos cuando comparten el mismo @usuario</label><div className="flex flex-wrap gap-2"><button onClick={organizeSocials} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">Organizar mis redes: icono + @usuario</button><button onClick={equalizeSocialIcons} className="rounded-lg border border-white/30 px-3 py-2 text-xs">Igualar y alinear iconos</button></div>
             <div className="space-y-2 rounded-xl border border-white/15 p-3"><p className="text-sm font-semibold">Capas de texto</p>{t.zones?.map(z=><div key={z.id} className={`flex items-center gap-2 rounded-lg p-1 ${zoneId===z.id?"bg-[#F05E07]/15":"bg-white/5"}`}><button onClick={()=>setZoneId(z.id)} className="min-w-0 flex-1 truncate px-2 py-2 text-left text-xs">{z.label}</button><button title={z.hidden?"Mostrar":"Ocultar"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,hidden:!a.hidden}:a)})} className="px-2 text-xs">{z.hidden?"Oculto":"Visible"}</button><button title={z.locked?"Desbloquear":"Bloquear"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,locked:!a.locked}:a)})} className="px-2 text-xs">{z.locked?"Bloqueado":"Libre"}</button></div>)}</div>
             {activeZone&&<div className="space-y-2"><label className="block text-xs text-slate-300">Nombre de capa<input value={activeZone.label} onChange={e=>updateZone({label:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>{activeZone.kind==="custom"&&<label className="block text-xs text-slate-300">Texto<input value={activeZone.text||""} onChange={e=>updateZone({text:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>}<div className="flex flex-wrap gap-2"><button onClick={copyStyle} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Copiar formato</button><button disabled={!copiedStyle||activeZone.locked} onClick={pasteStyle} className="rounded-lg border border-white/20 px-3 py-2 text-xs disabled:opacity-40">Pegar formato</button><button onClick={duplicateZone} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Duplicar</button><button onClick={()=>reorderZone(-1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Atrás</button><button onClick={()=>reorderZone(1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Adelante</button><button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar</button></div></div>}
             
