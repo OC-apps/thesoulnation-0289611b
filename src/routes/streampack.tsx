@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
 import { buildZip } from "@/lib/streampack-zip";
 import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
@@ -146,6 +146,11 @@ function StreamPackStudio(){
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
   const [groupSameSocials,setGroupSameSocials]=useState(true);
+  const clipboardRef=useRef<Zone|null>(null);
+  const historyRef=useRef<Template[][]>([]);
+  const redoRef=useRef<Template[][]>([]);
+  const templatesRef=useRef<Template[]>([]);
+  const nextIdRef=useRef(0);
   const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
   const [selected,setSelected]=useState("avi");
   const [assets,setAssets]=useState<Record<string,string>>({});
@@ -162,6 +167,29 @@ function StreamPackStudio(){
   const [editor,setEditor]=useState(false);
   const [packBusy,setPackBusy]=useState(false);
   const t=templates.find(item=>item.id===selected) || templates[0];
+  templatesRef.current=templates;
+  const recordHistory=()=>{historyRef.current.push(structuredClone(templatesRef.current));if(historyRef.current.length>40)historyRef.current.shift();redoRef.current=[];};
+  const undo=()=>{const previous=historyRef.current.pop();if(!previous)return;redoRef.current.push(structuredClone(templatesRef.current));setTemplates(previous);};
+  const redo=()=>{const next=redoRef.current.pop();if(!next)return;historyRef.current.push(structuredClone(templatesRef.current));setTemplates(next);};
+  const pasteElement=()=>{const source=clipboardRef.current;if(!source)return;recordHistory();const id=`pasted-${++nextIdRef.current}`;const zone={...source,id,label:source.label+" copia",x:Math.max(0,Math.min(t.width-source.width,source.x+25)),y:Math.max(0,Math.min(t.height-source.height,source.y+25))};update({zones:[...(t.zones||[]),zone]});setZoneId(id);};
+  const duplicateElement=()=>{if(!activeZone||activeZone.locked)return;clipboardRef.current={...activeZone};pasteElement();};
+  useEffect(()=>{
+    if(!editor)return;
+    const onKey=(event:KeyboardEvent)=>{
+      const element=event.target as HTMLElement|null;
+      if(element?.closest('input, textarea, select, [contenteditable="true"]'))return;
+      const modifier=event.ctrlKey||event.metaKey;
+      const key=event.key.toLowerCase();
+      if(modifier&&key==="c"&&activeZone){event.preventDefault();clipboardRef.current={...activeZone};return;}
+      if(modifier&&key==="v"&&clipboardRef.current){event.preventDefault();pasteElement();return;}
+      if(modifier&&key==="d"&&activeZone){event.preventDefault();duplicateElement();return;}
+      if(modifier&&key==="z"){event.preventDefault();if(event.shiftKey)redo();else undo();return;}
+      if(modifier&&key==="y"){event.preventDefault();redo();return;}
+      if(!modifier&&(event.key==="Delete"||event.key==="Backspace")&&activeZone&&!activeZone.locked){event.preventDefault();recordHistory();update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("");return;}
+      if(!modifier&&["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(event.key)&&activeZone&&!activeZone.locked){event.preventDefault();recordHistory();const step=event.shiftKey?10:1;const dx=event.key==="ArrowLeft"?-step:event.key==="ArrowRight"?step:0;const dy=event.key==="ArrowUp"?-step:event.key==="ArrowDown"?step:0;updateArea({x:Math.max(0,Math.min(t.width-activeZone.width,activeZone.x+dx)),y:Math.max(0,Math.min(t.height-activeZone.height,activeZone.y+dy))});}
+    };
+    window.addEventListener("keydown",onKey);return()=>window.removeEventListener("keydown",onKey);
+  });
   const update=(patch:Partial<Template>)=>setTemplates(current=>current.map(x=>{
     if(x.id!==t.id)return x;
     if(x.id!=="4cams"||!patch.zones)return {...x,...patch};
@@ -231,7 +259,7 @@ function StreamPackStudio(){
   const pasteStyle=()=>{if(!activeZone||!copiedStyle)return;updateZone({...copiedStyle,width:Math.min(copiedStyle.width??activeZone.width,t.width-activeZone.x),height:Math.min(copiedStyle.height??activeZone.height,t.height-activeZone.y)});};
   const duplicateZone=()=>{if(!activeZone)return;const id=`zone-${Date.now()}`;update({zones:[...t.zones!,{...activeZone,id,label:`${activeZone.label} copia`,x:Math.min(t.width-activeZone.width,activeZone.x+24),y:Math.min(t.height-activeZone.height,activeZone.y+24)}]});setZoneId(id);};
   const reorderZone=(direction:-1|1)=>{if(!activeZone||!t.zones)return;const current=t.zones.findIndex(z=>z.id===zoneId),target=current+direction;if(target<0||target>=t.zones.length)return;const next=[...t.zones];[next[current],next[target]]=[next[target],next[current]];update({zones:next});};
-  const removeZone=()=>{if(!activeZone)return;update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
+  const removeZone=()=>{if(!activeZone||activeZone.locked)return;recordHistory();update({zones:t.zones!.filter(z=>z.id!==zoneId)});setZoneId("nickname");};
   useEffect(()=>{let active=true;render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,guides,socials).then(c=>{if(active)setPreview(c.toDataURL("image/png"));}).catch(()=>{if(active)setMessage("No se pudo generar la vista previa.");});return()=>{active=false};},[t,chosenName,assets,available,fontFamily,guides,socials]);
   const upload=(file?:File)=>{
     if(!file)return;
@@ -347,6 +375,7 @@ function StreamPackStudio(){
             <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="space-y-2"><p className="text-xs text-slate-300">Agregar logotipo de red social (capa independiente, ajustable y exportable)</p><div className="flex flex-wrap gap-2">{(["YouTube","Twitch","Instagram","TikTok"] as const).map(net=><button key={net} onClick={()=>{const id=`icon-${Date.now()}`;const size=Math.max(40,Math.round(t.width*.045));update({zones:[...(t.zones||[]),{id,kind:"social-icon",label:`Icono ${net}`,x:Math.round(t.width*.12),y:Math.round(t.height*.75),width:size,height:size,maxFont:size,minFont:1,color:"#FFFFFF",align:"left"}]});setZoneId(id);}} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs">+ {net} icono</button>)}</div></div>
             <label className="flex items-center gap-2 text-sm text-slate-200"><input type="checkbox" checked={groupSameSocials} onChange={e=>setGroupSameSocials(e.target.checked)} className="accent-[#F05E07]"/>Agrupar iconos cuando comparten el mismo @usuario</label><div className="flex flex-wrap gap-2"><button onClick={organizeSocials} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">Organizar mis redes: icono + @usuario</button><button onClick={equalizeSocialIcons} className="rounded-lg border border-white/30 px-3 py-2 text-xs">Igualar y alinear iconos</button></div>
+            <p className="text-xs text-slate-400">Atajos del editor: Supr eliminar · Ctrl+C copiar · Ctrl+V pegar · Ctrl+D duplicar · Ctrl+Z deshacer · Ctrl+Y rehacer · flechas mover (Shift: 10 px). No afectan campos de texto.</p>
             <div className="space-y-2 rounded-xl border border-white/15 p-3"><p className="text-sm font-semibold">Capas de texto</p>{t.zones?.map(z=><div key={z.id} className={`flex items-center gap-2 rounded-lg p-1 ${zoneId===z.id?"bg-[#F05E07]/15":"bg-white/5"}`}><button onClick={()=>setZoneId(z.id)} className="min-w-0 flex-1 truncate px-2 py-2 text-left text-xs">{z.label}</button><button title={z.hidden?"Mostrar":"Ocultar"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,hidden:!a.hidden}:a)})} className="px-2 text-xs">{z.hidden?"Oculto":"Visible"}</button><button title={z.locked?"Desbloquear":"Bloquear"} onClick={()=>update({zones:t.zones!.map(a=>a.id===z.id?{...a,locked:!a.locked}:a)})} className="px-2 text-xs">{z.locked?"Bloqueado":"Libre"}</button></div>)}</div>
             {activeZone&&<div className="space-y-2"><label className="block text-xs text-slate-300">Nombre de capa<input value={activeZone.label} onChange={e=>updateZone({label:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>{activeZone.kind==="custom"&&<label className="block text-xs text-slate-300">Texto<input value={activeZone.text||""} onChange={e=>updateZone({text:e.target.value})} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>}<div className="flex flex-wrap gap-2"><button onClick={copyStyle} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Copiar formato</button><button disabled={!copiedStyle||activeZone.locked} onClick={pasteStyle} className="rounded-lg border border-white/20 px-3 py-2 text-xs disabled:opacity-40">Pegar formato</button><button onClick={duplicateZone} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Duplicar</button><button onClick={()=>reorderZone(-1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Atrás</button><button onClick={()=>reorderZone(1)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">Adelante</button><button onClick={removeZone} className="rounded-lg border border-red-400/30 px-3 py-2 text-xs text-red-300">Eliminar</button></div></div>}
             
