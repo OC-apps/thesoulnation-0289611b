@@ -5,6 +5,7 @@ import { buildZip } from "@/lib/streampack-zip";
 import soulOfficialLogo from "@/assets/soul-logo-official.png";
 import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
 import { useRoster } from "@/hooks/use-roster";
+import { useWavesHidden } from "@/hooks/use-waves-hidden";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { CURRENT_WAVES } from "@/lib/roster-current";
 import { supabase } from "@/integrations/supabase/client";
@@ -208,7 +209,8 @@ async function render(template:Template, nickname:string, asset:string|undefined
 function StreamPackStudio(){
   const roster=useRoster();
   const waves=useWavesMembers();
-  const rosterOptions=[...new Set([...CURRENT_WAVES,...waves.map(m=>m.name.toUpperCase()),...roster.all.map(m=>m.nickname.toUpperCase())])].filter(name=>name.startsWith("SOUL ")&&name.length<70).sort((a,b)=>a.localeCompare(b));
+  const hiddenWaves=useWavesHidden();
+  const rosterOptions=[...new Set([...CURRENT_WAVES.filter(n=>!hiddenWaves.has(n)),...waves.filter(m=>!hiddenWaves.has(m.name.toUpperCase())).map(m=>m.name.toUpperCase()),...roster.all.map(m=>m.nickname.toUpperCase())])].filter(name=>name.startsWith("SOUL ")&&name.length<70).sort((a,b)=>a.localeCompare(b));
   const [selectedMember,setSelectedMember]=useState("");
   const [memberSearch,setMemberSearch]=useState("");
   const selectedIsOfficial=rosterOptions.includes(selectedMember);
