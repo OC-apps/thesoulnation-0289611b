@@ -182,9 +182,25 @@ function StreamPackStudio(){
   const nextIdRef=useRef(0);
   const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
   const [selected,setSelected]=useState("avi");
-  const [restored,setRestored]=useState(false);
-  useEffect(()=>{try{const raw=localStorage.getItem("tsn-streampack-workspace-v3");if(raw){const data=JSON.parse(raw);if(Array.isArray(data.templates)&&data.templates.length&&data.templates.length<101)setTemplates(data.templates);if(data.socials&&typeof data.socials==="object")setSocials(data.socials);}}catch{}finally{setRestored(true);}},[]);
-  useEffect(()=>{if(!restored)return;try{localStorage.setItem("tsn-streampack-workspace-v3",JSON.stringify({templates,socials,savedAt:new Date().toISOString()}));}catch{}},[templates,socials,restored]);
+  const [officialLoaded,setOfficialLoaded]=useState(false);
+  useEffect(()=>{
+    let cancelled=false;
+    fetch("/streampack/configuracion-oficial.json",{cache:"no-store"})
+      .then(response=>{if(!response.ok)throw Error("Configuración no disponible");return response.json();})
+      .then(data=>{
+        if(cancelled)return;
+        if(data.version!==2||!Array.isArray(data.templates)||data.templates.length!==14)throw Error("Configuración oficial incompatible");
+        const standard=new Map(START.map(item=>[item.id,item]));
+        const official:Template[]=data.templates.map((item:Template)=>{
+          const base=standard.get(item.id);
+          if(!base||!Array.isArray(item.zones)||!item.zones.every(z=>typeof z.id==="string"&&Number.isFinite(z.x)&&Number.isFinite(z.y)&&Number.isFinite(z.width)&&Number.isFinite(z.height)))throw Error("Plantilla oficial inválida");
+          return {...base,area:{...base.area,...item.area},zones:item.zones.map(z=>({...z})),assetPath:base.assetPath,membersOnly:false};
+        });
+        setTemplates(official);setOfficialLoaded(true);
+      }).catch(()=>{if(!cancelled){setOfficialLoaded(false);setMessage("No se pudo cargar la configuración oficial. Comprueba la publicación antes de descargar.");}});
+    return()=>{cancelled=true};
+  },[]);
+  useEffect(()=>{if(!officialLoaded||!adminVerified)return;try{localStorage.setItem("tsn-streampack-workspace-v3",JSON.stringify({templates,socials,savedAt:new Date().toISOString()}));}catch{}},[templates,socials,officialLoaded,adminVerified]);
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
   useEffect(()=>{let cancelled=false;Promise.all(START.map(async item=>{try{const response=await fetch(item.assetPath||"",{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}})).then(entries=>{if(!cancelled)setAvailable(Object.fromEntries(entries));});return()=>{cancelled=true;};},[]);
@@ -349,6 +365,7 @@ function StreamPackStudio(){
   const download=async()=>{
     setBusy(true);setMessage("");
     try{
+      if(!officialLoaded)throw Error("No se cargó la configuración oficial.");
       if(!selectedIsOfficial)throw Error("Selecciona un integrante del roster oficial.");
       const c=await render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,false,socials);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
@@ -428,7 +445,7 @@ function StreamPackStudio(){
           <div className="rounded-xl border border-white/15 p-3 space-y-2"><p className="text-sm font-semibold">Exportación por piezas</p><div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedExport(templates.map(x=>x.id))}>Todas</button><button className="text-xs underline" onClick={()=>setSelectedExport([])}>Ninguna</button></div><div className="grid grid-cols-2 gap-2">{templates.map(item=><label key={item.id} className="flex gap-2 text-xs"><input type="checkbox" checked={selectedExport.includes(item.id)} onChange={e=>setSelectedExport(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>{item.name}</label>)}</div></div>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
           {adminVerified?<button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor":"Abrir editor de plantilla"}</button>:<p className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Solo administración puede modificar plantillas. Aquí puedes elegir tu nickname, agregar tus redes y descargar tu StreamPack.</p>}
-          <button onClick={download} disabled={busy || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
+          <button onClick={download} disabled={busy || !officialLoaded || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
           <button onClick={downloadPack} disabled={packBusy || !selectedIsOfficial || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
           <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
         </section>
