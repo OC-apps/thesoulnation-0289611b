@@ -221,6 +221,7 @@ function AdminLivePage() {
   const legendsPhotos = useLegendsPhotos();
   const [legendPhotoOverrides, setLegendPhotoOverrides] = useState<Record<string,string>>({});
   const waves = useWavesMembers();
+  const waveHiddenForProfiles=useWavesHidden();
   const [waveForm, setWaveForm] = useState({ name: "", redes: "", bio: "", socialLabel: "", socialHref: "" });
   const [wavePhoto, setWavePhoto] = useState<{ base64: string; mime: string; name: string } | null>(null);
   const [waveBusy, setWaveBusy] = useState<string | null>(null);
@@ -782,7 +783,7 @@ function AdminLivePage() {
               <p className="text-sm text-muted-foreground">Edita los datos de Waves, Legends y Crew. Las redes se guardan para completar automáticamente StreamPack; no se añaden al sitio público.</p>
               {(()=>{const all=[
                 ...waves.map(m=>({key:m.name.toUpperCase(),name:m.name.toUpperCase(),category:"waves" as const,id:m.id})),
-                ...CURRENT_WAVES.filter(name=>!waves.some(m=>m.name.toUpperCase()===name.toUpperCase())).map(name=>({key:name.toUpperCase(),name:name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
+                ...CURRENT_WAVES.filter(name=>!waveHiddenForProfiles.has(name.toUpperCase())&&!waves.some(m=>m.name.toUpperCase()===name.toUpperCase())).map(name=>({key:name.toUpperCase(),name:name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
                 ...roster.filter(m=>m.category==="legends"||m.category==="crew").map(m=>({key:m.nickname.toUpperCase(),name:m.nickname.toUpperCase(),category:m.category as "legends"|"crew",id:m.id}))
               ];const selected=all.find(m=>m.key===profileMember);
               const choose=(key:string)=>{const found=all.find(m=>m.key===key);setProfileMember(key);setProfileName(found?.name??"");setProfileSocials(savedProfiles[key]??{});};
@@ -790,7 +791,7 @@ function AdminLivePage() {
                 <label className="block text-sm">Integrante<select className="mt-2 w-full rounded-lg bg-[#07122c] p-3 text-white" value={profileMember} onChange={e=>choose(e.target.value)}><option value="">Selecciona un integrante...</option>{(["waves","legends","crew"] as const).map(cat=><optgroup key={cat} label={cat.toUpperCase()}>{all.filter(m=>m.category===cat).map(m=><option key={m.key} value={m.key}>{m.name}</option>)}</optgroup>)}</select></label>
                 {selected&&<div className="space-y-4 rounded-xl border border-flame/20 p-4">
                   <label className="block text-sm">Nickname<input className="mt-1 w-full rounded-lg bg-[#07122c] p-3 text-white" value={profileName} onChange={e=>setProfileName(e.target.value)}/></label>
-                  {!selected.id&&selected.category==="waves"&&<p className="text-xs text-amber-300">Este Waves pertenece al listado fijo: las redes sí se pueden guardar aquí; para renombrarlo hay que actualizar también su entrada oficial.</p>}
+                  {!selected.id&&selected.category==="waves"&&<p className="text-xs text-amber-300">Al cambiar este nickname, conservaremos su perfil original y ocultaremos el nombre anterior.</p>}
                   <div className="grid gap-3 sm:grid-cols-2">{["Twitch","TikTok","YouTube","Instagram","Facebook","X"].map(net=><label key={net} className="block text-xs">{net}<input className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-3 text-sm text-white" placeholder="@usuario o enlace" value={profileSocials[net]??""} onChange={e=>setProfileSocials(p=>({...p,[net]:e.target.value}))}/></label>)}</div>
                   <button type="button" disabled={profileBusy} className="rounded-lg bg-flame px-4 py-3 text-sm font-bold text-black disabled:opacity-50" onClick={async()=>{setProfileBusy(true);setMsg("");try{const result=await saveStreamMemberProfile({data:{password,memberKey:selected.key,nickname:profileName,category:selected.category,memberId:selected.id,socials:profileSocials}});setSavedProfiles(p=>({...p,[result.nickname]:profileSocials}));setProfileMember(result.nickname);setMsg("Ficha del integrante guardada para StreamPack.");}catch(e){setMsg(e instanceof Error?e.message:"No se guardaron los cambios");}finally{setProfileBusy(false);}}}>{profileBusy?"Guardando...":"Guardar ficha"}</button>
                 </div>}
