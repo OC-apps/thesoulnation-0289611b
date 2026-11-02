@@ -184,7 +184,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
       if(zone.hidden)continue;
       const linked=master&&(zone.id==="nickname"||/^guest-[123]$/.test(zone.id));
       const paint=linked?{...zone,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:zone;
-      if(zone.kind==="soul-logo"){if(logoAsset)context.drawImage(logoAsset,zone.x,zone.y,zone.width,zone.height);continue;}
+      if(zone.kind==="soul-logo"){if(logoAsset){const fit=Math.min(zone.width/logoAsset.naturalWidth,zone.height/logoAsset.naturalHeight);const w=logoAsset.naturalWidth*fit,h=logoAsset.naturalHeight*fit;context.drawImage(logoAsset,zone.x+(zone.width-w)/2,zone.y+(zone.height-h)/2,w,h);}continue;}
       if(zone.kind==="social-icon"){if(!autoSocial&&(socials[zone.label.replace(/^Icono /,"")]||"").trim())drawSocialIcon(context,zone);continue;}
       if(zone.kind==="nickname"){
         const bounds=drawText(paint,displayName,true,linked?groupFont:undefined);
@@ -461,7 +461,7 @@ function StreamPackStudio(){
       const incoming:Template[]=data.templates.map((item:Template)=>{
         if(!item||typeof item.id!=="string"||!item.id||typeof item.name!=="string"||!Number.isInteger(item.width)||!Number.isInteger(item.height)||item.width<1||item.width>8192||item.height<1||item.height>8192||!Array.isArray(item.zones)||item.zones.length>100)throw Error("Una plantilla tiene datos inválidos.");
         const zones=item.zones.map(z=>{
-          if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom","social-icon"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color))throw Error("Una capa contiene datos inválidos.");
+          if(!z||typeof z.id!=="string"||typeof z.label!=="string"||!["nickname","soul","social","custom","social-icon","soul-logo"].includes(z.kind)||!["left","center","right"].includes(z.align)||!Number.isFinite(z.x)||!Number.isFinite(z.y)||!Number.isFinite(z.width)||!Number.isFinite(z.height)||z.width<=0||z.height<=0||!Number.isFinite(z.maxFont)||z.maxFont<=0||typeof z.color!=="string"||!/^#[0-9a-f]{6}$/i.test(z.color))throw Error("Una capa contiene datos inválidos.");
           const {verticalAlign: _ignored,...cleanZone}=z as Zone & {verticalAlign?:string};return {...cleanZone,x:Math.max(0,Math.min(z.x,item.width-1)),y:Math.max(0,Math.min(z.y,item.height-1)),width:Math.min(z.width,item.width),height:Math.min(z.height,item.height)};
         });
         return {...item,area:{...item.area},zones,assetPath:typeof item.assetPath==="string"&&item.assetPath.startsWith("/streampack/templates/")?item.assetPath:undefined,membersOnly:false};
