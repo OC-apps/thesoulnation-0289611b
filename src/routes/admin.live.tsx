@@ -876,6 +876,7 @@ function AdminLivePage() {
 
 
 
+          <div className="mb-5 rounded-xl border border-flame/25 bg-blue-deep/30 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-bold text-foreground">StreamPack Studio · Administración</h3><p className="text-xs text-muted-foreground">Editar plantillas, capas, estilos y exportar la configuración global.</p></div><a href="/streampack?studio=admin" className="rounded-lg bg-flame px-4 py-2 text-xs font-bold text-background">Abrir editor de StreamPack</a></div></div>
           <TabsContent value="waves" className="mt-0">
             <SectionShell
               icon={WavesIcon}
