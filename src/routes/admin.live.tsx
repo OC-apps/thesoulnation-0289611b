@@ -177,6 +177,8 @@ function AdminLivePage() {
   const [savedProfiles,setSavedProfiles]=useState<Record<string,Record<string,string>>>({});
   useEffect(()=>{if(!authed)return;let alive=true;supabase.from("stream_member_profiles").select("member_key,socials").then(({data})=>{if(alive&&data)setSavedProfiles(Object.fromEntries(data.map(r=>[String(r.member_key),r.socials as Record<string,string>])));});return()=>{alive=false};},[authed]);
   const [roster, setRoster] = useState<RosterRow[]>([]);
+  const [rosterNicknameEdits,setRosterNicknameEdits]=useState<Record<string,string>>({});
+  const [editingRosterId,setEditingRosterId]=useState<string|null>(null);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
   const [rosterSynced, setRosterSynced] = useState(false);
@@ -385,6 +387,19 @@ function AdminLivePage() {
     return () => { supabase.removeChannel(ch); };
   }, []);
 
+  const saveRosterNickname=async(member:RosterRow)=>{
+    const nickname=(rosterNicknameEdits[member.id]??member.nickname).trim().toUpperCase().replace(/\\s+/g," ");
+    if(nickname===member.nickname){setEditingRosterId(null);return;}
+    setRosterBusy(`rename:${member.id}`);setMsg("");
+    try{
+      const oldProfiles=savedProfiles[member.nickname.toUpperCase()]??{};
+      await saveStreamMemberProfile({data:{password,memberKey:member.nickname,nickname,category:member.category as "legends"|"crew",memberId:member.id,socials:oldProfiles}});
+      setRosterNicknameEdits(prev=>{const next={...prev};delete next[member.id];return next;});
+      setEditingRosterId(null);
+      setMsg(`Nickname actualizado: ${member.nickname} → ${nickname}`);
+    }catch(error){setMsg(error instanceof Error?error.message:"No fue posible modificar el nickname");}
+    finally{setRosterBusy(null);}
+  };
   const applyOfficialRoster = async () => {
     setRosterBusy("sync");
     setMsg("");
@@ -886,7 +901,12 @@ function AdminLivePage() {
                           const rmBusy = rosterBusy === `rm:${m.id}`;
                           return (
                             <li key={m.id} className="group inline-flex items-center gap-1.5 border border-flame/30 hover:border-flame rounded px-2 py-1 bg-background/60 transition">
-                              <span className="font-mono text-[11px] text-foreground">{m.nickname}</span>
+                              {editingRosterId===m.id?<form className="flex items-center gap-1" onSubmit={e=>{e.preventDefault();void saveRosterNickname(m);}}>
+                                <input autoFocus aria-label={`Nuevo nickname de ${m.nickname}`} maxLength={80} className="w-40 rounded border border-flame/50 bg-background px-2 py-1 font-mono text-[11px] text-white" value={rosterNicknameEdits[m.id]??m.nickname} onChange={e=>setRosterNicknameEdits(prev=>({...prev,[m.id]:e.target.value}))}/>
+                                <button type="submit" disabled={rosterBusy===`rename:${m.id}`} className="text-flame" aria-label="Guardar nickname"><Save className="h-3.5 w-3.5"/></button>
+                                <button type="button" onClick={()=>setEditingRosterId(null)} aria-label="Cancelar edición" className="text-muted-foreground"><span>×</span></button>
+                              </form>:<><span className="font-mono text-[11px] text-foreground">{m.nickname}</span>
+                                <button type="button" onClick={()=>{setEditingRosterId(m.id);setRosterNicknameEdits(prev=>({...prev,[m.id]:m.nickname}));}} className="text-flame hover:text-white" aria-label={`Editar nickname de ${m.nickname}`}>Editar</button></>}
                               <button
                                 onClick={() => setConfirm({ title: "Eliminar miembro", description: `¿Seguro que quieres eliminar a "${m.nickname}" del roster? Esta acción no se puede deshacer.`, onConfirm: () => removeMember(m.id) })}
                                 disabled={rmBusy}
