@@ -363,6 +363,7 @@ function StreamPackStudio(){
     try {const family="SoulUploadedFont";const url=URL.createObjectURL(file);const face=new FontFace(family,`url("${url}")`);await face.load();document.fonts.add(face);URL.revokeObjectURL(url);setFontFamily(family);setMessage("Tipografía cargada para esta sesión.");}
     catch {setMessage("No se pudo cargar la fuente. Usa un archivo TTF u OTF válido.");}
   };
+  const exportNames:Record<string,string>={"avi":"Imagen_de_Perfil","4cams":"Cuatro_Camaras_Invitados","tsn-3":"Iniciamos_Horizontal","tsn-4":"Iniciamos_Vertical","tsn-5":"Regresamos","tsn-6":"Finalizamos","tsn-7":"Gameplay_Horizontal_Con_Camara","tsn-8":"Gameplay_Horizontal_Sin_Camara","tsn-9":"Gameplay_Vertical_Con_Camara","tsn-10":"Gameplay_Vertical_Con_Camara_Version_2","tsn-11":"Gameplay_Vertical_Sin_Camara","tsn-12":"Gameplay_Vertical_Sin_Camara_Version_2","tsn-13":"Marco_Webcam","tsn-14":"Marco_Webcam_Barra"};
   const download=async()=>{
     setBusy(true);setMessage("");
     try{
@@ -371,7 +372,7 @@ function StreamPackStudio(){
       const c=await render(t,chosenName,(assets[t.id]||(available[t.id]?t.assetPath:undefined)),fontFamily,false,socials,guests);
       const blob=await new Promise<Blob|null>(resolve=>c.toBlob(resolve,"image/png"));
       if(!blob)throw Error("No se pudo crear el PNG");
-      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`${safeName(chosenName)}_${t.id}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
+      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`${safeName(chosenName)}_${exportNames[t.id]||safeName(t.name)}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
     }catch(e){setMessage(e instanceof Error?e.message:"Error de exportación");}finally{setBusy(false);}
   };
   const downloadPack=async()=>{
@@ -382,10 +383,10 @@ function StreamPackStudio(){
       if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
       const files:{name:string;bytes:Uint8Array}[]=[];
       for(const item of valid){
-        const canvas=await render(item,chosenName,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials);
+        const canvas=await render(item,chosenName,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials,guests);
         const blob=await new Promise<Blob|null>(resolve=>canvas.toBlob(resolve,"image/png"));
         if(!blob)throw Error("No se pudo generar "+item.name);
-        files.push({name:`${item.width>item.height*1.2?"OBS":item.height>item.width*1.2?"TikTok":"AVI"}/${item.category}/${safeName(chosenName)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
+        files.push({name:`${safeName(chosenName)}_${exportNames[item.id]||safeName(item.name)}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
       }
       const zip=buildZip(files);const url=URL.createObjectURL(zip);const a=document.createElement("a");
       a.href=url;a.download=`TheSoulNation_${safeName(chosenName)}_StreamPack.zip`;a.click();
