@@ -724,7 +724,7 @@ function AdminLivePage() {
             <SectionShell icon={Radio} title="Soul Live" subtitle="Estados en vivo administrados">
               <p className="text-sm text-foreground/70">Marca como «En vivo» únicamente a quienes estén transmitiendo. Este control es manual: no detecta automáticamente TikTok, Twitch o YouTube. Al terminar un directo, desactívalo.</p>
               <div className="space-y-3">
-                {[...new Map([...MEMBERS,...waves.map(w=>({id:w.name.toLowerCase().replace(/\s+/g,"-"),name:w.name,photo:w.photo_url}))].map(m=>[m.id,m])).values()].map(member=>{
+                {[...new Map([...MEMBERS.filter(m=>!hiddenSet.has(m.name.toUpperCase())),...waves.filter(w=>!hiddenSet.has(w.name.toUpperCase())).map(w=>({id:w.name.toLowerCase().replace(/\s+/g,"-"),name:w.name,photo:w.photo_url}))].map(m=>[m.id,m])).values()].map(member=>{
                   const entry=getLiveEntry(member.id);
                   return <div key={member.id} className="rounded-xl border border-flame/20 bg-blue-deep/30 p-3 sm:p-4 space-y-3">
                     <div className="flex items-center justify-between gap-3">
