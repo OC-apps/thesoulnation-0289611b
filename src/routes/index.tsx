@@ -240,6 +240,10 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
   return (
     <>
       <div className="soul-waves-collection mb-20 space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#F05E07]/30 bg-[#01039E]/10 px-5 py-4">
+          <div><p className="text-sm font-semibold text-white">StreamPack para Soul Waves</p><p className="text-xs text-white/70">Selecciona tu nickname oficial, agrega tus redes y descarga tus gráficos.</p></div>
+          <a href="/streampack" className="rounded-xl bg-[#F05E07] px-5 py-3 text-sm font-bold text-[#080b20]">Crear mi StreamPack</a>
+        </div>
         {(() => {
           const leaderIdx = WAVES_ALL.findIndex((c) => c.name === "SOUL MAVERICK Z");
           const ordered = [
