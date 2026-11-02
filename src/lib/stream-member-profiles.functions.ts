@@ -18,7 +18,8 @@ export const saveStreamMemberProfile=createServerFn({method:"POST"})
     const oldKey=data.memberKey.trim().toUpperCase(),name=data.nickname.trim().toUpperCase();
     if(!name.startsWith("SOUL "))throw Error("El nickname debe comenzar con SOUL ");
     if(name!==oldKey){const {data:existing}=await supabaseAdmin.from("roster_members").select("id").eq("nickname",name).maybeSingle();if(existing)throw Error("Ese nickname ya está en uso.");}
-    const cleaned=Object.fromEntries(Object.entries(data.socials).map(([k,v])=>[k,v.trim()]));
+    const {data:previousProfile}=await supabaseAdmin.from("stream_member_profiles").select("socials").eq("member_key",oldKey).maybeSingle();
+    const cleaned={...((previousProfile?.socials as Record<string,string>|null)??{}),...Object.fromEntries(Object.entries(data.socials).map(([k,v])=>[k,v.trim()]))};
     if(data.memberId&&data.category!=="waves"){
       const {error}=await supabaseAdmin.from("roster_members").update({nickname:name}).eq("id",data.memberId).eq("category",data.category);
       if(error)throw Error(error.message);
