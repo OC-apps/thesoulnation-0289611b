@@ -83,11 +83,13 @@ async function render(template:Template, nickname:string, asset:string|undefined
   for(let i=0;i<24;i++) {
     const mid=(low+high)/2;
     context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
+    (context as CanvasRenderingContext2D & {letterSpacing:string}).letterSpacing=`${a.tracking??0}px`;
     const measure=context.measureText(label);
     const height=(measure.actualBoundingBoxAscent || mid*.85)+(measure.actualBoundingBoxDescent || mid*.25);
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
   context.font=`900 italic ${fixedFont??low}px "${fontFamily}", Arial, sans-serif`;
+  (context as CanvasRenderingContext2D & {letterSpacing:string}).letterSpacing=`${a.tracking??0}px`;
   context.textAlign=template.id==="avi"?"center":a.align;
   // Align the visible glyph bottom, not the font em-box (which leaves a gap).
   context.textBaseline="alphabetic";
@@ -100,7 +102,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
   if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,textY);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,textY);}
   else {if((a.strokeWidth??0)>0)context.strokeText(label,x,textY);context.fillText(label,x,textY);}
-  context.shadowBlur=0;
+  context.shadowBlur=0;(context as CanvasRenderingContext2D & {letterSpacing:string}).letterSpacing="0px";
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
 
@@ -371,7 +373,7 @@ function StreamPackStudio(){
         </section>
         <section className="min-w-0 space-y-4">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
-            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]">{editor ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>:<span>Preparando vista previa…</span>}</div>
+            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]" style={simulator==="obs"?{background:"linear-gradient(125deg,#14243f 0%,#32485d 35%,#262b34 70%,#131824 100%)"}:simulator==="tiktok"?{background:"linear-gradient(160deg,#0e0c22 0%,#21183c 45%,#0c1020 100%)"}:{}}>{editor ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<div className="relative w-full"><img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>{simulator!=="none"&&<div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-2 text-[10px] text-white/80">{simulator==="obs"?"Simulación OBS • escena de juego":"Simulación TikTok • cámara y chat"}</div>}</div>:<span>Preparando vista previa…</span>}</div>
             <div className="flex flex-wrap gap-2 pt-2"><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("none")}>Fondo transparente</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("obs")}>Simular OBS</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("tiktok")}>Simular TikTok</button></div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div>
