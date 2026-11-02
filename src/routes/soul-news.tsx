@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowUpRight, Flame, Newspaper, Search, ShieldCheck, Clock3 
 
 type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string };
 const API = "https://quscgfasziijdjyixsex.supabase.co/rest/v1/soul_news_articles";
-const KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+const KEY = "sb_publishable_AT5FDfqPulWKJOHrDsag1Q_9hlAVrl6";
 const categories = ["Todas", "Oficial", "E-Day", "Comunidad", "Competitivo", "Análisis"];
 const date = (s:string) => new Intl.DateTimeFormat("es-MX",{day:"numeric",month:"long",year:"numeric"}).format(new Date(s));
 const safeUrl = (s:string|null|undefined) => s && /^https:\/\//i.test(s) ? s : undefined;
