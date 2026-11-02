@@ -642,7 +642,11 @@ function IndexContent() {
             {href:"#reclutamiento",title:"Únete",short:"Únete",sub:"Forma parte de Soul",image:"/quick-join-2026.jpg"},
           ].map(item => <a key={item.href} href={item.href} className="soul-home-tile" aria-label={item.title}><img src={item.image} alt="" loading="lazy" /><span><strong><span className="soul-tile-title-full">{item.title}</span><span className="soul-tile-title-small" aria-hidden="true">{item.short}</span></strong><small>{item.sub}</small></span><span aria-hidden="true" className="soul-tile-arrow">↗</span></a>)}
         </div>
-        <div className="mx-auto max-w-6xl px-6 pb-4">
+        <div className="mx-auto grid max-w-6xl gap-3 px-6 pb-4 md:grid-cols-2">
+          <a href="/soul-news" className="group flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#F05E07]/25 bg-[#091540]/80 px-5 py-4 transition hover:border-[#F05E07]/70 hover:bg-[#0c1c52]">
+            <span className="min-w-0"><strong className="block text-sm font-bold uppercase tracking-widest text-white">Soul News</strong><small className="mt-1 block text-xs text-slate-300">Noticias de Gears of War, comunidad y Gears al Carbón</small></span>
+            <span className="shrink-0 text-sm font-semibold text-[#F05E07]">Leer noticias ↗</span>
+          </a>
           <a href="/streampack" className="group flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#F05E07]/25 bg-[#091540]/80 px-5 py-4 transition hover:border-[#F05E07]/70 hover:bg-[#0c1c52]">
             <span className="min-w-0"><strong className="block text-sm font-bold uppercase tracking-widest text-white">StreamPack Studio</strong><small className="mt-1 block text-xs text-slate-300">Personaliza tus overlays y marcos para transmisión</small></span>
             <span className="shrink-0 text-sm font-semibold text-[#F05E07]">Abrir estudio ↗</span>
