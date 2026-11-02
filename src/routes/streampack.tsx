@@ -17,7 +17,7 @@ export const Route = createFileRoute("/streampack")({
 });
 
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; tracking?:number; strokeWidth?:number; strokeColor?:string; shadowBlur?:number; shadowColor?:string; align: "center" | "left" | "right" };
-type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string }; 
+type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string; anchorTo?:string; anchorGap?:number }; 
 type Template = { assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
 {id:"avi",name:"AVI",width:2048,height:2048,category:"avi",membersOnly:false,assetPath:"/streampack/templates/TSN_AVI_1x1.png",area:{x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center" as const}]},
@@ -223,6 +223,10 @@ function StreamPackStudio(){
   const activeZone=t.zones?.find(z=>z.id===zoneId);
   const updateZone=(patch:Partial<Zone>)=>{if(!activeZone)return;update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)});};
   const updateArea=(patch:Partial<Area>)=>activeZone ? (activeZone.locked?undefined:update({zones:t.zones!.map(z=>{
+    if(z.anchorTo===zoneId && (patch.x!==undefined||patch.y!==undefined||patch.width!==undefined||patch.height!==undefined)){
+      const next={...activeZone,...patch};
+      return {...z,x:Math.max(0,Math.min(t.width-z.width,next.x)),y:Math.max(0,Math.min(t.height-z.height,next.y-(z.anchorGap??4)-z.height))};
+    }
     if(z.id!==zoneId)return z;
     if(t.id==="4cams"&&/^guest-[123]$/.test(z.id)){
       const {x,y}=patch;return {...z,...(x===undefined?{}:{x}),...(y===undefined?{}:{y})};
@@ -294,6 +298,20 @@ function StreamPackStudio(){
     const id="group-"+Date.now();recordHistory();
     update({zones:(t.zones||[]).map(z=>multiSelected.includes(z.id)?{...z,groupId:id}:z)});
     setMessage("Capas agrupadas para organización.");
+  };
+  const applyTSNComposition=()=>{
+    if(!adminVerified)return;
+    const main=t.zones?.find(z=>z.kind==="nickname");
+    if(!main){setMessage("Agrega primero una capa Nickname.");return;}
+    const existing=t.zones?.find(z=>z.kind==="soul"&&(z.anchorTo==="nickname"||z.label==="SOUL"));
+    const height=Math.max(22,Math.round(main.height*.38));
+    const width=Math.min(t.width,Math.max(100,Math.round(main.width*.35)));
+    const gap=Math.max(0,Math.round(main.height*.04));
+    const soul:Zone={...(existing||main),id:existing?.id||"soul-tsn",label:"SOUL",kind:"soul",anchorTo:"nickname",anchorGap:gap,x:main.x,y:Math.max(0,main.y-gap-height),width,height,maxFont:Math.round(main.maxFont*.4),minFont:8,padding:0,color:"#F05E07",align:"left"};
+    recordHistory();
+    update({zones:[...(t.zones||[]).filter(z=>z.id!==soul.id),soul]});
+    setZoneId("nickname");
+    setMessage("Composición TSN aplicada: SOUL arriba del nickname y vinculado a su posición.");
   };
   const copyStyle=()=>{if(!activeZone)return;const {width,height,maxFont,minFont,padding,align,color}=activeZone;setCopiedStyle({width,height,maxFont,minFont,padding,align,color});};
   const pasteStyle=()=>{if(!activeZone||!copiedStyle)return;updateZone({...copiedStyle,width:Math.min(copiedStyle.width??activeZone.width,t.width-activeZone.x),height:Math.min(copiedStyle.height??activeZone.height,t.height-activeZone.y)});};
@@ -408,7 +426,7 @@ function StreamPackStudio(){
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div>
           {editor&&adminVerified&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
-            <div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">Editor local de gráficos</h2><button onClick={createTemplate} className="text-sm text-[#F05E07]">+ Nueva plantilla</button></div>
+            <div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">Editor local de gráficos</h2><button type="button" onClick={applyTSNComposition} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-bold text-black">Aplicar composición TSN · SOUL + Nickname</button><button onClick={createTemplate} className="text-sm text-[#F05E07]">+ Nueva plantilla</button></div>
             <p className="text-xs text-amber-200">Edita las zonas directamente sobre la vista previa superior. Los PNG permanecen solo durante esta sesión. Exporta un JSON para conservar posiciones y márgenes; no incluye imágenes ni habilita descargas privadas.</p>
             <div className="rounded-xl border border-white/15 p-3 space-y-2"><div className="flex items-center justify-between"><p className="text-sm font-semibold">Versiones de mi proyecto</p><button type="button" onClick={saveVersion} className="rounded-lg bg-white/10 px-3 py-2 text-xs">Guardar versión</button></div><p className="text-xs text-slate-400">Se guardan hasta 8 versiones en este navegador; no contienen PNG.</p>{versions.map((v,i)=><button type="button" key={i} onClick={()=>restoreVersion(i)} className="block w-full rounded-lg border border-white/15 px-3 py-2 text-left text-xs">{v.date} · Restaurar</button>)}</div>
             <div className="flex flex-wrap gap-2"><button onClick={saveConfiguration} className="rounded-lg bg-blue-700 px-3 py-2 text-sm">Exportar todas las plantillas</button><label className="cursor-pointer rounded-lg border border-blue-500/50 px-3 py-2 text-sm">Importar todas las plantillas<input type="file" accept=".json,application/json" className="hidden" onChange={e=>void loadConfiguration(e.target.files?.[0])}/></label></div>
