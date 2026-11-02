@@ -180,6 +180,7 @@ function StreamPackStudio(){
   const redoRef=useRef<Template[][]>([]);
   const templatesRef=useRef<Template[]>([]);
   const nextIdRef=useRef(0);
+  const [adminVerified,setAdminVerified]=useState(false);
   const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
   const [selected,setSelected]=useState("avi");
   const [officialLoaded,setOfficialLoaded]=useState(false);
@@ -213,7 +214,6 @@ function StreamPackStudio(){
   const [message,setMessage]=useState("");
   const [busy,setBusy]=useState(false);
   const [editor,setEditor]=useState(false);
-  const [adminVerified,setAdminVerified]=useState(false);
   useEffect(()=>{let cancelled=false;const check=async()=>{const pass=sessionStorage.getItem("admin-live-pw");if(!pass)return;try{const result=await verifyAdminPassword({data:{password:pass}});if(!cancelled)setAdminVerified(result.ok);}catch{if(!cancelled)setAdminVerified(false);}};void check();return()=>{cancelled=true;};},[]);
   useEffect(()=>{if(!adminVerified)setEditor(false);},[adminVerified]);
   const [packBusy,setPackBusy]=useState(false);
