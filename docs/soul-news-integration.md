@@ -23,3 +23,12 @@ La Edge Function `soul-news-ingest` está desplegada en el proyecto Supabase ind
 6. Verificar el despliegue de Cloudflare y navegación a `/soul-news`.
 
 No colocar claves de servicio en el navegador ni en el repositorio.
+
+## Actualización de ejecución — 2026-11-02
+
+- Cron `soul-news-rss-daily` configurado a `0 19 * * *` UTC.
+- Token de ingesta generado aleatoriamente y almacenado en Supabase Vault; la función valida el SHA-256 frente a una tabla con RLS y sin acceso de anon/authenticated.
+- Función `soul-news-ingest` versión 2 desplegada y probada con respuesta HTTP 200 (`processed:17, failed:0`).
+- Consulta posterior: 9 borradores únicos en `soul_news_articles` (las URLs duplicadas entre feeds se consolidan).
+- El sitio público sigue mostrando exclusivamente `status='published'`.
+- Pendiente: panel editorial, aprobación, redacción IA y conector X autorizado.
