@@ -96,6 +96,8 @@ async function render(template:Template, nickname:string, asset:string|undefined
   context.textBaseline="alphabetic";
   const glyphMetrics=context.measureText(label);
   const textY=a.y+a.height-Math.max(0,glyphMetrics.actualBoundingBoxDescent);
+  const visibleTop=textY-glyphMetrics.actualBoundingBoxAscent;
+  const visibleLeft=a.align==="left"?a.x+inset:undefined;
   context.fillStyle=a.color;
   context.shadowColor=a.shadowColor??"#000000";context.shadowBlur=a.shadowBlur??0;
   context.lineWidth=a.strokeWidth??0;context.strokeStyle=a.strokeColor??"#000000";
@@ -105,6 +107,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   else {if((a.strokeWidth??0)>0)context.strokeText(label,x,textY);context.fillText(label,x,textY);}
   context.shadowBlur=0;(context as CanvasRenderingContext2D & {letterSpacing:string}).letterSpacing="0px";
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
+  return {top:visibleTop,left:visibleLeft??a.x};
   };
 
   if(template.zones){
@@ -133,8 +136,18 @@ async function render(template:Template, nickname:string, asset:string|undefined
       const linked=master&&(zone.id==="nickname"||/^guest-[123]$/.test(zone.id));
       const paint=linked?{...zone,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:zone;
       if(zone.kind==="social-icon"){if((socials[zone.label.replace(/^Icono /,"")]||"").trim())drawSocialIcon(context,zone);continue;}
-      if(zone.kind==="nickname")drawText(paint,displayName,true,linked?groupFont:undefined);
-      else if(zone.kind==="soul")drawText(paint,"SOUL");
+      if(zone.kind==="nickname"){
+        const bounds=drawText(paint,displayName,true,linked?groupFont:undefined);
+        // Anchor SOUL to the actual ink, not the top of the editable rectangle.
+        const labels=template.zones.filter(z=>z.kind==="soul"&&z.anchorTo===zone.id&&!z.hidden);
+        for(const soul of labels){
+          if(!bounds)continue;
+          const gap=soul.anchorGap??4;
+          const positioned={...soul,x:Math.max(0,bounds.left),y:Math.max(0,bounds.top-gap-soul.height)};
+          drawText(positioned,"SOUL");
+        }
+      }
+      else if(zone.kind==="soul"){if(!zone.anchorTo)drawText(paint,"SOUL");}
       else if(zone.kind==="social"){const account=(socials[zone.label]||"").trim();if(account)drawText(paint,account.startsWith("@")?account:"@"+account);}
       else if(zone.kind==="custom")drawText(paint,zone.text||"",false,linked?groupFont:undefined);
     }
