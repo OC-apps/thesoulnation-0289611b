@@ -47,6 +47,14 @@ export const updateWavePhoto = createServerFn({ method: "POST" })
         .update({ photo_url: newUrl })
         .eq("id", data.id);
       if (error) throw new Error(error.message);
+      // Keep the uploaded image canonical for every consumer (admin, roster, StreamPack).
+      const {data:updatedMember}=await supabaseAdmin.from("waves_members").select("name").eq("id",data.id).maybeSingle();
+      if(updatedMember?.name){
+        const {error:syncError}=await supabaseAdmin.from("waves_socials").upsert({
+          name:updatedMember.name.trim().toUpperCase(),photo_url:newUrl
+        },{onConflict:"name"});
+        if(syncError)throw new Error(syncError.message);
+      }
       if (row?.photo_url) {
         const m = row.photo_url.match(/\/wave-photos\/(.+)$/);
         if (m) await supabaseAdmin.storage.from("wave-photos").remove([m[1]]).catch(() => {});
