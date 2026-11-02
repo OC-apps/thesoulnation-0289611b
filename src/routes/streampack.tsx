@@ -20,7 +20,7 @@ type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"c
 type Template = { assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
 {id:"avi",name:"AVI",width:2048,height:2048,category:"avi",membersOnly:false,assetPath:"/streampack/templates/TSN_AVI_1x1.png",area:{x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center" as const}]},
-{id:"4cams",name:"Cuatro invitados",width:1920,height:1080,category:"4cams",membersOnly:false,assetPath:"/streampack/templates/TSN_Overlay_16x9_4Cams.png",area:{x:384,y:886,width:1152,height:130,maxFont:86,minFont:8,color:"#FFFFFF",align:"center"},zones:[0,1,2,3].map(i=>({id:`guest-${i+1}`,kind:"custom" as const,label:`Invitado ${i+1}`,text:`Invitado ${i+1}`,x:130+i*455,y:930,width:390,height:70,maxFont:60,minFont:8,color:"#FFFFFF",align:"center" as const}))},
+{id:"4cams",name:"Cuatro invitados",width:1920,height:1080,category:"4cams",membersOnly:false,assetPath:"/streampack/templates/TSN_Overlay_16x9_4Cams.png",area:{x:130,y:930,width:390,height:70,maxFont:60,minFont:8,color:"#FFFFFF",align:"left"},zones:[0,1,2,3].map(i=>({id:i===0?"nickname":`guest-${i}`,kind:i===0?"nickname" as const:"custom" as const,label:i===0?"Nickname":`Invitado ${i}`,text:i===0?undefined:`Invitado ${i}`,x:130+i*455,y:930,width:390,height:70,maxFont:60,minFont:8,padding:0,color:"#FFFFFF",align:"left" as const}))},
 {id:"tsn-3",name:"Iniciamos · Horizontal",width:1920,height:1080,category:"static",membersOnly:false,assetPath:"/streampack/templates/TSN_Iniciamos_16X9.png",area:{x:384,y:886,width:1152,height:130,maxFont:86,minFont:8,color:"#FFFFFF",align:"center"},zones:[]},
 {id:"tsn-4",name:"Iniciamos · Vertical",width:941,height:1672,category:"static",membersOnly:false,assetPath:"/streampack/templates/TSN_Iniciamos_9x16.png",area:{x:188,y:1371,width:565,height:201,maxFont:134,minFont:8,color:"#FFFFFF",align:"center"},zones:[]},
 {id:"tsn-5",name:"Regresamos",width:1920,height:1080,category:"static",membersOnly:false,assetPath:"/streampack/templates/TSN_Regresamos_16X9.png",area:{x:384,y:886,width:1152,height:130,maxFont:86,minFont:8,color:"#FFFFFF",align:"center"},zones:[]},
@@ -44,7 +44,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\s+/i,"") || "NICKNAME";
   await document.fonts.load(`900 italic 40px "${fontFamily}"`);
-  const drawText=(a:Area,label:string,highlightFinal=false)=>{
+  const drawText=(a:Area,label:string,highlightFinal=false,fixedFont?:number)=>{
   if(!label.trim())return;
   const inset=Math.min((a.padding??8),Math.max(0,Math.min(a.width,a.height)/2-1));
   let low=1, high=Math.max(2,a.maxFont);
@@ -71,7 +71,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
     const height=(measure.actualBoundingBoxAscent || mid*.85)+(measure.actualBoundingBoxDescent || mid*.25);
     if(measure.width<=permittedWidth && height<=permittedHeight)low=mid; else high=mid;
   }
-  context.font=`900 italic ${low}px "${fontFamily}", Arial, sans-serif`;
+  context.font=`900 italic ${fixedFont??low}px "${fontFamily}", Arial, sans-serif`;
   context.textAlign=template.id==="avi"?"center":a.align;
   // Align the visible glyph bottom, not the font em-box (which leaves a gap).
   context.textBaseline="alphabetic";
@@ -86,12 +86,34 @@ async function render(template:Template, nickname:string, asset:string|undefined
   };
 
   if(template.zones){
+    const guestGroup=template.id==="4cams"?template.zones.filter(z=>z.id==="nickname"||/^guest-[123]$/.test(z.id)):[];
+    const master=guestGroup.find(z=>z.id==="nickname");
+    const guestText=(z:Zone)=>z.kind==="nickname"?displayName:(z.text||"");
+    // All four boxes share a single font size, limited by the longest visible name.
+    let groupFont: number|undefined;
+    if(master){
+      let low=1,high=Math.max(2,master.maxFont);
+      for(let i=0;i<24;i++){
+        const mid=(low+high)/2;
+        context.font=`900 italic ${mid}px "${fontFamily}", Arial, sans-serif`;
+        const fits=guestGroup.filter(z=>!z.hidden&&guestText(z).trim()).every(z=>{
+          const inset=Math.min(master.padding??0,Math.max(0,Math.min(z.width,z.height)/2-1));
+          const metrics=context.measureText(guestText(z));
+          const h=(metrics.actualBoundingBoxAscent||mid*.85)+(metrics.actualBoundingBoxDescent||mid*.25);
+          return metrics.width<=z.width-2*inset&&h<=z.height-2*inset;
+        });
+        if(fits)low=mid;else high=mid;
+      }
+      groupFont=low;
+    }
     for(const zone of template.zones){
       if(zone.hidden)continue;
-      if(zone.kind==="nickname")drawText(zone,displayName,true);
-      else if(zone.kind==="soul")drawText(zone,"SOUL");
-      else if(zone.kind==="social")drawText(zone,socials[zone.label]||"");
-      else if(zone.kind==="custom")drawText(zone,zone.text||"");
+      const linked=master&&(zone.id==="nickname"||/^guest-[123]$/.test(zone.id));
+      const paint=linked?{...zone,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:zone;
+      if(zone.kind==="nickname")drawText(paint,displayName,true,linked?groupFont:undefined);
+      else if(zone.kind==="soul")drawText(paint,"SOUL");
+      else if(zone.kind==="social")drawText(paint,socials[zone.label]||"");
+      else if(zone.kind==="custom")drawText(paint,zone.text||"",false,linked?groupFont:undefined);
     }
   }else drawText(a,displayName,true);
   return canvas;
@@ -122,10 +144,23 @@ function StreamPackStudio(){
   const [editor,setEditor]=useState(false);
   const [packBusy,setPackBusy]=useState(false);
   const t=templates.find(item=>item.id===selected) || templates[0];
-  const update=(patch:Partial<Template>)=>setTemplates(current=>current.map(x=>x.id===t.id?{...x,...patch}:x));
+  const update=(patch:Partial<Template>)=>setTemplates(current=>current.map(x=>{
+    if(x.id!==t.id)return x;
+    if(x.id!=="4cams"||!patch.zones)return {...x,...patch};
+    const master=patch.zones.find(z=>z.id==="nickname");
+    if(!master)return {...x,...patch};
+    const linked=patch.zones.map(z=>/^guest-[123]$/.test(z.id)?{...z,width:master.width,height:master.height,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:{...z,align:z.id==="nickname"?"left" as const:z.align});
+    return {...x,...patch,zones:linked};
+  }));
   const activeZone=t.zones?.find(z=>z.id===zoneId);
   const updateZone=(patch:Partial<Zone>)=>{if(!activeZone)return;update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)});};
-  const updateArea=(patch:Partial<Area>)=>activeZone ? (activeZone.locked?undefined:update({zones:t.zones!.map(z=>z.id===zoneId?{...z,...patch}:z)})) : update({area:{...t.area,...patch}});
+  const updateArea=(patch:Partial<Area>)=>activeZone ? (activeZone.locked?undefined:update({zones:t.zones!.map(z=>{
+    if(z.id!==zoneId)return z;
+    if(t.id==="4cams"&&/^guest-[123]$/.test(z.id)){
+      const {x,y}=patch;return {...z,...(x===undefined?{}:{x}),...(y===undefined?{}:{y})};
+    }
+    return {...z,...patch};
+  })})) : update({area:{...t.area,...patch}});
   const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
   const copyStyle=()=>{if(!activeZone)return;const {width,height,maxFont,minFont,padding,align,color}=activeZone;setCopiedStyle({width,height,maxFont,minFont,padding,align,color});};
   const pasteStyle=()=>{if(!activeZone||!copiedStyle)return;updateZone({...copiedStyle,width:Math.min(copiedStyle.width??activeZone.width,t.width-activeZone.x),height:Math.min(copiedStyle.height??activeZone.height,t.height-activeZone.y)});};
