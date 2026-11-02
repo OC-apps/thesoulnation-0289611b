@@ -15,7 +15,7 @@ export const Route = createFileRoute("/streampack")({
   component: StreamPackStudio,
 });
 
-type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; align: "center" | "left" | "right" };
+type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; tracking?:number; strokeWidth?:number; strokeColor?:string; shadowBlur?:number; shadowColor?:string; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"; text?:string; hidden?:boolean; locked?:boolean }; 
 type Template = { assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
@@ -94,10 +94,13 @@ async function render(template:Template, nickname:string, asset:string|undefined
   const glyphMetrics=context.measureText(label);
   const textY=a.y+a.height-Math.max(0,glyphMetrics.actualBoundingBoxDescent);
   context.fillStyle=a.color;
+  context.shadowColor=a.shadowColor??"#000000";context.shadowBlur=a.shadowBlur??0;
+  context.lineWidth=a.strokeWidth??0;context.strokeStyle=a.strokeColor??"#000000";
   const x=template.id==="avi"?textCenterX:a.align==="left"?a.x+inset:a.align==="right"?a.x+a.width-inset:a.x+a.width/2;
   const pieces=highlightFinal ? label.match(/^(.*\S)\s+([A-Z])$/i) : null;
   if(pieces){const left=pieces[1]+" ",right=pieces[2];const allWidth=context.measureText(label).width;const leftWidth=context.measureText(left).width;const start=template.id==="avi"||a.align==="center"?x-allWidth/2:a.align==="right"?x-allWidth:x;context.textAlign="left";context.fillStyle="#FFFFFF";context.fillText(left,start,textY);context.fillStyle="#F05E07";context.fillText(right,start+leftWidth,textY);}
-  else context.fillText(label,x,textY);
+  else {if((a.strokeWidth??0)>0)context.strokeText(label,x,textY);context.fillText(label,x,textY);}
+  context.shadowBlur=0;
   if(showGuides){context.strokeStyle="#F05E07";context.lineWidth=Math.max(2,canvas.width/480);context.setLineDash([14,10]);context.strokeRect(a.x,a.y,a.width,a.height);context.setLineDash([]);}
   };
 
@@ -146,6 +149,8 @@ function StreamPackStudio(){
   const [socials,setSocials]=useState<Record<string,string>>({Twitch:"",TikTok:"",YouTube:"",Instagram:""});
   const [zoneId,setZoneId]=useState("nickname");
   const [groupSameSocials,setGroupSameSocials]=useState(true);
+  const [simulator,setSimulator]=useState<"none"|"obs"|"tiktok">("none");
+  const [selectedExport,setSelectedExport]=useState<string[]>(START.map(x=>x.id));
   const clipboardRef=useRef<Zone|null>(null);
   const historyRef=useRef<Template[][]>([]);
   const redoRef=useRef<Template[][]>([]);
@@ -153,6 +158,9 @@ function StreamPackStudio(){
   const nextIdRef=useRef(0);
   const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
   const [selected,setSelected]=useState("avi");
+  const [restored,setRestored]=useState(false);
+  useEffect(()=>{try{const raw=localStorage.getItem("tsn-streampack-workspace-v3");if(raw){const data=JSON.parse(raw);if(Array.isArray(data.templates)&&data.templates.length&&data.templates.length<101)setTemplates(data.templates);if(data.socials&&typeof data.socials==="object")setSocials(data.socials);}}catch{}finally{setRestored(true);}},[]);
+  useEffect(()=>{if(!restored)return;try{localStorage.setItem("tsn-streampack-workspace-v3",JSON.stringify({templates,socials,savedAt:new Date().toISOString()}));}catch{}},[templates,socials,restored]);
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
   useEffect(()=>{let cancelled=false;Promise.all(START.map(async item=>{try{const response=await fetch(item.assetPath||"",{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}})).then(entries=>{if(!cancelled)setAvailable(Object.fromEntries(entries));});return()=>{cancelled=true;};},[]);
@@ -289,14 +297,14 @@ function StreamPackStudio(){
     setPackBusy(true);setMessage("");
     try{
       if(!selectedIsOfficial)throw Error("Selecciona un integrante del roster oficial.");
-      const valid=templates.filter(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]));
+      const valid=templates.filter(item=>selectedExport.includes(item.id)&&!item.membersOnly && Boolean(assets[item.id]||available[item.id]));
       if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
       const files:{name:string;bytes:Uint8Array}[]=[];
       for(const item of valid){
         const canvas=await render(item,chosenName,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials);
         const blob=await new Promise<Blob|null>(resolve=>canvas.toBlob(resolve,"image/png"));
         if(!blob)throw Error("No se pudo generar "+item.name);
-        files.push({name:`${item.category}/${safeName(chosenName)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
+        files.push({name:`${item.width>item.height*1.2?"OBS":item.height>item.width*1.2?"TikTok":"AVI"}/${item.category}/${safeName(chosenName)}_${item.id}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
       }
       const zip=buildZip(files);const url=URL.createObjectURL(zip);const a=document.createElement("a");
       a.href=url;a.download=`TheSoulNation_${safeName(chosenName)}_StreamPack.zip`;a.click();
@@ -354,6 +362,7 @@ function StreamPackStudio(){
             <p className="text-xs text-slate-400">{selectedIsOfficial?`Seleccionado: ${chosenName}`:"Solo se pueden generar paquetes con nombres del roster oficial."}</p>
             <p className="text-xs text-amber-200">Esta selección no verifica tu identidad: cualquier visitante podría escoger el nombre de otro miembro. Para impedir suplantaciones se requiere un acceso verificado por integrante.</p></div>
           <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
+          <div className="rounded-xl border border-white/15 p-3 space-y-2"><p className="text-sm font-semibold">Exportación por piezas</p><div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedExport(templates.map(x=>x.id))}>Todas</button><button className="text-xs underline" onClick={()=>setSelectedExport([])}>Ninguna</button></div><div className="grid grid-cols-2 gap-2">{templates.map(item=><label key={item.id} className="flex gap-2 text-xs"><input type="checkbox" checked={selectedExport.includes(item.id)} onChange={e=>setSelectedExport(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>{item.name}</label>)}</div></div>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
           <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
           <button onClick={download} disabled={busy || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
@@ -363,6 +372,7 @@ function StreamPackStudio(){
         <section className="min-w-0 space-y-4">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
             <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]">{editor ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>:<span>Preparando vista previa…</span>}</div>
+            <div className="flex flex-wrap gap-2 pt-2"><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("none")}>Fondo transparente</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("obs")}>Simular OBS</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("tiktok")}>Simular TikTok</button></div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div>
           {editor&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
@@ -385,6 +395,11 @@ function StreamPackStudio(){
                 {["The Soul Nation","Arial","SoulUploadedFont","Anton","Barlow Condensed","Bebas Neue","Oswald","Rajdhani","Roboto Condensed"].map(font=><option key={font} value={font}>{font==="SoulUploadedFont"?"The Soul Nation (fuente cargada)":font}</option>)}
               </select>
               <p className="text-xs text-slate-400">La fuente oficial está incluida y seleccionada por defecto. Las Google Fonts requieren conexión.</p>
+              <div className="grid grid-cols-2 gap-2">
+                {([{key:"tracking",label:"Espaciado (px)",max:20},{key:"strokeWidth",label:"Contorno (px)",max:12},{key:"shadowBlur",label:"Sombra (px)",max:40}] as const).map(setting=><label key={setting.key} className="text-xs text-slate-300">{setting.label}<input type="number" min={0} max={setting.max} value={(activeZone||t.area)[setting.key]??0} onChange={e=>updateArea({[setting.key]:Math.min(setting.max,Math.max(0,Number(e.target.value)))} as Partial<Area>)} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2"/></label>)}
+                <label className="text-xs text-slate-300">Color contorno<input type="color" value={(activeZone||t.area).strokeColor??"#000000"} onChange={e=>updateArea({strokeColor:e.target.value})}/></label>
+                <label className="text-xs text-slate-300">Color sombra<input type="color" value={(activeZone||t.area).shadowColor??"#000000"} onChange={e=>updateArea({shadowColor:e.target.value})}/></label>
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({x:Math.round((t.width-(activeZone||t.area).width)/2),align:"center"})}>Centrar horizontal</button>
                 <button className="rounded-lg border border-white/20 px-2 py-2 text-xs hover:bg-white/10" onClick={()=>updateArea({y:Math.round((t.height-(activeZone||t.area).height)/2)})}>Centrar vertical</button>
