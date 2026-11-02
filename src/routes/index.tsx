@@ -195,7 +195,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
       return {
         ...w,
         socials: mergeSocials(w),
-        photo: extra?.photo_url || w.photo,
+        photo: [extra?.photo_url,w.photo].find(url=>url?.includes("/storage/v1/object/public/wave-photos/")) || extra?.photo_url || w.photo,
         bio: extra?.bio || w.bio,
         redes: extra?.redes || w.redes,
       };
