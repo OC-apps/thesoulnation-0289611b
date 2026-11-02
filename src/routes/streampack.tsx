@@ -6,6 +6,7 @@ import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
 import { useRoster } from "@/hooks/use-roster";
 import { useWavesMembers } from "@/hooks/use-waves-members";
 import { CURRENT_WAVES } from "@/lib/roster-current";
+import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 
 export const Route = createFileRoute("/streampack")({
   head: () => ({ links:[{rel:"stylesheet",href:"https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@1,700;1,900&family=Bebas+Neue&family=Oswald:wght@700&family=Rajdhani:wght@700&family=Roboto+Condensed:ital,wght@1,900&display=swap"}], meta: [
@@ -183,6 +184,9 @@ function StreamPackStudio(){
   const [message,setMessage]=useState("");
   const [busy,setBusy]=useState(false);
   const [editor,setEditor]=useState(false);
+  const [adminVerified,setAdminVerified]=useState(false);
+  useEffect(()=>{let cancelled=false;const check=async()=>{const pass=sessionStorage.getItem("admin-live-pw");if(!pass)return;try{const result=await verifyAdminPassword({data:{password:pass}});if(!cancelled)setAdminVerified(result.ok);}catch{if(!cancelled)setAdminVerified(false);}};void check();return()=>{cancelled=true;};},[]);
+  useEffect(()=>{if(!adminVerified)setEditor(false);},[adminVerified]);
   const [packBusy,setPackBusy]=useState(false);
   const t=templates.find(item=>item.id===selected) || templates[0];
   templatesRef.current=templates;
@@ -192,7 +196,7 @@ function StreamPackStudio(){
   const pasteElement=()=>{const source=clipboardRef.current;if(!source)return;recordHistory();const id=`pasted-${++nextIdRef.current}`;const zone={...source,id,label:source.label+" copia",x:Math.max(0,Math.min(t.width-source.width,source.x+25)),y:Math.max(0,Math.min(t.height-source.height,source.y+25))};update({zones:[...(t.zones||[]),zone]});setZoneId(id);};
   const duplicateElement=()=>{if(!activeZone||activeZone.locked)return;clipboardRef.current={...activeZone};pasteElement();};
   useEffect(()=>{
-    if(!editor)return;
+    if(!editor||!adminVerified)return;
     const onKey=(event:KeyboardEvent)=>{
       const element=event.target as HTMLElement|null;
       if(element?.closest('input, textarea, select, [contenteditable="true"]'))return;
@@ -348,7 +352,7 @@ function StreamPackStudio(){
     setTimeout(()=>URL.revokeObjectURL(url),2000);
     setMessage(`Se exportaron las ${templates.length} plantillas con todas sus capas. El JSON no contiene los archivos PNG ni las fuentes TTF.`);
   };
-  const loadConfiguration=async(file?:File)=>{
+  const loadConfiguration=async(file?:File)=>{if(!adminVerified)return;
     if(!file)return;
     try{
       if(file.size>2_000_000)throw Error("Archivo demasiado grande para una configuración.");
@@ -369,7 +373,7 @@ function StreamPackStudio(){
       setMessage(`Configuración global importada: ${incoming.length} plantillas restauradas. Las imágenes deben existir en el sitio o cargarse por separado.`);
     }catch(e){setMessage(e instanceof Error?e.message:"No se pudo importar el JSON.");}
   };
-  const createTemplate=()=>{const id=`custom-${Date.now()}`;setTemplates(p=>[...p,{...START[0],id,name:"Nuevo gráfico",membersOnly:false}]);setSelected(id);setEditor(true);};
+  const createTemplate=()=>{if(!adminVerified)return;const id=`custom-${Date.now()}`;setTemplates(p=>[...p,{...START[0],id,name:"Nuevo gráfico",membersOnly:false}]);setSelected(id);setEditor(true);};
   const setNumber=(key:keyof Area,value:number)=>{
     if(!Number.isFinite(value))return;
     const max=key==="x"||key==="width"?t.width:key==="y"||key==="height"?t.height:400;
@@ -392,18 +396,18 @@ function StreamPackStudio(){
           <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2><div className="flex flex-wrap gap-2"><button type="button" onClick={saveProfile} disabled={!selectedIsOfficial} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs disabled:opacity-40">Guardar mis redes</button><button type="button" onClick={restoreProfile} disabled={!selectedIsOfficial} className="rounded-lg border border-white/25 px-3 py-2 text-xs disabled:opacity-40">Cargar redes guardadas</button></div>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
           <div className="rounded-xl border border-white/15 p-3 space-y-2"><p className="text-sm font-semibold">Exportación por piezas</p><div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedExport(templates.map(x=>x.id))}>Todas</button><button className="text-xs underline" onClick={()=>setSelectedExport([])}>Ninguna</button></div><div className="grid grid-cols-2 gap-2">{templates.map(item=><label key={item.id} className="flex gap-2 text-xs"><input type="checkbox" checked={selectedExport.includes(item.id)} onChange={e=>setSelectedExport(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>{item.name}</label>)}</div></div>
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
-          <button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor local":"Abrir editor de plantilla"}</button>
+          {adminVerified?<button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor":"Abrir editor de plantilla"}</button>:<p className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Solo administración puede modificar plantillas. Aquí puedes elegir tu nickname, agregar tus redes y descargar tu StreamPack.</p>}
           <button onClick={download} disabled={busy || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
           <button onClick={downloadPack} disabled={packBusy || !selectedIsOfficial || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
           <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
         </section>
         <section className="min-w-0 space-y-4">
           <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
-            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]" style={simulator==="obs"?{background:"linear-gradient(125deg,#14243f 0%,#32485d 35%,#262b34 70%,#131824 100%)"}:simulator==="tiktok"?{background:"linear-gradient(160deg,#0e0c22 0%,#21183c 45%,#0c1020 100%)"}:{}}>{editor ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<div className="relative w-full"><img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>{simulator!=="none"&&<div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-2 text-[10px] text-white/80">{simulator==="obs"?"Simulación OBS • escena de juego":"Simulación TikTok • cámara y chat"}</div>}</div>:<span>Preparando vista previa…</span>}</div>
+            <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]" style={simulator==="obs"?{background:"linear-gradient(125deg,#14243f 0%,#32485d 35%,#262b34 70%,#131824 100%)"}:simulator==="tiktok"?{background:"linear-gradient(160deg,#0e0c22 0%,#21183c 45%,#0c1020 100%)"}:{}}>{editor&&adminVerified ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<div className="relative w-full"><img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>{simulator!=="none"&&<div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-2 text-[10px] text-white/80">{simulator==="obs"?"Simulación OBS • escena de juego":"Simulación TikTok • cámara y chat"}</div>}</div>:<span>Preparando vista previa…</span>}</div>
             <div className="flex flex-wrap gap-2 pt-2"><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("none")}>Fondo transparente</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("obs")}>Simular OBS</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("tiktok")}>Simular TikTok</button></div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
           </div>
-          {editor&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
+          {editor&&adminVerified&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
             <div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">Editor local de gráficos</h2><button onClick={createTemplate} className="text-sm text-[#F05E07]">+ Nueva plantilla</button></div>
             <p className="text-xs text-amber-200">Edita las zonas directamente sobre la vista previa superior. Los PNG permanecen solo durante esta sesión. Exporta un JSON para conservar posiciones y márgenes; no incluye imágenes ni habilita descargas privadas.</p>
             <div className="rounded-xl border border-white/15 p-3 space-y-2"><div className="flex items-center justify-between"><p className="text-sm font-semibold">Versiones de mi proyecto</p><button type="button" onClick={saveVersion} className="rounded-lg bg-white/10 px-3 py-2 text-xs">Guardar versión</button></div><p className="text-xs text-slate-400">Se guardan hasta 8 versiones en este navegador; no contienen PNG.</p>{versions.map((v,i)=><button type="button" key={i} onClick={()=>restoreVersion(i)} className="block w-full rounded-lg border border-white/15 px-3 py-2 text-left text-xs">{v.date} · Restaurar</button>)}</div>
