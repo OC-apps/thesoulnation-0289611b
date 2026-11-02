@@ -55,6 +55,22 @@ export const saveStreamMemberProfile=createServerFn({method:"POST"})
         await supabaseAdmin.from("waves_socials").delete().eq("name",oldKey);
       }
     }
+    if(oldKey!==name&&data.category==="waves"){
+      const slug=(value:string)=>value.toLowerCase().replace(/\\s+/g,"-");
+      const oldId=slug(oldKey),newId=slug(name);
+      const {data:oldLive,error:liveReadError}=await supabaseAdmin.from("live_status").select("member_id,is_live,platform,stream_url").eq("member_id",oldId).maybeSingle();
+      if(liveReadError)throw Error(liveReadError.message);
+      if(oldLive){
+        const {data:newLive,error:newLiveError}=await supabaseAdmin.from("live_status").select("member_id").eq("member_id",newId).maybeSingle();
+        if(newLiveError)throw Error(newLiveError.message);
+        if(!newLive){
+          const {error:liveWriteError}=await supabaseAdmin.from("live_status").insert({member_id:newId,is_live:oldLive.is_live,platform:oldLive.platform,stream_url:oldLive.stream_url});
+          if(liveWriteError)throw Error(liveWriteError.message);
+        }
+        const {error:oldLiveDeleteError}=await supabaseAdmin.from("live_status").delete().eq("member_id",oldId);
+        if(oldLiveDeleteError)throw Error(oldLiveDeleteError.message);
+      }
+    }
     const {error:writeError}=await supabaseAdmin.from("stream_member_profiles").upsert({member_key:name,socials:cleaned,updated_at:new Date().toISOString()},{onConflict:"member_key"});
     if(writeError)throw Error(writeError.message);
     if(oldKey!==name){
