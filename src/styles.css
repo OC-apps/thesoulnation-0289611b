@@ -3106,7 +3106,7 @@ body { isolation: isolate; }
   z-index:-50;
   overflow:hidden;
   pointer-events:none;
-  background:#01039E;
+  background:#080A34;
 }
 .soul-global-gradient::before,
 .soul-global-gradient::after {
@@ -3124,7 +3124,7 @@ body { isolation: isolate; }
   animation:soul-gradient-flow 32s ease-in-out infinite alternate;
 }
 .soul-global-gradient::after {
-  background:radial-gradient(ellipse 40% 46% at 46% 47%, #01039E 0%, rgba(1,3,158,.85) 36%, rgba(1,3,158,.3) 65%, transparent 90%);
+  background:radial-gradient(ellipse 40% 46% at 46% 47%, #101252 0%, rgba(16,18,82,.85) 36%, rgba(16,18,82,.3) 65%, transparent 90%);
   animation:soul-gradient-blue 38s ease-in-out infinite alternate;
 }
 @keyframes soul-gradient-flow {
