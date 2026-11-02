@@ -1,0 +1,809 @@
+{
+  "version": 2,
+  "scope": "all-templates",
+  "exportedAt": "2026-11-02T20:44:19.536Z",
+  "templates": [
+    {
+      "id": "avi",
+      "name": "AVI",
+      "width": 2048,
+      "height": 2048,
+      "category": "avi",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_AVI_1x1.png",
+      "area": {
+        "x": 410,
+        "y": 1556,
+        "width": 1229,
+        "height": 246,
+        "maxFont": 164,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 410,
+          "y": 1427,
+          "width": 1229,
+          "height": 246,
+          "maxFont": 164,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "4cams",
+      "name": "Cuatro invitados",
+      "width": 1920,
+      "height": 1080,
+      "category": "4cams",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_16x9_4Cams.png",
+      "area": {
+        "x": 130,
+        "y": 930,
+        "width": 390,
+        "height": 70,
+        "maxFont": 60,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "left"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 350,
+          "y": 466,
+          "width": 390,
+          "height": 70,
+          "maxFont": 60,
+          "minFont": 8,
+          "padding": 0,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "id": "guest-1",
+          "kind": "custom",
+          "label": "Invitado 1",
+          "text": "Invitado 1",
+          "x": 1105,
+          "y": 466,
+          "width": 390,
+          "height": 70,
+          "maxFont": 60,
+          "minFont": 8,
+          "padding": 0,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "id": "guest-2",
+          "kind": "custom",
+          "label": "Invitado 2",
+          "text": "Invitado 2",
+          "x": 350,
+          "y": 907,
+          "width": 390,
+          "height": 70,
+          "maxFont": 60,
+          "minFont": 8,
+          "padding": 0,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "id": "guest-3",
+          "kind": "custom",
+          "label": "Invitado 3",
+          "text": "Invitado 3",
+          "x": 1105,
+          "y": 907,
+          "width": 390,
+          "height": 70,
+          "maxFont": 60,
+          "minFont": 8,
+          "padding": 0,
+          "color": "#FFFFFF",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "id": "tsn-3",
+      "name": "Iniciamos · Horizontal",
+      "width": 1920,
+      "height": 1080,
+      "category": "static",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Iniciamos_16X9.png",
+      "area": {
+        "x": 311,
+        "y": 696,
+        "width": 1152,
+        "height": 130,
+        "maxFont": 86,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "x": 301,
+          "y": 184,
+          "width": 664,
+          "height": 86,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left",
+          "id": "zone-1793644051449",
+          "kind": "nickname",
+          "label": "Nickname"
+        },
+        {
+          "x": 96,
+          "y": 923,
+          "width": 492,
+          "height": 43,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left",
+          "id": "zone-1793652082072",
+          "kind": "social",
+          "label": "TikTok"
+        }
+      ]
+    },
+    {
+      "id": "tsn-4",
+      "name": "Iniciamos · Vertical",
+      "width": 941,
+      "height": 1672,
+      "category": "static",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Iniciamos_9x16.png",
+      "area": {
+        "x": 199,
+        "y": 1346,
+        "width": 565,
+        "height": 201,
+        "maxFont": 134,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "x": 53,
+          "y": 870,
+          "width": 802,
+          "height": 194,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793652128280",
+          "kind": "nickname",
+          "label": "Nickname"
+        }
+      ]
+    },
+    {
+      "id": "tsn-5",
+      "name": "Regresamos",
+      "width": 1920,
+      "height": 1080,
+      "category": "static",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Regresamos_16X9.png",
+      "area": {
+        "x": 384,
+        "y": 886,
+        "width": 1152,
+        "height": 130,
+        "maxFont": 86,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "x": 301,
+          "y": 190,
+          "width": 624,
+          "height": 83,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left",
+          "id": "zone-1793647514213",
+          "kind": "nickname",
+          "label": "Nickname"
+        },
+        {
+          "id": "icon-1793647581013",
+          "kind": "social-icon",
+          "label": "Icono YouTube",
+          "x": 96,
+          "y": 906,
+          "width": 63,
+          "height": 63,
+          "maxFont": 86,
+          "minFont": 1,
+          "color": "#FFFFFF",
+          "align": "left",
+          "groupId": "group-1793647625181"
+        },
+        {
+          "id": "icon-1793647685917",
+          "kind": "social-icon",
+          "label": "Icono Twitch",
+          "x": 175,
+          "y": 906,
+          "width": 63,
+          "height": 63,
+          "maxFont": 86,
+          "minFont": 1,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "id": "icon-1793647686669",
+          "kind": "social-icon",
+          "label": "Icono Instagram",
+          "x": 254,
+          "y": 906,
+          "width": 63,
+          "height": 63,
+          "maxFont": 86,
+          "minFont": 1,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "id": "icon-1793647687277",
+          "kind": "social-icon",
+          "label": "Icono TikTok",
+          "x": 333,
+          "y": 906,
+          "width": 63,
+          "height": 63,
+          "maxFont": 86,
+          "minFont": 1,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "x": 396,
+          "y": 906,
+          "width": 510,
+          "height": 63,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793647765981",
+          "kind": "social",
+          "label": "TikTok"
+        }
+      ]
+    },
+    {
+      "id": "tsn-6",
+      "name": "Finalizamos",
+      "width": 1920,
+      "height": 1080,
+      "category": "static",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Finalizada_16X9.png",
+      "area": {
+        "x": 384,
+        "y": 886,
+        "width": 1152,
+        "height": 130,
+        "maxFont": 86,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "x": 293,
+          "y": 178,
+          "width": 690,
+          "height": 104,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left",
+          "id": "zone-1793647825821",
+          "kind": "nickname",
+          "label": "Nickname"
+        }
+      ]
+    },
+    {
+      "id": "tsn-7",
+      "name": "Overlay horizontal · Cámara",
+      "width": 1920,
+      "height": 1080,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_16x9_Cam.png",
+      "area": {
+        "x": 436,
+        "y": 704,
+        "width": 524,
+        "height": 87,
+        "maxFont": 86,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 797,
+          "y": 0,
+          "width": 332,
+          "height": 76,
+          "maxFont": 360,
+          "minFont": 1,
+          "color": "#FFFFFF",
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "tsn-8",
+      "name": "Overlay horizontal · Sin cámara",
+      "width": 1920,
+      "height": 1080,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_16x9_NoCam.png",
+      "area": {
+        "x": 384,
+        "y": 886,
+        "width": 1152,
+        "height": 130,
+        "maxFont": 86,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 127,
+          "y": 0,
+          "width": 346,
+          "height": 68,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "x": 624,
+          "y": 983,
+          "width": 672,
+          "height": 76,
+          "maxFont": 86,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648081461",
+          "kind": "custom",
+          "label": "website",
+          "text": "WWW.THESOULNATION.ORG"
+        },
+        {
+          "id": "soul-tsn",
+          "kind": "soul",
+          "label": "SOUL",
+          "x": 127,
+          "y": 0,
+          "width": 121,
+          "height": 26,
+          "maxFont": 34,
+          "minFont": 8,
+          "color": "#F05E07",
+          "align": "left",
+          "anchorTo": "nickname",
+          "anchorGap": 3,
+          "padding": 0
+        }
+      ]
+    },
+    {
+      "id": "tsn-9",
+      "name": "Overlay vertical · Cámara",
+      "width": 941,
+      "height": 1672,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_Cam.png",
+      "area": {
+        "x": 214,
+        "y": 796,
+        "width": 565,
+        "height": 201,
+        "maxFont": 134,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 213,
+          "y": 343,
+          "width": 515,
+          "height": 121,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center"
+        },
+        {
+          "x": 595,
+          "y": 1157,
+          "width": 229,
+          "height": 34,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648338172",
+          "kind": "social",
+          "label": "Twitch"
+        },
+        {
+          "x": 595,
+          "y": 1312,
+          "width": 231,
+          "height": 32,
+          "maxFont": 134,
+          "minFont": 12,
+          "color": "#FFFFFF",
+          "align": "right",
+          "id": "zone-1793648388204",
+          "kind": "social",
+          "label": "Instagram"
+        },
+        {
+          "x": 595,
+          "y": 1235,
+          "width": 229,
+          "height": 34,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648580700",
+          "kind": "social",
+          "label": "YouTube"
+        },
+        {
+          "x": 595,
+          "y": 1385,
+          "width": 229,
+          "height": 34,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648617332",
+          "kind": "social",
+          "label": "TikTok"
+        },
+        {
+          "id": "soul-tsn",
+          "kind": "soul",
+          "label": "SOUL",
+          "x": 213,
+          "y": 292,
+          "width": 130,
+          "height": 24,
+          "maxFont": 54,
+          "minFont": 8,
+          "color": "#F05E07",
+          "align": "left",
+          "anchorTo": "nickname",
+          "anchorGap": 5,
+          "padding": 0
+        }
+      ]
+    },
+    {
+      "id": "tsn-10",
+      "name": "Overlay vertical · Cámara 2",
+      "width": 941,
+      "height": 1672,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_Cam_V02.png",
+      "area": {
+        "x": 83,
+        "y": 607,
+        "width": 565,
+        "height": 201,
+        "maxFont": 134,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 128,
+          "y": 480,
+          "width": 477,
+          "height": 102,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "x": 737,
+          "y": 230,
+          "width": 158,
+          "height": 29,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648805956",
+          "kind": "social",
+          "label": "Twitch"
+        },
+        {
+          "x": 737,
+          "y": 323,
+          "width": 158,
+          "height": 29,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648807492",
+          "kind": "social",
+          "label": "TikTok"
+        },
+        {
+          "x": 737,
+          "y": 417,
+          "width": 158,
+          "height": 29,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648808020",
+          "kind": "social",
+          "label": "YouTube"
+        },
+        {
+          "x": 737,
+          "y": 508,
+          "width": 158,
+          "height": 29,
+          "maxFont": 134,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "center",
+          "id": "zone-1793648808580",
+          "kind": "social",
+          "label": "Instagram"
+        },
+        {
+          "id": "soul-tsn",
+          "kind": "soul",
+          "label": "SOUL",
+          "x": 128,
+          "y": 437,
+          "width": 111,
+          "height": 24,
+          "maxFont": 54,
+          "minFont": 8,
+          "color": "#F05E07",
+          "align": "left",
+          "anchorTo": "nickname",
+          "anchorGap": 4,
+          "padding": 0
+        }
+      ]
+    },
+    {
+      "id": "tsn-11",
+      "name": "Overlay vertical · Sin cámara",
+      "width": 1080,
+      "height": 1920,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_NoCam.png",
+      "area": {
+        "x": 232,
+        "y": 1129,
+        "width": 648,
+        "height": 230,
+        "maxFont": 154,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 171,
+          "y": 281,
+          "width": 739,
+          "height": 155,
+          "maxFont": 640,
+          "minFont": 1,
+          "color": "#FFFFFF",
+          "align": "center"
+        },
+        {
+          "id": "soul-tsn",
+          "kind": "soul",
+          "label": "SOUL",
+          "x": 171,
+          "y": 216,
+          "width": 212,
+          "height": 39,
+          "maxFont": 256,
+          "minFont": 8,
+          "color": "#F05E07",
+          "align": "left",
+          "anchorTo": "nickname",
+          "anchorGap": 6,
+          "padding": 0
+        }
+      ]
+    },
+    {
+      "id": "tsn-12",
+      "name": "Overlay vertical · Sin cámara 2",
+      "width": 1080,
+      "height": 1920,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Overlay_9x16_NoCam_V02.png",
+      "area": {
+        "x": 216,
+        "y": 1574,
+        "width": 648,
+        "height": 230,
+        "maxFont": 154,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 173,
+          "y": 84,
+          "width": 777,
+          "height": 124,
+          "maxFont": 640,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left",
+          "padding": 0
+        },
+        {
+          "id": "soul-tsn",
+          "kind": "soul",
+          "label": "SOUL",
+          "x": 173,
+          "y": 53,
+          "width": 111,
+          "height": 24,
+          "maxFont": 256,
+          "minFont": 8,
+          "color": "#F05E07",
+          "align": "left",
+          "padding": 0,
+          "anchorTo": "nickname",
+          "anchorGap": 7
+        }
+      ]
+    },
+    {
+      "id": "tsn-13",
+      "name": "Webcam 16:9",
+      "width": 1672,
+      "height": 941,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Webcam_16x9.png",
+      "area": {
+        "x": 334,
+        "y": 772,
+        "width": 1003,
+        "height": 113,
+        "maxFont": 75,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": [
+        {
+          "id": "nickname",
+          "kind": "nickname",
+          "label": "Nickname",
+          "x": 319,
+          "y": 748,
+          "width": 807,
+          "height": 142,
+          "maxFont": 314,
+          "minFont": 8,
+          "color": "#FFFFFF",
+          "align": "left"
+        },
+        {
+          "id": "soul-tsn",
+          "kind": "soul",
+          "label": "SOUL",
+          "x": 319,
+          "y": 700,
+          "width": 335,
+          "height": 93,
+          "maxFont": 78,
+          "minFont": 8,
+          "color": "#F05E07",
+          "align": "left",
+          "anchorTo": "nickname",
+          "anchorGap": 5,
+          "padding": 0
+        }
+      ]
+    },
+    {
+      "id": "tsn-14",
+      "name": "Webcam · Barra",
+      "width": 1920,
+      "height": 600,
+      "category": "editable",
+      "membersOnly": false,
+      "assetPath": "/streampack/templates/TSN_Webcam_16x9 (2).png",
+      "area": {
+        "x": 384,
+        "y": 492,
+        "width": 1152,
+        "height": 72,
+        "maxFont": 48,
+        "minFont": 8,
+        "color": "#FFFFFF",
+        "align": "center"
+      },
+      "zones": []
+    }
+  ]
+}
