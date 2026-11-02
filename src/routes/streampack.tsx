@@ -18,7 +18,7 @@ export const Route = createFileRoute("/streampack")({
 
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; tracking?:number; strokeWidth?:number; strokeColor?:string; shadowBlur?:number; shadowColor?:string; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string; anchorTo?:string; anchorGap?:number }; 
-type Template = { assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
+type Template = { socialAutoLayout?:boolean; assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
 {id:"avi",name:"AVI",width:2048,height:2048,category:"avi",membersOnly:false,assetPath:"/streampack/templates/TSN_AVI_1x1.png",area:{x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center" as const}]},
 {id:"4cams",name:"Cuatro invitados",width:1920,height:1080,category:"4cams",membersOnly:false,assetPath:"/streampack/templates/TSN_Overlay_16x9_4Cams.png",area:{x:130,y:930,width:390,height:70,maxFont:60,minFont:8,color:"#FFFFFF",align:"left"},zones:[0,1,2,3].map(i=>({id:i===0?"nickname":`guest-${i}`,kind:i===0?"nickname" as const:"custom" as const,label:i===0?"Nickname":`Invitado ${i}`,text:i===0?undefined:`Invitado ${i}`,x:130+i*455,y:930,width:390,height:70,maxFont:60,minFont:8,padding:0,color:"#FFFFFF",align:"left" as const}))},
@@ -110,6 +110,53 @@ async function render(template:Template, nickname:string, asset:string|undefined
   return {top:visibleTop,left:visibleLeft??a.x};
   };
 
+  // Dynamic optical layout: compact visible icons and handles without reserving
+  // widths for missing networks or the editable zones of old templates.
+  const autoSocial=template.socialAutoLayout===true && !!template.zones?.some(z=>z.kind==="social-icon");
+  if(autoSocial&&template.zones){
+    const iconZones=template.zones.filter(z=>z.kind==="social-icon"&&!z.hidden);
+    const textZones=template.zones.filter(z=>z.kind==="social"&&!z.hidden);
+    const active=iconZones.map(z=>({zone:z,network:z.label.replace(/^Icono /,"")})).filter(e=>isSocialNetwork(e.network)&&(socials[e.network]||"").trim());
+    const groups:{handle:string;icons:Zone[]}[]=[];
+    for(const {zone,network} of active){
+      const handle=(socials[network]||"").trim().replace(/^@+/,"");
+      const previous=groups.find(g=>g.handle.toLocaleLowerCase()===handle.toLocaleLowerCase());
+      if(previous)previous.icons.push(zone);else groups.push({handle,icons:[zone]});
+    }
+    if(groups.length){
+      const sample=textZones[0];
+      const size=Math.max(1,Math.min(...iconZones.map(z=>Math.min(z.width,z.height))));
+      const fontSize=Math.max(8,Math.min(sample?.maxFont??size*.68,size*.72));
+      const iconGap=Math.round(size*.16),handleGap=Math.round(size*.22),groupGap=Math.round(size*.56);
+      context.font=`900 italic ${fontSize}px "${fontFamily}", Arial, sans-serif`;
+      const measure=(value:string)=>context.measureText(value).width;
+      const widths=groups.map(g=>g.icons.length*size+Math.max(0,g.icons.length-1)*iconGap+handleGap+measure("@"+g.handle));
+      const naturalWidth=widths.reduce((a,b)=>a+b,0)+Math.max(0,groups.length-1)*groupGap;
+      const left=Math.max(0,Math.min(...iconZones.map(z=>z.x),...textZones.map(z=>z.x)));
+      const bottom=Math.min(template.height,Math.max(...iconZones.map(z=>z.y+z.height),...textZones.map(z=>z.y+z.height)));
+      const availableWidth=Math.max(1,template.width-left-Math.max(8,Math.round(template.width*.035)));
+      const scale=Math.min(1,availableWidth/Math.max(1,naturalWidth));
+      context.save();
+      context.translate(left,bottom);
+      context.scale(scale,scale);
+      let cursor=0;
+      for(const group of groups){
+        for(const iconZone of group.icons){
+          drawSocialIcon(context,{...iconZone,x:cursor,y:-size,width:size,height:size});
+          cursor+=size+iconGap;
+        }
+        cursor+=handleGap-iconGap;
+        context.font=`900 italic ${fontSize}px "${fontFamily}", Arial, sans-serif`;
+        context.textBaseline="alphabetic";context.textAlign="left";
+        const handle="@"+group.handle;
+        const metrics=context.measureText(handle);
+        context.fillStyle=sample?.color??"#FFFFFF";
+        context.fillText(handle,cursor,-Math.max(0,metrics.actualBoundingBoxDescent));
+        cursor+=measure(handle)+groupGap;
+      }
+      context.restore();
+    }
+  }
   if(template.zones){
     const guestGroup=template.id==="4cams"?template.zones.filter(z=>z.id==="nickname"||/^guest-[123]$/.test(z.id)):[];
     const master=guestGroup.find(z=>z.id==="nickname");
@@ -135,7 +182,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
       if(zone.hidden)continue;
       const linked=master&&(zone.id==="nickname"||/^guest-[123]$/.test(zone.id));
       const paint=linked?{...zone,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:zone;
-      if(zone.kind==="social-icon"){if((socials[zone.label.replace(/^Icono /,"")]||"").trim())drawSocialIcon(context,zone);continue;}
+      if(zone.kind==="social-icon"){if(!autoSocial&&(socials[zone.label.replace(/^Icono /,"")]||"").trim())drawSocialIcon(context,zone);continue;}
       if(zone.kind==="nickname"){
         const bounds=drawText(paint,displayName,true,linked?groupFont:undefined);
         // Anchor SOUL to the actual ink, not the top of the editable rectangle.
@@ -148,7 +195,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
         }
       }
       else if(zone.kind==="soul"){if(!zone.anchorTo)drawText(paint,"SOUL");}
-      else if(zone.kind==="social"){const account=(socials[zone.label]||"").trim();if(account)drawText(paint,account.startsWith("@")?account:"@"+account);}
+      else if(zone.kind==="social"&&!autoSocial){const account=(socials[zone.label]||"").trim();if(account)drawText(paint,account.startsWith("@")?account:"@"+account);}
       else if(zone.kind==="custom")drawText(paint,template.id==="4cams"&&/^guest-[123]$/.test(zone.id)?(guests[zone.id]??zone.text??""):(zone.text||""),false,linked?groupFont:undefined);
     }
   }else drawText(a,displayName,true);
@@ -196,7 +243,7 @@ function StreamPackStudio(){
         const official:Template[]=data.templates.map((item:Template)=>{
           const base=standard.get(item.id);
           if(!base||!Array.isArray(item.zones)||!item.zones.every(z=>typeof z.id==="string"&&Number.isFinite(z.x)&&Number.isFinite(z.y)&&Number.isFinite(z.width)&&Number.isFinite(z.height)))throw Error("Plantilla oficial inválida");
-          return {...base,area:{...base.area,...item.area},zones:item.zones.map(z=>({...z})),assetPath:base.assetPath,membersOnly:false};
+          return {...base,area:{...base.area,...item.area},zones:item.zones.map(z=>({...z})),socialAutoLayout:item.socialAutoLayout===true,assetPath:base.assetPath,membersOnly:false};
         });
         setTemplates(official);setOfficialLoaded(true);
       }).catch(()=>{if(!cancelled){setOfficialLoaded(false);setMessage("No se pudo cargar la configuración oficial. Comprueba la publicación antes de descargar.");}});
