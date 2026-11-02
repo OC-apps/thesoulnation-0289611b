@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
 import { buildZip } from "@/lib/streampack-zip";
+import soulOfficialLogo from "@/assets/soul-logo-official.png";
 import { StreamPackAreaEditor } from "@/components/streampack-area-editor";
 import { useRoster } from "@/hooks/use-roster";
 import { useWavesMembers } from "@/hooks/use-waves-members";
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/streampack")({
 });
 
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; tracking?:number; strokeWidth?:number; strokeColor?:string; shadowBlur?:number; shadowColor?:string; align: "center" | "left" | "right" };
-type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string; anchorTo?:string; anchorGap?:number }; 
+type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"|"soul-logo"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string; anchorTo?:string; anchorGap?:number }; 
 type Template = { socialAutoLayout?:boolean; assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
 const START: Template[] = [
 {id:"avi",name:"AVI",width:2048,height:2048,category:"avi",membersOnly:false,assetPath:"/streampack/templates/TSN_AVI_1x1.png",area:{x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center" as const}]},
@@ -61,6 +62,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
   if (asset) { const image=await loadImage(asset); context.drawImage(image,0,0,canvas.width,canvas.height); }
   const a=template.area; const displayName=nickname.trim().toUpperCase().replace(/^SOUL\s+/i,"") || "NICKNAME";
   await document.fonts.load(`900 italic 40px "${fontFamily}"`);
+  const logoAsset=template.zones?.some(z=>z.kind==="soul-logo"&&!z.hidden)?await loadImage(soulOfficialLogo):null;
   const drawText=(a:Area,label:string,highlightFinal=false,fixedFont?:number)=>{
   if(!label.trim())return;
   const inset=Math.min((a.padding??8),Math.max(0,Math.min(a.width,a.height)/2-1));
@@ -182,6 +184,7 @@ async function render(template:Template, nickname:string, asset:string|undefined
       if(zone.hidden)continue;
       const linked=master&&(zone.id==="nickname"||/^guest-[123]$/.test(zone.id));
       const paint=linked?{...zone,maxFont:master.maxFont,minFont:master.minFont,padding:master.padding,color:master.color,align:"left" as const}:zone;
+      if(zone.kind==="soul-logo"){if(logoAsset)context.drawImage(logoAsset,zone.x,zone.y,zone.width,zone.height);continue;}
       if(zone.kind==="social-icon"){if(!autoSocial&&(socials[zone.label.replace(/^Icono /,"")]||"").trim())drawSocialIcon(context,zone);continue;}
       if(zone.kind==="nickname"){
         const bounds=drawText(paint,displayName,true,linked?groupFont:undefined);
@@ -310,7 +313,7 @@ function StreamPackStudio(){
     }
     return {...z,...patch};
   })})) : update({area:{...t.area,...patch}});
-  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*.35),height:Math.round(t.height*.07)}]});setZoneId(id);};
+  const addZone=(kind:Zone["kind"],label:string)=>{const id=`zone-${Date.now()}`;update({zones:[...(t.zones||[{...t.area,id:"nickname",kind:"nickname" as const,label:"Nickname"}]),{...t.area,id,kind,label,text:kind==="custom"?"Nuevo texto":undefined,x:Math.round(t.width*.12),y:Math.round(t.height*.35),width:Math.round(t.width*(kind==="soul-logo"?.18:.35)),height:Math.round(t.height*(kind==="soul-logo"?.18:.07))}]});setZoneId(id);};
   const organizeSocials=()=>{
     const networks=(["YouTube","Twitch","Instagram","TikTok"] as const).filter(n=>(socials[n]||"").trim());
     const cleaned=(t.zones||[]).filter(z=>!(z.kind==="social-icon"||z.kind==="social"));
@@ -477,7 +480,7 @@ function StreamPackStudio(){
     updateArea({[key]:Math.max(0,Math.min(max,Math.round(value)))} as Partial<Area>);
   };
   return <main className="relative min-h-screen px-4 pb-28 pt-24 text-white md:px-8" style={{background:"radial-gradient(ellipse at 80% 0%,#071c64 0%,#060b22 55%,#050719 100%)"}}>
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-[1800px]">
       <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white"><ArrowLeft size={16}/> Regresar a The Soul Nation</Link>
       <div className="mt-8 flex flex-wrap items-start justify-between gap-4">
         <div><p className="text-xs font-bold uppercase tracking-[.3em] text-[#F05E07]">The Soul Nation / Creators</p><h1 className="mt-2 text-3xl font-black uppercase italic tracking-tight md:text-5xl">StreamPack <span className="text-[#F05E07]">Studio</span></h1><p className="mt-3 max-w-xl text-sm text-slate-300">Genera tus gráficos con el nickname ajustado al área exacta de cada plantilla. Descarga PNG a resolución original.</p></div>
@@ -499,13 +502,13 @@ function StreamPackStudio(){
           <button onClick={downloadPack} disabled={packBusy || !selectedIsOfficial || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
           <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
         </section>
-        <section className="min-w-0 space-y-4">
-          <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
+        <section className={editor&&adminVerified?"min-w-0 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-4":"min-w-0 space-y-4"}>
+          <div className="lg:sticky lg:top-20 lg:z-10"><div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
             <div className="flex min-h-[270px] items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(45deg,#171c2a_25%,transparent_25%,transparent_75%,#171c2a_75%),linear-gradient(45deg,#171c2a_25%,#0c1221_25%,#0c1221_75%,#171c2a_75%)] bg-[length:24px_24px] bg-[position:0_0,12px_12px]" style={simulator==="obs"?{background:"linear-gradient(125deg,#14243f 0%,#32485d 35%,#262b34 70%,#131824 100%)"}:simulator==="tiktok"?{background:"linear-gradient(160deg,#0e0c22 0%,#21183c 45%,#0c1020 100%)"}:{}}>{editor&&adminVerified ? <StreamPackAreaEditor background={preview || assets[t.id] || (available[t.id]?t.assetPath:undefined)} imageWidth={t.width} imageHeight={t.height} area={activeZone||t.area} onChange={rect=>updateArea(rect)} zones={t.zones?.filter(z=>!z.hidden)} selectedId={zoneId} onSelect={setZoneId} circleGuide={t.id==="avi"}/> : preview?<div className="relative w-full"><img src={preview} alt="Vista previa del gráfico generado" className="max-h-[610px] w-full object-contain"/>{simulator!=="none"&&<div className="pointer-events-none absolute bottom-3 right-3 rounded-lg border border-white/20 bg-black/60 px-3 py-2 text-[10px] text-white/80">{simulator==="obs"?"Simulación OBS • escena de juego":"Simulación TikTok • cámara y chat"}</div>}</div>:<span>Preparando vista previa…</span>}</div>
             <div className="flex flex-wrap gap-2 pt-2"><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("none")}>Fondo transparente</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("obs")}>Simular OBS</button><button className="rounded-lg border border-white/20 px-3 py-2 text-xs" onClick={()=>setSimulator("tiktok")}>Simular TikTok</button></div>
             <p className="mt-3 text-xs text-slate-400">La cuadrícula representa transparencia. Para obtener un marco real, carga una plantilla PNG transparente.</p>
-          </div>
-          {editor&&adminVerified&&<div className="space-y-4 rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
+          </div></div>
+          {editor&&adminVerified&&<div className="space-y-4 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
             <div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">Editor local de gráficos</h2><button type="button" onClick={applyTSNComposition} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-bold text-black">Aplicar composición TSN · SOUL + Nickname</button><button onClick={createTemplate} className="text-sm text-[#F05E07]">+ Nueva plantilla</button></div>
             <p className="text-xs text-amber-200">Edita las zonas directamente sobre la vista previa superior. Los PNG permanecen solo durante esta sesión. Exporta un JSON para conservar posiciones y márgenes; no incluye imágenes ni habilita descargas privadas.</p>
             <div className="rounded-xl border border-white/15 p-3 space-y-2"><div className="flex items-center justify-between"><p className="text-sm font-semibold">Versiones de mi proyecto</p><button type="button" onClick={saveVersion} className="rounded-lg bg-white/10 px-3 py-2 text-xs">Guardar versión</button></div><p className="text-xs text-slate-400">Se guardan hasta 8 versiones en este navegador; no contienen PNG.</p>{versions.map((v,i)=><button type="button" key={i} onClick={()=>restoreVersion(i)} className="block w-full rounded-lg border border-white/15 px-3 py-2 text-left text-xs">{v.date} · Restaurar</button>)}</div>
@@ -513,7 +516,7 @@ function StreamPackStudio(){
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><Type size={18}/> Cargar fuente TTF / OTF <input type="file" accept=".ttf,.otf,font/ttf,font/otf" className="hidden" onChange={e=>void fontUpload(e.target.files?.[0])}/></label>
             <label className="block text-sm">Nombre de plantilla<input className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-2" value={t.name} onChange={e=>update({name:e.target.value})}/></label>
-            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
+            <div className="flex flex-wrap gap-2"><button onClick={()=>addZone("custom","Texto libre")} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">+ Nuevo texto</button><button onClick={()=>addZone("soul-logo","Logo oficial Soul")} className="rounded-lg border border-[#F05E07]/50 px-3 py-2 text-xs">+ Logo Soul</button><button onClick={()=>addZone("nickname","Nickname")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ Nickname</button>{<button onClick={()=>addZone("soul","SOUL")} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ SOUL</button>}{["Twitch","TikTok","YouTube","Instagram"].map(net=><button key={net} onClick={()=>addZone("social",net)} className="rounded-lg border border-white/20 px-3 py-2 text-xs">+ {net}</button>)}</div>
             <div className="space-y-2"><p className="text-xs text-slate-300">Agregar logotipo de red social (capa independiente, ajustable y exportable)</p><div className="flex flex-wrap gap-2">{(["YouTube","Twitch","Instagram","TikTok"] as const).map(net=><button key={net} onClick={()=>{const id=`icon-${Date.now()}`;const size=Math.max(40,Math.round(t.width*.045));update({zones:[...(t.zones||[]),{id,kind:"social-icon",label:`Icono ${net}`,x:Math.round(t.width*.12),y:Math.round(t.height*.75),width:size,height:size,maxFont:size,minFont:1,color:"#FFFFFF",align:"left"}]});setZoneId(id);}} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs">+ {net} icono</button>)}</div></div>
             <label className="flex items-center gap-2 text-sm text-slate-200"><input type="checkbox" checked={groupSameSocials} onChange={e=>setGroupSameSocials(e.target.checked)} className="accent-[#F05E07]"/>Agrupar iconos cuando comparten el mismo @usuario</label><div className="flex flex-wrap gap-2"><button onClick={organizeSocials} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-semibold text-black">Organizar mis redes: icono + @usuario</button><button onClick={equalizeSocialIcons} className="rounded-lg border border-white/30 px-3 py-2 text-xs">Igualar y alinear iconos</button></div>
             <p className="text-xs text-slate-400">Atajos del editor: Supr eliminar · Ctrl+C copiar · Ctrl+V pegar · Ctrl+D duplicar · Ctrl+Z deshacer · Ctrl+Y rehacer · flechas mover (Shift: 10 px). No afectan campos de texto.</p>
