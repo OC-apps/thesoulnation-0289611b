@@ -272,6 +272,7 @@ function AdminLivePage() {
     setContentEdits((p) => ({ ...p, [key]: { ...current, [field]: value } }));
   };
 
+  const [waveNicknameEdits,setWaveNicknameEdits]=useState<Record<string,string>>({});
   const saveAll = async (
     name: string,
     opts: { isFixed: boolean; dynId?: string; fallbackContent: ContentFields },
@@ -295,6 +296,17 @@ function AdminLivePage() {
           data: { password, id: opts.dynId, bio: c.bio, redes: c.redes },
         });
       }
+      const newNickname=(waveNicknameEdits[key]??key).trim().toUpperCase().replace(/\\s+/g," ");
+      if(newNickname!==key){
+        await saveStreamMemberProfile({data:{
+          password,memberKey:key,nickname:newNickname,category:"waves",memberId:opts.dynId,
+          socials:{TikTok:v.tiktok,Twitch:v.twitch,YouTube:v.youtube,Facebook:v.facebook,X:v.x,
+            Instagram:getExtraLinks(key).find(l=>l.label.toLowerCase()==="instagram")?.href??""}
+        }});
+        setWaveNicknameEdits(p=>{const n={...p};delete n[key];return n;});
+        setExpandedSocial(null);
+        setMsg(`Nickname actualizado: ${key} → ${newNickname}. Se conservaron sus redes y perfil.`);
+      }else setMsg("Datos del integrante guardados.");
       setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
       setContentEdits((p) => { const n = { ...p }; delete n[key]; return n; });
       setExtraEdits((p) => { const n = { ...p }; delete n[key]; return n; });
@@ -1127,6 +1139,11 @@ function AdminLivePage() {
 
                               {expanded && (
                                 <div className="px-3 pb-3 pt-3 border-t border-flame/15 bg-background/30 space-y-3">
+                                  <div className="space-y-1">
+                                    <label className="block text-[9px] font-mono uppercase tracking-widest text-muted-foreground">Nickname del integrante</label>
+                                    <input value={waveNicknameEdits[key]??c.name} onChange={e=>setWaveNicknameEdits(p=>({...p,[key]:e.target.value}))} maxLength={80} className="w-full rounded border border-flame/30 bg-background px-3 py-2 text-sm text-white outline-none focus:border-flame" aria-label="Editar nickname de Soul Waves"/>
+                                    <p className="text-[10px] text-muted-foreground">Puedes corregir el nickname aquí. Guardar todo actualizará el roster y StreamPack.</p>
+                                  </div>
                                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                     <label className="sm:col-span-1 space-y-1 block">
                                       <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
