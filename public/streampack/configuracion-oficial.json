@@ -296,7 +296,8 @@
           "kind": "social",
           "label": "TikTok"
         }
-      ]
+      ],
+      "socialAutoLayout": true
     },
     {
       "id": "tsn-6",
