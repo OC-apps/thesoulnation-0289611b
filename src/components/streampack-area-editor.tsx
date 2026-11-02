@@ -5,7 +5,7 @@ type Props = { background?:string; imageWidth:number; imageHeight:number; area:T
 const MIN=12;
 export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onChange,zones,selectedId,onSelect,circleGuide=false,selectedIds=[],onMultiSelect,onMoveSelection}:Props){
  const surface=useRef<HTMLDivElement>(null);
- const interaction=useRef<{kind:"move"|"resize"|"draw"|"marquee";startX:number;startY:number;initial:TextRect}|null>(null);
+ const interaction=useRef<{kind:"move"|"resize"|"draw"|"marquee";startX:number;startY:number;initial:TextRect;lastDx?:number;lastDy?:number}|null>(null);
  const [active,setActive]=useState(false);
  const [marquee,setMarquee]=useState<TextRect|null>(null);
  const [lines,setLines]=useState<{axis:"x"|"y";value:number}[]>([]);
@@ -39,7 +39,7 @@ export function StreamPackAreaEditor({background,imageWidth,imageHeight,area,onC
       for(const p of ys)for(const target of [z.y,z.y+z.height/2,z.y+z.height]){const d=Math.abs(p.v-target);if(d<bestY){bestY=d;ny=clamp(target-p.offset,0,imageHeight-a.height);newLines[1]={axis:"y",value:target};}}
     }
     setLines(newLines.filter(Boolean));
-    if(selectedIds.length>1&&selectedIds.includes(selectedId||"")&&onMoveSelection)onMoveSelection(Math.round(nx-a.x),Math.round(ny-a.y));else onChange({...a,x:Math.round(nx),y:Math.round(ny)});
+    if(selectedIds.length>1&&selectedIds.includes(selectedId||"")&&onMoveSelection){const totalX=Math.round(nx-a.x),totalY=Math.round(ny-a.y);onMoveSelection(totalX-(op.lastDx||0),totalY-(op.lastDy||0));op.lastDx=totalX;op.lastDy=totalY;}else onChange({...a,x:Math.round(nx),y:Math.round(ny)});
   }
   else if(op.kind==="resize")onChange({...a,width:Math.round(clamp(a.width+dx,MIN,imageWidth-a.x)),height:Math.round(clamp(a.height+dy,MIN,imageHeight-a.y))});
   else onChange({x:Math.round(Math.min(op.startX,x)),y:Math.round(Math.min(op.startY,y)),width:Math.round(Math.max(MIN,Math.abs(dx))),height:Math.round(Math.max(MIN,Math.abs(dy)))});
