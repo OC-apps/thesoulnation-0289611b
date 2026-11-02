@@ -86,12 +86,12 @@ export function CinematicBackground() {
         float smoke = pow(n, 1.6) * (0.35 + 0.85 * vignette);
 
         vec3 colOrange = vec3(1.0, 0.45, 0.12);    // flame
-        vec3 colBlue   = vec3(0.18, 0.42, 1.0);    // electric blue
+        vec3 colBlue   = vec3(0.035, 0.045, 0.42); // deeper roster navy-blue
         vec3 base      = vec3(0.005, 0.008, 0.015); // deep black
 
         vec3 col = base;
         col += colOrange * (orangeGlow * 1.85 + smoke * orangeGlow * 2.9);
-        col += colBlue   * (blueGlow   * 1.85 + smoke * blueGlow   * 2.9);
+        col += colBlue   * (blueGlow   * 1.45 + smoke * blueGlow   * 2.0);
 
         // subtle ambient haze in mid tones, kept off center
         col += mix(colBlue, colOrange, n) * smoke * 0.16 * vignette;
@@ -196,8 +196,8 @@ export function CinematicBackground() {
         className="absolute inset-0 opacity-70"
         style={{
           background:
-            "radial-gradient(ellipse 34% 56% at -6% 34%, rgba(255, 82, 0, 0.34), transparent 72%), radial-gradient(ellipse 42% 56% at 106% 24%, rgba(0, 92, 255, 0.26), transparent 76%), radial-gradient(ellipse 34% 40% at 86% 92%, rgba(0, 70, 220, 0.18), transparent 72%)",
-          filter: "blur(42px) saturate(1.25)",
+            "radial-gradient(ellipse 34% 56% at -6% 34%, rgba(255, 82, 0, 0.34), transparent 72%), radial-gradient(ellipse 42% 56% at 106% 24%, rgba(16, 18, 82, 0.26), transparent 76%), radial-gradient(ellipse 34% 40% at 86% 92%, rgba(16, 18, 82, 0.18), transparent 72%)",
+          filter: "blur(42px) saturate(1.05)",
           mixBlendMode: "screen",
           animation: "cinematic-breathe 7s ease-in-out infinite",
         }}
