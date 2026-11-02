@@ -18,6 +18,7 @@ import { addRosterMember, removeRosterMember, syncOfficialRoster } from "@/lib/r
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
+import { saveStreamMemberProfile } from "@/lib/stream-member-profiles.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { updateSoulLive } from "@/lib/soul-live.functions";
 import { RecruitmentAdminPanel } from "@/components/recruitment-admin-panel";
@@ -169,6 +170,12 @@ function AdminLivePage() {
   }, [authed]);
 
 
+  const [profileMember,setProfileMember]=useState("");
+  const [profileName,setProfileName]=useState("");
+  const [profileSocials,setProfileSocials]=useState<Record<string,string>>({});
+  const [profileBusy,setProfileBusy]=useState(false);
+  const [savedProfiles,setSavedProfiles]=useState<Record<string,Record<string,string>>>({});
+  useEffect(()=>{if(!authed)return;let alive=true;supabase.from("stream_member_profiles").select("member_key,socials").then(({data})=>{if(alive&&data)setSavedProfiles(Object.fromEntries(data.map(r=>[String(r.member_key),r.socials as Record<string,string>])));});return()=>{alive=false};},[authed]);
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
@@ -599,11 +606,12 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-7 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
             </TabsTrigger>
+            <TabsTrigger value="perfiles" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 text-xs font-mono uppercase"><Users className="w-3.5 h-3.5"/>Fichas</TabsTrigger>
             <TabsTrigger value="waves" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <WavesIcon className="w-3.5 h-3.5" />
               <span>Waves · Redes</span>
@@ -769,6 +777,26 @@ function AdminLivePage() {
             </SectionShell>
           </TabsContent>
 
+          <TabsContent value="perfiles" className="mt-0">
+            <SectionShell icon={Users} title="Fichas de integrantes" subtitle="Nicknames y redes para StreamPack">
+              <p className="text-sm text-muted-foreground">Edita los datos de Waves, Legends y Crew. Las redes se guardan para completar automáticamente StreamPack; no se añaden al sitio público.</p>
+              {(()=>{const all=[
+                ...waves.members.map(m=>({key:m.name.toUpperCase(),name:m.name.toUpperCase(),category:"waves" as const,id:m.id})),
+                ...WAVES.filter(w=>!waves.members.some(m=>m.name.toUpperCase()===w.name.toUpperCase())).map(w=>({key:w.name.toUpperCase(),name:w.name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
+                ...roster.filter(m=>m.category==="legends"||m.category==="crew").map(m=>({key:m.nickname.toUpperCase(),name:m.nickname.toUpperCase(),category:m.category as "legends"|"crew",id:m.id}))
+              ];const selected=all.find(m=>m.key===profileMember);
+              const choose=(key:string)=>{const found=all.find(m=>m.key===key);setProfileMember(key);setProfileName(found?.name??"");setProfileSocials(savedProfiles[key]??{});};
+              return <div className="space-y-4">
+                <label className="block text-sm">Integrante<select className="mt-2 w-full rounded-lg bg-[#07122c] p-3 text-white" value={profileMember} onChange={e=>choose(e.target.value)}><option value="">Selecciona un integrante...</option>{(["waves","legends","crew"] as const).map(cat=><optgroup key={cat} label={cat.toUpperCase()}>{all.filter(m=>m.category===cat).map(m=><option key={m.key} value={m.key}>{m.name}</option>)}</optgroup>)}</select></label>
+                {selected&&<div className="space-y-4 rounded-xl border border-flame/20 p-4">
+                  <label className="block text-sm">Nickname<input className="mt-1 w-full rounded-lg bg-[#07122c] p-3 text-white" value={profileName} onChange={e=>setProfileName(e.target.value)}/></label>
+                  {!selected.id&&selected.category==="waves"&&<p className="text-xs text-amber-300">Este Waves pertenece al listado fijo: las redes sí se pueden guardar aquí; para renombrarlo hay que actualizar también su entrada oficial.</p>}
+                  <div className="grid gap-3 sm:grid-cols-2">{["Twitch","TikTok","YouTube","Instagram","Facebook","X"].map(net=><label key={net} className="block text-xs">{net}<input className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-3 text-sm text-white" placeholder="@usuario o enlace" value={profileSocials[net]??""} onChange={e=>setProfileSocials(p=>({...p,[net]:e.target.value}))}/></label>)}</div>
+                  <button type="button" disabled={profileBusy} className="rounded-lg bg-flame px-4 py-3 text-sm font-bold text-black disabled:opacity-50" onClick={async()=>{setProfileBusy(true);setMsg("");try{const result=await saveStreamMemberProfile({data:{password,memberKey:selected.key,nickname:profileName,category:selected.category,memberId:selected.id,socials:profileSocials}});setSavedProfiles(p=>({...p,[result.nickname]:profileSocials}));setProfileMember(result.nickname);setMsg("Ficha del integrante guardada para StreamPack.");}catch(e){setMsg(e instanceof Error?e.message:"No se guardaron los cambios");}finally{setProfileBusy(false);}}}>{profileBusy?"Guardando...":"Guardar ficha"}</button>
+                </div>}
+              </div>})()}
+            </SectionShell>
+          </TabsContent>
           <TabsContent value="roster" className="mt-0">
             <SectionShell icon={Users} title="Roster" subtitle="Waves · Legends · Crew">
               {!rosterSynced && (
