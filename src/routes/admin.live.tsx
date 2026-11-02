@@ -18,6 +18,7 @@ import { addRosterMember, removeRosterMember, syncOfficialRoster } from "@/lib/r
 import { addWavesMember, removeWavesMember } from "@/lib/waves.functions";
 import { upsertWavesSocials, updateWavesMemberContent } from "@/lib/waves-socials.functions";
 import { setWaveHidden } from "@/lib/waves-hidden.functions";
+import { saveStreamMemberProfile } from "@/lib/stream-member-profiles.functions";
 import { verifyAdminPassword } from "@/lib/admin-auth.functions";
 import { updateSoulLive } from "@/lib/soul-live.functions";
 import { RecruitmentAdminPanel } from "@/components/recruitment-admin-panel";
@@ -170,6 +171,8 @@ function AdminLivePage() {
 
 
   const [roster, setRoster] = useState<RosterRow[]>([]);
+  const [renameDrafts,setRenameDrafts]=useState<Record<string,string>>({});
+  const [renameBusy,setRenameBusy]=useState<string|null>(null);
   const [newNick, setNewNick] = useState<Record<RosterCategory, string>>({ crew: "", legends: "" });
   const [rosterBusy, setRosterBusy] = useState<string | null>(null);
   const [rosterSynced, setRosterSynced] = useState(false);
@@ -287,6 +290,16 @@ function AdminLivePage() {
           data: { password, id: opts.dynId, bio: c.bio, redes: c.redes },
         });
       }
+      const nextName=(renameDrafts[key]??key).trim().toUpperCase().replace(/\\s+/g," ");
+      if(nextName!==key){
+        await saveStreamMemberProfile({data:{password,memberKey:key,nickname:nextName,category:"waves",memberId:opts.dynId,socials:{
+          TikTok:v.tiktok,Twitch:v.twitch,YouTube:v.youtube,Facebook:v.facebook,X:v.x,
+          Instagram:getExtraLinks(key).find(l=>l.label.toLowerCase()==="instagram")?.href??""
+        }}});
+        setRenameDrafts(prev=>{const copy={...prev};delete copy[key];return copy;});
+        setExpandedSocial(null);
+        setMsg(`Nickname actualizado a ${nextName}.`);
+      }else setMsg("Cambios guardados.");
       setSocialEdits((p) => { const n = { ...p }; delete n[key]; return n; });
       setContentEdits((p) => { const n = { ...p }; delete n[key]; return n; });
       setExtraEdits((p) => { const n = { ...p }; delete n[key]; return n; });
@@ -845,7 +858,7 @@ function AdminLivePage() {
                           const rmBusy = rosterBusy === `rm:${m.id}`;
                           return (
                             <li key={m.id} className="group inline-flex items-center gap-1.5 border border-flame/30 hover:border-flame rounded px-2 py-1 bg-background/60 transition">
-                              <span className="font-mono text-[11px] text-foreground">{m.nickname}</span>
+                              {renameDrafts[m.id]!==undefined?<form className="flex items-center gap-1" onSubmit={async e=>{e.preventDefault();setRenameBusy(m.id);try{const name=renameDrafts[m.id].trim().toUpperCase();await saveStreamMemberProfile({data:{password,memberKey:m.nickname,nickname:name,category:m.category as "crew"|"legends",memberId:m.id,socials:{}}});setRenameDrafts(prev=>{const next={...prev};delete next[m.id];return next;});setMsg("Nickname actualizado.");}catch(error){setMsg(error instanceof Error?error.message:"No se pudo guardar");}finally{setRenameBusy(null);}}}><input aria-label="Editar nickname" className="w-32 border border-flame/40 bg-background px-2 py-1 text-xs text-white" value={renameDrafts[m.id]} onChange={e=>setRenameDrafts(prev=>({...prev,[m.id]:e.target.value}))}/><button type="submit" disabled={renameBusy===m.id} aria-label="Guardar nickname"><Save className="h-3.5 w-3.5 text-flame"/></button><button type="button" onClick={()=>setRenameDrafts(prev=>{const next={...prev};delete next[m.id];return next;})}>×</button></form>:<><span className="font-mono text-[11px] text-foreground">{m.nickname}</span><button type="button" className="text-[10px] text-flame" onClick={()=>setRenameDrafts(prev=>({...prev,[m.id]:m.nickname}))}>Editar</button></>}
                               <button
                                 onClick={() => setConfirm({ title: "Eliminar miembro", description: `¿Seguro que quieres eliminar a "${m.nickname}" del roster? Esta acción no se puede deshacer.`, onConfirm: () => removeMember(m.id) })}
                                 disabled={rmBusy}
@@ -1097,7 +1110,7 @@ function AdminLivePage() {
                               </div>
 
                               {expanded && (
-                                <div className="px-3 pb-3 pt-3 border-t border-flame/15 bg-background/30 space-y-3">
+                                <div className="px-3 pb-3 pt-3 border-t border-flame/15 bg-background/30 space-y-3"><label className="block space-y-1"><span className="text-[10px] font-mono text-flame">EDITAR NICKNAME</span><input className="w-full rounded border border-flame/30 bg-background px-3 py-2 text-white" maxLength={80} value={renameDrafts[key]??c.name} onChange={e=>setRenameDrafts(prev=>({...prev,[key]:e.target.value}))}/></label>
                                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                     <label className="sm:col-span-1 space-y-1 block">
                                       <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">
