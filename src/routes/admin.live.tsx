@@ -781,8 +781,8 @@ function AdminLivePage() {
             <SectionShell icon={Users} title="Fichas de integrantes" subtitle="Nicknames y redes para StreamPack">
               <p className="text-sm text-muted-foreground">Edita los datos de Waves, Legends y Crew. Las redes se guardan para completar automáticamente StreamPack; no se añaden al sitio público.</p>
               {(()=>{const all=[
-                ...waves.members.map(m=>({key:m.name.toUpperCase(),name:m.name.toUpperCase(),category:"waves" as const,id:m.id})),
-                ...WAVES.filter(w=>!waves.members.some(m=>m.name.toUpperCase()===w.name.toUpperCase())).map(w=>({key:w.name.toUpperCase(),name:w.name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
+                ...waves.map(m=>({key:m.name.toUpperCase(),name:m.name.toUpperCase(),category:"waves" as const,id:m.id})),
+                ...WAVES.filter(w=>!waves.some(m=>m.name.toUpperCase()===w.name.toUpperCase())).map(w=>({key:w.name.toUpperCase(),name:w.name.toUpperCase(),category:"waves" as const,id:undefined as string|undefined})),
                 ...roster.filter(m=>m.category==="legends"||m.category==="crew").map(m=>({key:m.nickname.toUpperCase(),name:m.nickname.toUpperCase(),category:m.category as "legends"|"crew",id:m.id}))
               ];const selected=all.find(m=>m.key===profileMember);
               const choose=(key:string)=>{const found=all.find(m=>m.key===key);setProfileMember(key);setProfileName(found?.name??"");setProfileSocials(savedProfiles[key]??{});};
