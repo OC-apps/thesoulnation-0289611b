@@ -1,0 +1,50 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { ArrowLeft, Check, LogOut, Save, Plus, RefreshCw } from "lucide-react";
+
+type Article={id:string;title:string;excerpt:string;body:string;category:string;kind:string;status:string;source_name:string;source_url:string;published_at:string};
+type Source={id:string;name:string;platform:string;source_url:string|null;active:boolean};
+const roles=["editor","admin"];
+export const Route=createFileRoute("/soul-news/editorial")({
+ head:()=>({meta:[{title:"Redacción | Soul News"},{name:"robots",content:"noindex, nofollow"}]}),
+ component:Editorial,
+});
+function Editorial(){
+ const [user,setUser]=useState<any>(null);
+ const [email,setEmail]=useState("");const [password,setPassword]=useState("");
+ const [error,setError]=useState("");const [busy,setBusy]=useState(false);
+ const [articles,setArticles]=useState<Article[]>([]);const [sources,setSources]=useState<Source[]>([]);
+ const [tab,setTab]=useState<"articles"|"sources">("articles");
+ const [selected,setSelected]=useState<Article|null>(null);
+ const [sourceName,setSourceName]=useState("");const [sourceUrl,setSourceUrl]=useState("");const [sourcePlatform,setSourcePlatform]=useState("x");
+ const role=user?.app_metadata?.soul_news_role;
+ const authorized=roles.includes(role);
+ async function load(){
+  const [{data:a,error:ae},{data:s,error:se}]=await Promise.all([
+   supabase.from("soul_news_articles" as any).select("*").order("published_at",{ascending:false}).limit(200),
+   supabase.from("soul_news_sources" as any).select("*").order("name")
+  ]);
+  if(ae||se)setError(ae?.message||se?.message||"No se pudieron cargar los datos");
+  else {setArticles((a||[]) as unknown as Article[]);setSources((s||[]) as unknown as Source[]);setError("");}
+ }
+ useEffect(()=>{let mounted=true;supabase.auth.getUser().then(({data})=>{if(mounted)setUser(data.user)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>{if(mounted)setUser(session?.user||null)});return()=>{mounted=false;subscription.unsubscribe()}},[]);
+ useEffect(()=>{if(authorized)void load()},[authorized]);
+ async function signIn(e:React.FormEvent){e.preventDefault();setBusy(true);setError("");const {error}=await supabase.auth.signInWithPassword({email,password});if(error)setError("No se pudo iniciar sesión. Verifica tus credenciales.");setBusy(false);}
+ async function saveArticle(){if(!selected)return;setBusy(true);setError("");const {error}=await supabase.from("soul_news_articles" as any).update({title:selected.title,excerpt:selected.excerpt,body:selected.body,category:selected.category,kind:selected.kind,status:selected.status} as any).eq("id",selected.id);if(error)setError(error.message);else{setSelected(null);await load()}setBusy(false);}
+ async function updateSource(s:Source){setBusy(true);const {error}=await supabase.from("soul_news_sources" as any).update({active:!s.active} as any).eq("id",s.id);if(error)setError(error.message);else await load();setBusy(false);}
+ async function addSource(e:React.FormEvent){e.preventDefault();if(role!=="admin")return;try{const u=new URL(sourceUrl);if(u.protocol!=="https:")throw Error();}catch{setError("Utiliza una URL HTTPS válida.");return;}setBusy(true);const {error}=await supabase.from("soul_news_sources" as any).insert({name:sourceName,source_url:sourceUrl,platform:sourcePlatform,category:"creator",active:true} as any);if(error)setError(error.message);else{setSourceName("");setSourceUrl("");await load()}setBusy(false);}
+ const input="w-full rounded-lg border border-white/15 bg-white/5 p-3 text-sm text-white outline-none focus:border-[#F05E07]";
+ return <main className="min-h-screen bg-[#090a12] px-5 py-12 text-white sm:px-10"><div className="mx-auto max-w-6xl">
+  <Link to="/soul-news" className="mb-12 inline-flex items-center gap-2 text-sm text-white/60"><ArrowLeft size={16}/> Soul News</Link>
+  <div className="mb-9 flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-7"><div><p className="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#F05E07]">Acceso editorial</p><h1 className="text-4xl font-black uppercase tracking-tight sm:text-6xl">Redacción<span className="text-[#F05E07]">.</span></h1></div>{user&&<button onClick={()=>supabase.auth.signOut()} className="flex items-center gap-2 text-sm text-white/60"><LogOut size={16}/> Salir</button>}</div>
+  {!user?<form onSubmit={signIn} className="max-w-md space-y-4 rounded-xl border border-white/15 p-7"><h2 className="text-xl font-bold">Iniciar sesión</h2><p className="text-sm text-white/55">Solo usuarios autorizados por The Soul Nation.</p><input className={input} type="email" placeholder="Correo electrónico" required value={email} onChange={e=>setEmail(e.target.value)}/><input className={input} type="password" placeholder="Contraseña" required value={password} onChange={e=>setPassword(e.target.value)}/><button disabled={busy} className="w-full rounded-lg bg-[#F05E07] p-3 font-bold">Entrar</button></form>
+  :!authorized?<p className="max-w-xl rounded-lg border border-white/15 p-6 text-white/70">Esta cuenta no tiene permisos editoriales. Un administrador debe asignar el rol <code>soul_news_role</code> en los metadatos seguros de la cuenta.</p>
+  :<><div className="mb-8 flex flex-wrap gap-3"><button onClick={()=>{setTab("articles");setSelected(null)}} className={`rounded-full px-5 py-2 text-sm ${tab==="articles"?"bg-[#F05E07]":"bg-white/10"}`}>Artículos ({articles.length})</button><button onClick={()=>{setTab("sources");setSelected(null)}} className={`rounded-full px-5 py-2 text-sm ${tab==="sources"?"bg-[#F05E07]":"bg-white/10"}`}>Fuentes ({sources.length})</button><button onClick={load} className="ml-auto flex items-center gap-2 text-sm text-white/60"><RefreshCw size={15}/> Actualizar</button></div>
+   {tab==="articles"&&(selected?<div className="max-w-3xl space-y-4"><button onClick={()=>setSelected(null)} className="text-sm text-[#F05E07]">← Volver</button><label className="block text-xs text-white/50">Titular<input className={input} value={selected.title} onChange={e=>setSelected({...selected,title:e.target.value})}/></label><label className="block text-xs text-white/50">Resumen<textarea className={input} rows={3} value={selected.excerpt} onChange={e=>setSelected({...selected,excerpt:e.target.value})}/></label><label className="block text-xs text-white/50">Artículo<textarea className={input} rows={12} value={selected.body} onChange={e=>setSelected({...selected,body:e.target.value})}/></label><div className="grid gap-3 sm:grid-cols-3"><label className="text-xs text-white/50">Categoría<select className={input} value={selected.category} onChange={e=>setSelected({...selected,category:e.target.value})}>{["Oficial","E-Day","Comunidad","Competitivo","Análisis"].map(x=><option className="bg-[#10111a]" key={x}>{x}</option>)}</select></label><label className="text-xs text-white/50">Tipo<select className={input} value={selected.kind} onChange={e=>setSelected({...selected,kind:e.target.value})}><option className="bg-[#10111a]" value="news">Noticia</option><option className="bg-[#10111a]" value="opinion">Opinión</option></select></label><label className="text-xs text-white/50">Estado<select className={input} value={selected.status} onChange={e=>setSelected({...selected,status:e.target.value})}>{["draft","published","archived"].map(x=><option className="bg-[#10111a]" key={x} value={x}>{x==="draft"?"Borrador":x==="published"?"Publicado":"Archivado"}</option>)}</select></label></div><p className="text-xs text-white/45">Fuente: {selected.source_name} · {selected.source_url}</p><button disabled={busy} onClick={saveArticle} className="inline-flex items-center gap-2 rounded-lg bg-[#F05E07] px-6 py-3 font-bold"><Save size={16}/> Guardar cambios</button></div>
+   :<div className="divide-y divide-white/10 border-t border-white/15">{articles.map(a=><button key={a.id} onClick={()=>setSelected({...a})} className="flex w-full items-center justify-between gap-5 py-5 text-left"><div><span className="text-[11px] uppercase tracking-widest text-[#F05E07]">{a.category} · {a.status==="published"?"Publicado":"Borrador"}</span><h3 className="mt-2 font-semibold">{a.title}</h3><p className="mt-2 text-xs text-white/45">{a.source_name}</p></div><span className="text-sm text-white/50">Editar →</span></button>)}</div>)}
+   {tab==="sources"&&<><div className="divide-y divide-white/10 border-t border-white/15">{sources.map(s=><div key={s.id} className="flex items-center justify-between gap-4 py-4"><div><p className="font-semibold">{s.name}</p><p className="break-all text-xs text-white/45">{s.platform} · {s.source_url||"Sin URL"}</p></div>{role==="admin"?<button disabled={busy} onClick={()=>updateSource(s)} className={`rounded-full px-4 py-2 text-xs font-semibold ${s.active?"bg-[#01039E]":"bg-white/10"}`}>{s.active?"Activa":"Inactiva"}</button>:<span className="text-xs text-white/45">{s.active?"Activa":"Inactiva"}</span>}</div>)}</div>{role==="admin"&&<form onSubmit={addSource} className="mt-10 grid gap-3 rounded-xl border border-white/15 p-6 sm:grid-cols-[1fr_1fr_auto]"><h3 className="sm:col-span-3 text-lg font-bold">Agregar fuente</h3><input className={input} placeholder="Nombre" required value={sourceName} onChange={e=>setSourceName(e.target.value)}/><input className={input} placeholder="https://..." required value={sourceUrl} onChange={e=>setSourceUrl(e.target.value)}/><select className={input} value={sourcePlatform} onChange={e=>setSourcePlatform(e.target.value)}>{["x","youtube","rss","website","twitch"].map(x=><option className="bg-[#10111a]" key={x}>{x}</option>)}</select><button disabled={busy} className="flex items-center justify-center gap-2 rounded-lg bg-[#F05E07] px-5 py-3 font-bold sm:col-span-3"><Plus size={16}/> Agregar</button></form>}</>}
+  </>}
+  {error&&<p role="alert" className="mt-6 rounded-lg border border-red-500/40 p-4 text-sm text-red-300">{error}</p>}
+ </div></main>;
+}
