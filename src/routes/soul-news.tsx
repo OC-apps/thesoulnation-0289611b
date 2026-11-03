@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { GearsShow } from '@/components/GearsShow';
 import { ArrowLeft, ArrowUpRight, Flame, Newspaper, Search, ShieldCheck, Clock3 } from "lucide-react";
 
 type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string };
@@ -17,8 +18,13 @@ export const Route = createFileRoute("/soul-news")({
     { property:"og:description",content:"Noticias, análisis y actualidad de Gears of War." },
     { property:"og:url",content:"https://thesoulnation.org/soul-news" },
   ], links:[{rel:"canonical",href:"https://thesoulnation.org/soul-news"}] }),
-  component:SoulNews,
+  component:SoulNewsRoute,
 });
+
+function SoulNewsRoute(){
+ const pathname=useRouterState({select:state=>state.location.pathname});
+ return pathname.startsWith('/soul-news/editorial')?<Outlet/>:<SoulNews/>;
+}
 
 function SoulNews(){
   const [articles,setArticles]=useState<Article[]>([]);
@@ -45,7 +51,7 @@ function SoulNews(){
       </div>
       <header className="border-b-2 border-white/80 pb-8">
         <div className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[.3em] text-[#F05E07]"><span className="h-2 w-2 rounded-full bg-[#F05E07]"/> Gaming · Cultura · Comunidad</div>
-        <h1 className="font-black leading-[.85] tracking-[-.075em] text-[clamp(4.1rem,13vw,12rem)]">SOUL<span className="text-[#F05E07]">NEWS</span></h1>
+        <h1 className="font-black leading-[.85] tracking-[-.075em] text-[clamp(2rem,8vw,10rem)]">SOUL<span className="text-[#F05E07]">NEWS</span></h1>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-[.16em] text-white/60">
           <p>La actualidad de Gears of War, sin ruido.</p><p>THE SOUL NATION / EDICIÓN DIGITAL</p>
         </div>
@@ -64,7 +70,7 @@ function SoulNews(){
         <div className="space-y-5 whitespace-pre-line text-lg leading-9 text-white/80">{selected.body}</div>
         {safeUrl(selected.source_url)&&<a href={selected.source_url} target="_blank" rel="noopener noreferrer" className="mt-10 inline-flex items-center gap-2 border-b border-[#F05E07] pb-2 text-sm text-[#F05E07]">Consultar fuente original <ArrowUpRight size={16}/></a>}
       </article> : <>
-        <section className="grid gap-7 border-b border-white/15 py-10 lg:grid-cols-[1.75fr_1fr]">
+        <section className="grid grid-cols-1 gap-7 border-b border-white/15 py-10 lg:grid-cols-[1.75fr_1fr]">
           <div className="group min-h-[420px] overflow-hidden border border-white/10 bg-[#11131e]">
             {main ? <button className="flex h-full w-full flex-col text-left" onClick={()=>setSelected(main)}>
               <div className="relative aspect-[16/8] w-full overflow-hidden bg-gradient-to-br from-[#01039E] to-[#10111c]">{safeUrl(main.image_url)&&<img src={safeUrl(main.image_url)} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]"/>}</div>
@@ -72,11 +78,12 @@ function SoulNews(){
             </button> : <div className="flex h-full flex-col justify-between p-8 sm:p-12"><Newspaper size={40} className="text-[#F05E07]"/><div><p className="mb-4 text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">Edición inaugural</p><h2 className="max-w-xl text-4xl font-bold tracking-tight sm:text-6xl">Una nueva forma de contar Gears.</h2><p className="mt-6 max-w-lg leading-7 text-white/60">{loading?"Consultando las publicaciones…":"Todavía no hay artículos publicados. La redacción solo mostrará noticias verificadas, con fuentes y fechas reales."}</p></div><div className="mt-10 flex items-center gap-2 text-sm text-white/50"><ShieldCheck size={17}/> Sin titulares inventados</div></div>}
           </div>
           <aside className="flex flex-col justify-between border-t-4 border-[#F05E07] bg-[#151521] p-8">
-            <div><div className="flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">La columna</p><Flame size={25} className="text-[#F05E07]"/></div><h2 className="mt-10 text-5xl font-black uppercase leading-[.95] tracking-tight">Gears<br/>al Carbón<span className="text-[#F05E07]">.</span></h2><p className="mt-7 leading-7 text-white/65">La opinión de la casa. Análisis, humor norteño y conversación con Dizzy, sin confundir carrilla con información.</p></div>
+            <div><div className="flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">La columna</p><Flame size={25} className="text-[#F05E07]"/></div><h2 className="mt-10 text-4xl sm:text-5xl font-black uppercase leading-[.95] tracking-tight">Gears<br/>al Carbón<span className="text-[#F05E07]">.</span></h2><p className="mt-7 leading-7 text-white/65">La opinión de la casa. Análisis, humor norteño y conversación con Dizzy, sin confundir carrilla con información.</p></div>
             {opinion?<button onClick={()=>setSelected(opinion)} className="mt-12 flex items-center justify-between border-t border-white/20 pt-5 text-left text-sm font-semibold">{opinion.title}<ArrowUpRight/></button>:<div className="mt-12 border-t border-white/20 pt-5 text-xs uppercase tracking-widest text-white/40">Próxima entrega · En revisión editorial</div>}
           </aside>
         </section>
-        <section className="py-12"><div className="mb-8 flex items-baseline justify-between border-b border-white/20 pb-4"><h2 className="text-2xl font-bold uppercase tracking-tight">Últimas publicaciones</h2><span className="text-xs text-white/40">{filtered.length} artículos</span></div>
+        <GearsShow/>
+        <section className="py-12"><div className="mb-8 flex flex-wrap items-baseline justify-between gap-3 border-b border-white/20 pb-4"><h2 className="text-2xl font-bold uppercase tracking-tight">Últimas publicaciones</h2><span className="text-xs text-white/40">{filtered.length} artículos</span></div>
           {filtered.length>1?<div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{filtered.slice(1).map(a=><button key={a.id} onClick={()=>setSelected(a)} className="group border-b border-white/15 pb-6 text-left"><div className="mb-5 aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#01039E] to-[#171727]">{safeUrl(a.image_url)&&<img src={safeUrl(a.image_url)} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>}</div><p className="text-[11px] font-bold uppercase tracking-[.18em] text-[#F05E07]">{a.category} · {date(a.published_at)}</p><h3 className="mt-3 text-xl font-bold leading-snug">{a.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-white/55">{a.excerpt}</p></button>)}</div>:<p className="py-12 text-sm text-white/50">{search||category!=="Todas"?"No hay publicaciones que coincidan con esta búsqueda.":"Los próximos artículos aparecerán aquí cuando sean publicados."}</p>}
         </section>
       </>}

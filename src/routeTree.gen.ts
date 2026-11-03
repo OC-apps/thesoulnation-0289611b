@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as XplicitCupRouteImport } from './routes/xplicit-cup'
+import { Route as StreampackRouteImport } from './routes/streampack'
+import { Route as SoulNewsRouteImport } from './routes/soul-news'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SoulNewsEditorialRouteImport } from './routes/soul-news.editorial'
 import { Route as AdminLiveRouteImport } from './routes/admin.live'
 
 const XplicitCupRoute = XplicitCupRouteImport.update({
@@ -18,10 +21,25 @@ const XplicitCupRoute = XplicitCupRouteImport.update({
   path: '/xplicit-cup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StreampackRoute = StreampackRouteImport.update({
+  id: '/streampack',
+  path: '/streampack',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoulNewsRoute = SoulNewsRouteImport.update({
+  id: '/soul-news',
+  path: '/soul-news',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SoulNewsEditorialRoute = SoulNewsEditorialRouteImport.update({
+  id: '/editorial',
+  path: '/editorial',
+  getParentRoute: () => SoulNewsRoute,
 } as any)
 const AdminLiveRoute = AdminLiveRouteImport.update({
   id: '/admin/live',
@@ -31,30 +49,60 @@ const AdminLiveRoute = AdminLiveRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/soul-news': typeof SoulNewsRouteWithChildren
+  '/streampack': typeof StreampackRoute
   '/xplicit-cup': typeof XplicitCupRoute
   '/admin/live': typeof AdminLiveRoute
+  '/soul-news/editorial': typeof SoulNewsEditorialRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/soul-news': typeof SoulNewsRouteWithChildren
+  '/streampack': typeof StreampackRoute
   '/xplicit-cup': typeof XplicitCupRoute
   '/admin/live': typeof AdminLiveRoute
+  '/soul-news/editorial': typeof SoulNewsEditorialRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/soul-news': typeof SoulNewsRouteWithChildren
+  '/streampack': typeof StreampackRoute
   '/xplicit-cup': typeof XplicitCupRoute
   '/admin/live': typeof AdminLiveRoute
+  '/soul-news/editorial': typeof SoulNewsEditorialRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/xplicit-cup' | '/admin/live'
+  fullPaths:
+    | '/'
+    | '/soul-news'
+    | '/streampack'
+    | '/xplicit-cup'
+    | '/admin/live'
+    | '/soul-news/editorial'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/xplicit-cup' | '/admin/live'
-  id: '__root__' | '/' | '/xplicit-cup' | '/admin/live'
+  to:
+    | '/'
+    | '/soul-news'
+    | '/streampack'
+    | '/xplicit-cup'
+    | '/admin/live'
+    | '/soul-news/editorial'
+  id:
+    | '__root__'
+    | '/'
+    | '/soul-news'
+    | '/streampack'
+    | '/xplicit-cup'
+    | '/admin/live'
+    | '/soul-news/editorial'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SoulNewsRoute: typeof SoulNewsRouteWithChildren
+  StreampackRoute: typeof StreampackRoute
   XplicitCupRoute: typeof XplicitCupRoute
   AdminLiveRoute: typeof AdminLiveRoute
 }
@@ -68,12 +116,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof XplicitCupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/streampack': {
+      id: '/streampack'
+      path: '/streampack'
+      fullPath: '/streampack'
+      preLoaderRoute: typeof StreampackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soul-news': {
+      id: '/soul-news'
+      path: '/soul-news'
+      fullPath: '/soul-news'
+      preLoaderRoute: typeof SoulNewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/soul-news/editorial': {
+      id: '/soul-news/editorial'
+      path: '/editorial'
+      fullPath: '/soul-news/editorial'
+      preLoaderRoute: typeof SoulNewsEditorialRouteImport
+      parentRoute: typeof SoulNewsRoute
     }
     '/admin/live': {
       id: '/admin/live'
@@ -85,11 +154,35 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface SoulNewsRouteChildren {
+  SoulNewsEditorialRoute: typeof SoulNewsEditorialRoute
+}
+
+const SoulNewsRouteChildren: SoulNewsRouteChildren = {
+  SoulNewsEditorialRoute: SoulNewsEditorialRoute,
+}
+
+const SoulNewsRouteWithChildren = SoulNewsRoute._addFileChildren(
+  SoulNewsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SoulNewsRoute: SoulNewsRouteWithChildren,
+  StreampackRoute: StreampackRoute,
   XplicitCupRoute: XplicitCupRoute,
   AdminLiveRoute: AdminLiveRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
