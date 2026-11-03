@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { gearsTime, gearsUrl } from "@/lib/gears";
 import type { GearsEpisode, GearsMedia, GearsSegment } from "@/lib/gears";
+import soulLogo from "@/assets/soul-logo-official.png";
 import "./gears-player.css";
 
 export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: GearsMedia[] }) {
   const videos = useRef<Partial<Record<GearsSegment, HTMLVideoElement>>>({});
   const audio = useRef<HTMLAudioElement>(null);
   const [segment, setSegment] = useState<GearsSegment>("intro");
+  const [previous, setPrevious] = useState<GearsSegment | null>(null);
+  const [transition, setTransition] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
+  const pendingTransition = useRef<GearsSegment | null>(null);
+  const transitionTimer = useRef<number | null>(null);
   const current = useRef<GearsSegment>("intro");
   const wanted = useRef(false);
   const [playing, setPlaying] = useState(false);
@@ -68,6 +74,10 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
   function change(next: GearsSegment) {
     generation.current++;
     pauseAll();
+    if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current);
+    setPrevious(current.current);
+    setTransitioning(false);
+    pendingTransition.current = next;
     current.current = next;
     setSegment(next);
     setBuffering(wanted.current);
@@ -76,6 +86,16 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
     if (next === "background" && audio.current && seekTarget.current === null)
       audio.current.currentTime = 0;
     void resume();
+  }
+  function reveal(id: GearsSegment) {
+    if (current.current !== id || pendingTransition.current !== id) return;
+    pendingTransition.current = null;
+    setTransition((value) => value + 1);
+    setTransitioning(true);
+    transitionTimer.current = window.setTimeout(() => {
+      setTransitioning(false);
+      setPrevious(null);
+    }, 1100);
   }
   function toggle() {
     if (wanted.current) {
@@ -137,6 +157,9 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
       void resume();
   }
   useEffect(() => {
+    // Fetch the existing brand asset before the first segment transition.
+    const brand = new Image();
+    brand.src = soulLogo;
     // iOS uses the device volume and ignores per-element volume mixing.
     // Keep the visual bed silent there so it cannot overpower the narrator.
     setMobileVolume(
@@ -152,6 +175,8 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
       generation.current++;
       Object.values(nodes).forEach((v) => v?.pause());
       voice?.pause();
+      // This timer belongs to playback state and may be replaced during a transition.
+      if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current);
     };
   }, []);
   useEffect(() => {
@@ -162,7 +187,7 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
   }, [volume]);
   return (
     <div className="gears-player" aria-label={`Reproductor: ${episode.title}`}>
-      <div className="gears-stage" data-segment={segment}>
+      <div className="gears-stage" data-segment={segment} data-transitioning={transitioning}>
         {(["intro", "background", "outro"] as const).map((id) => {
           const asset = media.find((m) => m.id === id);
           return (
@@ -177,12 +202,13 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
                 playsInline
                 muted={id === "background" && mobileVolume}
                 loop={id === "background"}
-                className={`gears-video ${segment === id ? "is-active" : ""}`}
+                className={`gears-video ${segment === id ? "is-active" : ""} ${previous === id ? "is-previous" : ""} ${segment === id && previous && !transitioning ? "is-preparing" : ""}`}
                 aria-hidden="true"
                 onWaiting={() => {
                   if (current.current === id) waiting();
                 }}
                 onCanPlay={canContinue}
+                onPlaying={() => reveal(id)}
                 onError={() => {
                   if (current.current === id)
                     fail("No se pudo cargar el video. Intenta reproducir de nuevo.");
@@ -238,7 +264,20 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
           }}
           onError={() => fail("No se pudo cargar el MP3. Intenta de nuevo.")}
         />
-        <div key={segment} className={started ? "gears-sweep" : ""} aria-hidden="true" />
+        {transitioning && (
+          <div key={transition} className="gears-transition" aria-hidden="true">
+            <div className="gears-shutter gears-shutter-top" />
+            <div className="gears-shutter gears-shutter-bottom" />
+            <div className="gears-sweep" />
+            <div className="gears-flare" />
+            <div className="gears-streaks" />
+            <div className="gears-brand">
+              <img src={soulLogo} alt="" />
+              <span>THE SOUL NATION</span>
+              <i />
+            </div>
+          </div>
+        )}
         {!started && (
           <div className="gears-cover">
             <span>SOUL NEWS · DIZZY</span>

@@ -19,19 +19,21 @@ MB decimales (1 MB = 1.000.000 bytes):
 | Archivo original | Bytes | MB |
 | --- | ---: | ---: |
 | intro gears al carbon.mp4 | 5.813.362 | 5,81 |
-| Videopodcast.mp4 | 45.240.325 | 45,24 |
+| videopodcast.mp4 · fondo nuevo optimizado | 38.007.569 | 38,01 |
 | outro soul vertical.mp4 | 22.425.147 | 22,43 |
-| **Tres videos compartidos** | **73.478.834** | **73,48** |
+| **Tres videos compartidos** | **66.246.078** | **66,25** |
 | 20261103-005415-0d5677ccd3fd.mp3 | 1.766.444 | 1,77 |
-| **Instalación inicial con episodio 01** | **75.245.278** | **75,25** |
+| **Almacenamiento actual con episodio 01** | **68.012.522** | **68,01** |
 
-El crecimiento marginal es **el tamaño de cada MP3 + unos pocos datos de título, descripción, fecha y estado**, sin un MP4 adicional. Si todos los MP3 midieran lo mismo que el primero, 100 episodios ocuparían unos **250,12 MB** en total: 73,48 MB fijos + 176,64 MB de audio. El tamaño de futuros MP3 depende de duración y bitrate; no se garantiza 1–3 MB.
+El crecimiento marginal es **el tamaño de cada MP3 + unos pocos datos de título, descripción, fecha y estado**, sin un MP4 adicional. Si todos los MP3 midieran lo mismo que el primero, 100 episodios ocuparían unos **242,89 MB** en total: 66,25 MB fijos + 176,64 MB de audio. El tamaño de futuros MP3 depende de duración y bitrate; no se garantiza 1–3 MB.
 
-El almacenamiento se distingue del tráfico: cada visitante puede descargar los videos compartidos. Se usa `preload="none"` hasta reproducir y caché de un año en URLs inmutables; la caché del navegador/CDN reduce descargas repetidas, pero no elimina el tráfico ni su posible costo. No hay conversión ni compresión de los originales.
+El fondo anterior de 45.240.325 bytes fue eliminado de Storage a petición del usuario y sustituido por el nuevo `C:/Users/SoulM/Videos/videopodcast.mp4`. El original nuevo mide 88.634.201 bytes y supera el límite de 50 MiB del plan actual. Se preparó **una sola versión compartida** H.264 CRF 17, preset slow, AAC 192 kb/s, `faststart`, 1080×1920 a 24 fps, duración 40,085 s. La comparación SSIM global con el original dio 0,993146. No se redimensionó ni se generaron videos por episodio. Ruta nueva: `background/a3262607-c228-448f-aa63-46e67d6a2db3.mp4`.
+
+El almacenamiento se distingue del tráfico: cada visitante puede descargar los videos compartidos. Se usa `preload="none"` hasta reproducir y caché de un año en URLs inmutables; la caché del navegador/CDN reduce descargas repetidas, pero no elimina el tráfico ni su posible costo. Solo se optimizó el nuevo fondo compartido para cumplir el límite del alojamiento.
 
 ## Reproductor
 
-Tres segmentos, con intro saltable, jingle original, fondo en bucle y outro automático al finalizar el MP3. Transición CSS de 750 ms con barrido, opacidad y desenfoque; respeta `prefers-reduced-motion`. El MP3 es el reloj: avanzar lo posiciona junto con el fondo (`tiempo % duración del fondo`), y pausas/esperas de carga detienen ambos. La barra indica el tiempo del episodio MP3, excluyendo intro y outro. Avanzar desde intro o cierre abre la narración.
+Tres segmentos, con intro saltable, jingle original, fondo en bucle y outro automático al finalizar el MP3. Transición CSS de 1,1 s con el logo oficial de The Soul Nation, zoom, cortinas diagonales, estelas y destello naranja; respeta `prefers-reduced-motion` mostrando la marca sin desplazamientos ni destellos. El siguiente video comienza a revelar la transición cuando ya se está reproduciendo, conservando el último fotograma anterior mientras carga. La imagen del logo existente se precarga; no se genera un video de transición. El MP3 es el reloj: avanzar lo posiciona junto con el fondo (`tiempo % duración del fondo`), y pausas/esperas de carga detienen ambos. El bucle no dispara transiciones ni reinicia la voz. La barra indica el tiempo del episodio MP3, excluyendo intro y outro. Avanzar desde intro o cierre abre la narración.
 
 Controles de reproducir/pausar, avance y volumen; formato 9:16 sin deformación, `playsInline`, objetivos táctiles de 44 px y etiquetas accesibles. El audio se desbloquea mediante gesto del usuario. Si el navegador bloquea un cambio de segmento, muestra un mensaje para continuar con el botón. Música del fondo al 8 % en escritorio; en iOS se silencia el fondo para no tapar al narrador, porque ese sistema ignora el volumen por elemento. En iOS el volumen general se regula también con los botones del dispositivo. Falta una prueba física en iPhone/iPad; la emulación de tamaños no verifica las restricciones de Safari.
 

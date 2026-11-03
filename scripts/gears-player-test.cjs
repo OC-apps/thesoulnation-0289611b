@@ -74,6 +74,32 @@ const base = process.env.SOUL_TEST_BASE || "http://127.0.0.1:5173";
         video: el.querySelectorAll("video")[1].currentTime,
       }));
       assert.ok(Math.abs(sync.audio - sync.video) < 1, "Audio is the seek clock");
+      const loopDuration = await page
+        .locator(".gears-player video")
+        .nth(1)
+        .evaluate((v) => v.duration);
+      const voiceDuration = await page.locator(".gears-player audio").evaluate((a) => a.duration);
+      if (loopDuration + 2 < voiceDuration) {
+        await page
+          .getByRole("slider", { name: "Posición del MP3 del episodio" })
+          .fill((loopDuration - 0.6).toFixed(1));
+        await page.waitForFunction(
+          () => {
+            const a = document.querySelector(".gears-player audio"),
+              v = document.querySelectorAll(".gears-player video")[1];
+            return (
+              a.currentTime > v.duration + 0.2 &&
+              !a.paused &&
+              !v.paused &&
+              v.currentTime < 3 &&
+              document.querySelector(".gears-stage").dataset.segment === "background"
+            );
+          },
+          {},
+          { timeout: 30000 },
+        );
+        console.log(`PASS ${width}px: real background loop without restarting the MP3`);
+      }
       await page.getByRole("button", { name: "Pausar", exact: true }).click();
       await page.getByRole("slider", { name: "Posición del MP3 del episodio" }).fill("40");
       assert.equal(
@@ -113,6 +139,39 @@ const base = process.env.SOUL_TEST_BASE || "http://127.0.0.1:5173";
       await page.getByRole("alert").filter({ hasText: "Contraseña incorrecta" }).waitFor();
       await page.close();
     }
+    const branded = await browser.newPage({
+      viewport: { width: 390, height: 900 },
+      reducedMotion: "no-preference",
+    });
+    await branded.goto(base + "/soul-news", { waitUntil: "networkidle" });
+    await branded.getByRole("button", { name: "▶ Reproducir episodio" }).click();
+    await branded.waitForFunction(
+      () => document.querySelector(".gears-video.is-active")?.currentTime > 0,
+    );
+    await branded.getByRole("button", { name: "Saltar intro" }).click();
+    await branded.waitForSelector(".gears-brand");
+    assert.ok(
+      await branded
+        .locator(".gears-brand img")
+        .evaluate((img) => img.complete && img.naturalWidth > 0),
+      "Official logo preloaded",
+    );
+    assert.ok(
+      (await branded
+        .locator(".gears-stage")
+        .evaluate((el) => el.getAnimations({ subtree: true }).length)) >= 5,
+      "Code-driven transition layers",
+    );
+    await branded.waitForFunction(
+      () => document.querySelector(".gears-stage").dataset.transitioning === "false",
+    );
+    assert.equal(
+      await branded.locator(".gears-transition,.gears-video.is-previous").count(),
+      0,
+      "Transition cleanup",
+    );
+    await branded.close();
+    console.log("PASS branded transition: logo loaded, animation layers and cleanup");
   } finally {
     await browser.close();
   }
