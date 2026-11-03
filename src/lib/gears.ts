@@ -6,6 +6,11 @@ export type GearsEpisode = {
   description: string;
   audio_path: string;
   audio_bytes: number;
+  editorial_title?: string | null;
+  editorial_body?: string | null;
+  narration_script?: string | null;
+  edition_date?: string | null;
+  thumbnail_url?: string | null;
   status: "draft" | "published" | "archived";
   published_at: string;
 };
