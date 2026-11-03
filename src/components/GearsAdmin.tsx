@@ -109,7 +109,7 @@ export function GearsAdmin({ password }: { password: string }) {
       <h2 className="text-2xl font-bold">Gears al Carbón</h2>
       <p className="text-sm text-white/60">
         Los tres videos se comparten entre todos los episodios. Para cada entrega, sube solo el MP3.
-        Sin renderizado ni subtítulos.
+        La reproducción pública no genera un video nuevo. La exportación MP4 es privada y opcional.
       </p>
       <fieldset disabled={busy} className="rounded-xl border border-white/15 p-5">
         <legend>Videos base · cargar una sola vez</legend>
@@ -195,7 +195,7 @@ export function GearsAdmin({ password }: { password: string }) {
       </p>
       {edit ? (
         <div className="space-y-4">
-          <button onClick={() => setEdit(null)}>← Volver</button>
+          <div className="flex flex-wrap items-center justify-between gap-3"><button onClick={() => setEdit(null)}>← Volver</button><a href="#exportar-gears-mp4" className="rounded-lg border border-[#F05E07]/60 px-4 py-2 text-sm font-semibold text-[#F05E07]">Ir a exportar MP4 para redes ↓</a></div>
           <label className="block">
             Título
             <input
@@ -272,7 +272,7 @@ export function GearsAdmin({ password }: { password: string }) {
             Guardar episodio
           </button>
           <GearsPlayer key={edit.id} episode={edit} media={media} />
-          <GearsExport key={"export-"+edit.id} episode={edit} media={media} />
+          <div id="exportar-gears-mp4" className="scroll-mt-24"><GearsExport key={"export-"+edit.id} episode={edit} media={media} /></div>
         </div>
       ) : (
         <div className="divide-y divide-white/15">
@@ -284,7 +284,7 @@ export function GearsAdmin({ password }: { password: string }) {
             >
               <strong>{e.title}</strong>
               <span className="ml-3 text-sm text-white/50">
-                {e.status} · {(e.audio_bytes / 1000000).toFixed(2)} MB · Editar / Previsualizar →
+                {e.status} · {(e.audio_bytes / 1000000).toFixed(2)} MB · Editar / Previsualizar / Exportar MP4 →
               </span>
             </button>
           ))}
