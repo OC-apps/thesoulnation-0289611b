@@ -21,12 +21,14 @@ export const getGearsAdmin = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     check(data.password);
     const db = await client();
-    const [m, e] = await Promise.all([
+    const [m, e, a, links] = await Promise.all([
       db.from("gears_media").select("*"),
       db.from("gears_episodes").select("*").order("published_at", { ascending: false }),
+      db.from("soul_news_articles").select("id,title,published_at,status,category,group_key").order("published_at", { ascending: false }).limit(200),
+      db.from("gears_episode_articles").select("episode_id,article_id"),
     ]);
-    if (m.error || e.error) throw Error("No se pudieron cargar los episodios");
-    return { media: m.data as GearsMedia[], episodes: e.data as GearsEpisode[] };
+    if (m.error || e.error || a.error || links.error) throw Error("No se pudieron cargar los episodios y las noticias");
+    return { media: m.data as GearsMedia[], episodes: e.data as GearsEpisode[], articles: a.data || [], links: links.data || [] };
   });
 export const prepareGearsUpload = createServerFn({ method: "POST" })
   .inputValidator((raw) =>
@@ -108,6 +110,11 @@ export const updateGearsEpisode = createServerFn({ method: "POST" })
         description: z.string().max(3000),
         status: z.enum(["draft", "published", "archived"]),
         published_at: z.string().datetime(),
+        editorial_title: z.string().max(250).nullable().optional(),
+        editorial_body: z.string().max(30000).nullable().optional(),
+        narration_script: z.string().max(30000).nullable().optional(),
+        edition_date: z.string().regex(/^\\d{4}-\\d{2}-\\d{2}$/).nullable().optional(),
+        article_ids: z.array(z.string().uuid()).max(20).optional(),
       })
       .parse(raw),
   )
@@ -120,7 +127,8 @@ export const updateGearsEpisode = createServerFn({ method: "POST" })
         .select("id", { count: "exact", head: true });
       if (error || count !== 3) throw Error("Carga primero los tres videos base");
     }
-    const { password: _, id, ...values } = data;
+    const { password: _, id, article_ids, ...values } = data;
+    if(data.status === "published" && article_ids && !article_ids.length && !data.editorial_body?.trim()) throw Error("Selecciona noticias o escribe una edición editorial antes de publicar");
     const { data: updated, error } = await db
       .from("gears_episodes")
       .update(values)
@@ -128,5 +136,13 @@ export const updateGearsEpisode = createServerFn({ method: "POST" })
       .select("id")
       .single();
     if (error || !updated) throw Error("No se pudo actualizar el episodio");
+    if(article_ids){
+      const {error:deleteError}=await db.from("gears_episode_articles").delete().eq("episode_id",id);
+      if(deleteError)throw Error("No se pudo actualizar la relación con noticias");
+      if(article_ids.length){
+        const {error:insertError}=await db.from("gears_episode_articles").insert(article_ids.map(article_id=>({episode_id:id,article_id})));
+        if(insertError)throw Error("No se pudieron asociar las noticias");
+      }
+    }
     return { ok: true };
   });
