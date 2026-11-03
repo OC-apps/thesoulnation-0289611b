@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { GearsShow } from '@/components/GearsShow';
+import { getSoulNewsRadar, type RadarItem } from "@/lib/soul-news-radar.functions";
 import { ArrowLeft, ArrowUpRight, Flame, Newspaper, Search, ShieldCheck, Clock3 } from "lucide-react";
 
 type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string };
@@ -28,6 +29,7 @@ function SoulNewsRoute(){
 
 function SoulNews(){
   const [articles,setArticles]=useState<Article[]>([]);
+  const [radar,setRadar]=useState<RadarItem[]>([]);
   const [loading,setLoading]=useState(true);
   const [category,setCategory]=useState("Todas");
   const [search,setSearch]=useState("");
@@ -40,6 +42,7 @@ function SoulNews(){
     }).then(r=>{if(!r.ok)throw Error("Unavailable");return r.json()}).then(data=>{if(active&&Array.isArray(data))setArticles(data)}).catch(()=>{}).finally(()=>{if(active)setLoading(false)});
     return()=>{active=false};
   },[]);
+  useEffect(()=>{let active=true;getSoulNewsRadar().then(items=>{if(active)setRadar(items)}).catch(()=>{});return()=>{active=false};},[]);
   const filtered=useMemo(()=>articles.filter(a=>(category==="Todas"||a.category===category)&&(!search||[a.title,a.excerpt].join(" ").toLowerCase().includes(search.toLowerCase()))),[articles,category,search]);
   const main=filtered[0];
   const opinion=articles.find(a=>a.kind==="opinion"&&a.status==="published");
@@ -83,6 +86,15 @@ function SoulNews(){
           </aside>
         </section>
         <GearsShow/>
+        {radar.length>0&&<section className="border-b border-white/15 py-10" aria-label="Radar de fuentes">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[.22em] text-[#F05E07]">Actualización diaria · En seguimiento</p><h2 className="mt-2 text-2xl font-bold">Radar de fuentes de Gears</h2></div><span className="text-xs text-white/50">Titulares externos · No verificados editorialmente</span></div>
+          <p className="mb-5 max-w-3xl text-sm leading-6 text-white/60">Estas referencias proceden del monitoreo automático de medios. No son noticias confirmadas por The Soul Nation; abre la fuente original antes de compartirlas como hechos.</p>
+          <div className="grid gap-3 md:grid-cols-2">{radar.map(item=><a key={item.id} href={item.source_url} target="_blank" rel="noopener noreferrer" className="group rounded-xl border border-white/15 bg-[#111325] p-4 transition hover:border-[#F05E07]/60">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#F05E07]">{item.category} · {item.source_name}</span>
+            <h3 className="mt-2 text-base font-bold leading-snug text-white group-hover:underline">{item.title}</h3>
+            <span className="mt-3 block text-xs text-white/50">{new Date(item.published_at).toLocaleDateString("es-MX")} · Consultar fuente ↗</span>
+          </a>)}</div>
+        </section>}
         <section className="py-12"><div className="mb-8 flex flex-wrap items-baseline justify-between gap-3 border-b border-white/20 pb-4"><h2 className="text-2xl font-bold uppercase tracking-tight">Últimas publicaciones</h2><span className="text-xs text-white/40">{filtered.length} artículos</span></div>
           {filtered.length>1?<div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{filtered.slice(1).map(a=><button key={a.id} onClick={()=>setSelected(a)} className="group border-b border-white/15 pb-6 text-left"><div className="mb-5 aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#01039E] to-[#171727]">{safeUrl(a.image_url)&&<img src={safeUrl(a.image_url)} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>}</div><p className="text-[11px] font-bold uppercase tracking-[.18em] text-[#F05E07]">{a.category} · {date(a.published_at)}</p><h3 className="mt-3 text-xl font-bold leading-snug">{a.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-white/55">{a.excerpt}</p></button>)}</div>:<p className="py-12 text-sm text-white/50">{search||category!=="Todas"?"No hay publicaciones que coincidan con esta búsqueda.":"Los próximos artículos aparecerán aquí cuando sean publicados."}</p>}
         </section>
