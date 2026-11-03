@@ -11,7 +11,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Radio, Users, Waves as WavesIcon, Link2, Search, Plus, Trash2, EyeOff, Eye, Save, LogOut, Image as ImageIcon } from "lucide-react";
+import { Radio, Users, Waves as WavesIcon, Link2, Search, Plus, Trash2, EyeOff, Eye, Save, LogOut, Newspaper, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { updateWavePhoto } from "@/lib/wave-photo.functions";
 import { addRosterMember, removeRosterMember, syncOfficialRoster } from "@/lib/roster.functions";
@@ -612,7 +612,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-7 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -633,6 +633,10 @@ function AdminLivePage() {
               <Link2 className="w-3.5 h-3.5" />
               <span>Contenido</span>
             </TabsTrigger>
+            <TabsTrigger value="soul-news" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-[10px] sm:text-xs font-mono uppercase tracking-widest">
+              <Newspaper className="w-3.5 h-3.5" />
+              <span>Soul News</span>
+            </TabsTrigger>
             <TabsTrigger value="applications" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-[10px] sm:text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Solicitudes</span>
@@ -640,6 +644,13 @@ function AdminLivePage() {
           </TabsList>
 
 
+
+          <TabsContent value="soul-news" className="mt-0">
+            <SectionShell icon={Newspaper} title="Administrar Soul News" subtitle="Redacción, fuentes, noticias y videopodcast">
+              <p className="mb-5 text-sm text-white/70">Accede al editor completo de Soul News desde el panel de administración. Utiliza la misma contraseña de administrador.</p>
+              <a href="/soul-news/editorial" className="inline-flex items-center justify-center rounded-lg bg-flame px-5 py-3 text-sm font-semibold text-background transition hover:opacity-90">Abrir administración de Soul News</a>
+            </SectionShell>
+          </TabsContent>
 
           <TabsContent value="applications" className="mt-0">
             <RecruitmentAdminPanel password={password} />
