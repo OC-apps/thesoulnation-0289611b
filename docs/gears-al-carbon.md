@@ -18,14 +18,16 @@ MB decimales (1 MB = 1.000.000 bytes):
 
 | Archivo original | Bytes | MB |
 | --- | ---: | ---: |
-| intro gears al carbon.mp4 | 5.813.362 | 5,81 |
+| intro Gears al carbon.mp4 · intro nueva original | 27.579.116 | 27,58 |
 | videopodcast.mp4 · fondo nuevo optimizado | 38.007.569 | 38,01 |
 | outro soul vertical.mp4 | 22.425.147 | 22,43 |
-| **Tres videos compartidos** | **66.246.078** | **66,25** |
+| **Tres videos compartidos** | **88.011.832** | **88,01** |
 | 20261103-005415-0d5677ccd3fd.mp3 | 1.766.444 | 1,77 |
-| **Almacenamiento actual con episodio 01** | **68.012.522** | **68,01** |
+| **Almacenamiento actual con episodio 01** | **89.778.276** | **89,78** |
 
-El crecimiento marginal es **el tamaño de cada MP3 + unos pocos datos de título, descripción, fecha y estado**, sin un MP4 adicional. Si todos los MP3 midieran lo mismo que el primero, 100 episodios ocuparían unos **242,89 MB** en total: 66,25 MB fijos + 176,64 MB de audio. El tamaño de futuros MP3 depende de duración y bitrate; no se garantiza 1–3 MB.
+El crecimiento marginal es **el tamaño de cada MP3 + unos pocos datos de título, descripción, fecha y estado**, sin un MP4 adicional. Si todos los MP3 midieran lo mismo que el primero, 100 episodios ocuparían unos **264,66 MB** en total: 88,01 MB fijos + 176,64 MB de audio. El tamaño de futuros MP3 depende de duración y bitrate; no se garantiza 1–3 MB.
+
+La intro anterior de 5.813.362 bytes fue sustituida a petición del usuario por el archivo original `C:/Users/SoulM/Videos/intro Gears al carbon.mp4`: 27.579.116 bytes, 11,477 s, H.264/AAC, 1080×1920. Se alojó sin compresión ni recodificación en `intro/184a44d2-7dc4-424c-ad09-8e96095aceb6.mp4` y se eliminó del alojamiento la intro anterior. Conserva el botón de salto y la transición de marca al MP3/fondo.
 
 El fondo anterior de 45.240.325 bytes fue eliminado de Storage a petición del usuario y sustituido por el nuevo `C:/Users/SoulM/Videos/videopodcast.mp4`. El original nuevo mide 88.634.201 bytes y supera el límite de 50 MiB del plan actual. Se preparó **una sola versión compartida** H.264 CRF 17, preset slow, AAC 192 kb/s, `faststart`, 1080×1920 a 24 fps, duración 40,085 s. La comparación SSIM global con el original dio 0,993146. No se redimensionó ni se generaron videos por episodio. Ruta nueva: `background/a3262607-c228-448f-aa63-46e67d6a2db3.mp4`.
 
