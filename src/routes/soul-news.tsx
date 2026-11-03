@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useEffect, useMemo, useState } from "react";
 import { GearsShow } from '@/components/GearsShow';
 import { getSoulNewsRadar, type RadarItem } from "@/lib/soul-news-radar.functions";
-import { ArrowLeft, ArrowUpRight, Flame, Newspaper, Search, ShieldCheck, Clock3 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Newspaper, Search, ShieldCheck, Clock3 } from "lucide-react";
 
 type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string; classification?:string; verification_note?:string|null; source_links?:string[]|null };
 const API = "https://quscgfasziijdjyixsex.supabase.co/rest/v1/soul_news_articles";
@@ -77,17 +77,14 @@ function SoulNews(){
         {(selected.source_links||[]).filter(url=>safeUrl(url)).map((url,i)=><a key={url} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-b border-white/35 pb-2 text-sm text-white/75">Fuente complementaria {i+1} <ArrowUpRight size={16}/></a>)}
         </div>
       </article> : <>
-        <section className="grid grid-cols-1 gap-7 border-b border-white/15 py-10 lg:grid-cols-[1.75fr_1fr]">
+        <section className="grid grid-cols-1 gap-7 border-b border-white/15 py-10 ">
           <div className="group min-h-[420px] overflow-hidden border border-white/10 bg-[#11131e]">
             {main ? <button className="flex h-full w-full flex-col text-left" onClick={()=>setSelected(main)}>
               <div className="relative aspect-[16/8] w-full overflow-hidden bg-gradient-to-br from-[#01039E] to-[#10111c]">{safeUrl(main.image_url)&&<img src={safeUrl(main.image_url)} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]"/>}</div>
               <div className="p-7 sm:p-9"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">{main.category} · {articleLabel(main)} · {date(main.published_at)}</p><h2 className="mt-3 max-w-[760px] text-[clamp(1.4rem,2.6vw,2.3rem)] font-bold leading-[1.18] tracking-[-.02em] [text-wrap:balance]">{main.title}</h2><p className="mt-4 max-w-2xl text-base leading-7 text-white/60">{main.excerpt}</p><span className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#F05E07]">Leer artículo <ArrowUpRight size={16}/></span></div>
             </button> : <div className="flex h-full flex-col justify-between p-8 sm:p-12"><Newspaper size={40} className="text-[#F05E07]"/><div><p className="mb-4 text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">Edición inaugural</p><h2 className="max-w-xl text-4xl font-bold tracking-tight sm:text-6xl">Una nueva forma de contar Gears.</h2><p className="mt-6 max-w-lg leading-7 text-white/60">{loading?"Consultando las publicaciones…":"Todavía no hay artículos publicados. La redacción solo mostrará noticias verificadas, con fuentes y fechas reales."}</p></div><div className="mt-10 flex items-center gap-2 text-sm text-white/50"><ShieldCheck size={17}/> Sin titulares inventados</div></div>}
           </div>
-          <aside className="flex flex-col justify-between border-t-4 border-[#F05E07] bg-[#151521] p-8">
-            <div><div className="flex items-center justify-between"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">La columna</p><Flame size={25} className="text-[#F05E07]"/></div><h2 className="mt-10 text-4xl sm:text-5xl font-black uppercase leading-[.95] tracking-tight">Gears<br/>al Carbón<span className="text-[#F05E07]">.</span></h2><p className="mt-7 leading-7 text-white/65">La opinión de la casa. Análisis, humor norteño y conversación con Dizzy, sin confundir carrilla con información.</p></div>
-            {opinion?<button onClick={()=>setSelected(opinion)} className="mt-12 flex items-center justify-between border-t border-white/20 pt-5 text-left text-sm font-semibold">{opinion.title}<ArrowUpRight/></button>:<div className="mt-12 border-t border-white/20 pt-5 text-xs uppercase tracking-widest text-white/40">Próxima entrega · En revisión editorial</div>}
-          </aside>
+
         </section>
         <GearsShow/>
         {radar.length>0&&<section className="border-b border-white/15 py-10" aria-label="Radar de fuentes">
