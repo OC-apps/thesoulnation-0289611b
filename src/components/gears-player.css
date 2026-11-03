@@ -341,3 +341,29 @@
     gap: 8px;
   }
 }
+
+/* Tall immersive cover and full-screen playback share one source media file. */
+.gears-cover {
+  background:
+    radial-gradient(ellipse at 82% 13%, rgba(240,94,7,.42),transparent 42%),
+    radial-gradient(ellipse at 12% 86%, rgba(1,3,158,.65),transparent 54%),
+    linear-gradient(152deg,#060719 7%,#121543 47%,#060719 100%);
+  padding: 26px;
+  isolation: isolate;
+}
+.gears-cover::before {
+  content:"";position:absolute;inset:4%;border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;pointer-events:none;transform:skewY(-3deg);
+}
+.gears-cover::after {
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(113deg,transparent 40%,rgba(240,94,7,.24) 49%,transparent 57%);
+}
+.gears-cover strong { font-family:"The Soul Nation",Inter,sans-serif; font-style:italic;text-shadow:0 8px 40px #000; }
+.gears-stage:fullscreen,
+.gears-stage:-webkit-full-screen {
+  width:100vw;height:100dvh;max-height:none;aspect-ratio:auto;
+  border:0;border-radius:0;background:#02030a;
+}
+.gears-stage:fullscreen .gears-video { object-fit:contain; }
+.gears-stage:fullscreen .gears-skip { right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom)); }
