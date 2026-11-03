@@ -4,12 +4,13 @@ import { GearsShow } from '@/components/GearsShow';
 import { getSoulNewsRadar, type RadarItem } from "@/lib/soul-news-radar.functions";
 import { ArrowLeft, ArrowUpRight, Flame, Newspaper, Search, ShieldCheck, Clock3 } from "lucide-react";
 
-type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string };
+type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string; classification?:string; verification_note?:string|null };
 const API = "https://quscgfasziijdjyixsex.supabase.co/rest/v1/soul_news_articles";
 const KEY = "sb_publishable_AT5FDfqPulWKJOHrDsag1Q_9hlAVrl6";
 const categories = ["Todas", "Oficial", "E-Day", "Comunidad", "Competitivo", "Análisis"];
 const date = (s:string) => new Intl.DateTimeFormat("es-MX",{day:"numeric",month:"long",year:"numeric"}).format(new Date(s));
 const safeUrl = (s:string|null|undefined) => s && /^https:\/\//i.test(s) ? s : undefined;
+const articleLabel = (a:Article)=>a.classification==="rumor"?"Rumor no confirmado":a.classification==="report"||a.classification==="unverified"?"Reportado por terceros":a.classification==="opinion"||a.kind==="opinion"?"Opinión":a.classification==="confirmed"?"Información confirmada":"Sin verificación editorial";
 
 export const Route = createFileRoute("/soul-news")({
   head: () => ({ meta: [
@@ -37,7 +38,7 @@ function SoulNews(){
   useEffect(()=>{
     let active=true;
     if(!KEY){setLoading(false);return;}
-    fetch(API+"?select=id,slug,title,excerpt,body,category,source_name,source_url,image_url,published_at,kind,status&status=eq.published&order=published_at.desc&limit=80",{
+    fetch(API+"?select=id,slug,title,excerpt,body,category,source_name,source_url,image_url,published_at,kind,status,classification,verification_note&status=eq.published&order=published_at.desc&limit=80",{
       headers:{apikey:KEY,Authorization:"Bearer "+KEY}
     }).then(r=>{if(!r.ok)throw Error("Unavailable");return r.json()}).then(data=>{if(active&&Array.isArray(data))setArticles(data)}).catch(()=>{}).finally(()=>{if(active)setLoading(false)});
     return()=>{active=false};
@@ -65,10 +66,10 @@ function SoulNews(){
       </div>
       {selected ? <article className="mx-auto max-w-3xl py-14">
         <button onClick={()=>setSelected(null)} className="mb-8 inline-flex items-center gap-2 text-xs uppercase tracking-widest text-[#F05E07]"><ArrowLeft size={16}/> Volver a Soul News</button>
-        <p className="mb-5 text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">{selected.category} · {selected.kind==="opinion"?"Opinión":"Información"}</p>
+        <p className="mb-5 text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">{selected.category} · {articleLabel(selected)}</p>
         <h2 className="text-4xl font-bold leading-tight tracking-tight sm:text-6xl">{selected.title}</h2>
         <p className="mt-6 text-xl leading-relaxed text-white/65">{selected.excerpt}</p>
-        <p className="my-8 border-y border-white/15 py-4 text-xs uppercase tracking-widest text-white/50">{date(selected.published_at)} · {selected.source_name}</p>
+        <p className="my-8 border-y border-white/15 py-4 text-xs uppercase tracking-widest text-white/50">{date(selected.published_at)} · {selected.source_name}</p>{selected.classification!=="confirmed"&&<p className="mb-6 rounded-lg border border-[#F05E07]/35 bg-[#F05E07]/5 p-4 text-sm leading-6 text-white/70">Nota de la redacción: este contenido procede de un medio o conversación pública; no es confirmación oficial de The Coalition. {selected.verification_note||""}</p>}
         {safeUrl(selected.image_url)&&<img src={safeUrl(selected.image_url)} alt="" className="mb-9 aspect-video w-full rounded-xl object-cover"/>}
         <div className="space-y-5 whitespace-pre-line text-lg leading-9 text-white/80">{selected.body}</div>
         {safeUrl(selected.source_url)&&<a href={selected.source_url} target="_blank" rel="noopener noreferrer" className="mt-10 inline-flex items-center gap-2 border-b border-[#F05E07] pb-2 text-sm text-[#F05E07]">Consultar fuente original <ArrowUpRight size={16}/></a>}
@@ -77,7 +78,7 @@ function SoulNews(){
           <div className="group min-h-[420px] overflow-hidden border border-white/10 bg-[#11131e]">
             {main ? <button className="flex h-full w-full flex-col text-left" onClick={()=>setSelected(main)}>
               <div className="relative aspect-[16/8] w-full overflow-hidden bg-gradient-to-br from-[#01039E] to-[#10111c]">{safeUrl(main.image_url)&&<img src={safeUrl(main.image_url)} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.025]"/>}</div>
-              <div className="p-7 sm:p-9"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">{main.category} · {date(main.published_at)}</p><h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-5xl">{main.title}</h2><p className="mt-4 max-w-2xl text-base leading-7 text-white/60">{main.excerpt}</p><span className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#F05E07]">Leer artículo <ArrowUpRight size={16}/></span></div>
+              <div className="p-7 sm:p-9"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">{main.category} · {articleLabel(main)} · {date(main.published_at)}</p><h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight sm:text-5xl">{main.title}</h2><p className="mt-4 max-w-2xl text-base leading-7 text-white/60">{main.excerpt}</p><span className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#F05E07]">Leer artículo <ArrowUpRight size={16}/></span></div>
             </button> : <div className="flex h-full flex-col justify-between p-8 sm:p-12"><Newspaper size={40} className="text-[#F05E07]"/><div><p className="mb-4 text-xs font-bold uppercase tracking-[.2em] text-[#F05E07]">Edición inaugural</p><h2 className="max-w-xl text-4xl font-bold tracking-tight sm:text-6xl">Una nueva forma de contar Gears.</h2><p className="mt-6 max-w-lg leading-7 text-white/60">{loading?"Consultando las publicaciones…":"Todavía no hay artículos publicados. La redacción solo mostrará noticias verificadas, con fuentes y fechas reales."}</p></div><div className="mt-10 flex items-center gap-2 text-sm text-white/50"><ShieldCheck size={17}/> Sin titulares inventados</div></div>}
           </div>
           <aside className="flex flex-col justify-between border-t-4 border-[#F05E07] bg-[#151521] p-8">
@@ -96,7 +97,7 @@ function SoulNews(){
           </a>)}</div>
         </section>}
         <section className="py-12"><div className="mb-8 flex flex-wrap items-baseline justify-between gap-3 border-b border-white/20 pb-4"><h2 className="text-2xl font-bold uppercase tracking-tight">Últimas publicaciones</h2><span className="text-xs text-white/40">{filtered.length} artículos</span></div>
-          {filtered.length>1?<div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{filtered.slice(1).map(a=><button key={a.id} onClick={()=>setSelected(a)} className="group border-b border-white/15 pb-6 text-left"><div className="mb-5 aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#01039E] to-[#171727]">{safeUrl(a.image_url)&&<img src={safeUrl(a.image_url)} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>}</div><p className="text-[11px] font-bold uppercase tracking-[.18em] text-[#F05E07]">{a.category} · {date(a.published_at)}</p><h3 className="mt-3 text-xl font-bold leading-snug">{a.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-white/55">{a.excerpt}</p></button>)}</div>:<p className="py-12 text-sm text-white/50">{search||category!=="Todas"?"No hay publicaciones que coincidan con esta búsqueda.":"Los próximos artículos aparecerán aquí cuando sean publicados."}</p>}
+          {filtered.length>1?<div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{filtered.slice(1).map(a=><button key={a.id} onClick={()=>setSelected(a)} className="group border-b border-white/15 pb-6 text-left"><div className="mb-5 aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#01039E] to-[#171727]">{safeUrl(a.image_url)&&<img src={safeUrl(a.image_url)} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/>}</div><p className="text-[11px] font-bold uppercase tracking-[.18em] text-[#F05E07]">{a.category} · {articleLabel(a)} · {date(a.published_at)}</p><h3 className="mt-3 text-xl font-bold leading-snug">{a.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-white/55">{a.excerpt}</p></button>)}</div>:<p className="py-12 text-sm text-white/50">{search||category!=="Todas"?"No hay publicaciones que coincidan con esta búsqueda.":"Los próximos artículos aparecerán aquí cuando sean publicados."}</p>}
         </section>
       </>}
       <footer className="mt-12 flex flex-wrap items-center justify-between gap-5 border-t border-white/20 pt-8 text-xs text-white/45"><span>© The Soul Nation · Soul News</span><span className="inline-flex items-center gap-2"><Clock3 size={14}/> Actualidad con contexto y fuentes</span></footer>
