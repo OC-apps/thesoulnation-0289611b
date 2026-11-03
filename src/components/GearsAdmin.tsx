@@ -11,6 +11,9 @@ import type { GearsEpisode, GearsMedia } from "@/lib/gears";
 import { GearsPlayer } from "./GearsPlayer";
 
 export function GearsAdmin({ password }: { password: string }) {
+  const [articles,setArticles]=useState<{id:string;title:string;published_at:string;status:string;category:string;group_key:string|null}[]>([]);
+  const [articleLinks,setArticleLinks]=useState<{episode_id:string;article_id:string}[]>([]);
+  const [selectedArticles,setSelectedArticles]=useState<string[]>([]);
   const [episodes, setEpisodes] = useState<GearsEpisode[]>([]),
     [media, setMedia] = useState<GearsMedia[]>([]),
     [edit, setEdit] = useState<GearsEpisode | null>(null);
@@ -24,6 +27,8 @@ export function GearsAdmin({ password }: { password: string }) {
     try {
       const data = await getGearsAdmin({ data: { password } });
       setMedia(data.media);
+      setArticles(data.articles);
+      setArticleLinks(data.links);
       setEpisodes(data.episodes);
     } catch (e) {
       setMessage(e instanceof Error ? e.message : "Error de carga");
@@ -82,6 +87,11 @@ export function GearsAdmin({ password }: { password: string }) {
           description: edit.description,
           status: edit.status,
           published_at: edit.published_at,
+          editorial_title: edit.editorial_title || null,
+          editorial_body: edit.editorial_body || null,
+          narration_script: edit.narration_script || null,
+          edition_date: edit.edition_date || null,
+          article_ids: selectedArticles,
         },
       });
       setMessage("Episodio actualizado");
@@ -220,6 +230,29 @@ export function GearsAdmin({ password }: { password: string }) {
               }}
             />
           </label>
+          <div className="rounded-xl border border-[#F05E07]/30 bg-[#F05E07]/5 p-4 space-y-3">
+            <h3 className="font-semibold">Edición editorial vinculada</h3>
+            <p className="text-xs text-white/55">Elige las noticias de este MP3. El texto editorial y el video aparecerán juntos en la misma tarjeta pública.</p>
+            <label className="block">Título editorial
+              <input className={input} maxLength={250} value={edit.editorial_title||""} onChange={e=>setEdit({...edit,editorial_title:e.target.value})}/>
+            </label>
+            <label className="block">Fecha de edición
+              <input type="date" className={input} value={edit.edition_date||""} onChange={e=>setEdit({...edit,edition_date:e.target.value||null})}/>
+            </label>
+            <label className="block">Texto editorial (informativo, no narración)
+              <textarea rows={10} className={input} maxLength={30000} value={edit.editorial_body||""} onChange={e=>setEdit({...edit,editorial_body:e.target.value})}/>
+            </label>
+            <label className="block">Guion narrado (opcional)
+              <textarea rows={5} className={input} maxLength={30000} value={edit.narration_script||""} onChange={e=>setEdit({...edit,narration_script:e.target.value})}/>
+            </label>
+            <fieldset className="max-h-64 space-y-2 overflow-y-auto rounded-lg border border-white/15 p-3">
+              <legend className="px-2 text-sm">Noticias relacionadas ({selectedArticles.length} seleccionadas)</legend>
+              {articles.map(a=><label key={a.id} className="flex gap-3 border-b border-white/10 py-2 text-xs">
+                <input type="checkbox" checked={selectedArticles.includes(a.id)} onChange={e=>setSelectedArticles(prev=>e.target.checked?[...prev,a.id]:prev.filter(id=>id!==a.id))}/>
+                <span><strong className="block text-white">{a.title}</strong><span className="text-white/50">{a.status} · {a.category} · {new Date(a.published_at).toLocaleDateString("es-MX")}</span></span>
+              </label>)}
+            </fieldset>
+          </div>
           <label className="block">
             Estado
             <select
@@ -244,7 +277,7 @@ export function GearsAdmin({ password }: { password: string }) {
           {episodes.map((e) => (
             <button
               key={e.id}
-              onClick={() => setEdit({ ...e })}
+              onClick={() => {setEdit({ ...e });setSelectedArticles(articleLinks.filter(link=>link.episode_id===e.id).map(link=>link.article_id));}}
               className="block w-full py-5 text-left"
             >
               <strong>{e.title}</strong>
