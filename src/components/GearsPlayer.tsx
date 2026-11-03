@@ -7,6 +7,8 @@ import "./gears-player.css";
 export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: GearsMedia[] }) {
   const videos = useRef<Partial<Record<GearsSegment, HTMLVideoElement>>>({});
   const audio = useRef<HTMLAudioElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen,setIsFullscreen] = useState(false);
   const [segment, setSegment] = useState<GearsSegment>("intro");
   const [previous, setPrevious] = useState<GearsSegment | null>(null);
   const [transition, setTransition] = useState(0);
@@ -97,6 +99,15 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
       setPrevious(null);
     }, 1100);
   }
+  async function toggleFullscreen() {
+    const el=stageRef.current;
+    if(!el)return;
+    try{
+      if(document.fullscreenElement) await document.exitFullscreen();
+      else if(el.requestFullscreen) await el.requestFullscreen();
+      else {const v=videos.current[current.current] as (HTMLVideoElement & {webkitEnterFullscreen?:()=>void})|undefined;v?.webkitEnterFullscreen?.();}
+    }catch{setError("Tu navegador no permite pantalla completa en este momento.");}
+  }
   function toggle() {
     if (wanted.current) {
       wanted.current = false;
@@ -158,6 +169,8 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
   }
   useEffect(() => {
     // Fetch the existing brand asset before the first segment transition.
+    const syncFullscreen=()=>setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange",syncFullscreen);
     const brand = new Image();
     brand.src = soulLogo;
     // iOS uses the device volume and ignores per-element volume mixing.
@@ -169,6 +182,7 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
     const nodes = videos.current;
     const voice = audio.current;
     return () => {
+      document.removeEventListener("fullscreenchange",syncFullscreen);
       wanted.current = false;
       // This ref is an async playback counter, not a DOM node.
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,7 +201,7 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
   }, [volume]);
   return (
     <div className="gears-player" aria-label={`Reproductor: ${episode.title}`}>
-      <div className="gears-stage" data-segment={segment} data-transitioning={transitioning}>
+      <div ref={stageRef} className="gears-stage" data-segment={segment} data-transitioning={transitioning}>
         {(["intro", "background", "outro"] as const).map((id) => {
           const asset = media.find((m) => m.id === id);
           return (
@@ -281,7 +295,7 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
         {!started && (
           <div className="gears-cover">
             <span>SOUL NEWS · DIZZY</span>
-            <strong>
+            <strong className="font-display italic">
               GEARS
               <br />
               AL CARBÓN<span>.</span>
@@ -319,6 +333,7 @@ export function GearsPlayer({ episode, media }: { episode: GearsEpisode; media: 
             onChange={(e) => seek(Number(e.target.value))}
           />
         </label>
+        <button onClick={()=>void toggleFullscreen()} title="Pantalla completa" aria-label={isFullscreen?"Salir de pantalla completa":"Ver en pantalla completa"}>{isFullscreen?"⤢":"⛶"}</button>
         <label className="gears-volume">
           Volumen
           <input
