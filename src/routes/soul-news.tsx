@@ -4,7 +4,7 @@ import { GearsShow } from '@/components/GearsShow';
 import { getSoulNewsRadar, type RadarItem } from "@/lib/soul-news-radar.functions";
 import { ArrowLeft, ArrowUpRight, Flame, Newspaper, Search, ShieldCheck, Clock3 } from "lucide-react";
 
-type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string; classification?:string; verification_note?:string|null };
+type Article = { id:string; slug:string; title:string; excerpt:string; body:string; category:string; source_name:string; source_url:string; image_url:string|null; published_at:string; kind:string; status:string; classification?:string; verification_note?:string|null; source_links?:string[]|null };
 const API = "https://quscgfasziijdjyixsex.supabase.co/rest/v1/soul_news_articles";
 const KEY = "sb_publishable_AT5FDfqPulWKJOHrDsag1Q_9hlAVrl6";
 const categories = ["Todas", "Oficial", "E-Day", "Comunidad", "Competitivo", "Análisis"];
@@ -38,7 +38,7 @@ function SoulNews(){
   useEffect(()=>{
     let active=true;
     if(!KEY){setLoading(false);return;}
-    fetch(API+"?select=id,slug,title,excerpt,body,category,source_name,source_url,image_url,published_at,kind,status,classification,verification_note&status=eq.published&order=published_at.desc&limit=80",{
+    fetch(API+"?select=id,slug,title,excerpt,body,category,source_name,source_url,image_url,published_at,kind,status,classification,verification_note,source_links&status=eq.published&order=published_at.desc&limit=80",{
       headers:{apikey:KEY,Authorization:"Bearer "+KEY}
     }).then(r=>{if(!r.ok)throw Error("Unavailable");return r.json()}).then(data=>{if(active&&Array.isArray(data))setArticles(data)}).catch(()=>{}).finally(()=>{if(active)setLoading(false)});
     return()=>{active=false};
@@ -72,7 +72,10 @@ function SoulNews(){
         <p className="my-8 border-y border-white/15 py-4 text-xs uppercase tracking-widest text-white/50">{date(selected.published_at)} · {selected.source_name}</p>{selected.classification!=="confirmed"&&<p className="mb-6 rounded-lg border border-[#F05E07]/35 bg-[#F05E07]/5 p-4 text-sm leading-6 text-white/70">Nota de la redacción: este contenido procede de un medio o conversación pública; no es confirmación oficial de The Coalition. {selected.verification_note||""}</p>}
         {safeUrl(selected.image_url)&&<img src={safeUrl(selected.image_url)} alt="" className="mb-9 aspect-video w-full rounded-xl object-cover"/>}
         <div className="space-y-5 whitespace-pre-line text-lg leading-9 text-white/80">{selected.body}</div>
-        {safeUrl(selected.source_url)&&<a href={selected.source_url} target="_blank" rel="noopener noreferrer" className="mt-10 inline-flex items-center gap-2 border-b border-[#F05E07] pb-2 text-sm text-[#F05E07]">Consultar fuente original <ArrowUpRight size={16}/></a>}
+        <div className="mt-9 flex flex-wrap gap-4">
+        {safeUrl(selected.source_url)&&<a href={selected.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-b border-[#F05E07] pb-2 text-sm text-[#F05E07]">Ver entrevista o fuente original <ArrowUpRight size={16}/></a>}
+        {(selected.source_links||[]).filter(url=>safeUrl(url)).map((url,i)=><a key={url} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-b border-white/35 pb-2 text-sm text-white/75">Fuente complementaria {i+1} <ArrowUpRight size={16}/></a>)}
+        </div>
       </article> : <>
         <section className="grid grid-cols-1 gap-7 border-b border-white/15 py-10 lg:grid-cols-[1.75fr_1fr]">
           <div className="group min-h-[420px] overflow-hidden border border-white/10 bg-[#11131e]">
