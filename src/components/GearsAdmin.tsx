@@ -9,6 +9,7 @@ import {
 import { GEARS_BUCKET } from "@/lib/gears";
 import type { GearsEpisode, GearsMedia } from "@/lib/gears";
 import { GearsPlayer } from "./GearsPlayer";
+import { GearsExport } from "./GearsExport";
 
 export function GearsAdmin({ password }: { password: string }) {
   const [articles,setArticles]=useState<{id:string;title:string;published_at:string;status:string;category:string;group_key:string|null}[]>([]);
@@ -271,6 +272,7 @@ export function GearsAdmin({ password }: { password: string }) {
             Guardar episodio
           </button>
           <GearsPlayer key={edit.id} episode={edit} media={media} />
+          <GearsExport key={"export-"+edit.id} episode={edit} media={media} />
         </div>
       ) : (
         <div className="divide-y divide-white/15">
