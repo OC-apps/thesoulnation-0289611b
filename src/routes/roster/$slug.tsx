@@ -28,12 +28,16 @@ function MemberProfile(){
    const wavePeople=(waves.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null;social_label:string|null;social_href:string|null}[];
    const photoRows=(photos.data||[]) as unknown as {nickname:string;photo_url:string}[];
    const socialRows=(socials.data||[]) as unknown as Record<string,unknown>[];
-   const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug);
-   const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug);
+   const params=new URLSearchParams(window.location.search);
+   const requestedName=params.get("name")?.trim().toUpperCase()||"";
+   const requestedDivision=params.get("division");
+   const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug||(requestedDivision==="legends"&&p.nickname.toUpperCase()===requestedName));
+   const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug||(requestedDivision==="waves"&&p.name.toUpperCase()===requestedName));
    const fixedPeople=(fixed.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null}[];
-   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug);
+   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug||(requestedDivision==="waves"&&p.name.toUpperCase()===requestedName));
    const defaultWave=WAVES.find(p=>p.name===fixedWave?.name);
-   const nickname=member?.nickname||wave?.name||fixedWave?.name;
+   const fallbackName=/^[0-9a-f-]{36}$/i.test(slug)&&requestedName.startsWith("SOUL ")&&["waves","legends"].includes(requestedDivision||"")?requestedName:"";
+   const nickname=member?.nickname||wave?.name||fixedWave?.name||fallbackName;
    if(!nickname){if(active){setProfile(null);setLoading(false)}return;}
    const social=socialRows.find(p=>String(p.name).toUpperCase()===nickname.toUpperCase());
    const links:{label:string;url:string}[]=[];
@@ -44,7 +48,7 @@ function MemberProfile(){
    if(Array.isArray(extra))for(const item of extra){if(item&&typeof item==="object"){const row=item as Record<string,unknown>;const url=safe(row.href);if(url)links.push({label:String(row.label||"Enlace"),url});}}
    if(wave?.social_href&&safe(wave.social_href))links.push({label:wave.social_label||"Red social",url:wave.social_href});
    const photo=photoRows.find(p=>p.nickname.toUpperCase()===nickname.toUpperCase())?.photo_url;
-   const result:Profile={id:member?.id||wave?.id||fixedWave!.id,nickname,category:member?.category||"waves",photo:safe(social?.photo_url)||safe(wave?.photo_url)||safe(fixedWave?.photo_url)||defaultWave?.photo||safe(photo),bio:String(social?.bio||wave?.bio||fixedWave?.bio||defaultWave?.bio||"")||null,links};
+   const result:Profile={id:member?.id||wave?.id||fixedWave?.id||slug,nickname,category:member?.category||requestedDivision||"waves",photo:safe(social?.photo_url)||safe(wave?.photo_url)||safe(fixedWave?.photo_url)||defaultWave?.photo||safe(photo),bio:String(social?.bio||wave?.bio||fixedWave?.bio||defaultWave?.bio||"")||null,links};
    if(active){setProfile(result);setLoading(false)}
   };
   void load();
