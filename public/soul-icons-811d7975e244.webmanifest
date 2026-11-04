@@ -1,0 +1,22 @@
+{
+  "name": "The Soul Nation",
+  "short_name": "The Soul Nation",
+  "icons": [
+    {
+      "src": "/soul-icon-811d7975e244-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/soul-icon-811d7975e244-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#01039E",
+  "background_color": "#01039E",
+  "display": "standalone",
+  "start_url": "/"
+}

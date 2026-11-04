@@ -99,6 +99,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://thesoulnation.org/soul-share.jpg" },
     ],
     links: [
+      { rel: "icon", href: "/favicon.ico?v=811d7975e244", sizes: "16x16 32x32 48x48 64x64 128x128 256x256" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/soul-icon-811d7975e244-16.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/soul-icon-811d7975e244-32.png" },
+      { rel: "icon", type: "image/png", sizes: "48x48", href: "/soul-icon-811d7975e244-48.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/soul-icon-811d7975e244-180.png" },
+      { rel: "manifest", href: "/soul-icons-811d7975e244.webmanifest" },
       {
         rel: "stylesheet",
         href: appCss,
