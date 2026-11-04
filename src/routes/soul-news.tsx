@@ -72,6 +72,7 @@ function SoulNews(){
         <p className="my-6 border-y border-white/15 py-3 text-[11px] uppercase tracking-[.1em] text-white/50">{date(selected.published_at)} · {selected.source_name}</p>{selected.classification!=="confirmed"&&<p className="mb-6 rounded-lg border border-[#F05E07]/35 bg-[#F05E07]/5 p-4 text-sm leading-6 text-white/70">Nota de la redacción: este contenido procede de un medio o conversación pública; no es confirmación oficial de The Coalition. {selected.verification_note||""}</p>}
         {safeUrl(selected.image_url)&&<img src={safeUrl(selected.image_url)} alt="" className="mb-9 aspect-video w-full rounded-xl object-cover"/>}
         <div className="max-w-[740px] space-y-5 whitespace-pre-line text-[1rem] leading-[1.85] text-white/80 sm:text-[1.065rem]">{selected.body}</div>
+        <GearsShow articleId={selected.id}/>
         <div className="mt-9 flex flex-wrap gap-4">
         {safeUrl(selected.source_url)&&<a href={selected.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-b border-[#F05E07] pb-2 text-sm text-[#F05E07]">Ver entrevista o fuente original <ArrowUpRight size={16}/></a>}
         {(selected.source_links||[]).filter(url=>safeUrl(url)).map((url,i)=><a key={url} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 border-b border-white/35 pb-2 text-sm text-white/75">Fuente complementaria {i+1} <ArrowUpRight size={16}/></a>)}
