@@ -11,11 +11,12 @@ export function RosterMediaAdmin({password}:{password:string}){
  const [url,setUrl]=useState("");const [caption,setCaption]=useState("");
  const [file,setFile]=useState<File|null>(null);
  const [busy,setBusy]=useState(false);const [message,setMessage]=useState("");
- useEffect(()=>{let active=true;void Promise.all([supabase.from("roster_members").select("id,nickname,category"),supabase.from("waves_members").select("id,name")]).then(([r,w])=>{
+ useEffect(()=>{let active=true;void Promise.all([supabase.from("roster_members").select("id,nickname,category"),supabase.from("waves_members").select("id,name"),supabase.from("roster_wave_profiles" as "roster_members").select("id,name")]).then(([r,w,f])=>{
   if(!active)return;
   const a=((r.data||[]) as {id:string;nickname:string;category:string}[]).filter(p=>p.category==="crew"||p.category==="legends").map(p=>({id:p.id,name:p.nickname,category:p.category as "crew"|"legends"}));
   const b=((w.data||[]) as {id:string;name:string}[]).map(p=>({id:p.id,name:p.name,category:"waves" as const}));
-  setMembers([...a,...b].sort((x,y)=>x.name.localeCompare(y.name)));
+  const fixed=((f.data||[]) as unknown as {id:string;name:string}[]).map(p=>({id:p.id,name:p.name,category:"waves" as const}));
+  setMembers([...a,...b,...fixed].sort((x,y)=>x.name.localeCompare(y.name)));
  });return()=>{active=false};},[]);
  const member=members.find(m=>m.id===selected);
  const reload=async(m=member)=>{if(!m)return;const result=await getRosterMediaAdmin({data:{password,memberId:m.id,category:m.category}});setItems(result.items as unknown as Item[]);};
