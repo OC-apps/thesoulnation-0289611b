@@ -1,7 +1,7 @@
 import { useEffect,useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { addRosterMedia,deleteRosterMedia,getRosterMediaAdmin,prepareRosterImage,saveRosterImage } from "@/lib/roster-media.functions";
-type Member={id:string;name:string;category:"waves"|"legends"|"crew"};
+type Member={id:string;name:string;category:"waves"|"legends"};
 type Item={id:string;media_type:string;media_url:string;caption:string};
 export function RosterMediaAdmin({password}:{password:string}){
  const [members,setMembers]=useState<Member[]>([]);
@@ -13,7 +13,7 @@ export function RosterMediaAdmin({password}:{password:string}){
  const [busy,setBusy]=useState(false);const [message,setMessage]=useState("");
  useEffect(()=>{let active=true;void Promise.all([supabase.from("roster_members").select("id,nickname,category"),supabase.from("waves_members").select("id,name"),supabase.from("roster_wave_profiles" as "roster_members").select("id,name")]).then(([r,w,f])=>{
   if(!active)return;
-  const a=((r.data||[]) as {id:string;nickname:string;category:string}[]).filter(p=>p.category==="crew"||p.category==="legends").map(p=>({id:p.id,name:p.nickname,category:p.category as "crew"|"legends"}));
+  const a=((r.data||[]) as {id:string;nickname:string;category:string}[]).filter(p=>p.category==="legends").map(p=>({id:p.id,name:p.nickname,category:p.category as "legends"}));
   const b=((w.data||[]) as {id:string;name:string}[]).map(p=>({id:p.id,name:p.name,category:"waves" as const}));
   const fixed=((f.data||[]) as unknown as {id:string;name:string}[]).map(p=>({id:p.id,name:p.name,category:"waves" as const}));
   setMembers([...a,...b,...fixed].sort((x,y)=>x.name.localeCompare(y.name)));
@@ -38,7 +38,7 @@ export function RosterMediaAdmin({password}:{password:string}){
  }catch(e){setMessage(e instanceof Error?e.message:String(e));}finally{setBusy(false);}};
  const remove=async(id:string)=>{if(!window.confirm("¿Quitar este contenido del perfil?"))return;setBusy(true);try{await deleteRosterMedia({data:{password,id}});await reload();setMessage("Contenido retirado.");}catch(e){setMessage(String(e));}finally{setBusy(false);}};
  return <section className="space-y-5 rounded-2xl border border-white/15 bg-white/[.035] p-5 text-white">
-  <div><h2 className="text-xl font-bold">Perfiles · Fotos y videos</h2><p className="mt-1 text-sm text-white/60">Publica galerías y videos integrados en las fichas de Waves, Legends y Crew.</p></div>
+  <div><h2 className="text-xl font-bold">Perfiles · Fotos y videos</h2><p className="mt-1 text-sm text-white/60">Publica galerías y videos integrados en las fichas de Waves y Legends.</p></div>
   <label className="block text-sm">Integrante<select value={selected} onChange={e=>setSelected(e.target.value)} className="mt-2 w-full rounded-lg border border-white/20 bg-[#101631] p-3"><option value="">Selecciona integrante</option>{members.map(m=><option key={m.id} value={m.id}>{m.name} · {m.category}</option>)}</select></label>
   {member&&<div className="space-y-4">
    <a className="text-sm text-[#F05E07] underline" href={"/roster/"+member.name.toLowerCase().replace(/^soul\s+/,"").replace(/[^a-z0-9]+/g,"-")} target="_blank" rel="noreferrer">Ver perfil público ↗</a>
