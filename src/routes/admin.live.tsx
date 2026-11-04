@@ -1,3 +1,4 @@
+import { RosterMediaAdmin } from "@/components/roster-media-admin";
 import wallpaperTile from "@/assets/wallpaper-olimpo.jpg";
 import jerseyTile from "@/assets/jersey-front.png";
 import { HOME_ASSET_KEYS, useSiteAssets, type SiteAssetKey } from "@/hooks/use-site-assets";
@@ -794,6 +795,7 @@ function AdminLivePage() {
           </TabsContent>
 
           <TabsContent value="roster" className="mt-0">
+            <div className="mb-8"><RosterMediaAdmin password={password}/></div>
             <SectionShell icon={Users} title="Roster" subtitle="Waves · Legends · Crew">
               {!rosterSynced && (
                 <div className="rounded-xl border border-[#F05E07]/50 bg-[#01039E]/20 p-4 mb-5 space-y-3">
