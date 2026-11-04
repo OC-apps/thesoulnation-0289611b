@@ -105,22 +105,22 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legend
         </ul>
       </div>
       <Dialog open={selectedMember !== null} onOpenChange={open=>!open&&closeProfile()}>
-        <DialogContent className="soul-member-profile max-w-[min(92vw,720px)] max-h-[calc(100dvh-2rem)] overflow-y-auto [&>button]:hidden rounded-[24px] border border-white/15 bg-[#0b0e24] p-0 text-white">
+        <DialogContent className="soul-member-profile w-[min(100vw-1rem,440px)] max-w-[min(100vw-1rem,440px)] max-h-[calc(100dvh-1rem)] overflow-y-auto overscroll-contain [&>button]:hidden rounded-[24px] border border-white/15 bg-[#0b0e24] p-0 text-white">
           {selectedMember&&<div key={selectedMember} className={`soul-member-profile-content ${profileDirection > 0 ? "is-forward" : "is-backward"} relative`}>
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <span className="text-[10px] font-semibold tracking-[.22em] text-[#F05E07]">THE SOUL NATION / PERFIL</span>
               <button type="button" onClick={closeProfile} aria-label="Cerrar perfil" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"><X size={18}/></button>
             </div>
-            <div className="grid items-center gap-0 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
-              <div className="relative flex min-h-[240px] items-center justify-center bg-[#01039E]">
+            <div className="flex flex-col gap-0">
+              <div className="relative flex aspect-[4/4.1] min-h-[280px] items-center justify-center overflow-hidden bg-[#01039E]">
                 <img src={(isLegends && legendsPhotos[selectedMember.trim().toUpperCase()])||logo} alt={isLegends&&legendsPhotos[selectedMember.trim().toUpperCase()]?selectedMember:"Emblema oficial de la división"}
                   className={isLegends&&legendsPhotos[selectedMember.trim().toUpperCase()]?"h-full w-full object-cover absolute inset-0":"h-28 w-28 object-contain"} />
               </div>
               <div className="flex min-w-0 flex-col items-start gap-4 p-6 sm:p-8">
                 <span className="text-[11px] font-bold tracking-[.16em] text-[#F05E07]">{title}</span>
-                <DialogTitle className="font-display text-3xl leading-tight break-words text-white">{selectedMember}</DialogTitle>
+                <DialogTitle className="font-display text-2xl sm:text-3xl leading-tight break-words text-white">{selectedMember}</DialogTitle>
                 <p className="text-sm leading-relaxed text-white/70">{isLegends?"Integrante de Soul Legends. Montajes y clips de exhibición.":"Integrante de Soul Crew, la familia oficial de The Soul Nation."}</p>
-                <button type="button" onClick={()=>void shareProfile()} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#F05E07]/50 px-5 py-2 text-sm font-semibold text-white hover:bg-[#F05E07]/15">
+                <button type="button" onClick={()=>void shareProfile()} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#F05E07]/60 bg-[#F05E07]/10 px-5 py-3 text-sm font-semibold text-white hover:bg-[#F05E07]/25">
                   <Share2 size={16} className="text-[#F05E07]"/>{linkCopied?"Enlace copiado":"Compartir perfil"}
                 </button>
                 <nav className="soul-member-profile-navigation" aria-label="Otros integrantes de la división">
