@@ -7,7 +7,7 @@ import { GearsPlayer } from "./GearsPlayer";
 type LinkedArticle = { id: string; title: string; body: string };
 type EpisodeArticle = { episode_id: string; article: LinkedArticle | null };
 
-export function GearsShow() {
+export function GearsShow({articleId}:{articleId?:string} = {}) {
   const [episodes,setEpisodes]=useState<GearsEpisode[]>([]);
   const [media,setMedia]=useState<GearsMedia[]>([]);
   const [selected,setSelected]=useState("");
@@ -31,10 +31,13 @@ export function GearsShow() {
     });
     return()=>{active=false;};
   },[]);
-  const episode=episodes.find(e=>e.id===selected);
+  const matchedEpisodeIds=articleId?new Set(articles.filter(a=>a.article?.id===articleId).map(a=>a.episode_id)):null;
+  const visibleEpisodes=matchedEpisodeIds?episodes.filter(e=>matchedEpisodeIds.has(e.id)):episodes;
+  const episode=visibleEpisodes.find(e=>e.id===selected)||visibleEpisodes[0];
   const linkedArticles=articles.filter(a=>a.episode_id===selected&&a.article?.body?.trim()).map(a=>a.article!);
   const reading=linkedArticles.length?linkedArticles:[{id:selected,title:"",body:episode?.editorial_body?.trim()||"La edición editorial de este episodio está en preparación."}];
   const hasVideo=!!episode?.audio_path&&(["intro","background","outro"] as const).every(id=>media.some(m=>m.id===id));
+  if(articleId&&!episode)return null;
   return <section className="border-b border-white/15 py-10" aria-label="Gears al Carbón">
     <header className="mb-7">
       <p className="text-xs font-bold uppercase tracking-[.24em] text-[#F05E07]">Videopodcast · Con Dizzy</p>
@@ -42,8 +45,9 @@ export function GearsShow() {
       <p className="mt-2 text-sm text-white/60">Noticias, análisis y humor norteño. Lee la edición o escucha a Dizzy.</p>
     </header>
     {error&&<p role="alert" className="mb-6 text-red-300">{error}</p>}
-    {episodes.length>1&&<nav aria-label="Ediciones de Gears al Carbón" className="mb-6 flex gap-2 overflow-x-auto pb-2">{episodes.map(e=><button key={e.id} aria-pressed={selected===e.id} onClick={()=>{setSelected(e.id);}} className={`max-w-[235px] shrink-0 rounded-lg border px-4 py-3 text-left text-xs ${selected===e.id?"border-[#F05E07] bg-[#F05E07]/15":"border-white/15 bg-white/5"}`}><span className="block text-white/45">{new Date(e.published_at).toLocaleDateString("es-MX")}</span><strong className="mt-1 block text-white">{e.title}</strong></button>)}</nav>}
-    {episode?<div className={`grid gap-6 rounded-2xl border border-white/15 bg-[#101224]/90 p-4 sm:p-6 ${hasVideo?"lg:grid-cols-[minmax(0,1fr)_minmax(260px,370px)]":"grid-cols-1"}`}>
+    {visibleEpisodes.length>1&&<nav aria-label="Ediciones de Gears al Carbón" className="mb-6 flex gap-2 overflow-x-auto pb-2">{visibleEpisodes.map(e=><button key={e.id} aria-pressed={selected===e.id} onClick={()=>{setSelected(e.id);}} className={`max-w-[235px] shrink-0 rounded-lg border px-4 py-3 text-left text-xs ${selected===e.id?"border-[#F05E07] bg-[#F05E07]/15":"border-white/15 bg-white/5"}`}><span className="block text-white/45">{new Date(e.published_at).toLocaleDateString("es-MX")}</span><strong className="mt-1 block text-white">{e.title}</strong></button>)}</nav>}
+    {articleId&&episode&&hasVideo&&<div className="mb-6 max-w-[420px]"><GearsPlayer key={episode.id} episode={episode} media={media}/></div>}
+    {!articleId&&episode?<div className={`grid gap-6 rounded-2xl border border-white/15 bg-[#101224]/90 p-4 sm:p-6 ${hasVideo?"lg:grid-cols-[minmax(0,1fr)_minmax(260px,370px)]":"grid-cols-1"}`}>
       <article className="relative min-w-0" aria-labelledby="gears-editorial-title">
         <div className={`flex min-h-0 flex-col ${hasVideo?"lg:absolute lg:inset-0":""}`}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><span className="text-[11px] font-bold uppercase tracking-[.16em] text-[#F05E07]">Edición editorial · {new Date((episode.edition_date||episode.published_at).slice(0,10)+"T12:00:00").toLocaleDateString("es-MX",{day:"numeric",month:"long",year:"numeric"})}</span><span className="text-[11px] text-white/45">Soul News</span></div>
@@ -58,6 +62,6 @@ export function GearsShow() {
         </div>
       </article>
       {hasVideo&&<div className="min-w-0"><GearsPlayer key={episode.id} episode={episode} media={media}/></div>}
-    </div>:<div className="rounded-xl border border-white/15 bg-[#101224] p-8 text-white/60">La próxima edición de Gears al Carbón está en preparación. Las noticias de Soul News se mostrarán aquí cuando estén publicadas.</div>}
+    </div>:!articleId?<div className="rounded-xl border border-white/15 bg-[#101224] p-8 text-white/60">La próxima edición de Gears al Carbón está en preparación. Las noticias de Soul News se mostrarán aquí cuando estén publicadas.</div>:null}
   </section>;
 }
