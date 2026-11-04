@@ -50,10 +50,10 @@ export function GearsShow() {
         <h3 id="gears-editorial-title" className="font-display text-xl font-black uppercase italic leading-tight tracking-tight text-white sm:text-2xl">{episode.editorial_title||episode.title}</h3>
         <p className="mt-3 text-sm leading-6 text-white/65">{episode.description}</p>
         <div key={episode.id} role="region" tabIndex={0} aria-label="Artículo editorial, usa el desplazamiento para continuar" className={`mt-5 h-[min(55svh,440px)] min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-white/10 bg-[#080A19]/80 p-4 text-sm leading-7 text-white/80 [overflow-wrap:anywhere] [scrollbar-gutter:stable] focus-visible:outline-2 focus-visible:outline-[#F05E07] sm:p-5 ${hasVideo?"lg:h-auto lg:flex-1":""}`}>
-          {reading.map(article=><section key={article.id} className="mb-8 last:mb-0">
+          {reading.map(article=><div key={article.id} className="mb-8 last:mb-0">
             {reading.length>1&&<h4 className="mb-4 text-base font-bold text-white">{article.title}</h4>}
             {article.body.split(/\n\s*\n/).filter(Boolean).map((part,i)=>/^#{1,6}\s/.test(part.trim())?<h4 key={i} className="mb-4 mt-6 font-bold text-white first:mt-0">{part.trim().replace(/^#{1,6}\s+/,"")}</h4>:<p key={i} className="mb-4 whitespace-pre-line last:mb-0">{part}</p>)}
-          </section>)}
+          </div>)}
         </div>
         </div>
       </article>
