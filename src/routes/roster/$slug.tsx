@@ -30,10 +30,11 @@ function MemberProfile(){
    const params=new URLSearchParams(window.location.search);
    const requestedName=(params.get("name")||"").trim().toUpperCase();
    const requestedDivision=params.get("division");
-   const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug);
-   const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug);
-   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug);
-   const staticWave=WAVES.find(p=>slugify(p.name)===slug||p.name.toUpperCase()===requestedName);
+   const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug||slugify(p.nickname)===slug.replace(/^soul-/,""));
+   const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug||slugify(p.name)===slug.replace(/^soul-/,""));
+   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug||slugify(p.name)===slug.replace(/^soul-/,"").replace(/-x$/,""));
+   const normalizedSlug=slug.replace(/^soul-/,"").replace(/-x$/,"");
+   const staticWave=WAVES.find(p=>slugify(p.name)===normalizedSlug||p.name.toUpperCase()===requestedName);
    const fallbackName=/^[0-9a-f-]{36}$/i.test(slug)&&requestedName.startsWith("SOUL ")&&["waves","legends"].includes(requestedDivision||"")?requestedName:"";
    const nickname=member?.nickname||wave?.name||fixedWave?.name||staticWave?.name||fallbackName;
    if(!nickname){if(active){setProfile(null);setLoading(false)}return;}
