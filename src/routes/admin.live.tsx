@@ -795,7 +795,6 @@ function AdminLivePage() {
           </TabsContent>
 
           <TabsContent value="roster" className="mt-0">
-            <div className="mb-8"><RosterMediaAdmin password={password}/></div>
             <SectionShell icon={Users} title="Roster" subtitle="Waves · Legends · Crew">
               {!rosterSynced && (
                 <div className="rounded-xl border border-[#F05E07]/50 bg-[#01039E]/20 p-4 mb-5 space-y-3">
@@ -813,6 +812,7 @@ function AdminLivePage() {
                 </div>
               )}
 
+              <div className="mb-6"><RosterMediaAdmin password={password}/></div>
               <div className="mb-5 rounded-xl border border-flame/25 bg-blue-deep/20 p-4">
                 <h3 className="font-display text-flame mb-2">Fotografías · Soul Legends</h3>
                 <p className="text-xs text-white/60 mb-4">Sube una foto para cada Legend. Si no hay fotografía se mostrará el emblema oficial. Formatos JPG, PNG o WebP, máximo 5 MB.</p>
