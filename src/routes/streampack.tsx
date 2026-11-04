@@ -240,6 +240,15 @@ function StreamPackStudio(){
   const saveProfile=()=>{if(!selectedIsOfficial)return;const next={...savedProfiles,[selectedMember]:{...socials}};setSavedProfiles(next);localStorage.setItem("tsn-member-social-profiles",JSON.stringify(next));setMessage("Redes guardadas para este gamertag en este navegador.");};
   const restoreProfile=()=>{if(!selectedIsOfficial)return;const entry=savedProfiles[selectedMember];if(entry)setSocials(entry);else setMessage("Este gamertag todavía no tiene redes guardadas en este navegador.");};
   const saveVersion=()=>{const entry={date:new Date().toLocaleString("es-MX"),templates:structuredClone(templates)};const next=[entry,...versions].slice(0,8);setVersions(next);localStorage.setItem("tsn-streampack-versions",JSON.stringify(next));setMessage("Versión de proyecto guardada en este dispositivo.");};
+  const saveSelectedGraphic=()=>{
+    try {
+      const key="tsn-streampack-saved-graphics-v1";
+      const saved=JSON.parse(localStorage.getItem(key)||"{}") as Record<string,Template>;
+      saved[selected]={...t,zones:t.zones?.map(zone=>({...zone})),area:{...t.area}};
+      localStorage.setItem(key,JSON.stringify(saved));
+      setMessage(`Gráfico «${t.name}» guardado en este navegador. Se restaurará al volver a entrar; no se ha publicado en el servidor.`);
+    } catch {setMessage("No se pudo guardar el gráfico. Revisa el almacenamiento del navegador.");}
+  };
   const restoreVersion=(n:number)=>{const entry=versions[n];if(entry){setTemplates(structuredClone(entry.templates));setMessage("Versión restaurada.");}};
   const [guests,setGuests]=useState<Record<string,string>>({"guest-1":"","guest-2":"","guest-3":""});
   const [zoneId,setZoneId]=useState("nickname");
@@ -270,7 +279,12 @@ function StreamPackStudio(){
           if(!base||!Array.isArray(item.zones)||!item.zones.every(z=>typeof z.id==="string"&&Number.isFinite(z.x)&&Number.isFinite(z.y)&&Number.isFinite(z.width)&&Number.isFinite(z.height)))throw Error("Plantilla oficial inválida");
           return {...base,area:{...base.area,...item.area},zones:item.zones.map(z=>({...z})),socialAutoLayout:item.socialAutoLayout===true,assetPath:base.assetPath,membersOnly:false};
         });
-        setTemplates([...official,SOUL_STREAM_TEMPLATE]);setOfficialLoaded(true);
+        const catalog=[...official,SOUL_STREAM_TEMPLATE];
+        try {
+          const saved=JSON.parse(localStorage.getItem("tsn-streampack-saved-graphics-v1")||"{}") as Record<string,Template>;
+          setTemplates(catalog.map(item=>saved[item.id]?{...item,...saved[item.id],id:item.id,assetPath:item.assetPath,width:item.width,height:item.height}:item));
+        } catch { setTemplates(catalog); }
+        setOfficialLoaded(true);
       }).catch(()=>{if(!cancelled){setOfficialLoaded(false);setMessage("No se pudo cargar la configuración oficial. Comprueba la publicación antes de descargar.");}});
     return()=>{cancelled=true};
   },[]);
@@ -546,6 +560,7 @@ function StreamPackStudio(){
           {editor&&adminVerified&&<div className="space-y-4 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto rounded-3xl border border-[#F05E07]/30 bg-white/[.045] p-5">
             <div className="flex flex-wrap justify-between gap-2"><h2 className="font-bold">Editor local de gráficos</h2><button type="button" onClick={applyTSNComposition} className="rounded-lg bg-[#F05E07] px-3 py-2 text-xs font-bold text-black">Aplicar composición TSN · SOUL + Nickname</button><button onClick={createTemplate} className="text-sm text-[#F05E07]">+ Nueva plantilla</button></div>
             <p className="text-xs text-amber-200">Edita las zonas directamente sobre la vista previa superior. Los PNG permanecen solo durante esta sesión. Exporta un JSON para conservar posiciones y márgenes; no incluye imágenes ni habilita descargas privadas.</p>
+            <button type="button" onClick={saveSelectedGraphic} className="w-full rounded-xl bg-[#F05E07] px-4 py-3 text-sm font-bold text-black hover:brightness-110">Guardar plantilla actual</button><p className="text-xs text-slate-300">Guarda los cambios del gráfico seleccionado en este navegador. Para compartirlos entre dispositivos hace falta publicación en el servidor.</p>
             <div className="rounded-xl border border-white/15 p-3 space-y-2"><div className="flex items-center justify-between"><p className="text-sm font-semibold">Versiones de mi proyecto</p><button type="button" onClick={saveVersion} className="rounded-lg bg-white/10 px-3 py-2 text-xs">Guardar versión</button></div><p className="text-xs text-slate-400">Se guardan hasta 8 versiones en este navegador; no contienen PNG.</p>{versions.map((v,i)=><button type="button" key={i} onClick={()=>restoreVersion(i)} className="block w-full rounded-lg border border-white/15 px-3 py-2 text-left text-xs">{v.date} · Restaurar</button>)}</div>
             <div className="flex flex-wrap gap-2"><button onClick={saveConfiguration} className="rounded-lg bg-blue-700 px-3 py-2 text-sm">Exportar todas las plantillas</button><label className="cursor-pointer rounded-lg border border-blue-500/50 px-3 py-2 text-sm">Importar todas las plantillas<input type="file" accept=".json,application/json" className="hidden" onChange={e=>void loadConfiguration(e.target.files?.[0])}/></label></div>
             <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-white/25 p-3 text-sm"><ImagePlus size={18}/> Subir fondo PNG / JPG <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={e=>upload(e.target.files?.[0])}/></label>
