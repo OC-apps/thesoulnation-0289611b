@@ -1,3 +1,4 @@
+import { RosterMediaGallery } from "@/components/roster-media-gallery";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -63,6 +64,7 @@ function MemberProfile(){
      </div>
     </div>
    </article>}
+   {profile&&<RosterMediaGallery memberId={profile.id} category={profile.category}/>}
   </div>
  </main>;
 }
