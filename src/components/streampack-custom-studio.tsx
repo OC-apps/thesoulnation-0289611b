@@ -234,7 +234,8 @@ export function StreamPackCustomStudio() {
     change({ layers });
   };
   return (
-    <section
+    <div
+      role="region"
       className="mt-6 rounded-2xl border border-white/15 bg-white/[.04] p-4 md:p-5"
       aria-label="Plantillas personalizadas"
     >
@@ -683,6 +684,6 @@ export function StreamPackCustomStudio() {
       <p role="status" className="mt-3 text-sm text-orange-200">
         {busy ? "Procesando…" : status}
       </p>
-    </section>
+    </div>
   );
 }
