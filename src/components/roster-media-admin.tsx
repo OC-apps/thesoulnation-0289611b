@@ -21,7 +21,7 @@ export function RosterMediaAdmin({password}:{password:string}){
   setMembers([...a,...b,...fixed].sort((x,y)=>x.name.localeCompare(y.name)));
  });return()=>{active=false};},[]);
  const member=members.find(m=>m.id===selected);
- const profileUrl=member?"/roster/"+member.id:"";
+ const profileUrl=member?"/roster/"+member.id+"?name="+encodeURIComponent(member.name)+"&division="+member.category:"";
  const reload=async(m=member)=>{if(!m)return;const result=await getRosterMediaAdmin({data:{password,memberId:m.id,category:m.category}});setItems(result.items as unknown as Item[]);setPreviewVersion(v=>v+1);};
  useEffect(()=>{setItems([]);if(member)void reload(member).catch(e=>setMessage(String(e)));},[selected]);
  const save=async()=>{if(!member)return;setBusy(true);setMessage("");try{
