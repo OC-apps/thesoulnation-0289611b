@@ -53,7 +53,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legend
     if(!selectedMember)return;
     const url=new URL(window.location.href);
     url.searchParams.delete("wave");
-    url.pathname="/legends/"+slug(selectedMember);
+    url.pathname="/roster/"+slug(selectedMember).replace(/^soul-/,"");
     url.search="";
     url.hash="";
     const link=url.toString();
@@ -120,6 +120,7 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legend
                 <span className="text-[11px] font-bold tracking-[.16em] text-[#F05E07]">{title}</span>
                 <DialogTitle className="font-display text-2xl sm:text-3xl leading-tight break-words text-white">{selectedMember}</DialogTitle>
                 <p className="text-sm leading-relaxed text-white/70">{isLegends?"Integrante de Soul Legends. Montajes y clips de exhibición.":"Integrante de Soul Crew, la familia oficial de The Soul Nation."}</p>
+                <a href={"/roster/"+slug(selectedMember).replace(/^soul-/,"")} className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#F05E07] px-5 py-3 text-sm font-bold text-[#090b1d]">Ver perfil completo ↗</a>
                 <button type="button" onClick={()=>void shareProfile()} className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#F05E07]/60 bg-[#F05E07]/10 px-5 py-3 text-sm font-semibold text-white hover:bg-[#F05E07]/25">
                   <Share2 size={16} className="text-[#F05E07]"/>{linkCopied?"Enlace copiado":"Compartir perfil"}
                 </button>
