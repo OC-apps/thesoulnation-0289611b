@@ -17,41 +17,46 @@ function MemberProfile(){
   let active=true;
   const load=async()=>{
    setLoading(true);
-   const [roster,waves,photos,socials,fixed]=await Promise.all([
+   const [roster,waves,socials,fixed]=await Promise.all([
     supabase.from("roster_members").select("id,nickname,category"),
     supabase.from("waves_members").select("id,name,bio,photo_url,social_label,social_href"),
-    supabase.from("legends_photos" as "roster_members").select("nickname,photo_url"),
     supabase.from("waves_socials").select("name,tiktok_url,twitch_url,youtube_url,x_url,facebook_url,photo_url,bio,extra_links"),
     supabase.from("roster_wave_profiles" as "roster_members").select("id,name,bio,photo_url")
    ]);
    const people=(roster.data||[]) as {id:string;nickname:string;category:string}[];
    const wavePeople=(waves.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null;social_label:string|null;social_href:string|null}[];
-   const photoRows=(photos.data||[]) as unknown as {nickname:string;photo_url:string}[];
+   const fixedPeople=(fixed.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null}[];
    const socialRows=(socials.data||[]) as unknown as Record<string,unknown>[];
    const params=new URLSearchParams(window.location.search);
-   const requestedName=params.get("name")?.trim().toUpperCase()||"";
+   const requestedName=(params.get("name")||"").trim().toUpperCase();
    const requestedDivision=params.get("division");
-   const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug||(requestedDivision==="legends"&&p.nickname.toUpperCase()===requestedName));
-   const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug||(requestedDivision==="waves"&&p.name.toUpperCase()===requestedName));
-   const fixedPeople=(fixed.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null}[];
-   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug||(requestedDivision==="waves"&&p.name.toUpperCase()===requestedName));
-   const defaultWave=WAVES.find(p=>p.name===fixedWave?.name);
+   const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug);
+   const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug);
+   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug);
+   const staticWave=WAVES.find(p=>slugify(p.name)===slug||p.name.toUpperCase()===requestedName);
    const fallbackName=/^[0-9a-f-]{36}$/i.test(slug)&&requestedName.startsWith("SOUL ")&&["waves","legends"].includes(requestedDivision||"")?requestedName:"";
-   const nickname=member?.nickname||wave?.name||fixedWave?.name||fallbackName;
+   const nickname=member?.nickname||wave?.name||fixedWave?.name||staticWave?.name||fallbackName;
    if(!nickname){if(active){setProfile(null);setLoading(false)}return;}
    const social=socialRows.find(p=>String(p.name).toUpperCase()===nickname.toUpperCase());
    const links:{label:string;url:string}[]=[];
-   const defaultLinks=WAVES.find(p=>p.name===nickname)?.socials||[];
-   for(const item of defaultLinks)if(safe(item.href))links.push({label:item.label,url:item.href});
-   for(const [field,label] of [["tiktok_url","TikTok"],["twitch_url","Twitch"],["youtube_url","YouTube"],["x_url","X"],["facebook_url","Facebook"]] as const){const url=safe(social?.[field]);if(url)links.push({label,url});}
+   for(const item of staticWave?.socials||[])if(safe(item.href))links.push({label:item.label,url:item.href});
+   for(const [field,label] of [["tiktok_url","TikTok"],["twitch_url","Twitch"],["youtube_url","YouTube"],["x_url","X"],["facebook_url","Facebook"]] as const){
+    const url=safe(social?.[field]);if(url&&!links.some(link=>link.url===url))links.push({label,url});
+   }
    const extra=social?.extra_links;
    if(Array.isArray(extra))for(const item of extra){if(item&&typeof item==="object"){const row=item as Record<string,unknown>;const url=safe(row.href);if(url)links.push({label:String(row.label||"Enlace"),url});}}
    if(wave?.social_href&&safe(wave.social_href))links.push({label:wave.social_label||"Red social",url:wave.social_href});
-   const photo=photoRows.find(p=>p.nickname.toUpperCase()===nickname.toUpperCase())?.photo_url;
-   const result:Profile={id:member?.id||wave?.id||fixedWave?.id||slug,nickname,category:member?.category||requestedDivision||"waves",photo:safe(social?.photo_url)||safe(wave?.photo_url)||safe(fixedWave?.photo_url)||defaultWave?.photo||safe(photo),bio:String(social?.bio||wave?.bio||fixedWave?.bio||defaultWave?.bio||"")||null,links};
+   const division=member?.category||requestedDivision||(wave||fixedWave||staticWave?"waves":"legends");
+   const result:Profile={
+    id:member?.id||wave?.id||fixedWave?.id||slug,
+    nickname,category:division,
+    photo:safe(social?.photo_url)||safe(wave?.photo_url)||safe(fixedWave?.photo_url)||staticWave?.photo||null,
+    bio:String(social?.bio||wave?.bio||fixedWave?.bio||staticWave?.bio||"")||null,
+    links
+   };
    if(active){setProfile(result);setLoading(false)}
   };
-  void load();
+  void load().catch(error=>{console.error("No se pudo cargar el perfil",error);if(active){setProfile(null);setLoading(false);}});
   return()=>{active=false};
  },[slug]);
  return <main className="min-h-screen bg-[#070b20] px-5 py-12 text-white sm:px-10">
