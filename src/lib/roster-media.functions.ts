@@ -15,7 +15,9 @@ const validateMember=async(admin:any,id:string,category:string)=>{
  const query=admin.from(table).select("id").eq("id",id);
  if(category!=="waves")query.eq("category",category);
  const {data,error}=await query.maybeSingle();
- if(error||!data)throw Error("Integrante no encontrado");
+ if(error)throw Error(error.message);
+ if(!data&&category==="waves"){const fallback=await admin.from("roster_wave_profiles").select("id").eq("id",id).maybeSingle();if(fallback.error||!fallback.data)throw Error("Integrante no encontrado");return;}
+ if(!data)throw Error("Integrante no encontrado");
 };
 export const getRosterMediaAdmin=createServerFn({method:"POST"}).inputValidator(raw=>z.object({password:pass,...member.shape}).parse(raw)).handler(async({data})=>{
  check(data.password);const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
