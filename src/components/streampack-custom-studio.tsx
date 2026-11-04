@@ -248,9 +248,9 @@ export function StreamPackCustomStudio() {
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-semibold">Mis plantillas</h2>
+          <h2 className="font-semibold">Crear plantillas</h2>
           <p className="text-xs text-slate-300">
-            Diseños propios, separados de las 14 plantillas oficiales.
+            Crea y administra tus diseños personalizados. El gráfico Soul Stream está en «Selecciona tu gráfico».
           </p>
         </div>
         <button
@@ -274,71 +274,6 @@ export function StreamPackCustomStudio() {
         >
           {open ? "Ocultar mis plantillas" : `Mis plantillas (${saved.length})`}
         </button>
-      </div>
-      <div className="mt-4 flex flex-wrap items-center gap-4 rounded-xl border border-[#F05E07]/30 bg-white/5 p-3">
-        <img
-          src={SERVER_OVERLAY.src}
-          alt="Soul Stream con gameplay, cámara y chat en vivo"
-          width={192}
-          height={108}
-          className="w-40 rounded-lg border border-white/10 object-contain"
-          loading="lazy"
-        />
-        <div className="min-w-0 flex-1 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-wide text-[#F05E07]">
-            Plantillas del servidor
-          </p>
-          <h3 className="text-sm font-semibold">{SERVER_OVERLAY.name}</h3>
-          <p className="text-xs text-slate-300">
-            PNG original con transparencia · 1920 × 1081 px · Disponible en todos los dispositivos.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={busy}
-              className={button}
-              onClick={() => {
-                setOpen(true);
-                guard(() => {
-                  const next = newCustomTemplate(
-                    SERVER_OVERLAY.name,
-                    SERVER_OVERLAY.width,
-                    SERVER_OVERLAY.height,
-                  );
-                  next.layers = [
-                    {
-                      id: crypto.randomUUID(),
-                      label: "Overlay original",
-                      kind: "image",
-                      src: SERVER_OVERLAY.src,
-                      x: 0,
-                      y: 0,
-                      width: SERVER_OVERLAY.width,
-                      height: SERVER_OVERLAY.height,
-                      color: "#FFFFFF",
-                      fontSize: 48,
-                    },
-                  ];
-                  setDraft(next);
-                  setSelected("");
-                  setDirty(true);
-                  setStatus(
-                    "Original alojado en el servidor. Puedes editar una copia; el original permanece disponible para todos.",
-                  );
-                });
-              }}
-            >
-              Usar Gameplay, Cam y Livechat
-            </button>
-            <a
-              className={button}
-              href={SERVER_OVERLAY.src}
-              download="Soul_Stream_Gameplay_Cam_y_Livechat.png"
-            >
-              Descargar PNG original
-            </a>
-          </div>
-        </div>
       </div>
       {open && (
         <fieldset disabled={busy} className="mt-4 min-w-0 space-y-4">
