@@ -222,8 +222,9 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
 
   const shareWave = async (name: string) => {
     const url = new URL(window.location.href);
-    url.searchParams.set("wave", waveSlug(name));
-    url.hash = "waves";
+    url.pathname = "/waves/" + waveSlug(name);
+    url.search = "";
+    url.hash = "";
     const link = url.toString();
     if (navigator.share) {
       try { await navigator.share({ title: name + " | The Soul Nation", url: link }); return; }
