@@ -53,8 +53,9 @@ export function HoloSquadCard({ id, logo, title, subtitle, desc, members, legend
     if(!selectedMember)return;
     const url=new URL(window.location.href);
     url.searchParams.delete("wave");
-    url.searchParams.set("member",slug(selectedMember));
-    url.hash=id||"roster";
+    url.pathname="/legends/"+slug(selectedMember);
+    url.search="";
+    url.hash="";
     const link=url.toString();
     if(navigator.share){
       try{await navigator.share({title:selectedMember+" | The Soul Nation",url:link});return;}
