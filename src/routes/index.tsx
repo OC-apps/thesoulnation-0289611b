@@ -306,6 +306,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                     </h3>
                   </div>
 
+                  <a href={"/roster/"+active.name.toLowerCase().replace(/^soul\\s+/,"").replace(/[^a-z0-9]+/g,"-")} className="inline-flex w-fit rounded-xl bg-[#F05E07] px-5 py-3 text-sm font-bold text-[#080b1c]">Ver perfil completo ↗</a>
                   <button type="button" onClick={() => void shareWave(active.name)}
                     className="soul-profile-share inline-flex w-fit items-center gap-2 rounded-full border border-flame/50 px-4 py-2 text-xs font-semibold text-white hover:bg-[#F05E07]/15"
                     aria-label={`Compartir perfil de ${active.name}`}>
