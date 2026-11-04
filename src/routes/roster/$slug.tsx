@@ -1,3 +1,4 @@
+import { WAVES } from "@/lib/waves-defaults";
 import { RosterMediaGallery } from "@/components/roster-media-gallery";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -16,11 +17,12 @@ function MemberProfile(){
   let active=true;
   const load=async()=>{
    setLoading(true);
-   const [roster,waves,photos,socials]=await Promise.all([
+   const [roster,waves,photos,socials,fixed]=await Promise.all([
     supabase.from("roster_members").select("id,nickname,category"),
     supabase.from("waves_members").select("id,name,bio,photo_url,social_label,social_href"),
     supabase.from("legends_photos" as "roster_members").select("nickname,photo_url"),
-    supabase.from("waves_socials").select("name,tiktok_url,twitch_url,youtube_url,x_url,facebook_url,photo_url,bio,extra_links")
+    supabase.from("waves_socials").select("name,tiktok_url,twitch_url,youtube_url,x_url,facebook_url,photo_url,bio,extra_links"),
+    supabase.from("roster_wave_profiles" as "roster_members").select("id,name,bio,photo_url")
    ]);
    const people=(roster.data||[]) as {id:string;nickname:string;category:string}[];
    const wavePeople=(waves.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null;social_label:string|null;social_href:string|null}[];
@@ -28,16 +30,21 @@ function MemberProfile(){
    const socialRows=(socials.data||[]) as unknown as Record<string,unknown>[];
    const member=people.find(p=>p.id===slug||slugify(p.nickname)===slug);
    const wave=wavePeople.find(p=>p.id===slug||slugify(p.name)===slug);
-   const nickname=member?.nickname||wave?.name;
+   const fixedPeople=(fixed.data||[]) as unknown as {id:string;name:string;bio:string|null;photo_url:string|null}[];
+   const fixedWave=fixedPeople.find(p=>p.id===slug||slugify(p.name)===slug);
+   const defaultWave=WAVES.find(p=>p.name===fixedWave?.name);
+   const nickname=member?.nickname||wave?.name||fixedWave?.name;
    if(!nickname){if(active){setProfile(null);setLoading(false)}return;}
    const social=socialRows.find(p=>String(p.name).toUpperCase()===nickname.toUpperCase());
    const links:{label:string;url:string}[]=[];
+   const defaultLinks=WAVES.find(p=>p.name===nickname)?.socials||[];
+   for(const item of defaultLinks)if(safe(item.href))links.push({label:item.label,url:item.href});
    for(const [field,label] of [["tiktok_url","TikTok"],["twitch_url","Twitch"],["youtube_url","YouTube"],["x_url","X"],["facebook_url","Facebook"]] as const){const url=safe(social?.[field]);if(url)links.push({label,url});}
    const extra=social?.extra_links;
    if(Array.isArray(extra))for(const item of extra){if(item&&typeof item==="object"){const row=item as Record<string,unknown>;const url=safe(row.href);if(url)links.push({label:String(row.label||"Enlace"),url});}}
    if(wave?.social_href&&safe(wave.social_href))links.push({label:wave.social_label||"Red social",url:wave.social_href});
    const photo=photoRows.find(p=>p.nickname.toUpperCase()===nickname.toUpperCase())?.photo_url;
-   const result:Profile={id:member?.id||wave!.id,nickname,category:member?.category||"waves",photo:safe(social?.photo_url)||safe(wave?.photo_url)||safe(photo),bio:String(social?.bio||wave?.bio||"")||null,links};
+   const result:Profile={id:member?.id||wave?.id||fixedWave!.id,nickname,category:member?.category||"waves",photo:safe(social?.photo_url)||safe(wave?.photo_url)||safe(fixedWave?.photo_url)||defaultWave?.photo||safe(photo),bio:String(social?.bio||wave?.bio||fixedWave?.bio||defaultWave?.bio||"")||null,links};
    if(active){setProfile(result);setLoading(false)}
   };
   void load();
