@@ -29,7 +29,7 @@ export const addRosterMedia=createServerFn({method:"POST"}).inputValidator(raw=>
  check(data.password);if(!provider(data.url,data.type))throw Error("El enlace no corresponde a la plataforma seleccionada");
  const {supabaseAdmin}=await import("@/integrations/supabase/client.server");
  await validateMember(supabaseAdmin,data.memberId,data.category);
- const {data:row,error}=await supabaseAdmin.from("roster_profile_media" as "roster_members").insert({member_id:data.memberId,member_category:data.category,media_type:data.type,media_url:data.url,caption:data.caption.trim(),sort_order:Date.now()} as never).select("id").single();
+ const {data:row,error}=await supabaseAdmin.from("roster_profile_media" as "roster_members").insert({member_id:data.memberId,member_category:data.category,media_type:data.type,media_url:data.url,caption:data.caption.trim(),sort_order:Math.floor(Date.now()/1000)} as never).select("id").single();
  if(error)throw Error(error.message);return {ok:true,id:row.id};
 });
 export const deleteRosterMedia=createServerFn({method:"POST"}).inputValidator(raw=>z.object({password:pass,id:z.string().uuid()}).parse(raw)).handler(async({data})=>{
@@ -52,6 +52,6 @@ export const saveRosterImage=createServerFn({method:"POST"}).inputValidator(raw=
  const {data:info,error:infoError}=await supabaseAdmin.storage.from("roster-media").info(data.path);
  if(infoError||!info||Number(info.size)>5242880)throw Error("No se pudo verificar la imagen");
  const mediaUrl=supabaseAdmin.storage.from("roster-media").getPublicUrl(data.path).data.publicUrl;
- const {error}=await supabaseAdmin.from("roster_profile_media" as "roster_members").insert({member_id:data.memberId,member_category:data.category,media_type:"image",media_url:mediaUrl,caption:data.caption,sort_order:Date.now()} as never);
+ const {error}=await supabaseAdmin.from("roster_profile_media" as "roster_members").insert({member_id:data.memberId,member_category:data.category,media_type:"image",media_url:mediaUrl,caption:data.caption,sort_order:Math.floor(Date.now()/1000)} as never);
  if(error)throw Error(error.message);return {ok:true,url:mediaUrl};
 });
