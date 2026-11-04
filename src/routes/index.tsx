@@ -195,7 +195,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
       return {
         ...w,
         socials: mergeSocials(w),
-        photo: [extra?.photo_url,w.photo].find(url=>url?.includes("/storage/v1/object/public/wave-photos/")) || extra?.photo_url || w.photo,
+        photo: extra?.photo_url || (extraWaves.some(member=>member.name.toUpperCase()===w.name.toUpperCase()) ? w.photo : ""),
         bio: extra?.bio || w.bio,
         redes: extra?.redes || w.redes,
       };
@@ -265,7 +265,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
       </div>
 
       <Dialog open={active !== null} onOpenChange={(o) => !o && closeWave()}>
-        <DialogContent className="soul-wave-profile w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[calc(100dvh-2rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 [&>button]:hidden rounded-[28px]">
+        <DialogContent className="soul-wave-profile w-[min(100vw-1rem,440px)] max-w-[min(100vw-1rem,440px)] max-h-[calc(100dvh-1rem)] overflow-y-auto border-white/15 bg-[#111329] p-0 [&>button]:hidden rounded-[24px] overscroll-contain">
           {active && (
             <div className="relative">
               {/* Editorial header */}
@@ -283,10 +283,10 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
 
               <DialogTitle className="sr-only">{active.name}</DialogTitle>
 
-              <div className="grid md:grid-cols-5 gap-0">
+              <div className="flex flex-col gap-0">
                 {/* Photo panel */}
-                <div className="relative md:col-span-2 aspect-square md:aspect-auto md:min-h-[420px] overflow-hidden bg-background group">
-                  <img src={active.photo} alt={active.name} className="absolute inset-0 w-full h-full object-cover" />
+                <div className="relative aspect-[4/4.1] min-h-[280px] overflow-hidden bg-[#01039E] group">
+                  {active.photo ? <img key={active.photo} src={active.photo} alt={active.name} className="absolute inset-0 w-full h-full object-cover" /> : <img src={soulLogo} alt="The Soul Nation" className="absolute inset-0 m-auto h-28 w-28 object-contain opacity-40" />}
                   {/* subtle edge fade only towards info side */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-background/70 via-transparent to-transparent" />
                   {/* Foto original del integrante sin decoraciones técnicas. */}
@@ -331,7 +331,7 @@ function WavesHUD({ dynamicWaves, hiddenSet }: { dynamicWaves: ReturnType<typeof
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] border border-flame/40 hover:border-flame hover:bg-flame hover:text-background text-flame px-2 py-1 rounded transition"
+                            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-flame/50 bg-[#F05E07]/10 px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-flame hover:text-background active:scale-[.98]"
                           >
                             ► {s.label}
                           </a>
