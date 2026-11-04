@@ -553,9 +553,13 @@ function IndexContent() {
                   ¿Quiénes <span className="italic text-flame">Somos?</span>
                 </h2>
               </div>
-              <p className="text-sm sm:text-base text-foreground/85 font-light leading-relaxed">
-                The Soul Nation es una comunidad de gaming que nació el <span className="text-flame font-semibold">10 de Noviembre del 2012</span>, inicialmente enfocada en clips de Gears of War. Con el tiempo nos convertimos en un equipo multifacético dedicado a crear contenido de exhibición de la más alta calidad, impulsando la escena de los esports en Latinoamérica como una familia unida.
-              </p>
+              <div className="space-y-4 text-sm sm:text-base text-foreground/85 font-light leading-relaxed">
+                <p>The Soul Nation es una comunidad de gaming fundada el <strong className="text-flame font-semibold">10 de noviembre de 2012</strong>, nacida de nuestra pasión por Gears of War y la creación de clips y montajes.</p>
+                <p>Desde nuestros inicios nos hemos caracterizado por la creatividad, la innovación y la búsqueda de nuevas formas de conectar a los jugadores. Fuimos <strong className="font-semibold text-foreground">el primer equipo hispano en organizar un torneo de Gears of War transmitido en vivo por YouTube</strong>, una iniciativa pionera para su época que logró reunir a una audiencia significativa y abrió camino a nuevas formas de crear contenido y organizar eventos dentro de la comunidad.</p>
+                <p>A lo largo de nuestra trayectoria hemos impulsado proyectos e ideas que contribuyeron a la evolución del contenido de Gears of War en habla hispana, convirtiéndonos en un referente creativo para nuevas generaciones de jugadores y creadores.</p>
+                <p>Hoy, The Soul Nation es una comunidad de jugadores, streamers y creadores de contenido que comparten mucho más que un videojuego. Nos apasiona competir, superar nuestros límites, crear contenido de calidad y disfrutar cada partida. Somos tryhards cuando toca competir, creativos cuando llega la inspiración y una familia cuando nos reunimos a jugar.</p>
+                <p className="font-semibold text-foreground">Más que un equipo, somos una nación unida por el gaming.</p>
+              </div>
 
 
             </div>
@@ -606,9 +610,10 @@ function IndexContent() {
                     className="soul-purpose-copy"
                   >
                     <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight md:min-w-[140px]">Visión</h3>
-                    <p className="text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
-                      Ser el equipo Mexicano líder en la creación de contenido de exhibición y una referencia de calidad en la comunidad hispana por nuestra capacidad para generar contenido original, innovador y de calidad, que inspire y conecte con los gamers de la región.
-                    </p>
+                    <div className="space-y-3 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                      <p>Consolidar a The Soul Nation como una comunidad referente del gaming en habla hispana, reconocida por su creatividad, autenticidad y capacidad de innovar.</p>
+                      <p>Queremos seguir construyendo un legado que trascienda las generaciones de jugadores, donde la pasión por los videojuegos, el talento y las ideas originales nos permitan evolucionar, inspirar y mantener viva una comunidad que ha crecido junto a nosotros desde 2012.</p>
+                    </div>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -621,9 +626,13 @@ function IndexContent() {
                     className="soul-purpose-copy"
                   >
                     <h3 className="font-display text-2xl sm:text-3xl font-bold italic text-flame leading-tight md:min-w-[140px]">Objetivo</h3>
-                    <p className="text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
-                      Impulsar el potencial de cada miembro de The Soul Nation —jugador, creador o parte de nuestras divisiones Legends, Media, Waves y Crew—. Queremos expandir nuestra organización, fortalecer la comunidad gamer y colaborar con otras organizaciones de Latinoamérica para construir juntos el futuro de los esports en la región.
-                    </p>
+                    <div className="space-y-3 text-sm sm:text-[15px] text-foreground/85 leading-relaxed">
+                      <p>Construir una comunidad donde jugadores, streamers y creadores de contenido puedan desarrollar su talento, compartir su pasión y crecer juntos, manteniendo la excelencia como uno de nuestros principales compromisos.</p>
+                      <p>Buscamos distinguirnos por la calidad de todo lo que hacemos, desde nuestra identidad gráfica y producción audiovisual hasta la organización de proyectos, eventos y actividades. Creemos que cada detalle cuenta y que la creatividad, la innovación y el profesionalismo deben reflejarse en cada iniciativa de The Soul Nation.</p>
+                      <p>Parte fundamental de nuestro propósito es <strong className="font-semibold text-foreground">brindar a nuestros integrantes las herramientas y el conocimiento necesarios para elevar la calidad de su contenido</strong>, poniendo a su disposición recursos gráficos, paquetes para transmisiones, herramientas digitales, asesorías, tutoriales y acompañamiento que les permitan mejorar sus producciones y desarrollar sus habilidades como creadores.</p>
+                      <p>Queremos fomentar una cultura de colaboración, aprendizaje y competitividad, donde cada miembro tenga la oportunidad de superarse, aportar sus ideas y representar con orgullo la identidad de nuestra comunidad.</p>
+                      <p className="font-semibold text-foreground">Nuestra meta no es solamente crear contenido, sino hacerlo con excelencia, impulsar a quienes forman parte de nuestra nación y seguir elevando el estándar de calidad en todo lo que hacemos.</p>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
