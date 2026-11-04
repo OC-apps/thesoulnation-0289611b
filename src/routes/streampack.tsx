@@ -254,6 +254,7 @@ function StreamPackStudio(){
   const nextIdRef=useRef(0);
   const [adminVerified,setAdminVerified]=useState(false);
   const [templates,setTemplates]=useState<Template[]>(START.map(t=>({...t,area:{...t.area},zones:t.zones?.map(z=>({...z}))})));
+  const SOUL_STREAM_TEMPLATE: Template = {...START[0], id:"soul-stream-gameplay-cam-livechat", name:"Soul Stream · Gameplay, Cam y Livechat", width:1920, height:1081, category:"gameplay", membersOnly:false, assetPath:"/streampack/shared/soul-gameplay-cam-livechat-f123ad237770.png", area:{x:580,y:35,width:780,height:100,maxFont:80,minFont:8,color:"#FFFFFF",align:"center"}, zones:[]};
   const [selected,setSelected]=useState("avi");
   const [officialLoaded,setOfficialLoaded]=useState(false);
   useEffect(()=>{
@@ -269,14 +270,14 @@ function StreamPackStudio(){
           if(!base||!Array.isArray(item.zones)||!item.zones.every(z=>typeof z.id==="string"&&Number.isFinite(z.x)&&Number.isFinite(z.y)&&Number.isFinite(z.width)&&Number.isFinite(z.height)))throw Error("Plantilla oficial inválida");
           return {...base,area:{...base.area,...item.area},zones:item.zones.map(z=>({...z})),socialAutoLayout:item.socialAutoLayout===true,assetPath:base.assetPath,membersOnly:false};
         });
-        setTemplates(official);setOfficialLoaded(true);
+        setTemplates([...official,SOUL_STREAM_TEMPLATE]);setOfficialLoaded(true);
       }).catch(()=>{if(!cancelled){setOfficialLoaded(false);setMessage("No se pudo cargar la configuración oficial. Comprueba la publicación antes de descargar.");}});
     return()=>{cancelled=true};
   },[]);
   useEffect(()=>{if(!officialLoaded||!adminVerified)return;try{localStorage.setItem("tsn-streampack-workspace-v3",JSON.stringify({templates,socials,savedAt:new Date().toISOString()}));}catch{}},[templates,socials,officialLoaded,adminVerified]);
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
-  useEffect(()=>{let cancelled=false;Promise.all(START.map(async item=>{try{const response=await fetch(item.assetPath||"",{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}})).then(entries=>{if(!cancelled)setAvailable(Object.fromEntries(entries));});return()=>{cancelled=true;};},[]);
+  useEffect(()=>{let cancelled=false;Promise.all([...START,SOUL_STREAM_TEMPLATE].map(async item=>{try{const response=await fetch(item.assetPath||"",{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}})).then(entries=>{if(!cancelled)setAvailable(Object.fromEntries(entries));});return()=>{cancelled=true;};},[]);
   const [fontFamily,setFontFamily]=useState("The Soul Nation");
   const [advanced,setAdvanced]=useState(false);
   const [copiedStyle,setCopiedStyle]=useState<Partial<Zone>|null>(null);
