@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Download, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
+import { Download, Film, ImagePlus, Type, ShieldCheck, MoveHorizontal, ArrowLeft, Package } from "lucide-react";
 import { buildZip } from "@/lib/streampack-zip";
 import soulOfficialLogo from "@/assets/soul-logo-official.png";
 import { StreamPackCustomStudio } from "@/components/streampack-custom-studio";
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/streampack")({
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; tracking?:number; strokeWidth?:number; strokeColor?:string; shadowBlur?:number; shadowColor?:string; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"|"soul-logo"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string; anchorTo?:string; anchorGap?:number }; 
 type Template = { socialAutoLayout?:boolean; assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
+type MediaAsset = { id:string; name:string; filename:string; assetPath:string; orientation:"Horizontal"|"Vertical"; description:string };
 const START: Template[] = [
 {id:"avi",name:"AVI",width:2048,height:2048,category:"avi",membersOnly:false,assetPath:"/streampack/templates/TSN_AVI_1x1.png",area:{x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center" as const}]},
 {id:"4cams",name:"Cuatro invitados",width:1920,height:1080,category:"4cams",membersOnly:false,assetPath:"/streampack/templates/TSN_Overlay_16x9_4Cams.png",area:{x:130,y:930,width:390,height:70,maxFont:60,minFont:8,color:"#FFFFFF",align:"left"},zones:[0,1,2,3].map(i=>({id:i===0?"nickname":`guest-${i}`,kind:i===0?"nickname" as const:"custom" as const,label:i===0?"Nickname":`Invitado ${i}`,text:i===0?undefined:`Invitado ${i}`,x:130+i*455,y:930,width:390,height:70,maxFont:60,minFont:8,padding:0,color:"#FFFFFF",align:"left" as const}))},
@@ -38,6 +39,10 @@ const START: Template[] = [
 {id:"tsn-12",name:"Overlay vertical · Sin cámara 2",width:1080,height:1920,category:"editable",membersOnly:false,assetPath:"/streampack/templates/TSN_Overlay_9x16_NoCam_V02.png",area:{x:216,y:1574,width:648,height:230,maxFont:154,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:216,y:1574,width:648,height:230,maxFont:154,minFont:8,color:"#FFFFFF",align:"center" as const}]},
 {id:"tsn-13",name:"Webcam 16:9",width:1672,height:941,category:"editable",membersOnly:false,assetPath:"/streampack/templates/TSN_Webcam_16x9.png",area:{x:334,y:772,width:1003,height:113,maxFont:75,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:334,y:772,width:1003,height:113,maxFont:75,minFont:8,color:"#FFFFFF",align:"center" as const}]},
 {id:"tsn-14",name:"Webcam · Barra",width:1920,height:600,category:"editable",membersOnly:false,assetPath:"/streampack/templates/TSN_Webcam_16x9 (2).png",area:{x:384,y:492,width:1152,height:72,maxFont:48,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:384,y:492,width:1152,height:72,maxFont:48,minFont:8,color:"#FFFFFF",align:"center" as const}]}
+];
+const MEDIA_ASSETS: MediaAsset[] = [
+  {id:"intro-horizontal",name:"Intro oficial · Horizontal",filename:"TSN-Intro-Oficial-4K.mp4",assetPath:"/streampack/media/TSN-Intro-Oficial-4K.mp4",orientation:"Horizontal",description:"Intro 16:9 para transmisiones y escenas principales."},
+  {id:"intro-vertical",name:"Intro oficial · Vertical",filename:"TSN-Intro-Oficial-Vertical-4K.mp4",assetPath:"/streampack/media/TSN-Intro-Oficial-Vertical-4K.mp4",orientation:"Vertical",description:"Intro 9:16 para Shorts, TikTok y transmisiones verticales."}
 ];
 const safeName = (name:string) => (name.trim().replace(/[^a-z0-9-_]+/gi,"_").slice(0,64) || "Streamer");
 const loadImage = (src:string):Promise<HTMLImageElement> => new Promise((resolve,reject) => {
@@ -256,6 +261,7 @@ function StreamPackStudio(){
   const [simulator,setSimulator]=useState<"none"|"obs"|"tiktok">("none");
   const [multiSelected,setMultiSelected]=useState<string[]>([]);
   const [selectedExport,setSelectedExport]=useState<string[]>(START.map(x=>x.id));
+  const [selectedMedia,setSelectedMedia]=useState<string[]>(MEDIA_ASSETS.map(item=>item.id));
   const clipboardRef=useRef<Zone|null>(null);
   const historyRef=useRef<Template[][]>([]);
   const redoRef=useRef<Template[][]>([]);
@@ -292,6 +298,20 @@ function StreamPackStudio(){
   const [assets,setAssets]=useState<Record<string,string>>({});
   const [available,setAvailable]=useState<Record<string,boolean>>({});
   useEffect(()=>{let cancelled=false;Promise.all([...START,SOUL_STREAM_TEMPLATE].map(async item=>{try{const response=await fetch(item.assetPath||"",{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}})).then(entries=>{if(!cancelled)setAvailable(Object.fromEntries(entries));});return()=>{cancelled=true;};},[]);
+  const [mediaAvailable,setMediaAvailable]=useState<Record<string,boolean>>({});
+  const [mediaChecked,setMediaChecked]=useState(false);
+  const [mediaBusy,setMediaBusy]=useState<string|null>(null);
+  useEffect(()=>{
+    let cancelled=false;
+    const check=async()=>{
+      const entries=await Promise.all(MEDIA_ASSETS.map(async item=>{
+        try{const response=await fetch(item.assetPath,{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}
+      }));
+      if(!cancelled){setMediaAvailable(Object.fromEntries(entries));setMediaChecked(true);}
+    };
+    void check();
+    return()=>{cancelled=true;};
+  },[]);
   const [fontFamily,setFontFamily]=useState("The Soul Nation");
   const [advanced,setAdvanced]=useState(false);
   const [copiedStyle,setCopiedStyle]=useState<Partial<Zone>|null>(null);
@@ -305,6 +325,9 @@ function StreamPackStudio(){
   useEffect(()=>{if(!adminVerified)setEditor(false);},[adminVerified]);
   const [packBusy,setPackBusy]=useState(false);
   const t=templates.find(item=>item.id===selected) || templates[0];
+  const selectedAvailableMedia=MEDIA_ASSETS.filter(item=>selectedMedia.includes(item.id)&&mediaAvailable[item.id]);
+  const hasSelectedGraphics=selectedIsOfficial && templates.some(item=>selectedExport.includes(item.id)&&!item.membersOnly&&Boolean(assets[item.id]||available[item.id]));
+  const canDownloadPack=mediaChecked&&(selectedAvailableMedia.length>0||hasSelectedGraphics);
   templatesRef.current=templates;
   const recordHistory=()=>{historyRef.current.push(structuredClone(templatesRef.current));if(historyRef.current.length>40)historyRef.current.shift();redoRef.current=[];};
   const undo=()=>{const previous=historyRef.current.pop();if(!previous)return;redoRef.current.push(structuredClone(templatesRef.current));setTemplates(previous);};
@@ -473,12 +496,29 @@ function StreamPackStudio(){
       const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`${safeName(chosenName)}_${exportNames[t.id]||safeName(t.name)}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
     }catch(e){setMessage(e instanceof Error?e.message:"Error de exportación");}finally{setBusy(false);}
   };
+  const triggerDownload=(url:string,filename:string)=>{
+    const link=document.createElement("a");link.href=url;link.download=filename;link.rel="noopener";document.body.appendChild(link);link.click();link.remove();
+  };
+  const fetchMediaBytes=async(item:MediaAsset)=>{
+    const response=await fetch(item.assetPath);
+    if(!response.ok)throw Error(`No se pudo cargar ${item.name}.`);
+    return new Uint8Array(await response.arrayBuffer());
+  };
+  const downloadMedia=async(item:MediaAsset)=>{
+    setMediaBusy(item.id);setMessage("");
+    try{
+      const bytes=await fetchMediaBytes(item);
+      const url=URL.createObjectURL(new Blob([bytes],{type:"video/mp4"}));
+      triggerDownload(url,item.filename);setTimeout(()=>URL.revokeObjectURL(url),3000);
+    }catch(e){setMessage(e instanceof Error?e.message:"No se pudo descargar el video.");}
+    finally{setMediaBusy(null);}
+  };
   const downloadPack=async()=>{
     setPackBusy(true);setMessage("");
     try{
-      if(!selectedIsOfficial)throw Error("Selecciona un integrante del roster oficial.");
-      const valid=templates.filter(item=>selectedExport.includes(item.id)&&!item.membersOnly && Boolean(assets[item.id]||available[item.id]));
-      if(!valid.length)throw Error("Sube primero al menos un gráfico PNG en el editor para generar el paquete.");
+      const valid=selectedIsOfficial ? templates.filter(item=>selectedExport.includes(item.id)&&!item.membersOnly&&Boolean(assets[item.id]||available[item.id])) : [];
+      const media=MEDIA_ASSETS.filter(item=>selectedMedia.includes(item.id)&&mediaAvailable[item.id]);
+      if(!valid.length&&!media.length)throw Error("Selecciona al menos un gráfico o recurso de video disponible.");
       const files:{name:string;bytes:Uint8Array}[]=[];
       for(const item of valid){
         const canvas=await render(item,chosenName,(assets[item.id]||(available[item.id]?item.assetPath:undefined)),fontFamily,false,socials,guests);
@@ -486,10 +526,11 @@ function StreamPackStudio(){
         if(!blob)throw Error("No se pudo generar "+item.name);
         files.push({name:`${safeName(chosenName)}_${exportNames[item.id]||safeName(item.name)}.png`,bytes:new Uint8Array(await blob.arrayBuffer())});
       }
+      for(const item of media)files.push({name:`Recursos/${item.filename}`,bytes:await fetchMediaBytes(item)});
       const zip=buildZip(files);const url=URL.createObjectURL(zip);const a=document.createElement("a");
-      a.href=url;a.download=`TheSoulNation_${safeName(chosenName)}_StreamPack.zip`;a.click();
+      a.href=url;a.download=`TheSoulNation_${selectedIsOfficial?safeName(chosenName)+"_":""}StreamPack.zip`;a.click();
       setTimeout(()=>URL.revokeObjectURL(url),3000);
-      setMessage(`Paquete generado: ${files.length} gráfico(s) con fondo cargado.`);
+      setMessage(`Paquete generado: ${valid.length} gráfico(s) y ${media.length} recurso(s) de video.`);
     }catch(e){setMessage(e instanceof Error?e.message:"No se pudo generar el paquete.");}
     finally{setPackBusy(false);}
   };
@@ -530,8 +571,8 @@ function StreamPackStudio(){
   return <main className="relative min-h-screen px-4 pb-28 pt-24 text-white md:px-8" style={{background:"radial-gradient(ellipse at 80% 0%,#071c64 0%,#060b22 55%,#050719 100%)"}}>
     <div className="mx-auto max-w-[1800px]">
       <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white"><ArrowLeft size={16}/> Regresar a The Soul Nation</Link>
-      <div className="mt-8 flex flex-wrap items-start justify-between gap-4">
-        <div><p className="text-xs font-bold uppercase tracking-[.3em] text-[#F05E07]">The Soul Nation / Creators</p><h1 className="mt-2 text-3xl font-black uppercase italic tracking-tight md:text-5xl">StreamPack <span className="text-[#F05E07]">Studio</span></h1><p className="mt-3 max-w-xl text-sm text-slate-300">Genera tus gráficos con el nickname ajustado al área exacta de cada plantilla. Descarga PNG a resolución original.</p></div>
+       <div className="mt-8 flex flex-wrap items-start justify-between gap-4">
+         <div><p className="text-xs font-bold uppercase tracking-[.3em] text-[#F05E07]">The Soul Nation / Creators</p><h1 className="mt-2 text-3xl font-black uppercase italic tracking-tight md:text-5xl">StreamPack <span className="text-[#F05E07]">Studio</span></h1><p className="mt-3 max-w-xl text-sm text-slate-300">Genera tus gráficos con el nickname ajustado al área exacta de cada plantilla y descarga los intros oficiales sin edición.</p></div>
         <span className="rounded-full border border-blue-400/30 px-4 py-2 text-xs text-blue-200">Versión inicial</span>
       </div>
       <StreamPackCustomStudio />
@@ -543,13 +584,32 @@ function StreamPackStudio(){
             <p className="text-xs text-slate-400">{selectedIsOfficial?`Seleccionado: ${chosenName}`:"Solo se pueden generar paquetes con nombres del roster oficial."}</p>
             <p className="text-xs text-amber-200">Esta selección no verifica tu identidad: cualquier visitante podría escoger el nombre de otro miembro. Para impedir suplantaciones se requiere un acceso verificado por integrante.</p></div>
           <div className="space-y-2"><h2 className="text-sm font-semibold">Redes sociales</h2><div className="flex flex-wrap gap-2"><button type="button" onClick={saveProfile} disabled={!selectedIsOfficial} className="rounded-lg border border-[#F05E07]/40 px-3 py-2 text-xs disabled:opacity-40">Guardar mis redes</button><button type="button" onClick={restoreProfile} disabled={!selectedIsOfficial} className="rounded-lg border border-white/25 px-3 py-2 text-xs disabled:opacity-40">Cargar redes guardadas</button></div>{["Twitch","TikTok","YouTube","Instagram"].map(network=><label key={network} className="block text-xs text-slate-300">{network}<input value={socials[network]||""} onChange={e=>setSocials(p=>({...p,[network]:e.target.value}))} className="mt-1 w-full rounded-lg border border-white/15 bg-[#07122c] p-2 text-base text-white" placeholder="@usuario"/></label>)}</div>
-          <div className="rounded-xl border border-white/15 p-3 space-y-2"><p className="text-sm font-semibold">Exportación por piezas</p><div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedExport(templates.map(x=>x.id))}>Todas</button><button className="text-xs underline" onClick={()=>setSelectedExport([])}>Ninguna</button></div><div className="grid grid-cols-2 gap-2">{templates.map(item=><label key={item.id} className="flex gap-2 text-xs"><input type="checkbox" checked={selectedExport.includes(item.id)} onChange={e=>setSelectedExport(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>{item.name}</label>)}</div></div>
+           <div className="rounded-xl border border-white/15 p-3 space-y-2"><p className="text-sm font-semibold">Exportación por piezas</p><div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedExport(templates.map(x=>x.id))}>Todas</button><button className="text-xs underline" onClick={()=>setSelectedExport([])}>Ninguna</button></div><div className="grid grid-cols-2 gap-2">{templates.map(item=><label key={item.id} className="flex gap-2 text-xs"><input type="checkbox" checked={selectedExport.includes(item.id)} onChange={e=>setSelectedExport(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>{item.name}</label>)}</div></div>
+           <div className="space-y-3 rounded-xl border border-[#F05E07]/30 bg-[#F05E07]/[.04] p-3">
+             <div className="flex flex-wrap items-start justify-between gap-3">
+               <div><p className="flex items-center gap-2 text-sm font-semibold"><Film size={16} className="text-[#F05E07]"/>Recursos de video sin edición</p><p className="mt-1 text-xs text-slate-400">Se proporcionan tal cual, con descarga individual o dentro del ZIP.</p></div>
+               <div className="flex gap-3"><button className="text-xs underline" onClick={()=>setSelectedMedia(MEDIA_ASSETS.map(item=>item.id))}>Todos</button><button className="text-xs underline" onClick={()=>setSelectedMedia([])}>Ninguno</button></div>
+             </div>
+             <div className="space-y-2">
+               {MEDIA_ASSETS.map(item=>{
+                 const isAvailable=Boolean(mediaAvailable[item.id]);
+                 return <div key={item.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/10 p-2">
+                   <label className="flex min-w-0 flex-1 items-start gap-2 text-xs">
+                     <input type="checkbox" className="mt-0.5 accent-[#F05E07]" disabled={!isAvailable} checked={selectedMedia.includes(item.id)} onChange={e=>setSelectedMedia(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>
+                     <span className="min-w-0"><span className="block truncate font-semibold text-white">{item.name}</span><span className="block text-slate-400">{item.orientation} · MP4 · 4K · {isAvailable?item.description:"Archivo no disponible"}</span></span>
+                   </label>
+                   <button type="button" disabled={!isAvailable||mediaBusy===item.id} onClick={()=>void downloadMedia(item)} className="shrink-0 rounded-lg border border-[#F05E07]/50 px-2 py-1.5 text-xs font-semibold text-[#F9A66B] disabled:opacity-40">{mediaBusy===item.id?"Preparando…":"Descargar"}</button>
+                 </div>;
+               })}
+             </div>
+             <p className="text-[11px] text-slate-500">{mediaChecked?"Marca los videos que quieras sumar al paquete ZIP.":"Comprobando archivos de video…"}</p>
+           </div>
           {selected==="4cams"&&<div className="rounded-xl border border-[#F05E07]/30 p-3 space-y-3"><h2 className="text-sm font-semibold">Nombres de tus invitados</h2><p className="text-xs text-slate-400">Tu nickname se toma del roster. Escribe los otros tres nombres; solo cambiarán en tu descarga.</p>{[1,2,3].map(n=><label key={n} className="block text-xs text-slate-300">Invitado {n}<input maxLength={50} value={guests[`guest-${n}`]??""} onChange={e=>setGuests(current=>({...current,[`guest-${n}`]:e.target.value}))} placeholder={`Nombre del invitado ${n}`} className="mt-1 w-full rounded-lg border border-white/20 bg-[#07122c] p-3 text-base text-white"/></label>)}</div>}
           <div><h2 className="mb-3 text-sm font-semibold">Selecciona tu gráfico</h2><div className="space-y-2">{templates.filter(x=>!x.membersOnly).map(item=><button type="button" key={item.id} onClick={()=>setSelected(item.id)} className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition ${t.id===item.id?"border-[#F05E07] bg-[#F05E07]/10":"border-white/10 bg-white/5 hover:bg-white/10"}`}><span>{item.name}</span><span className="text-xs text-slate-400">{assets[item.id]||available[item.id]?"Lista":"Falta PNG"} · {item.width}×{item.height}</span></button>)}</div></div>
           {adminVerified?<button onClick={()=>setEditor(p=>!p)} className="w-full rounded-xl border border-blue-400/40 px-4 py-3 text-sm font-semibold hover:bg-blue-500/10">{editor?"Cerrar editor":"Abrir editor de plantilla"}</button>:<p className="rounded-lg border border-white/10 px-3 py-2 text-xs text-slate-400">Solo administración puede modificar las plantillas oficiales. Aquí puedes elegir tu nickname, agregar tus redes y descargar tu StreamPack.</p>}
           <button onClick={download} disabled={busy || !officialLoaded || !selectedIsOfficial || !(assets[t.id]||available[t.id])} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#F05E07] px-4 py-3 font-bold text-[#080b20] disabled:opacity-50"><Download size={18}/> {busy?"Generando…":"Descargar PNG"}</button>
-          <button onClick={downloadPack} disabled={packBusy || !selectedIsOfficial || !templates.some(item=>!item.membersOnly && Boolean(assets[item.id]||available[item.id]))} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
-          <p className="text-xs text-slate-400">El ZIP incluye solo los gráficos públicos a los que hayas subido una imagen en esta sesión.</p>
+           <button onClick={downloadPack} disabled={packBusy || !canDownloadPack} className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-400/50 bg-blue-600/20 px-4 py-3 font-bold text-white disabled:opacity-40"><Package size={18}/> {packBusy?"Preparando ZIP…":"Descargar paquete ZIP"}</button>
+           <p className="text-xs text-slate-400">El ZIP incluye los gráficos públicos seleccionados y los videos marcados en “Recursos de video”.</p>
         </section>
         <section className={editor&&adminVerified?"min-w-0 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-4":"min-w-0 space-y-4"}>
           <div className="lg:sticky lg:top-20 lg:z-10"><div className="overflow-hidden rounded-3xl border border-white/10 bg-[#030717] p-4 md:p-6"><div className="mb-4 flex items-center justify-between text-xs text-slate-300"><span>Vista previa</span><span>{t.width} × {t.height} px</span></div>
