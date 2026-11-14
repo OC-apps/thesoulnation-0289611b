@@ -305,7 +305,7 @@ function StreamPackStudio(){
     let cancelled=false;
     const check=async()=>{
       const entries=await Promise.all(MEDIA_ASSETS.map(async item=>{
-        try{const response=await fetch(item.assetPath,{method:"HEAD"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}
+        try{const response=await fetch(item.assetPath,{headers:{Range:"bytes=0-0"},cache:"no-store"});return [item.id,response.ok] as const;}catch{return [item.id,false] as const;}
       }));
       if(!cancelled){setMediaAvailable(Object.fromEntries(entries));setMediaChecked(true);}
     };
