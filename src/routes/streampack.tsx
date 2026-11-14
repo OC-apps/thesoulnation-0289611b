@@ -23,7 +23,7 @@ export const Route = createFileRoute("/streampack")({
 type Area = { x: number; y: number; width: number; height: number; maxFont: number; minFont: number; color: string; padding?: number; tracking?:number; strokeWidth?:number; strokeColor?:string; shadowBlur?:number; shadowColor?:string; align: "center" | "left" | "right" };
 type Zone = Area & { id:string; label:string; kind:"nickname"|"social"|"soul"|"custom"|"social-icon"|"soul-logo"; text?:string; hidden?:boolean; locked?:boolean; groupId?:string; anchorTo?:string; anchorGap?:number }; 
 type Template = { socialAutoLayout?:boolean; assetPath?:string; zones?:Zone[]; id: string; name: string; width: number; height: number; area: Area; category: string; membersOnly: boolean };
-type MediaAsset = { id:string; name:string; filename:string; assetPath:string; orientation:"Horizontal"|"Vertical"; description:string };
+type MediaAsset = { id:string; name:string; filename:string; assetPath:string; orientation:"Horizontal"|"Vertical"|"Stinger"; fileType:"MP4"|"WebM"; description:string };
 const START: Template[] = [
 {id:"avi",name:"AVI",width:2048,height:2048,category:"avi",membersOnly:false,assetPath:"/streampack/templates/TSN_AVI_1x1.png",area:{x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:410,y:1679,width:1229,height:246,maxFont:164,minFont:8,color:"#FFFFFF",align:"center" as const}]},
 {id:"4cams",name:"Cuatro invitados",width:1920,height:1080,category:"4cams",membersOnly:false,assetPath:"/streampack/templates/TSN_Overlay_16x9_4Cams.png",area:{x:130,y:930,width:390,height:70,maxFont:60,minFont:8,color:"#FFFFFF",align:"left"},zones:[0,1,2,3].map(i=>({id:i===0?"nickname":`guest-${i}`,kind:i===0?"nickname" as const:"custom" as const,label:i===0?"Nickname":`Invitado ${i}`,text:i===0?undefined:`Invitado ${i}`,x:130+i*455,y:930,width:390,height:70,maxFont:60,minFont:8,padding:0,color:"#FFFFFF",align:"left" as const}))},
@@ -41,8 +41,9 @@ const START: Template[] = [
 {id:"tsn-14",name:"Webcam · Barra",width:1920,height:600,category:"editable",membersOnly:false,assetPath:"/streampack/templates/TSN_Webcam_16x9 (2).png",area:{x:384,y:492,width:1152,height:72,maxFont:48,minFont:8,color:"#FFFFFF",align:"center"},zones:[{id:"nickname",kind:"nickname" as const,label:"Nickname",x:384,y:492,width:1152,height:72,maxFont:48,minFont:8,color:"#FFFFFF",align:"center" as const}]}
 ];
 const MEDIA_ASSETS: MediaAsset[] = [
-  {id:"intro-horizontal",name:"Intro oficial · Horizontal",filename:"TSN-Intro-Oficial-4K.mp4",assetPath:"/streampack/media/TSN-Intro-Oficial-4K.mp4",orientation:"Horizontal",description:"Intro 16:9 para transmisiones y escenas principales."},
-  {id:"intro-vertical",name:"Intro oficial · Vertical",filename:"TSN-Intro-Oficial-Vertical-4K.mp4",assetPath:"/streampack/media/TSN-Intro-Oficial-Vertical-4K.mp4",orientation:"Vertical",description:"Intro 9:16 para Shorts, TikTok y transmisiones verticales."}
+  {id:"intro-horizontal",name:"Intro oficial · Horizontal",filename:"TSN-Intro-Oficial-4K.mp4",assetPath:"/streampack/media/TSN-Intro-Oficial-4K.mp4",orientation:"Horizontal",fileType:"MP4",description:"Intro 16:9 para transmisiones y escenas principales."},
+  {id:"intro-vertical",name:"Intro oficial · Vertical",filename:"TSN-Intro-Oficial-Vertical-4K.mp4",assetPath:"/streampack/media/TSN-Intro-Oficial-Vertical-4K.mp4",orientation:"Vertical",fileType:"MP4",description:"Intro 9:16 para Shorts, TikTok y transmisiones verticales."},
+  {id:"obs-stinger",name:"Stinger de transición · OBS",filename:"TSN-Stinger-OBS.webm",assetPath:"/streampack/media/TSN-Stinger-OBS.webm",orientation:"Stinger",fileType:"WebM",description:"Transición para cambiar de escena en OBS."}
 ];
 const safeName = (name:string) => (name.trim().replace(/[^a-z0-9-_]+/gi,"_").slice(0,64) || "Streamer");
 const loadImage = (src:string):Promise<HTMLImageElement> => new Promise((resolve,reject) => {
@@ -572,7 +573,7 @@ function StreamPackStudio(){
     <div className="mx-auto max-w-[1800px]">
       <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white"><ArrowLeft size={16}/> Regresar a The Soul Nation</Link>
        <div className="mt-8 flex flex-wrap items-start justify-between gap-4">
-         <div><p className="text-xs font-bold uppercase tracking-[.3em] text-[#F05E07]">The Soul Nation / Creators</p><h1 className="mt-2 text-3xl font-black uppercase italic tracking-tight md:text-5xl">StreamPack <span className="text-[#F05E07]">Studio</span></h1><p className="mt-3 max-w-xl text-sm text-slate-300">Genera tus gráficos con el nickname ajustado al área exacta de cada plantilla y descarga los intros oficiales sin edición.</p></div>
+         <div><p className="text-xs font-bold uppercase tracking-[.3em] text-[#F05E07]">The Soul Nation / Creators</p><h1 className="mt-2 text-3xl font-black uppercase italic tracking-tight md:text-5xl">StreamPack <span className="text-[#F05E07]">Studio</span></h1><p className="mt-3 max-w-xl text-sm text-slate-300">Genera tus gráficos con el nickname ajustado al área exacta de cada plantilla y descarga los intros oficiales y el stinger de OBS sin edición.</p></div>
         <span className="rounded-full border border-blue-400/30 px-4 py-2 text-xs text-blue-200">Versión inicial</span>
       </div>
       <StreamPackCustomStudio />
@@ -596,7 +597,7 @@ function StreamPackStudio(){
                  return <div key={item.id} className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/10 p-2">
                    <label className="flex min-w-0 flex-1 items-start gap-2 text-xs">
                      <input type="checkbox" className="mt-0.5 accent-[#F05E07]" disabled={!isAvailable} checked={selectedMedia.includes(item.id)} onChange={e=>setSelectedMedia(current=>e.target.checked?[...current,item.id]:current.filter(id=>id!==item.id))}/>
-                     <span className="min-w-0"><span className="block truncate font-semibold text-white">{item.name}</span><span className="block text-slate-400">{item.orientation} · MP4 · 4K · {isAvailable?item.description:"Archivo no disponible"}</span></span>
+                     <span className="min-w-0"><span className="block truncate font-semibold text-white">{item.name}</span><span className="block text-slate-400">{item.orientation} · {item.fileType}{item.fileType==="MP4"?" · 4K":""} · {isAvailable?item.description:"Archivo no disponible"}</span></span>
                    </label>
                    <button type="button" disabled={!isAvailable||mediaBusy===item.id} onClick={()=>void downloadMedia(item)} className="shrink-0 rounded-lg border border-[#F05E07]/50 px-2 py-1.5 text-xs font-semibold text-[#F9A66B] disabled:opacity-40">{mediaBusy===item.id?"Preparando…":"Descargar"}</button>
                  </div>;
