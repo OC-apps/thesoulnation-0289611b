@@ -1,4 +1,5 @@
 import { RosterMediaAdmin } from "@/components/roster-media-admin";
+import { StreamPackMediaAdmin } from "@/components/streampack-media-admin";
 import wallpaperTile from "@/assets/wallpaper-olimpo.jpg";
 import jerseyTile from "@/assets/jersey-front.png";
 import { HOME_ASSET_KEYS, useSiteAssets, type SiteAssetKey } from "@/hooks/use-site-assets";
@@ -613,7 +614,7 @@ function AdminLivePage() {
         )}
 
         <Tabs defaultValue="roster" className="w-full">
-          <TabsList className="grid grid-cols-3 sm:grid-cols-7 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 w-full bg-blue-deep/40 border border-flame/20 mb-6 h-auto p-1">
             <TabsTrigger value="roster" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 data-[state=active]:bg-flame data-[state=active]:text-background text-xs font-mono uppercase tracking-widest">
               <Users className="w-3.5 h-3.5" />
               <span>Roster</span>
@@ -642,7 +643,11 @@ function AdminLivePage() {
               <Users className="w-3.5 h-3.5" />
               <span>Solicitudes</span>
             </TabsTrigger>
+            <TabsTrigger value="streampack" className="py-2 text-xs font-mono uppercase tracking-widest data-[state=active]:bg-flame data-[state=active]:text-background">StreamPack</TabsTrigger>
           </TabsList>
+          <TabsContent value="streampack" className="mt-0">
+            <StreamPackMediaAdmin password={password}/>
+          </TabsContent>
 
 
 
